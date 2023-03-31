@@ -1,0 +1,179 @@
+<template>
+  <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" data-widget="pushmenu" href="#" role="button" ref="hiddenMenu"><i class="fas fa-bars"></i></a>
+      </li>
+      <li v-for="row in pages" :key="row.name" class="nav-item d-none d-sm-inline-block">
+        <a :href="row.link" target="_blank" class="nav-link">{{ row.name }}</a>
+      </li>
+    </ul>
+
+    <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto" data-v-075ba192="">
+
+      <NotificationDropdown />
+      <UserDropDown />
+
+    </ul>
+  </nav>
+
+  <aside class="main-sidebar sidebar-dark-primary elevation-4">
+
+    <RouterLink to="/" class="brand-link">
+      <img src="http://fchhis.migfus20.com/images/logo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
+        style="opacity: .8">
+      <span class="brand-text ml-2">Future Care</span>
+    </RouterLink>
+
+    <div class="sidebar">
+
+      <nav class="mt-2">
+        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+
+          <li v-for="row in menu" :key="row.name" :class="`${row.icon ? 'nav-item' : 'nav-header'}`">
+            <RouterLink v-if="row.icon" :to="row.link" :class="`${$route.name == row.link.name ? 'active' : ''} nav-link`"
+              @click="HideSideBar">
+              <i :class="`nav-icon fas ${row.icon}`"></i>
+              <p>
+                {{ row.name }}
+              </p>
+            </RouterLink>
+            <div v-else> {{ row.name }}</div>
+          </li>
+
+        </ul>
+      </nav>
+    </div>
+  </aside>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import { useRoute } from 'vue-router'
+import NotificationDropdown from './NotificationDropdown.vue';
+import UserDropDown from './UserDropDown.vue';
+
+const $route = useRoute();
+
+const hiddenMenu = ref()
+
+const menu = ref([
+  // DASHBOARD
+  {
+    name: 'DASHBOARD',
+  },
+  {
+    name: 'Dashboard',
+    icon: 'fa-table',
+    link: { name: 'dashboard' }
+  },
+  // USERS
+  {
+    name: 'USERS',
+  },
+  {
+    name: 'Admin',
+    icon: 'fa-user-tie',
+    link: { name: 'users-admin' }
+  },
+  // {
+  //   name: 'Manager',
+  //   icon: 'fa-user-friends',
+  //   link: '/users/manager'
+  // },
+  // {
+  //   name: 'Sales Agent',
+  //   icon: 'fa-user-secret',
+  //   link: '/users/agent'
+  // },
+  // {
+  //   name: 'Staff',
+  //   icon: 'fa-users',
+  //   link: '/users/staff'
+  // },
+  // {
+  //   name: 'Client',
+  //   icon: 'fa-people-arrows',
+  //   link: '/users/client'
+  // },
+  // ADMIN
+  // {
+  //   name: "ADMIN",
+  // },
+  // {
+  //   name: 'Plans',
+  //   icon: 'fa-clipboard-list',
+  //   link: '/admin/plans'
+  // },
+  // {
+  //   name: 'Transaction',
+  //   icon: 'fa-wallet',
+  //   link: '/admin/transactions'
+  // },
+  // {
+  //   name: 'Referals',
+  //   icon: 'fa-project-diagram',
+  //   link: '/admin/referals'
+  // },
+
+  // SETTINGS
+  {
+    name: 'MY ACCOUNT',
+  },
+  {
+    name: 'Account Settings',
+    icon: 'fa-user-cog',
+    link: { name: 'account-settings' },
+  },
+  {
+    name: 'Security',
+    icon: 'fa-shield-alt',
+    link: { name: 'account-settings-security' },
+  },
+
+  // SETTINGS
+  // {
+  //   name: 'SETTINGS',
+  // },
+  // {
+  //   name: 'System Settings',
+  //   icon: 'fa-cog',
+  //   link: '/settings/system',
+  // },
+  // {
+  //   name: 'Backup',
+  //   icon: 'fa-database',
+  //   link: '/settings/backup',
+  // },
+  // {
+  //   name: 'Logs',
+  //   icon: 'fa-pen',
+  //   link: '/settings/logs'
+  // }
+]);
+
+const pages = ref([
+  {
+    name: 'Home',
+    link: "https://google.com"
+  },
+  {
+    name: 'Contact',
+    link: "https://google.com"
+  },
+  // {
+  //   name: 'Developers',
+  //   link: { name: 'developers' }
+  // }
+]);
+
+</script>
+
+<style scoped>
+.sidebar-dark-primary .nav-sidebar>.nav-item>.nav-link.active,
+.sidebar-light-primary .nav-sidebar>.nav-item>.nav-link.active {
+  background-color: var(--info);
+  color: #fff;
+}
+</style>

@@ -1,0 +1,16 @@
+.loading-bg {
+  display: grid;
+  justify-items: center;
+  align-items: center;
+  margin-top: 10em;
+}
+
+.loading-bg > * {
+  grid-column-start: 1;
+  grid-row-start: 1;
+}
+
+.loading-bg > h3 {
+  font-family: Arial;
+  color: #495057;
+}

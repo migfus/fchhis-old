@@ -1,0 +1,175 @@
+{
+  "_chunk-index.esm.js": {
+    "file": "chunk-index.esm.js",
+    "imports": [
+      "resources/js/app.js"
+    ]
+  },
+  "node_modules/admin-lte/plugins/fontawesome-free/webfonts/fa-brands-400.eot": {
+    "file": "app-fa-brands-400.css",
+    "src": "node_modules/admin-lte/plugins/fontawesome-free/webfonts/fa-brands-400.eot"
+  },
+  "node_modules/admin-lte/plugins/fontawesome-free/webfonts/fa-brands-400.svg": {
+    "file": "app-fa-brands-4005.css",
+    "src": "node_modules/admin-lte/plugins/fontawesome-free/webfonts/fa-brands-400.svg"
+  },
+  "node_modules/admin-lte/plugins/fontawesome-free/webfonts/fa-brands-400.ttf": {
+    "file": "app-fa-brands-4004.css",
+    "src": "node_modules/admin-lte/plugins/fontawesome-free/webfonts/fa-brands-400.ttf"
+  },
+  "node_modules/admin-lte/plugins/fontawesome-free/webfonts/fa-brands-400.woff": {
+    "file": "app-fa-brands-4003.css",
+    "src": "node_modules/admin-lte/plugins/fontawesome-free/webfonts/fa-brands-400.woff"
+  },
+  "node_modules/admin-lte/plugins/fontawesome-free/webfonts/fa-brands-400.woff2": {
+    "file": "app-fa-brands-4002.css",
+    "src": "node_modules/admin-lte/plugins/fontawesome-free/webfonts/fa-brands-400.woff2"
+  },
+  "node_modules/admin-lte/plugins/fontawesome-free/webfonts/fa-regular-400.eot": {
+    "file": "app-fa-regular-400.css",
+    "src": "node_modules/admin-lte/plugins/fontawesome-free/webfonts/fa-regular-400.eot"
+  },
+  "node_modules/admin-lte/plugins/fontawesome-free/webfonts/fa-regular-400.svg": {
+    "file": "app-fa-regular-4005.css",
+    "src": "node_modules/admin-lte/plugins/fontawesome-free/webfonts/fa-regular-400.svg"
+  },
+  "node_modules/admin-lte/plugins/fontawesome-free/webfonts/fa-regular-400.ttf": {
+    "file": "app-fa-regular-4004.css",
+    "src": "node_modules/admin-lte/plugins/fontawesome-free/webfonts/fa-regular-400.ttf"
+  },
+  "node_modules/admin-lte/plugins/fontawesome-free/webfonts/fa-regular-400.woff": {
+    "file": "app-fa-regular-4003.css",
+    "src": "node_modules/admin-lte/plugins/fontawesome-free/webfonts/fa-regular-400.woff"
+  },
+  "node_modules/admin-lte/plugins/fontawesome-free/webfonts/fa-regular-400.woff2": {
+    "file": "app-fa-regular-4002.css",
+    "src": "node_modules/admin-lte/plugins/fontawesome-free/webfonts/fa-regular-400.woff2"
+  },
+  "node_modules/admin-lte/plugins/fontawesome-free/webfonts/fa-solid-900.eot": {
+    "file": "app-fa-solid-900.css",
+    "src": "node_modules/admin-lte/plugins/fontawesome-free/webfonts/fa-solid-900.eot"
+  },
+  "node_modules/admin-lte/plugins/fontawesome-free/webfonts/fa-solid-900.svg": {
+    "file": "app-fa-solid-9005.css",
+    "src": "node_modules/admin-lte/plugins/fontawesome-free/webfonts/fa-solid-900.svg"
+  },
+  "node_modules/admin-lte/plugins/fontawesome-free/webfonts/fa-solid-900.ttf": {
+    "file": "app-fa-solid-9004.css",
+    "src": "node_modules/admin-lte/plugins/fontawesome-free/webfonts/fa-solid-900.ttf"
+  },
+  "node_modules/admin-lte/plugins/fontawesome-free/webfonts/fa-solid-900.woff": {
+    "file": "app-fa-solid-9003.css",
+    "src": "node_modules/admin-lte/plugins/fontawesome-free/webfonts/fa-solid-900.woff"
+  },
+  "node_modules/admin-lte/plugins/fontawesome-free/webfonts/fa-solid-900.woff2": {
+    "file": "app-fa-solid-9002.css",
+    "src": "node_modules/admin-lte/plugins/fontawesome-free/webfonts/fa-solid-900.woff2"
+  },
+  "resources/css/app.css": {
+    "file": "app-app.css",
+    "isEntry": true,
+    "src": "resources/css/app.css"
+  },
+  "resources/js/app.css": {
+    "file": "app-app2.css",
+    "src": "resources/js/app.css"
+  },
+  "resources/js/app.js": {
+    "assets": [
+      "app-fa-brands-400.css",
+      "app-fa-brands-4002.css",
+      "app-fa-brands-4003.css",
+      "app-fa-brands-4004.css",
+      "app-fa-brands-4005.css",
+      "app-fa-regular-400.css",
+      "app-fa-regular-4002.css",
+      "app-fa-regular-4003.css",
+      "app-fa-regular-4004.css",
+      "app-fa-regular-4005.css",
+      "app-fa-solid-900.css",
+      "app-fa-solid-9002.css",
+      "app-fa-solid-9003.css",
+      "app-fa-solid-9004.css",
+      "app-fa-solid-9005.css"
+    ],
+    "css": [
+      "app-app2.css"
+    ],
+    "dynamicImports": [
+      "resources/js/views/auth/LoginPage.vue",
+      "resources/js/views/auth/ForgotPasswordPage.vue",
+      "resources/js/views/dashboard/DashboardPage.vue",
+      "resources/js/views/users/AdminPage.vue",
+      "resources/js/views/account-settings/AccountSettingsPage.vue",
+      "resources/js/views/account-settings/security/SecurityPage.vue"
+    ],
+    "file": "app-app2.js",
+    "isEntry": true,
+    "src": "resources/js/app.js"
+  },
+  "resources/js/views/account-settings/AccountSettingsPage.vue": {
+    "file": "chunk-AccountSettingsPage.js",
+    "imports": [
+      "resources/js/app.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/views/account-settings/AccountSettingsPage.vue"
+  },
+  "resources/js/views/account-settings/security/SecurityPage.vue": {
+    "file": "chunk-SecurityPage.js",
+    "imports": [
+      "_chunk-index.esm.js",
+      "resources/js/app.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/views/account-settings/security/SecurityPage.vue"
+  },
+  "resources/js/views/auth/ForgotPasswordPage.css": {
+    "file": "app-ForgotPasswordPage.css",
+    "src": "resources/js/views/auth/ForgotPasswordPage.css"
+  },
+  "resources/js/views/auth/ForgotPasswordPage.vue": {
+    "css": [
+      "app-ForgotPasswordPage.css"
+    ],
+    "file": "chunk-ForgotPasswordPage.js",
+    "imports": [
+      "_chunk-index.esm.js",
+      "resources/js/app.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/views/auth/ForgotPasswordPage.vue"
+  },
+  "resources/js/views/auth/LoginPage.css": {
+    "file": "app-LoginPage.css",
+    "src": "resources/js/views/auth/LoginPage.css"
+  },
+  "resources/js/views/auth/LoginPage.vue": {
+    "css": [
+      "app-LoginPage.css"
+    ],
+    "file": "chunk-LoginPage.js",
+    "imports": [
+      "_chunk-index.esm.js",
+      "resources/js/app.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/views/auth/LoginPage.vue"
+  },
+  "resources/js/views/dashboard/DashboardPage.vue": {
+    "file": "chunk-DashboardPage.js",
+    "imports": [
+      "resources/js/app.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/views/dashboard/DashboardPage.vue"
+  },
+  "resources/js/views/users/AdminPage.vue": {
+    "file": "chunk-AdminPage.js",
+    "imports": [
+      "resources/js/app.js"
+    ],
+    "isDynamicEntry": true,
+    "src": "resources/js/views/users/AdminPage.vue"
+  }
+}
