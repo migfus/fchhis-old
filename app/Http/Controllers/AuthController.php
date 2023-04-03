@@ -50,7 +50,7 @@ class AuthController extends Controller
 
     $user = User::find($req->user()->id)->update(['password' => Hash::make($req->newPassword)]);
 
-    return response()->json([...$this->returnDefault]);
+    return response()->json([...$this->returnDefault, 'data' => true]);
   }
 
   private function ValidationErrorResponse($data = '') {

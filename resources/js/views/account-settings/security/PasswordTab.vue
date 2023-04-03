@@ -73,12 +73,13 @@ const $toast = useToast();
 
 async function Update() {
   try {
-    const { data } = axios.post('/api/change-password', input)
-    console.log(data)
+    const { data } = await axios.post('/api/change-password', input)
+    // console.log(data.data)
     $toast.success('Successfuly Changed')
+    Object.assign(input, { currentPassword: '', newPassword: '', confirmPassword: '' })
   }
   catch (e) {
-    $toast.error('Database Error')
+    $toast.error('Incorrect Current Password')
   }
 }
 </script>

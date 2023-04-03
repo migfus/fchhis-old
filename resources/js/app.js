@@ -20,7 +20,7 @@ pinia.use(({ store }) => {
 
 app.use(router);
 app.use(pinia);
-app.use(Toast);
+app.use(Toast, { position: "bottom-right" });
 
 import jwtInterceptor from "./helpers/jwtInterceptor";
 jwtInterceptor();
