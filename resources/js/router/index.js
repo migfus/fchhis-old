@@ -52,7 +52,9 @@ const router = createRouter({
       path: "/account-settings",
       name: "account-settings",
       component: () =>
-        import("@/views/account-settings/AccountSettingsPage.vue"),
+        import(
+          "@/views/account-settings/account-settings/AccountSettingsPage.vue"
+        ),
       meta: {
         title: "Account Settings",
       },
