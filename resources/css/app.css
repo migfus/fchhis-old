@@ -14,3 +14,49 @@
   font-family: Arial;
   color: #495057;
 }
+
+/* NOTE CARD LOADER */
+.card-loader {
+  position: relative;
+  overflow: hidden;
+  /* padding-top: 30em; */
+  padding-bottom: 30em;
+  padding: 20px;
+  animation: pop-up 0.2s ease-in-out
+}
+
+.card-loader:after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background: linear-gradient(110deg, rgba(227, 227, 227, 0) 0%, rgba(227, 227, 227, 0) 40%, rgba(227, 227, 227, 0.5) 50%, rgba(227, 227, 227, 0) 60%, rgba(227, 227, 227, 0) 100%);
+  animation: gradient-animation_2 1.2s linear infinite;
+}
+
+@keyframes gradient-animation_2 {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes pop-up {
+  0% {
+    opacity: 0
+  }
+
+  100% {
+    opacity: 1
+  }
+}
+
+.card-loader-content {
+  background-color: #ADB5BD !important;
+  animation: bg-loader-anim 1.2 linear infinite;
+}

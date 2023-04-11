@@ -9,7 +9,9 @@ use App\Models\User;
 
 class AuthController extends Controller
 {
-  protected $returnDefault = ['status' => true, 'message' => 'success'];
+  private function ReturnDefault($role = null) {
+    return ['status' => true, 'message' => 'success', 'role' => $role];
+  }
 
   public function Login(Request $req) {
     $val = Validator::make($req->all(), [
@@ -27,7 +29,7 @@ class AuthController extends Controller
     }
 
     return response()->json([
-      ...$this->returnDefault, 'data' => [
+      ...$this->returnDefault($user->role), 'data' => [
         'auth' => $user,
         'token' => $user->createToken('token idk')->plainTextToken],
     ], 200);
@@ -50,10 +52,34 @@ class AuthController extends Controller
 
     $user = User::find($req->user()->id)->update(['password' => Hash::make($req->newPassword)]);
 
-    return response()->json([...$this->returnDefault, 'data' => true]);
+    return response()->json([...$this->returnDefault($req->user()->role), 'data' => true]);
   }
 
   private function ValidationErrorResponse($data = '') {
     return response()->json(['status' => false, 'message' => 'Invalid Input', 'data' => $data], 401);
+  }
+
+  public function ChangeAvatar(Request $req) {
+    $validator = Validator::make($req->all(), [
+      'file' => 'required'
+    ]);
+
+    if($validator->fails()) {
+      response()->json(['status' => false, 'message' => 'Invalid Input']);
+    }
+    $image = $req->file;
+    list($type, $image) = explode(';', $image);
+    list(, $image) = explode(',', $image);
+
+    $image = base64_decode($image);
+    $imageName = time(). '.jpg';
+    $location = '/uploads/'.$imageName;
+    file_put_contents('uploads/'.$imageName, $image);
+
+    $user = User::find($req->user()->id);
+    $user->avatar =  $location;
+    $user->save();
+
+    return response()->json([...$this->ReturnDefault($req->user()->role), 'file' => $location]);
   }
 }

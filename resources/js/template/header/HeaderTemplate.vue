@@ -49,14 +49,32 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import NotificationDropdown from './NotificationDropdown.vue';
 import UserDropDown from './UserDropDown.vue';
+import { useAuthStore } from '../../store/auth/auth';
 
 const $route = useRoute();
+const $auth = useAuthStore();
 
 const hiddenMenu = ref()
+
+const isAdmin = computed(() => {
+  if ($auth.auth.role == 2) {
+    return [
+      {
+        name: 'USERS',
+      },
+      {
+        name: 'Users',
+        icon: 'fa-users',
+        link: { name: 'users-list' }
+      },
+    ]
+  }
+  return []
+})
 
 const menu = ref([
   // DASHBOARD
@@ -69,14 +87,7 @@ const menu = ref([
     link: { name: 'dashboard' }
   },
   // USERS
-  {
-    name: 'USERS',
-  },
-  {
-    name: 'Admin',
-    icon: 'fa-user-tie',
-    link: { name: 'users-admin' }
-  },
+  ...isAdmin.value,
   // {
   //   name: 'Manager',
   //   icon: 'fa-user-friends',

@@ -40,11 +40,12 @@ const router = createRouter({
     },
     // NOTE USERS
     {
-      path: "/users/admin",
-      name: "users-admin",
-      component: () => import("@/views/users/AdminPage.vue"),
+      path: "/users/list",
+      name: "users-list",
+      component: () => import("@/views/users/UsersPage.vue"),
       meta: {
         title: "User Admin",
+        role: 2, //admin
       },
     },
     // NOTE ACCOUNT SETTINGS

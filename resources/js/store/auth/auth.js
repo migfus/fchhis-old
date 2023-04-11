@@ -8,6 +8,7 @@ export const useAuthStore = defineStore("auth", () => {
 
   const auth = ref(JSON.parse(localStorage.getItem("auth")) || {});
   const token = ref(localStorage.getItem("token") || "");
+  const role = auth.role;
 
   function UpdateToken(input) {
     token.value = input;
@@ -17,6 +18,11 @@ export const useAuthStore = defineStore("auth", () => {
   function UpdateAuth(input) {
     auth.value = input;
     localStorage.setItem("auth", JSON.stringify(input));
+  }
+
+  function UpdateAvatar(avatar) {
+    auth.value.avatar = avatar;
+    localStorage.setItem("auth", JSON.stringify(auth.value));
   }
 
   function Logout(mode = false) {
@@ -59,11 +65,13 @@ export const useAuthStore = defineStore("auth", () => {
   return {
     auth,
     token,
+    role,
 
     UpdateAuth,
     UpdateToken,
     Logout,
     Login,
     CheckAuth,
+    UpdateAvatar,
   };
 });

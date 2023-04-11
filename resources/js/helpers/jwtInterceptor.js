@@ -13,7 +13,13 @@ export default function jwtInterceptor() {
   });
 
   axios.interceptors.response.use(
-    (response) => response,
+    (response) => {
+      if (response.data.role) {
+        $auth.role = response.data.role;
+        console.log("Role Updated");
+      }
+      return response;
+    },
     (error) => {
       console.log("auth error: ", error);
 
@@ -22,7 +28,9 @@ export default function jwtInterceptor() {
       if (status === 401 && data.message == "Logout") {
         $auth.Logout();
       }
-
+      if (status === 401 && data.message == "Unauthenticated.") {
+        $auth.Logout();
+      }
       return Promise.reject(error);
     }
   );

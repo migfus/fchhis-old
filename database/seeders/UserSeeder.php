@@ -6,6 +6,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
+
 class UserSeeder extends Seeder
 {
     public function run(): void
@@ -65,12 +66,34 @@ class UserSeeder extends Seeder
           'phone'    => 1234567890,
           'password' => Hash::make('12345678'),
           'avatar'   => 'https://cdn1.iconfinder.com/data/icons/user-pictures/100/female1-512.png',
-          'role'     => 1, //inactive
+          'role'     => 1, //banned
         ],
+
+        // [
+        //   'username' => 'client',
+        //   'email'    => 'banned@gmail.com',
+        //   'phone'    => 1234567890,
+        //   'password' => Hash::make('12345678'),
+        //   'avatar'   => 'https://cdn1.iconfinder.com/data/icons/user-pictures/100/female1-512.png',
+        //   'role'     => 1, //banned
+        // ],
       ];
 
       foreach($data as $row) {
         \App\Models\User::create($row);
+      }
+
+      $faker = \Faker\Factory::create();
+      $faker->addProvider(new \Ottaviano\Faker\Gravatar($faker));
+      foreach(range(1,100) as $idx) {
+        \App\Models\User::create([
+          'username' => $faker->username,
+          'avatar'   => $faker->gravatarUrl(),
+          'email'    => $faker->email,
+          'phone'    => rand(1111111111, 9999999999),
+          'password' => Hash::make('12345678'),
+          'role'     => 6
+        ]);
       }
     }
 }

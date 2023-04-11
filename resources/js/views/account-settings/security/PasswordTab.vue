@@ -46,7 +46,7 @@
 </template>
 
 <script setup>
-import { defineProps, reactive } from 'vue';
+import { reactive } from 'vue';
 import * as Yup from 'yup'
 import { Form, Field, ErrorMessage, configure, } from 'vee-validate'
 import axios from 'axios'
