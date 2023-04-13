@@ -10,7 +10,15 @@ class Person extends Model
     use HasFactory;
 
     protected $fillable = [
-      'lastName', 'firstName', 'midName', 'extName', 'bday', 'bplace_id',
-      'sex', 'address_id', 'address'
+      'created_by_user_id',
+      'lastName',
+      'firstName',
+      'midName',
+      'extName',
+      'bday',
+      'bplace_id',
+      'sex',
+      'address_id',
+      'address'
     ];
 }

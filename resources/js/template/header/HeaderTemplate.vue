@@ -71,6 +71,11 @@ const isAdmin = computed(() => {
         icon: 'fa-users',
         link: { name: 'users-list' }
       },
+      {
+        name: 'Roles',
+        icon: 'fa-tasks',
+        link: { name: 'users-roles' }
+      },
     ]
   }
   return []

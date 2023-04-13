@@ -13,6 +13,7 @@ class UserSeeder extends Seeder
     {
       $data = [
         [
+          'person_id'=> 1,
           'username' => 'admin',
           'email'    => 'admin@gmail.com',
           'phone'    => 9978663855,
@@ -21,6 +22,7 @@ class UserSeeder extends Seeder
           'role'     => 2, //admin,
         ],
         [
+          'person_id'=> 2,
           'username' => 'manager',
           'email'    => 'manager@gmail.com',
           'phone'    => 1234567890,
@@ -29,6 +31,7 @@ class UserSeeder extends Seeder
           'role'     => 3, //manager
         ],
         [
+          'person_id'=> 3,
           'username' => 'agent',
           'email'    => 'agent@gmail.com',
           'phone'    => 1234567890,
@@ -37,6 +40,7 @@ class UserSeeder extends Seeder
           'role'     => 4, //agent
         ],
         [
+          'person_id'=> 4,
           'username' => 'staff',
           'email'    => 'staff@gmail.com',
           'phone'    => 1234567890,
@@ -45,6 +49,7 @@ class UserSeeder extends Seeder
           'role'     => 5, //staff
         ],
         [
+          'person_id'=> 5,
           'username' => 'client',
           'email'    => 'client@gmail.com',
           'phone'    => 1234567890,
@@ -53,6 +58,7 @@ class UserSeeder extends Seeder
           'role'     => 6, //client
         ],
         [
+          'person_id'=> 6,
           'username' => 'inactive',
           'email'    => 'inactive@gmail.com',
           'phone'    => 1234567890,
@@ -61,6 +67,7 @@ class UserSeeder extends Seeder
           'role'     => 0, //inactive
         ],
         [
+          'person_id'=> 7,
           'username' => 'banned',
           'email'    => 'banned@gmail.com',
           'phone'    => 1234567890,
@@ -87,6 +94,7 @@ class UserSeeder extends Seeder
       $faker->addProvider(new \Ottaviano\Faker\Gravatar($faker));
       foreach(range(1,100) as $idx) {
         \App\Models\User::create([
+          'person_id'=> $idx + 7,
           'username' => $faker->username,
           'avatar'   => $faker->gravatarUrl(),
           'email'    => $faker->email,

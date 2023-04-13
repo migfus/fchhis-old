@@ -1,10 +1,10 @@
 <template>
   <div class="row">
 
-    <div class="col-md-6 col-xl-4">
+    <div class="col-4">
       <div class="card">
       <div class="card-header border-0">
-        <h3 class="card-title"><strong>New Users</strong></h3>
+        <h3 class="card-title">New Users</h3>
         <div class="card-tools">
           <a href="#" class="btn btn-tool btn-sm">
             <i class="fas fa-download"></i>
@@ -33,7 +33,8 @@
               <td>{{ row.email }}</td>
               <td>
                 <small class="text-success mr-1">
-                  <i class="fas fa-arrow-up"></i>12%
+                  <i class="fas fa-arrow-up"></i>
+                  12%
                 </small>
                 {{  row.price }}
               </td>
@@ -49,36 +50,67 @@
     </div>
     </div>
 
-    <div class="col-md-12 col-xl-4">
+    <div class="col-4">
       <div class="card">
-        <div class="card-header border-0">
-          <div class="d-flex justify-content-between">
-            <h3 class="card-title"><strong>User's Role</strong></h3>
-            <a href="javascript:void(0);">View Report</a>
-          </div>
-        </div>
-        <div class="card-body">
-
-          <div class="position-relative mb-2">
-            <Doughnut :data="dougData" :options="{responsive: true, maintainAspectRatio: false}"/>
-          </div>
-
+      <div class="card-header border-0">
+        <h3 class="card-title">Latest Transactions</h3>
+        <div class="card-tools">
+          <a href="#" class="btn btn-tool btn-sm">
+            <i class="fas fa-download"></i>
+          </a>
+          <a href="#" class="btn btn-tool btn-sm">
+            <i class="fas fa-bars"></i>
+          </a>
         </div>
       </div>
+      <div class="card-body table-responsive p-0">
+        <table class="table table-striped table-valign-middle">
+          <thead>
+            <tr>
+              <th>Username</th>
+              <th>Email</th>
+              <th>Price</th>
+              <th>More</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="row in newTransaction" :key="row.username">
+              <td>
+                <img :src="row.avatar" alt="Product 1" class="img-circle img-size-32 mr-2">
+                {{  row.username }}
+              </td>
+              <td>{{ row.email }}</td>
+              <td>
+                <small class="text-success mr-1">
+                  <i class="fas fa-arrow-up"></i>
+                  12%
+                </small>
+                {{  row.price }}
+              </td>
+              <td>
+                <a href="#" class="text-muted">
+                  <i class="fas fa-search"></i>
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
     </div>
 
-    <div class="col-md-12 col-xl-4">
+    <div class="col-4">
       <div class="card">
         <div class="card-header border-0">
           <div class="d-flex justify-content-between">
-            <h3 class="card-title"><strong>Semi Annual</strong></h3>
+            <h3 class="card-title">Sales</h3>
             <a href="javascript:void(0);">View Report</a>
           </div>
         </div>
         <div class="card-body">
           <div class="d-flex">
             <p class="d-flex flex-column">
-              <span class="text-lg">₱ 82,000.00 </span>
+              <span class="text-bold text-lg">820,000 ₱</span>
               <span>Current 6 months</span>
             </p>
             <p class="ml-auto d-flex flex-column text-right">
@@ -90,7 +122,7 @@
           </div>
 
           <div class="position-relative mb-2">
-            <Line :data="lineData" :options="options" style="height: 13em" class="chartjs-render-monitor"/>
+            <Line :data="data" :options="options" style="height: 13em"/>
           </div>
 
         </div>
@@ -99,7 +131,6 @@
 
 
   </div>
-
 </template>
 
 <script setup>
@@ -112,10 +143,9 @@ import {
   LineElement,
   Title,
   Tooltip,
-  Legend,
-  ArcElement,
+  Legend
 } from 'chart.js'
-import { Line, Doughnut } from 'vue-chartjs'
+import { Line } from 'vue-chartjs'
 import moment from 'moment'
 
 ChartJS.register(
@@ -125,8 +155,7 @@ ChartJS.register(
   LineElement,
   Title,
   Tooltip,
-  Legend,
-  ArcElement,
+  Legend
 )
 
 const months = ref([])
@@ -137,51 +166,21 @@ months.value = months.value.reverse()
 
 const options = ref({
   responsive: true,
-  maintainAspectRatio: false,
-  bezierCurve : true,
+  maintainAspectRatio: false
 })
 
-const lineData = ref({
+const data = ref({
   labels: [...months.value.map((v) => moment(v).format('MMM'))],
-
   datasets: [
     {
       label: 'Current',
       backgroundColor: '#1591A5',
-      borderColor: '#17A2B8',
-      data: [40, 39, 10, 40, 39, 80, 40],
-      tension: .2,
+      data: [40, 39, 10, 40, 39, 80, 40]
     },
     {
       label: 'Last Year',
       backgroundColor: '#E5AD06',
-      borderColor: '#FFC107',
-      data: [40, 39, 20, 20, 30, 50, 20],
-      tension: .2,
-    }
-  ]
-})
-
-const dougData = ref({
-  labels: ['Admin', 'Manager', 'Agent', 'Staff', 'Client', 'Inactive/Banned'],
-  datasets: [
-    {
-      backgroundColor: [
-        '#41B883',
-        '#E46651',
-        '#00D8FF',
-        '#DD1B16',
-        '#17A2B8',
-        '#6C757D',
-      ],
-      data: [
-        40,
-        20,
-        80,
-        10,
-        500,
-        20,
-      ]
+      data: [40, 39, 20, 20, 30, 50, 20]
     }
   ]
 })
@@ -219,4 +218,36 @@ const newUsers = ref([
   },
 ]);
 
+const newTransaction = ref([
+  {
+    username: 'Admin',
+    email: 'emailemai@gmail.com',
+    price: '12k',
+    avatar: 'https://adminlte.io/themes/v3/dist/img/default-150x150.png'
+  },
+  {
+    username: 'Juan',
+    email: 'juan@gmail.com',
+    price: '14k',
+    avatar: 'https://adminlte.io/themes/v3/dist/img/default-150x150.png'
+  },
+  {
+    username: 'Lami',
+    email: 'llami@gmail.com',
+    price: '15k',
+    avatar: 'https://adminlte.io/themes/v3/dist/img/default-150x150.png'
+  },
+  {
+    username: 'Juan',
+    email: 'juan@gmail.com',
+    price: '14k',
+    avatar: 'https://adminlte.io/themes/v3/dist/img/default-150x150.png'
+  },
+  {
+    username: 'Lami',
+    email: 'llami@gmail.com',
+    price: '15k',
+    avatar: 'https://adminlte.io/themes/v3/dist/img/default-150x150.png'
+  },
+]);
 </script>
