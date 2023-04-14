@@ -1,3 +1,5 @@
+import moment from 'moment'
+
 export const RoleToDesc = (id) => {
   switch (id) {
     case 0:
@@ -39,3 +41,11 @@ export const RoleToID = (id) => {
       return "Banned";
   }
 };
+
+export const FullNameConvert = (last, first, mid, ext) => {
+  return `${last}, ${first} ${mid.charAt(0)}.`
+}
+
+export const AgeConverter = (bday) => {
+  return moment().diff(bday, 'years');
+}

@@ -62,9 +62,10 @@ class UserController extends Controller
               ->whereRelation('person', 'address', 'LIKE', '%'.$req->search.'%');
             break;
           default:
-            $user->orWhere('email',    'LIKE', '%'.$req->search.'%')
+              $user->orWhere('email',    'LIKE', '%'.$req->search.'%')
               ->orWhere('username', 'LIKE', '%'.$req->search.'%')
-              ->orwhereRelation('person', 'firstName','LIKE', '%'.$req->search.'%')
+              ->with('person')
+              ->orWhereRelation('person', 'firstName','LIKE', '%'.$req->search.'%')
               ->orWhereRelation('person', 'lastName', 'LIKE', '%'.$req->search.'%')
               ->orWhereRelation('person', 'midName',  'LIKE', '%'.$req->search.'%');
         }
