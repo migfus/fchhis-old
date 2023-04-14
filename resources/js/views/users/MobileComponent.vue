@@ -1,6 +1,7 @@
 <template>
   <div class="col-12">
 
+
     <div v-for="(row, idx,) in $user.list.data" :class="`card mb-2 ${$user.config.viewAll ? '' : 'collapsed-card'}`">
       <div class="card-header" style="cursor: pointer;">
         <div data-card-widget="collapse" ref="collapse-click">

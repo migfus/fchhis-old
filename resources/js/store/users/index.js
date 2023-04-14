@@ -4,56 +4,7 @@ import axios from 'axios'
 
 export const useUserStore = defineStore('users', () => {
   const list = ref([])
-  const counts = ref([
-    {
-      name: 'All',
-      count: 1013,
-      color: 'info',
-      icon: 'fa-users'
-    },
-    {
-      name: 'Clients',
-      count: 686,
-      color: 'success',
-      icon: 'fa-child'
-    },
-    {
-      name: 'Staff',
-      count: 131,
-      color: 'info',
-      icon: 'fa-user-edit'
-    },
-    {
-      name: 'Agent',
-      count: 10,
-      color: 'purple',
-      icon: 'fa-handshake'
-    },
-    {
-      name: 'Manager',
-      count: 3,
-      color: 'orange',
-      icon: 'fa-tasks'
-    },
-    {
-      name: 'Admin',
-      count: 2,
-      color: 'warning',
-      icon: 'fa-crown'
-    },
-    {
-      name: 'Inactive',
-      count: 3,
-      color: 'secondary',
-      icon: 'fa-moon'
-    },
-    {
-      name: 'Banned',
-      count: 2,
-      color: 'danger',
-      icon: 'fa-ban'
-    },
-  ])
+  const counts = ref([])
   const params = reactive({
     role: 7,
     search: '',
@@ -65,6 +16,7 @@ export const useUserStore = defineStore('users', () => {
     tableView: false,
     viewAll: false,
     loading: false,
+    countLoading: false,
     notify: localStorage.getItem('removed-user-notify') ? false : true,
     form: '', // [add] [update] []
   })
@@ -95,6 +47,20 @@ export const useUserStore = defineStore('users', () => {
     config.loading = false
   }
 
+  async function GetCount() {
+    config.countLoading = true
+    try {
+      let { data: { data } } = await axios.get(`/api/users`, { params: {
+        count: true,
+      }})
+      counts.value = data
+    }
+    catch(e) {
+      console.log({ e })
+    }
+    config.countLoading = false
+  }
+
   async function Delete(id, idx) {
     if (confirm("Do you want to delete")) {
       list.value.data.splice(idx, 1)
@@ -122,5 +88,5 @@ export const useUserStore = defineStore('users', () => {
     $toast.warning('update')
   }
 
-  return { list, counts, params, config, ChangeForm, RemoveNotify, GetAPI, Delete, Info, Update}
+  return { list, counts, params, config, ChangeForm, RemoveNotify, GetAPI, GetCount, Delete, Info, Update}
 })

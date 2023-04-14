@@ -16,7 +16,44 @@ class UserController extends Controller
     return response()->json(['status' => false, 'message' => 'Invalid Input', 'data' => $data], 401);
   }
 
+  private function UnauthorizedResponse() {
+    return response()->json(['status' => false, 'message' => 'Logout'], 401);
+  }
+
+  public function getCount($req) {
+    if($req->user()->role == 2) {
+      $count = [
+        'all'     => User::count(),
+        'clients' => User::where('role', 6)->count(),
+        'staff'   => User::where('role', 5)->count(),
+        'agent'   => User::where('role', 4)->count(),
+        'manager' => User::where('role', 3)->count(),
+        'admin'   => User::where('role', 2)->count(),
+        'inactive'=> User::where('role', 0)->count(),
+        'banned'  => User::where('role', 1)->count(),
+      ];
+
+      $data = [
+        ['name' => 'All',     'count' => $count['all'],     'color' => 'info',    'icon' => 'fa-users'],
+        ['name' => 'Clients', 'count' => $count['clients'], 'color' => 'success', 'icon' => 'fa-child'],
+        ['name' => 'Staff',   'count' => $count['staff'],   'color' => 'info',    'icon' => 'fa-user-edit'],
+        ['name' => 'Agent',   'count' => $count['agent'],   'color' => 'purple',  'icon' => 'fa-handshake'],
+        ['name' => 'Manager', 'count' => $count['manager'], 'color' => 'orange',  'icon' => 'fa-tasks'],
+        ['name' => 'Admin',   'count' => $count['admin'],   'color' => 'warning', 'icon' => 'fa-crown'],
+        ['name' => 'Inactive','count' => $count['inactive'],'color' => 'secondary','icon'=> 'fa-moon'],
+        ['name' => 'Banned',  'count' => $count['banned'],  'color' => 'danger',  'icon' => 'fa-ban'],
+      ];
+
+      return response()->json(['status' => true, 'message' => 'success', 'data' => $data], 200);
+    }
+    return $this->UnauthorizedResponse();
+  }
+
   public function index(Request $req) {
+    if($req->count)
+      return $this->getCount($req);
+
+
     $val = Validator::make($req->all(), [
       'role' => 'required|numeric',
       'search' => '',
@@ -55,7 +92,7 @@ class UserController extends Controller
               ->orWhereRelation('person', 'midName', 'LIKE', '%'.$req->search.'%');
             break;
           case 'email':
-            $user->where('email', 'LIKE', '%'.$req->search.'%');
+            $user->where('email', 'LIKE', '%'.$req->search.'%')->with('person');
             break;
           case 'address':
             $user->with('person')

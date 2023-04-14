@@ -87,7 +87,12 @@
               class="btn btn-info mr-1 float-right">
               <i :class="`fas ${$user.config.viewAll ? 'fa-window-minimize' : 'fa-window-maximize'}`"></i>
             </button>
-            <button class="btn btn-info mr-1 float-right">
+
+            <button v-if="$user.config.loading" class="btn card-loader-content card-loader mr-1 float-right"
+              style="width: 42px">
+              &nbsp;
+            </button>
+            <button v-else class="btn btn-info mr-1 float-right">
               <i class="fas fa-print"></i>
             </button>
 

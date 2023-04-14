@@ -2,7 +2,7 @@
   <div class="col-12">
     <Carousel v-bind="config.bind" :breakpoints="config.breakpoints" :autoplay="config.autoplay" :wrap-around="true">
 
-      <!-- <Slide v-if="$user.config.loading" v-for="row in 10" :key="row" class="mb-2">
+      <!-- <Slide v-if="$user.config.countLoading" v-for="row in 10" :key="row" class="mb-2">
         <div class="info-box mb-0 mr-2 card-loader" style="height: 100px">
           <span :class="`info-box-icon elevation-1 card-loader-content`"></span>
           <div class="info-box-content">
@@ -72,4 +72,8 @@ const config = {
     },
   }
 };
+
+onMounted(() => {
+  $user.GetCount()
+});
 </script>
