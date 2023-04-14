@@ -30,8 +30,15 @@ import FooterTemplate from './template/FooterTemplate.vue'
 import HeaderTemplate from './template/header/HeaderTemplate.vue'
 import BreadCrumbTemplate from './template/BreadCrumbTemplate.vue';
 import { useRoute } from 'vue-router';
+import { onMounted } from 'vue'
+import { useAddressStore } from '@/store/system/address'
 
 import "vue-toastification/dist/index.css";
 
 const $route = useRoute();
+const $address = useAddressStore();
+
+onMounted(() => {
+  $address.GetAPI();
+});
 </script>

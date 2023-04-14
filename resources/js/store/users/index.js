@@ -5,12 +5,15 @@ import axios from 'axios'
 export const useUserStore = defineStore('users', () => {
   const list = ref([])
   const counts = ref([])
+  const input = ref({
+   ...InitInput()
+  })
   const params = reactive({
     role: 7,
     search: '',
     start: '',
     end: '',
-    filter: '',
+    filter: 'name',
   })
   const config = reactive({
     tableView: false,
@@ -21,13 +24,49 @@ export const useUserStore = defineStore('users', () => {
     form: '', // [add] [update] []
   })
 
+  function InitInput() {
+    return {
+      avatar: '',
+      username: '',
+      email: '',
+      password: '',
+      mobile: '',
+      notifyMobile: true,
+      role: 'client',
+      plan: 'jasper',
+
+      lastName: '',
+      firstName: '',
+      midName: '',
+      extName: '',
+      sex: true,
+      bday: '',
+      bplaceID: 258,
+      addressID: 258,
+      address: '',
+    }
+  }
+
   function RemoveNotify() {
     config.notify = false
     localStorage.setItem('removed-user-notify', true);
   }
 
-  function ChangeForm(input) {
-    config.form = input
+  function ChangeForm(_input) {
+    if(_input != '') {
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: 'smooth',
+      })
+    }
+    else {
+      input.value = {
+        ...InitInput()
+      }
+    }
+
+    config.form = _input
   }
 
   async function GetAPI(page = 1) {
@@ -88,5 +127,6 @@ export const useUserStore = defineStore('users', () => {
     $toast.warning('update')
   }
 
-  return { list, counts, params, config, ChangeForm, RemoveNotify, GetAPI, GetCount, Delete, Info, Update}
+
+  return { list, counts, params, config, input, ChangeForm, RemoveNotify, GetAPI, GetCount, Delete, Info, Update}
 })

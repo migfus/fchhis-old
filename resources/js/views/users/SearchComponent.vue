@@ -39,7 +39,7 @@
                 <span class="input-group-text"><i class="fas fa-filter"></i></span>
               </div>
               <select v-model="$user.params.filter" class="form-control">
-                <option value="">All (Filter)</option>
+                <!-- <option value="">All (Filter)</option> -->
                 <option value="name">Name</option>
                 <option value="email">Email</option>
                 <option value="address">Address</option>

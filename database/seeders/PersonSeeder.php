@@ -114,10 +114,10 @@ class PersonSeeder extends Seeder
       foreach(range(1,100) as $idx) {
         \App\Models\Person::create([
           'created_by_user_id' => 1,
-          'lastName' => $faker->name,
-          'firstName'=> $faker->name,
-          'midName'  => $faker->name,
-          'extName'  => $faker->name,
+          'lastName' => $faker->lastName,
+          'firstName'=> $faker->firstName,
+          'midName'  => $faker->randomLetter,
+          'extName'  => 'Jr.',
           'bday'     => '2022-02-02',
           'bplace_id'=> 1,
           'sex'      => true,

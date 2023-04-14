@@ -1,4 +1,7 @@
 import moment from 'moment'
+import { useAddressStore } from '@/store/system/address';
+
+const $address = useAddressStore();
 
 export const RoleToDesc = (id) => {
   switch (id) {
@@ -49,3 +52,52 @@ export const FullNameConvert = (last, first, mid, ext) => {
 export const AgeConverter = (bday) => {
   return moment().diff(bday, 'years');
 }
+
+// SECTION ADDRESS
+export const CityIDToDesc = (id) => {
+  for (let i = 0; $address.content.length > i; i++) {
+    const { cities } = $address.content[i];
+    for (let f = 0; cities.length > f; f++) {
+      if (cities[f].id == id) {
+        return cities[f].name;
+      }
+    }
+  }
+  return null;
+};
+
+export const ProvinceIDToDesc = (id) => {
+  for (let i = 0; $address.content.length > i; i++) {
+    const province = $address.content[i];
+    for (let f = 0; province.cities.length > f; f++) {
+      if (province.cities[f].id == id) {
+        return province.name;
+      }
+    }
+  }
+  return null;
+};
+
+export const CityIDToFullAddress = (id) => {
+  for (let i = 0; $address.content.length > i; i++) {
+    const province = $address.content[i];
+    for (let f = 0; province.cities.length > f; f++) {
+      if (province.cities[f].id == id) {
+        return `${province.cities[f].name}, ${province.name}`;
+      }
+    }
+  }
+  return null;
+};
+
+export const CityIDToProvinceID = (id) => {
+  for (let i = 0; $address.content.length > i; i++) {
+    const province = $address.content[i];
+    for (let f = 0; province.cities.length > f; f++) {
+      if (province.cities[f].id == id) {
+        return province.id;
+      }
+    }
+  }
+  return null;
+};

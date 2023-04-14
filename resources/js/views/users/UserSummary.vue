@@ -1,8 +1,8 @@
 <template>
-  <div class="col-12">
-    <Carousel v-bind="config.bind" :breakpoints="config.breakpoints" :autoplay="config.autoplay" :wrap-around="true">
+  <div v-if="$user.config.countLoading" class="col-12">
+    <Carousel v-bind="config.bind" :breakpoints="config.breakpoints">
 
-      <!-- <Slide v-if="$user.config.countLoading" v-for="row in 10" :key="row" class="mb-2">
+      <Slide v-for="row in 10" :key="row" class="mb-2">
         <div class="info-box mb-0 mr-2 card-loader" style="height: 100px">
           <span :class="`info-box-icon elevation-1 card-loader-content`"></span>
           <div class="info-box-content">
@@ -10,7 +10,12 @@
             <span class="info-box-number card-loader-content" style="height: 1em">&nbsp;</span>
           </div>
         </div>
-      </Slide> -->
+      </Slide>
+
+    </Carousel>
+  </div>
+  <div v-else class="col-12">
+    <Carousel v-bind="config.bind" :breakpoints="config.breakpoints">
 
       <Slide v-for="row in $user.counts" :key="row.name" class="mb-2">
         <div class="info-box mb-0 mr-2" style="height: 100px">
@@ -24,7 +29,6 @@
         </div>
       </Slide>
 
-
       <template #addons>
         <Navigation />
       </template>
@@ -37,6 +41,7 @@ import { onMounted, ref } from 'vue'
 import { Carousel, Navigation, Slide } from 'vue3-carousel'
 import 'vue3-carousel/dist/carousel.css'
 import { useUserStore } from '@/store/users'
+
 
 const $user = useUserStore()
 
@@ -74,6 +79,8 @@ const config = {
 };
 
 onMounted(() => {
-  $user.GetCount()
+  setTimeout(() => {
+    $user.GetCount()
+  }, 1);
 });
 </script>

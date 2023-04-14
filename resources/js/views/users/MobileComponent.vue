@@ -53,7 +53,7 @@
               </strong>
             </div>
             <div>Birth Day: <strong>{{ moment(row.person.bday).local().format('MMM D, YYYY') }}</strong></div>
-            <div>Birth Place: <strong>{{ row.person.bplace_id }}</strong></div>
+            <div>Birth Place: <strong>{{ CityIDToFullAddress(row.person.bplace_id) }}</strong></div>
             <hr class="mt-1" />
           </div>
           <div class="col-12 col-md-6 col-lg-4 col-xl-3">
@@ -66,11 +66,10 @@
             <hr class="mt-1" />
           </div>
           <div class="col-12 col-md-6 col-lg-4 col-xl-3">
-            <div>Province: <strong>{{ row.person.address_id }}</strong></div>
-            <div>City: <strong>{{ row.person.address_id }}</strong></div>
+            <div>Province: <strong>{{ ProvinceIDToDesc(row.person.address_id) }}</strong></div>
+            <div>City: <strong>{{ CityIDToDesc(row.person.address_id) }}</strong></div>
             <div>Address: <strong>{{ row.person.address }}</strong></div>
             <div>Sex: <strong>Male</strong></div>
-            <div>Address: <strong>123 St. Roxina Taboboy</strong></div>
             <hr class="mt-1" />
           </div>
         </div>
@@ -101,6 +100,7 @@ import { useUserStore } from '@/store/users'
 import { RoleToDesc } from '@/helpers/converter'
 import BadgeComponent from './BadgeComponent.vue'
 import { FullNameConvert } from '@/helpers/converter'
+import { CityIDToFullAddress, ProvinceIDToDesc, CityIDToDesc } from '@/helpers/converter'
 
 const $user = useUserStore();
 </script>

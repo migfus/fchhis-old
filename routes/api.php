@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 Route::controller(\App\Http\Controllers\AuthController::class)->group(function () {
   Route::post('/login', 'Login');
 });
+Route::apiResource('/address', \App\Http\Controllers\AddressController::class)->only(['index']);
 
 Route::middleware('auth:sanctum')->group(function () {
   Route::controller(\App\Http\Controllers\AuthController::class)->group(function () {
