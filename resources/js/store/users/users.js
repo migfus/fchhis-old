@@ -1,8 +1,11 @@
 import { ref, reactive } from 'vue'
 import { defineStore } from 'pinia'
 import axios from 'axios'
+import { useToast } from 'vue-toastification'
 
 export const useUserStore = defineStore('users', () => {
+  const $toast = useToast();
+
   const list = ref([])
   const counts = ref([])
   const input = ref({
@@ -33,7 +36,7 @@ export const useUserStore = defineStore('users', () => {
       mobile: '',
       notifyMobile: true,
       role: 'client',
-      plan: 'jasper',
+      plan: 1,
 
       lastName: '',
       firstName: '',
@@ -60,6 +63,7 @@ export const useUserStore = defineStore('users', () => {
         behavior: 'smooth',
       })
     }
+
     else {
       input.value = {
         ...InitInput()
@@ -114,19 +118,78 @@ export const useUserStore = defineStore('users', () => {
     }
   }
 
-  function Info() {
-    $toast.warning('ifno')
-  }
-
-  function Update() {
+  async function Add() {
+    config.loading = true
+    try {
+      let { data : {data } } = await axios.post(`/api/users`, input.value)
+      console.log({ data })
+      GetAPI()
+      ChangeForm('')
+      $toast.success('Successfully added');
+    }
+    catch (e) {
+      console.log({ e })
+    }
+    config.loading = false
     window.scrollTo({
       top: 0,
       left: 0,
       behavior: 'smooth'
     });
-    $toast.warning('update')
+  }
+
+  function Info() {
+    $toast.warning('ifno')
+  }
+
+  function Update(row) {
+    input.value = row
+
+    config.form = 'update'
+
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: 'smooth'
+    });
+  }
+
+  async function UpdateAPI() {
+    config.loading = true
+    try {
+      let { data: { data}} = await axios.put(`/api/users/${input.value.id}`, input.value)
+      console.log({data})
+      GetAPI()
+      $toast.success('Successfully updated');
+    }
+    catch(e) {
+      console.log({e})
+    }
+    config.loading = false
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: 'smooth'
+    });
+    ChangeForm('')
   }
 
 
-  return { list, counts, params, config, input, ChangeForm, RemoveNotify, GetAPI, GetCount, Delete, Info, Update}
+  return {
+    list,
+    counts,
+    params,
+    config,
+    input,
+
+    ChangeForm,
+    RemoveNotify,
+    GetAPI,
+    GetCount,
+    Delete,
+    Info,
+    Update,
+    Add,
+    UpdateAPI
+  }
 })

@@ -22,7 +22,8 @@ return new class extends Migration
             $table->integer('bplace_id');
             $table->boolean('sex')->default(0);
             $table->integer('address_id')->comment('city ID, Province'); //city, province
-            $table->string('address')->comment('Specific Address');  //specific
+            $table->string('address')->comment('Specific Address');  //specific,
+            $table->decimal('mobile', 10, 0)->nullable();
             $table->timestamps();
         });
     }

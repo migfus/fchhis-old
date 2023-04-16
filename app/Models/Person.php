@@ -19,6 +19,11 @@ class Person extends Model
       'bplace_id',
       'sex',
       'address_id',
-      'address'
+      'address',
+      'mobile',
     ];
+
+  public function user() {
+    return $this->belongsTo(User::class, 'created_by_user_id');
+  }
 }

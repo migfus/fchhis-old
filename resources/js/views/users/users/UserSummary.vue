@@ -40,7 +40,7 @@
 import { onMounted, ref } from 'vue'
 import { Carousel, Navigation, Slide } from 'vue3-carousel'
 import 'vue3-carousel/dist/carousel.css'
-import { useUserStore } from '@/store/users'
+import { useUserStore } from '@/store/users/users'
 
 
 const $user = useUserStore()

@@ -62,12 +62,12 @@
 
         <div class="row mt-2">
           <div class="col-12 col-md-4 mb-2">
-            <VueDatePicker v-model="$user.params.start" :start-date="moment().startOf('month').format('YYYY-MM-DD')"
-              :enable-time-picker="false" auto-apply placeholder="Start Date" />
+            <VueDatePicker v-model="$user.params.start" :enable-time-picker="false"
+              :start-date="moment().startOf('month').format('YYYY-MM-DD')" placeholder="Start Date" auto-apply />
           </div>
           <div class="col-12 col-md-4 mb-2">
-            <VueDatePicker v-model="$user.params.end" :start-date="moment().endOf('month').format('YYYY-MM-DD')"
-              :enable-time-picker="false" auto-apply placeholder="End Date" />
+            <VueDatePicker v-model="$user.params.end" :enable-time-picker="false"
+              :start-date="moment().endOf('month').format('YYYY-MM-DD')" placeholder="End Date" auto-apply />
           </div>
 
           <div class="col-12 col-md-4">
@@ -106,7 +106,7 @@
 
 <script setup>
 import { reactive, watch, onMounted } from 'vue'
-import { useUserStore } from '@/store/users'
+import { useUserStore } from '@/store/users/users'
 import moment from 'moment'
 import { throttle } from 'lodash'
 

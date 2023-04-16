@@ -1,7 +1,8 @@
 <template>
   <div class="row">
     <!-- NOTE ADD/EDIT -->
-    <FormComponent />
+    <EditForm v-if="$user.config.form == 'update'" />
+    <AddForm v-else-if="$user.config.form" />
 
     <UserSummary />
 
@@ -21,10 +22,11 @@
 </template>
 
 <script setup>
-import { useUserStore } from '@/store/users'
+import { useUserStore } from '@/store/users/users'
 
 import UserSummary from './UserSummary.vue'
-import FormComponent from './FormComponent.vue'
+import AddForm from './AddForm.vue'
+import EditForm from './EditForm.vue'
 import SearchComponent from './SearchComponent.vue'
 import TableComponent from './TableComponent.vue'
 import MobileComponent from './MobileComponent.vue'

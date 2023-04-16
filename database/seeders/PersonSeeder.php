@@ -24,7 +24,8 @@ class PersonSeeder extends Seeder
           'bplace_id' => 1,
           'sex' => true,
           'address_id' => 1,
-          'address' => '[address]'
+          'address' => '[address]',
+          'mobile' => 9978885555,
         ],
         [
           'id' => 2,
@@ -37,7 +38,8 @@ class PersonSeeder extends Seeder
           'bplace_id' => 1,
           'sex' => true,
           'address_id' => 1,
-          'address' => '[address]'
+          'address' => '[address]',
+          'mobile' => 9978885555,
         ],
         [
           'id' => 3,
@@ -50,7 +52,8 @@ class PersonSeeder extends Seeder
           'bplace_id' => 1,
           'sex' => true,
           'address_id' => 1,
-          'address' => '[address]'
+          'address' => '[address]',
+          'mobile' => 9978885555,
         ],
         [
           'id' => 4,
@@ -63,7 +66,8 @@ class PersonSeeder extends Seeder
           'bplace_id' => 1,
           'sex' => true,
           'address_id' => 1,
-          'address' => '[address]'
+          'address' => '[address]',
+          'mobile' => 9978885555,
         ],
         [
           'id' => 5,
@@ -76,7 +80,8 @@ class PersonSeeder extends Seeder
           'bplace_id' => 1,
           'sex' => true,
           'address_id' => 1,
-          'address' => '[address]'
+          'address' => '[address]',
+          'mobile' => 9978885555,
         ],
         [
           'id' => 6,
@@ -89,7 +94,8 @@ class PersonSeeder extends Seeder
           'bplace_id' => 1,
           'sex' => true,
           'address_id' => 1,
-          'address' => '[address]'
+          'address' => '[address]',
+          'mobile' => 9978885555,
         ],
         [
           'id' => 7,
@@ -102,7 +108,8 @@ class PersonSeeder extends Seeder
           'bplace_id' => 1,
           'sex' => true,
           'address_id' => 1,
-          'address' => '[address]'
+          'address' => '[address]',
+          'mobile' => 9978885555,
         ],
       ];
 
@@ -117,12 +124,13 @@ class PersonSeeder extends Seeder
           'lastName' => $faker->lastName,
           'firstName'=> $faker->firstName,
           'midName'  => $faker->randomLetter,
-          'extName'  => 'Jr.',
+          'extName'  => 'Jr',
           'bday'     => '2022-02-02',
-          'bplace_id'=> 1,
+          'bplace_id'=> $idx,
           'sex'      => true,
-          'address_id' => 1,
-          'address'  => '[address]',
+          'address_id' => $idx,
+          'address'  => $faker->lastName,
+          'mobile' => 9978885555,
         ]);
       }
     }

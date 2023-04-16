@@ -64,7 +64,7 @@
 </template>
 
 <script setup>
-import { useUserStore } from '@/store/users'
+import { useUserStore } from '@/store/users/users'
 import moment from 'moment'
 import { RoleToDesc } from '@/helpers/converter';
 import { useAuthStore } from '@/store/auth/auth'

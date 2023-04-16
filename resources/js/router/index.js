@@ -38,11 +38,21 @@ const router = createRouter({
         title: "Dashboard",
       },
     },
+    // NOTE PLANS
+    {
+      path: "/plans",
+      name: "plans",
+      component: () => import("@/views/plans/PlanPage.vue"),
+      meta: {
+        title: "Plans' Management",
+        role: 2, //admin
+      },
+    },
     // NOTE USERS
     {
       path: "/users/list",
       name: "users-list",
-      component: () => import("@/views/users/UsersPage.vue"),
+      component: () => import("@/views/users/users/UsersPage.vue"),
       meta: {
         title: "Users' Management",
         role: 2, //admin
@@ -51,7 +61,7 @@ const router = createRouter({
     {
       path: "/users/roles",
       name: "users-roles",
-      component: () => import("@/views/users/RolePage.vue"),
+      component: () => import("@/views/users/roles/RolePage.vue"),
       meta: {
         title: "User's Roles",
         role: 2, //admin

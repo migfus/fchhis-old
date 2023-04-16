@@ -46,11 +46,18 @@ export const RoleToID = (id) => {
 };
 
 export const FullNameConvert = (last, first, mid, ext) => {
-  return `${last}, ${first} ${mid.charAt(0)}.`
+  if(mid) {
+    return `${last}, ${first} ${mid.charAt(0)}.`
+  }
+  return `${last}, ${first}`
 }
 
 export const AgeConverter = (bday) => {
   return moment().diff(bday, 'years');
+}
+
+export const NumberAddComma = (num)  => {
+  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
 // SECTION ADDRESS

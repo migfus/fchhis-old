@@ -13,9 +13,15 @@ return new class extends Migration
     {
         Schema::create('plans', function (Blueprint $table) {
             $table->id();
+            $table->integer('user_id');
+            $table->string('avatar')->nullable();
             $table->string('name');
-            $table->string('description');
-            $table->decimal('amount', 6, 2);
+            $table->tinyInteger('age_start');
+            $table->tinyInteger('age_end');
+            $table->text('desc')->nullable();
+            $table->decimal('contract_price', 7, 2);
+            $table->decimal('spot_pay', 7, 2);
+            $table->decimal('spot_service', 7, 2);
             $table->timestamps();
         });
     }

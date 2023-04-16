@@ -14,6 +14,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/avatar', 'ChangeAvatar');
   });
 
-  Route::apiResource('/users', \App\Http\Controllers\UserController::class)->only(['index', 'destroy']);
+  Route::apiResource('/users', \App\Http\Controllers\UserController::class)->only(['index', 'destroy', 'store', 'update']);
   Route::apiResource('/dashboard', \App\Http\Controllers\DashboardController::class)->only(['index']);
+  Route::apiResource('/plan', \App\Http\Controllers\PlanController::class)->only(['index']);
+
 });

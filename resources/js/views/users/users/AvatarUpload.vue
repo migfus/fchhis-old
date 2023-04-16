@@ -38,7 +38,7 @@
 import VuePictureCropper, { cropper } from 'vue-picture-cropper'
 import { ref } from 'vue';
 import axios from 'axios';
-import { useUserStore } from '@/store/users'
+import { useUserStore } from '@/store/users/users'
 
 const $user = useUserStore();
 

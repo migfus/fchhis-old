@@ -4,16 +4,15 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Person;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
   private function ReturnDefault($role) {
     return ['status' => true, 'message' => 'success', 'role' => $role];
-  }
-
-  private function ValidateErrorResponse($data = '') {
-    return response()->json(['status' => false, 'message' => 'Invalid Input', 'data' => $data], 401);
   }
 
   private function UnauthorizedResponse() {
@@ -49,10 +48,22 @@ class UserController extends Controller
     return $this->UnauthorizedResponse();
   }
 
+  private function AvatarUpload($req) {
+    $image = $req->avatar;
+    list($type, $image) = explode(';', $image);
+    list(, $image) = explode(',', $image);
+
+    $image = base64_decode($image);
+    $imageName = time(). '.jpg';
+    $location = '/uploads/'.$imageName;
+    file_put_contents('uploads/'.$imageName, $image);
+
+    return $location;
+  }
+
   public function index(Request $req) {
     if($req->count)
       return $this->getCount($req);
-
 
     $val = Validator::make($req->all(), [
       'role' => 'required|numeric',
@@ -62,7 +73,7 @@ class UserController extends Controller
     ]);
 
     if($val->fails()) {
-      return $this->ValidateErrorResponse();
+      return response()->json(['status' => false, 'message' => 'Invalid Input', 'errors' => $val->errors() ], 401);
     }
 
     $user = User::select('*');
@@ -76,27 +87,28 @@ class UserController extends Controller
       // NOTE DATE RANGE FILTER
       if((bool)strtotime($req->start) OR (bool)strtotime($req->end)) {
         if((bool)strtotime($req->start)) {
-          $user->where('created_at', '>=', $req->start)->with('person');
+          $user->where('created_at', '>=', $req->start);
         }
         if((bool)strtotime($req->end)) {
-          $user->where('created_at', '<=', $req->end)->with('person');
+          $user->where('created_at', '<=', $req->end);
         }
+        $user->with(['person.user', 'plan']);
       }
       else {
         // NOTE SEARCH FILTER
         switch($req->filter) {
           case 'email':
-            $user->where('email', 'LIKE', '%'.$req->search.'%')->with('person'); // OK No whereRelation
+            $user->where('email', 'LIKE', '%'.$req->search.'%')->with(['person.user', 'plan']); // OK No whereRelation
             break;
           case 'address':
-            $user->with('person')
-              ->whereHas('person', function($q) use ($req) {
+            $user->with(['person.user', 'plan'])
+              ->whereHas('person.user', function($q) use ($req) {
                 $q->where('address', 'LIKE', '%'.$req->search.'%');
               });
             break;
           default:
-            $user->with('person')
-              ->whereHas('person', function($q) use ($req) {
+            $user->with(['person.user', 'plan'])
+              ->whereHas('person.user', function($q) use ($req) {
                 $q->where('lastName', 'LIKE', '%'.$req->search.'%')
                   ->orWhere('firstName', 'LIKE', '%'.$req->search.'%')
                   ->orWhere('midName', 'LIKE', '%'.$req->search.'%');
@@ -111,12 +123,69 @@ class UserController extends Controller
     return response()->json(['status' => false, 'message' => 'Logout'], 401);
   }
 
-  /**
-   * Store a newly created resource in storage.
-   */
-  public function store(Request $request)
-  {
-      //
+  public function store(Request $req) {
+    if($req->user()->role == 2) {
+
+      $val = Validator::make($req->all(), [
+        'avatar'   => '',
+        'username' => 'required|unique:users',
+        'email'    => 'required|email|unique:users',
+        'password' => 'required|min:8',
+        'mobile'   => 'required',
+        'notifyMobile' => 'required',
+        'role'     => 'required',
+        'plan'     => 'required',
+
+        'lastName' => 'required',
+        'firstName'=> 'required',
+        'midName'  => '',
+        'extName'  => '',
+        'sex'      => 'required',
+        'bday'     => 'required',
+        'bplaceID' => 'required',
+        'addressID'=> 'required',
+        'address'  => 'required',
+      ]);
+
+      if($val->fails()) {
+        return response()->json(['status' => false, 'message' => 'Invalid Input', 'errors' => $val->errors() ], 401);
+      }
+
+      $person = Person::create([
+        'created_by_user_id' => $req->user()->id,
+        'lastName'  => $req->lastName,
+        'firstName' => $req->firstName,
+        'midName'   => $req->midName,
+        'extName'   => $req->extName,
+        'bday'      => $req->bday,
+        'bplace_id' => $req->bplaceID,
+        'sex'       => $req->sex,
+        'address_id'=> $req->bplaceID,
+        'address'   => $req->address,
+        'mobile'    => $req->mobile,
+      ]);
+
+      $avatar = null;
+
+      if($req->avatar != '') {
+        $avatar = $this->AvatarUpload($req);
+      }
+
+      $user = User::create([
+        'person_id'=> $person->id,
+        'plan_id'  => $req->plan,
+        'username' => $req->username,
+        'email'    => $req->email,
+        'password' => Hash::make($req->password),
+        'avatar'   => $avatar,
+        'role'     => $req->role,
+        'notify_mobile' => $req->notifyMobile,
+      ]);
+
+      return response()->json([...$this->ReturnDefault($req->user()->role)]);
+    }
+
+    $this->UnauthorizedResponse();
   }
 
   /**
@@ -127,12 +196,67 @@ class UserController extends Controller
       //
   }
 
-  /**
-   * Update the specified resource in storage.
-   */
-  public function update(Request $request, string $id)
-  {
-      //
+  public function update(Request $req, string $id) {
+    if($req->user()->role == 2) {
+
+      $val = Validator::make($req->all(), [
+        'avatar'   => '',
+        'username' => ['required', Rule::unique('users', 'username')->ignore($req->id)],
+        'email'    => ['required', 'email', Rule::unique('users', 'email')->ignore($req->id)],
+        'password' => '',
+        'person.mobile' => 'required',
+        'notify_mobile' => 'required',
+        'role'     => 'required',
+        'plan_id'  => 'required',
+
+        'person.lastName'  => 'required',
+        'person.firstName' => 'required',
+        'person.midName'   => '',
+        'person.extName'   => '',
+        'person.sex'       => 'required',
+        'person.bday'      => 'required',
+        'person.bplace_id' => 'required',
+        'person.address_id'=> 'required',
+        'person.address'   => 'required',
+      ]);
+
+      if($val->fails()) {
+        return response()->json(['status' => false, 'message' => 'Invalid Input', 'errors' => $val->errors() ], 401);
+      }
+
+      $person = Person::where('id', $req->person_id)->update([
+        'lastName'  => $req->person['lastName'],
+        'firstName' => $req->person['firstName'],
+        'midName'   => $req->person['midName'],
+        'extName'   => $req->person['extName'],
+        'bday'      => $req->person['bday'],
+        'bplace_id' => $req->person['bplace_id'],
+        'sex'       => $req->person['sex'],
+        'address_id'=> $req->person['address_id'],
+        'address'   => $req->person['address'],
+        'mobile'    => $req->person['mobile'],
+      ]);
+
+      $user = User::where('id', $id)->update([
+        'plan_id'  => $req->plan_id,
+        'username' => $req->username,
+        'email'    => $req->email,
+        'role'     => $req->role,
+        'notify_mobile' => $req->notify_mobile,
+      ]);
+
+      if($req->password) {
+        User::where('id', $id)->update(['password' => Hash::make($req->password)]);
+      }
+
+      if(!User::where('id', $id)->where('avatar', $req->avatar)->first()) {
+        User::where('id', $id)->update(['avatar' => $this->AvatarUpload($req)]);
+      }
+
+      return response()->json([...$this->ReturnDefault($req->user()->role),]);
+    }
+
+    return $this->UnauthorizedResponse();
   }
 
   public function destroy(string $id, Request $req) {

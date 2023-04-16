@@ -76,13 +76,22 @@ const isAdmin = computed(() => {
         icon: 'fa-tasks',
         link: { name: 'users-roles' }
       },
+
+      {
+        name: 'ADMIN',
+      },
+      {
+        name: 'Plans',
+        icon: 'fa-map-pin',
+        link: { name: 'plans' }
+      },
     ]
   }
   return []
 })
 
 const menu = ref([
-  // DASHBOARD
+  // NOTE DASHBOARD
   {
     name: 'DASHBOARD',
   },
