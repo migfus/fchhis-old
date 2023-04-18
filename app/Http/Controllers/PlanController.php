@@ -25,7 +25,10 @@ class PlanController extends Controller
   }
 
   public function PlanCount($req) {
-    return response()->json([...$this->ReturnDefault($req->user()->role), 'data' => Plan::get()]);
+    return response()->json([
+      ...$this->ReturnDefault($req->user()->role),
+      'data' => Plan::withCount(['users'])->orderBy('users_count', 'DESC')->get()
+    ]);
   }
 
   public function index(Request $req, Plan $plan)

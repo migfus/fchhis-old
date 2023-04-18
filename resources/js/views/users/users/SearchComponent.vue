@@ -43,6 +43,7 @@
                 <option value="name">Name</option>
                 <option value="email">Email</option>
                 <option value="address">Address</option>
+                <option value="plans">Plans</option>
               </select>
             </div>
           </div>

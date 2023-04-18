@@ -1,10 +1,12 @@
-import { ref, reactive } from 'vue'
+import { ref, reactive, watch } from 'vue'
 import { defineStore } from 'pinia'
 import axios from 'axios'
 import { useToast } from 'vue-toastification'
+import { useRoute } from 'vue-router'
 
 export const useUserStore = defineStore('users', () => {
   const $toast = useToast();
+  const $route = useRoute();
 
   const list = ref([])
   const counts = ref([])
@@ -13,10 +15,10 @@ export const useUserStore = defineStore('users', () => {
   })
   const params = reactive({
     role: 7,
-    search: '',
+    search: $route.query.search || '',
     start: '',
     end: '',
-    filter: 'name',
+    filter: $route.query.filter || 'name',
   })
   const config = reactive({
     tableView: false,
@@ -173,6 +175,7 @@ export const useUserStore = defineStore('users', () => {
     });
     ChangeForm('')
   }
+
 
 
   return {

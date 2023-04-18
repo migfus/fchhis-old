@@ -2,9 +2,9 @@
   <div class="row">
     <div class="col-lg-6 col-6">
 
-      <div v-if="data.users" class="small-box bg-info">
+      <div v-if="$dash.content.usersCount" class="small-box bg-info">
         <div class="inner">
-          <h3><i class="fas fa-users mr-2"></i>{{ data.users }}</h3>
+          <h3><i class="fas fa-users mr-2"></i>{{ $dash.content.usersCount }}</h3>
           <p>Users</p>
         </div>
         <div class="icon">
@@ -27,9 +27,9 @@
 
     <div class="col-lg-6 col-6">
 
-      <div class="small-box bg-success">
+      <div v-if="$dash.content.transactionCount" class="small-box bg-success">
         <div class="inner">
-          <h3>₱ 10,000 </h3>
+          <h3>₱ {{ $dash.content.transactionCount }} </h3>
           <p>Monthly Income</p>
         </div>
         <div class="icon">
@@ -44,24 +44,7 @@
 </template>
 
 <script setup>
-import { reactive, onMounted } from 'vue'
-import axios from 'axios'
+import { useDashboardStore } from '@/store/system/dashboard';
 
-
-const data = reactive({})
-
-async function GetAPI() {
-  try {
-    const { data: { users } } = await axios.get('/api/dashboard')
-    data.users = users
-  }
-  catch (e) {
-    console.log({ e })
-  }
-}
-
-onMounted(() => {
-  GetAPI()
-});
-
+const $dash = useDashboardStore();
 </script>

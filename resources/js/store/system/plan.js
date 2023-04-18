@@ -9,6 +9,8 @@ export const usePlanStore = defineStore('plan', ()=> {
     loading: false,
     loadingCount: false,
     notify: false,
+    enableDelete: false,
+    notify: sessionStorage.getItem('plan-notify') ? true : false
   })
   const params = reactive({
     search: '',
@@ -41,7 +43,15 @@ export const usePlanStore = defineStore('plan', ()=> {
 
   function RemoveNotify() {
     config.notify = true
+    sessionStorage.setItem('plan-notify', true);
   }
 
-  return { content, count, config, params, GetAPI, GetCount, RemoveNotify}
+  function ToggleEnableDelete() {
+    if(confirm('Deleting plans is not recommended. Are you sure you want to delete?')) {
+      config.enableDelete = !config.enableDelete
+
+    }
+  }
+
+  return { content, count, config, params, GetAPI, GetCount, RemoveNotify, ToggleEnableDelete}
 })

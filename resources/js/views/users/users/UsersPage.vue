@@ -4,6 +4,9 @@
     <EditForm v-if="$user.config.form == 'update'" />
     <AddForm v-else-if="$user.config.form" />
 
+    <!-- NOTE REPORT -->
+    <ReportForm />
+
     <UserSummary />
 
     <!-- NOTE SEARCH -->
@@ -31,6 +34,7 @@ import SearchComponent from './SearchComponent.vue'
 import TableComponent from './TableComponent.vue'
 import MobileComponent from './MobileComponent.vue'
 import PaginationComponent from './PaginationComponent.vue'
+import ReportForm from './ReportForm.vue'
 
 const $user = useUserStore();
 </script>

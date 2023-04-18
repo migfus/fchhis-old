@@ -44,7 +44,15 @@
           <div class="col-12">
             <button class="btn btn-success float-right">
               <i class="fas fa-plus-square d-inline d-xl-none"></i>
-              <span class="d-none d-xl-inline">Add User</span>
+              <span class="d-none d-xl-inline">Add Plan</span>
+            </button>
+
+            <button v-if="$plan.config.enableDelete" @click="$plan.ToggleEnableDelete"
+              class="btn btn-success mr-1 float-right">
+              Disable Delete
+            </button>
+            <button v-else @click="$plan.ToggleEnableDelete" class="btn btn-danger mr-1 float-right">
+              Enable Delete
             </button>
 
             <button v-if="$plan.config.loading" class="btn card-loader-content card-loader mr-1 float-right"

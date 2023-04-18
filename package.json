@@ -22,6 +22,7 @@
         "lodash": "^4.17.21",
         "moment": "^2.29.4",
         "pinia": "^2.0.33",
+        "sheetjs": "^2.0.0",
         "vee-validate": "^4.8.4",
         "vue": "^3.2.36",
         "vue-chartjs": "^5.2.0",
@@ -31,6 +32,8 @@
         "vue-slick-carousel": "^1.0.6",
         "vue-toastification": "^2.0.0-rc.5",
         "vue3-carousel": "^0.3.0",
+        "vue3-excel-editor": "^1.0.17",
+        "xlsx": "https://cdn.sheetjs.com/xlsx-0.19.2/xlsx-0.19.2.tgz",
         "yup": "^1.0.2"
     }
 }

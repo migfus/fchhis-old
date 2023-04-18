@@ -4,6 +4,6 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import ResponsiveCard from './ResponsiveCard.vue';
 </script>

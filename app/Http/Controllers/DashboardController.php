@@ -7,14 +7,78 @@ use App\Models\User;
 
 class DashboardController extends Controller
 {
-  private function returnDefault($role) {
+  private function ReturnDefault($role) {
     return ['status' => true, 'message' => 'success', 'role' => $role];
+  }
+
+  private function RolesData() {
+    $data = [
+      [
+        'id' => 6,
+        'icon' => 'fa-child',
+        'color' => 'success',
+        'name' => 'Client',
+        'count' => User::where('role', 6)->count(),
+      ],
+      [
+        'id' => 5,
+        'icon' => 'fa-user-edit',
+        'color' => 'info',
+        'name' => 'Staff',
+        'count' => User::where('role', 5)->count(),
+      ],
+      [
+        'id' => 4,
+        'icon' => 'fa-handshake',
+        'color' => 'purple',
+        'name' => 'Agent',
+        'count' => User::where('role', 4)->count(),
+      ],
+      [
+        'id' => 3,
+        'icon' => 'fa-tasks',
+        'color' => 'orange',
+        'name' => 'Manager',
+        'count' => User::where('role', 3)->count(),
+      ],
+      [
+        'id' => 2,
+        'icon' => 'fa-crown',
+        'color' => 'warning',
+        'name' => 'Admin',
+        'count' => User::where('role', 2)->count(),
+      ],
+      [
+        'id' => 1,
+        'icon' => 'fa-ban',
+        'color' => 'danger',
+        'name' => 'Banned',
+        'count' => User::where('role', 1)->count(),
+      ],
+      [
+        'id' => 0,
+        'icon' => 'fa-moon',
+        'color' => 'secondary',
+        'name' => 'Inactive',
+        'count' => User::where('role', 0)->count(),
+      ],
+    ];
+
+    return $data;
   }
 
   public function index(Request $req)
   {
-    if($req->user()->role) {
-      return response()->json([...$this->returnDefault($req->user()->role), 'users' => User::count()], 200);
+    if($req->user()->role == 2) {
+      return response()->json([
+        ...$this->ReturnDefault($req->user()->role),
+        'data' => [
+          'usersCount' => User::count(),
+          'transactionCount' => 10000,
+          'newUsers' => User::orderBy('id', 'DESC')->limit(5)->get(),
+          'rolesChart' => $this->RolesData(),
+        ]
+      ], 200);
     }
 
     return response()->json(['status' => false, 'message' => 'Logout'], 401);

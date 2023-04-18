@@ -106,6 +106,12 @@ class UserController extends Controller
                 $q->where('address', 'LIKE', '%'.$req->search.'%');
               });
             break;
+          case 'plans':
+            $user->with(['person.user', 'plan'])
+              ->whereHas('plan', function($q) use ($req) {
+                $q->where('name', 'LIKE', '%'.$req->search.'%');
+              });
+            break;
           default:
             $user->with(['person.user', 'plan'])
               ->whereHas('person.user', function($q) use ($req) {

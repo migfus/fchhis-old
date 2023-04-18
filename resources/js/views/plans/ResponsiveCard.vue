@@ -8,15 +8,17 @@
           <div class="row">
             <div class="col-12">
               <div class="card-tools float-right">
-                <button @click="$user.Delete(row.id, idx)" class="btn btn-danger btn-sm float-right">
+                <button :disabled="!$plan.config.enableDelete" @click="$user.Delete(row.id, idx)"
+                  class="btn btn-danger btn-sm float-right">
                   Remove
                 </button>
                 <button @click="$user.Update(row)" class="btn btn-secondary btn-sm float-right mr-1">
                   Edit
                 </button>
-                <button class="btn btn-secondary btn-sm float-right mr-1">
+                <RouterLink :to="{ name: 'users-list', query: { search: row.name, filter: 'plans' } }"
+                  class="btn btn-secondary btn-sm float-right mr-1">
                   Clients
-                </button>
+                </RouterLink>
               </div>
 
               <img v-if="row.avatar" :src="row.avatar" style="height: 2.5em; width: 2.5em"

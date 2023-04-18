@@ -48,5 +48,16 @@ export const useRoleStore = defineStore('role', () => {
     },
   ])
 
-  return { content}
+  async function RoleGetAPI() {
+    try {
+      let { data : {data}} = await axios.get('/api/role')
+      content.value = data
+    }
+    catch(e) {
+      console.log({e})
+    }
+  }
+
+
+  return { content,  RoleGetAPI}
 })

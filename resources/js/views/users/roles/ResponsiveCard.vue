@@ -8,44 +8,48 @@
           <div class="row">
             <div class="col-12">
               <div class="card-tools float-right">
-                <button class="btn btn-secondary btn-sm float-right mr-1">
-                  Clients
-                </button>
+                <strong>{{ row.count }}</strong> Users
               </div>
 
-              <!-- <img v-if="row.avatar" :src="row.avatar" style="height: 2.5em; width: 2.5em"
-                class="img-circle float-left mr-3"> -->
-              <!-- <div> <strong> {{ row.name }} </strong> </div> -->
-
-              <!-- <div>{{ moment(row.created_at).local().format('MMMD, YYYY') }}</div> -->
+              <div :class="`d-flex justify-content-center align-items-center img-circle float-left mr-3 bg-${row.color}`"
+                style="width: 40px; height: 40px">
+                <i :class="`fas ${row.icon}`"></i>
+              </div>
+              <div> <strong> {{ row.name }} </strong> </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="card-body">
-        <div class="row mb-2">
-          <div class="col-12">
-            <div>Description: </div>
-            <!-- <strong>{{ row.desc ? row.desc : 'N/A' }}</strong> -->
-            <hr />
-          </div>
-          <div class="col-12">
-            <div>Requirements: </div>
-            <!-- <strong>{{ `${row.age_start} - ${row.age_end} Years Old` }}</strong> -->
-            <hr class="mt-1" />
-          </div>
-          <div class="col-12">
-            <!-- <div>Contract Price: <strong>{{ NumberAddComma(row.contract_price) }}</strong></div>
-            <div>Spot Payment: <strong>{{ NumberAddComma(row.spot_pay) }}</strong></div>
-            <div>Spot Service: <strong>{{ NumberAddComma(row.spot_service) }}</strong></div>
-            <div>Annual: <strong>{{ NumberAddComma(row.contract_price / 5) }}</strong></div>
-            <div>Semi-Annual: <strong>{{ NumberAddComma(row.contract_price / 10) }}</strong></div>
-            <div>Quarterly: <strong>[12,089]</strong></div>
-            <div>Monthly: <strong>[12,089]</strong></div> -->
-          </div>
-
-        </div>
+      <div class="card-body table-responsive p-0">
+        <table class="table table-striped table-valign-middle">
+          <thead>
+            <tr>
+              <th>Username</th>
+              <th>Email</th>
+              <th>More</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="row2 in row.top" :key="row2.id">
+              <td>
+                <img :src="row2.avatar" alt="Product 1" class="img-circle img-size-32 mr-2">
+                {{ row2.username }}
+              </td>
+              <td>{{ FullNameConvert(row2.email) }}</td>
+              <td>
+                <a href="#" class="text-muted">
+                  <i class="fas fa-search"></i>
+                </a>
+              </td>
+            </tr>
+            <tr v-if="row.top">
+              <td>
+                <RouterLink :to="{ name: 'users-list' }">More Users</RouterLink>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
 
     </div>
@@ -53,9 +57,13 @@
 </template>
 
 <script setup>
+import { onMounted } from 'vue';
 import { useRoleStore } from '@/store/users/role';
-import moment from 'moment';
-import { NumberAddComma } from '@/helpers/converter'
+import { FullNameConvert } from '@/helpers/converter'
 
 const $role = useRoleStore();
+
+onMounted(() => {
+  $role.RoleGetAPI()
+});
 </script>

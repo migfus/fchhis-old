@@ -17,28 +17,28 @@
   <div v-else class="col-12">
     <Carousel v-bind="config.bind" :breakpoints="config.breakpoints">
 
-      <Slide v-for="row in $plan.count" :key="row.name">
+      <Slide v-for="(row, idx,) in $plan.count" :key="row.name">
 
         <div class="info-box mb-0 mr-2" style="height: 100px">
           <span :class="`info-box-icon elevation-1`"><img :src="row.avatar" /></span>
           <div class="info-box-content">
             <span class="info-box-text text-bold">{{ row.name }}</span>
-            <span class="info-box-text text-bold">{{ 100 - row.id }}</span>
+            <span class="info-box-text text-bold">{{ row.users_count }}</span>
             <!-- <span class="info-box-number card-loader-content" style="height: 1em">&nbsp;</span> -->
           </div>
 
           <div class="ribbon-wrapper">
-            <div v-if="row.id == 1" class="ribbon bg-warning">
-              {{ Ranking(row.id) }}
+            <div v-if="idx == 0" class="ribbon bg-warning">
+              {{ Ranking(idx + 1) }}
             </div>
-            <div v-else-if="row.id == 2" class="ribbon bg-white">
-              {{ Ranking(row.id) }}
+            <div v-else-if="idx == 1" class="ribbon bg-white">
+              {{ Ranking(idx + 1) }}
             </div>
-            <div v-else-if="row.id == 3" class="ribbon bg-orange">
-              {{ Ranking(row.id) }}
+            <div v-else-if="idx == 2" class="ribbon bg-orange">
+              {{ Ranking(idx + 1) }}
             </div>
             <div v-else class="ribbon bg-info">
-              {{ Ranking(row.id) }}
+              {{ Ranking(idx + 1) }}
             </div>
           </div>
         </div>
