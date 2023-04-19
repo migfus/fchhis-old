@@ -40,11 +40,11 @@ const router = createRouter({
     },
     // NOTE TRANSACTIONS
     {
-      path: "/transaction/list",
-      name: "transaction-list",
-      component: () => import("@/views/transaction/TransactionPage.vue"),
+      path: "/transactions-all",
+      name: "transactions-all",
+      component: () => import("@/views/transaction/AllTransactionPage.vue"),
       meta: {
-        title: "Transaction's Management",
+        title: "All Transactions",
         role: 2, //admin
       },
     },

@@ -1,7 +1,7 @@
 <template>
   <AdminSection />
   <UserSummary v-if="$dashboard.content.rolesChart" />
-  <TopPerformer />
+  <TopPerformer v-if="$dashboard.content.rolesChart" />
 </template>
 
 <script setup>

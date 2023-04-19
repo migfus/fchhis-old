@@ -8,10 +8,17 @@ use App\Models\Transaction;
 class TransactionController extends Controller
 {
 
-    public function index()
-    {
-      return $this->test();
+  public function index(Request $req)
+  {
+    if($req->user()->role == 2) {
+      return response()->json([
+        ...$this->G_ReturnDefault($req),
+        'data' => Transaction::with(['client.person', 'staff.person', 'agent.person', 'plan'])->paginate(10),
+      ]);
     }
+
+    return $this->G_UnauthorizedResponse();
+  }
 
     /**
      * Store a newly created resource in storage.

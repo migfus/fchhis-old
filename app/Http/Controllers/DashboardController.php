@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Transaction;
+use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
@@ -63,6 +65,65 @@ class DashboardController extends Controller
     return $data;
   }
 
+  private function MonthlyIncome() {
+    return Transaction::where('created_at', '>=', Carbon::now()->startOfMonth())
+      ->where('created_at', '<=', Carbon::now())
+      ->sum('amount');
+  }
+
+  private function SemiAnnualIncome($past = false) {
+    $data = [];
+    for($i = 0; $i < 6; $i++) {
+      if($past) {
+        $data[] = [
+          'date' => Carbon::now()->subMonths($i)->subYears(1)->format('F'),
+          'amount' => Transaction::where('created_at', '>=', Carbon::now()->startOfMonth()->subMonths($i)->subYears(1))
+            ->where('created_at', '<=', Carbon::now()->endOfMonth()->subMonths($i)->subYears(1))
+            ->sum('amount'),
+        ];
+      }
+      else {
+        $data[] = [
+          'date' => Carbon::now()->subMonths($i)->format('F'),
+          'amount' => Transaction::where('created_at', '>=', Carbon::now()->startOfMonth()->subMonths($i))
+            ->where('created_at', '<=', Carbon::now()->endOfMonth()->subMonths($i))
+            ->sum('amount'),
+        ];
+      }
+    }
+    return $data;
+  }
+
+  private function SemiAnnualTotalIncome() {
+    return [
+      'current' => Transaction::where('created_at', '<=', Carbon::now()->endOfMonth())
+      ->where('created_at', '>=', Carbon::now()->startOfMonth()->subMonths(6))->sum('amount'),
+      'past' => Transaction::where('created_at', '<=', Carbon::now()->endOfMonth()->subYears(1))
+      ->where('created_at', '>=', Carbon::now()->startOfMonth()->subMonths(6)->subYears(1))->sum('amount'),
+    ];
+  }
+
+  private function AnnualIncome() {
+    for($i = 0; $i < 12; $i++) {
+      $data[] = [
+        'date' => Carbon::now()->subMonths($i)->format('F'),
+        'amount' => Transaction::where('created_at', '>=', Carbon::now()->startOfMonth()->subMonths($i))
+          ->where('created_at', '<=', Carbon::now()->endOfMonth()->subMonths($i))
+          ->sum('amount'),
+      ];
+    }
+    return $data;
+  }
+
+  private function TopPerformer() {
+    return User::with(['person'])
+      ->withSum('agent_transactions', 'amount')
+      ->withCount('agent_transactions')
+      ->orderBy('agent_transactions_sum_amount', 'DESC')
+      ->limit(6)
+      ->get();
+  }
+
   public function index(Request $req)
   {
     if($req->user()->role == 2) {
@@ -70,45 +131,18 @@ class DashboardController extends Controller
         ...$this->G_ReturnDefault($req),
         'data' => [
           'usersCount' => User::count(),
-          'transactionCount' => 10000,
+          'transactionCount' => $this->MonthlyIncome(),
           'newUsers' => User::orderBy('id', 'DESC')->limit(5)->get(),
           'rolesChart' => $this->RolesData(),
+          'currentSemiAnnual' => $this->SemiAnnualIncome(),
+          'pastSemiAnnual' => $this->SemiAnnualIncome('past'),
+          'semiAnnualTotalIncome' => $this->SemiAnnualTotalIncome(),
+          'annualIncome' => $this->AnnualIncome(),
+          'topPerformer' => $this->TopPerformer(),
         ]
       ], 200);
     }
 
     return $this->G_UnauthorizedResponse();
-  }
-
-  /**
-   * Store a newly created resource in storage.
-   */
-  public function store(Request $request)
-  {
-      //
-  }
-
-  /**
-   * Display the specified resource.
-   */
-  public function show(string $id)
-  {
-      //
-  }
-
-  /**
-   * Update the specified resource in storage.
-   */
-  public function update(Request $request, string $id)
-  {
-      //
-  }
-
-  /**
-   * Remove the specified resource from storage.
-   */
-  public function destroy(string $id)
-  {
-      //
   }
 }

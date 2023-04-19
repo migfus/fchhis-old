@@ -75,12 +75,14 @@
         <div class="card-body">
           <div class="d-flex">
             <p class="d-flex flex-column">
-              <span class="text-lg">₱ 82,000.00 </span>
+              <span class="text-lg">₱ {{ NumberAddComma($dash.content.semiAnnualTotalIncome.current) }} </span>
               <span>Current 6 months</span>
             </p>
             <p class="ml-auto d-flex flex-column text-right">
               <span class="text-success">
-                <i class="fas fa-arrow-up"></i> 12.5%
+                <i class="fas fa-arrow-up"></i>
+                {{ GetPercentage($dash.content.semiAnnualTotalIncome.current,
+                  $dash.content.semiAnnualTotalIncome.past) }} %
               </span>
               <span class="text-muted">Last 6 Months</span>
             </p>
@@ -115,6 +117,7 @@ import {
 import { Line, Doughnut } from 'vue-chartjs'
 import moment from 'moment'
 import { RoleToDesc } from '@/helpers/converter'
+import { NumberAddComma, GetPercentage } from '@/helpers/converter'
 
 const $dash = useDashboardStore();
 
@@ -141,22 +144,25 @@ const options = ref({
   bezierCurve: true,
 })
 
+$dash.content.currentSemiAnnual = $dash.content.currentSemiAnnual.reverse()
+$dash.content.pastSemiAnnual = $dash.content.pastSemiAnnual.reverse()
+
 const lineData = ref({
-  labels: [...months.value.map((v) => moment(v).format('MMM'))],
+  labels: [...$dash.content.currentSemiAnnual.map(m => m.date.slice(0, 3))],
 
   datasets: [
     {
       label: 'Current',
       backgroundColor: '#1591A5',
       borderColor: '#17A2B8',
-      data: [40, 39, 10, 40, 39, 80, 40],
+      data: [...$dash.content.currentSemiAnnual.map(m => m.amount)],
       tension: .2,
     },
     {
       label: 'Last Year',
       backgroundColor: '#E5AD06',
       borderColor: '#FFC107',
-      data: [40, 39, 20, 20, 30, 50, 20],
+      data: [...$dash.content.pastSemiAnnual.map(m => m.amount)],
       tension: .2,
     }
   ]

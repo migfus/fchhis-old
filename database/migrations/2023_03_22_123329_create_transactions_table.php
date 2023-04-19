@@ -13,10 +13,11 @@ return new class extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
-            $table->string('referral_id')->unique();
-            $table->integer('client_id')->unsigned(); // user_id
-            $table->integer('plan_id')->unsigned();
-            $table->decimal('amount', 6, 2);
+            $table->integer('agent_id'); // refered agent
+            $table->integer('staff_id'); // staff
+            $table->integer('client_id'); // user_id
+            $table->integer('plan_id');
+            $table->decimal('amount', 8, 2);
             $table->timestamps();
         });
     }

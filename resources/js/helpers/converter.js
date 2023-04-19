@@ -108,3 +108,7 @@ export const CityIDToProvinceID = (id) => {
   }
   return null;
 };
+
+export const GetPercentage = (num1, num2) => {
+  return (((num1 - num2) / num1) * 100).toFixed(2);
+}

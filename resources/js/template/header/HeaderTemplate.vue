@@ -67,9 +67,9 @@ const isAdmin = computed(() => {
         name: 'TRANSACTIONS',
       },
       {
-        name: 'Transactions',
-        icon: 'fa-map-pin',
-        link: { name: 'transaction-list' }
+        name: 'All Transactions',
+        icon: 'fa-list-ol',
+        link: { name: 'transactions-all' }
       },
 
       {

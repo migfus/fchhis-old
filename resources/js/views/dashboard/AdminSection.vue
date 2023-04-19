@@ -29,7 +29,7 @@
 
       <div v-if="$dash.content.transactionCount" class="small-box bg-success">
         <div class="inner">
-          <h3>₱ {{ $dash.content.transactionCount }} </h3>
+          <h3>₱ {{ NumberAddComma($dash.content.transactionCount) }} </h3>
           <p>Monthly Income</p>
         </div>
         <div class="icon">
@@ -45,6 +45,7 @@
 
 <script setup>
 import { useDashboardStore } from '@/store/system/dashboard';
+import { NumberAddComma } from '@/helpers/converter'
 
 const $dash = useDashboardStore();
 </script>
