@@ -22,6 +22,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
   Route::apiResource('/users', UserController::class)->only(['index', 'destroy', 'store', 'update']);
   Route::apiResource('/dashboard', DashboardController::class)->only(['index']);
-  Route::apiResource('/plan', PlanController::class)->only(['index']);
+  Route::apiResource('/plan', PlanController::class)->only(['index', 'destroy', 'store', 'update']);
   Route::apiResource('/role', RoleController::class)->only(['index']);
 });

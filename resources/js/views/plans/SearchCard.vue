@@ -42,9 +42,13 @@
 
         <div class="row mt-2">
           <div class="col-12">
-            <button class="btn btn-success float-right">
+            <button v-if="$plan.config.form" @click="$plan.ChangeForm('add')" class="btn btn-danger float-right">
               <i class="fas fa-plus-square d-inline d-xl-none"></i>
-              <span class="d-none d-xl-inline">Add Plan</span>
+              <span class="d-none d-xl-inline">Cancel</span>
+            </button>
+            <button v-else @click="$plan.ChangeForm('add')" class="btn btn-success float-right">
+              <i class="fas fa-plus-square d-inline d-xl-none"></i>
+              <span class="d-none d-xl-inline">Add</span>
             </button>
 
             <button v-if="$plan.config.enableDelete" @click="$plan.ToggleEnableDelete"
