@@ -8,38 +8,9 @@ use Illuminate\Support\Facades\Validator;
 
 class PlanController extends Controller
 {
-  private function ReturnDefault($role) {
-    return ['status' => true, 'message' => 'success', 'role' => $role];
-  }
-
-  private function ValidateInputResponse($req, $role = []) {
-    $val = Validator::make($req->all(), $role);
-
-    if($val->fails()) {
-      return response()->json(['status' => false, 'message' => 'Invalid Input' ], 401);
-    }
-  }
-
-  private function UnauthorizedResponse() {
-    return response()->json(['status' => false, 'message' => 'Logout'], 401);
-  }
-
-  private function AvatarUpload($req) {
-    $image = $req->avatar;
-    list($type, $image) = explode(';', $image);
-    list(, $image) = explode(',', $image);
-
-    $image = base64_decode($image);
-    $imageName = time(). '.jpg';
-    $location = '/uploads/'.$imageName;
-    file_put_contents('uploads/'.$imageName, $image);
-
-    return $location;
-  }
-
-  public function PlanCount($req) {
+  private function PlanCount($req) {
     return response()->json([
-      ...$this->ReturnDefault($req->user()->role),
+      ...$this->G_ReturnDefault($req),
       'data' => Plan::withCount(['users'])->orderBy('users_count', 'DESC')->get()
     ]);
   }
@@ -48,10 +19,14 @@ class PlanController extends Controller
     if ($req->count)
       return $this->PlanCount($req);
 
-    $this->ValidateInputResponse($req, [
+    $val = Validator::make($req->all(), [
       'search' => '',
       'filter' => 'required'
     ]);
+
+    if($val->fails()) {
+      return $this->G_ValidatorFailResponse($val);
+    }
 
     $data;
     if($req->user()->role == 2) {
@@ -64,10 +39,10 @@ class PlanController extends Controller
         default:
           $data = $plan->where('name', 'LIKE', '%' . $req->search .'%')->get();
       }
-      return response()->json([...$this->ReturnDefault($req->user()->role), 'data' => $data]);
+      return response()->json([...$this->G_ReturnDefault($req), 'data' => $data]);
     }
 
-    return $this->UnauthorizedResponse();
+    return $this->G_UnauthorizedResponse();
   }
 
   public function store(Request $req) {
@@ -91,12 +66,12 @@ class PlanController extends Controller
       ]);
 
       if($val->fails()) {
-        return response()->json(['status' => false, 'message' => 'Invalid Input', 'errors' => $val->errors() ], 401);
+        return $this->G_ValidatorFailResponse($val);
       }
 
       $avatar = null;
       if($req->avatar) {
-        $avatar = $this->AvatarUpload($req);
+        $avatar = $this->G_AvatarUpload($req->avatar);
       }
 
       $plan = Plan::create([
@@ -110,25 +85,17 @@ class PlanController extends Controller
         'spot_service' => $req->spot_service,
         'user_id' => $req->user()->id,
       ]);
-      return response()->json([...$this->ReturnDefault($req->user()->role), 'data' => $plan]);
+      return response()->json([...$this->G_ReturnDefault($req), 'data' => $plan]);
     }
 
-    return $this->UnauthorizedResponse();
+    return $this->G_UnauthorizedResponse();
   }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
+  public function show(string $id) {
+      //
+  }
 
-  /**
-   * Update the specified resource in storage.
-   */
-  public function update(Request $req, string $id)
-  {
+  public function update(Request $req, string $id) {
     $val = Validator::make($req->all(), [
       'avatar' => '',
       'desc' => '',
@@ -148,12 +115,12 @@ class PlanController extends Controller
     ]);
 
     if($val->fails()) {
-      return response()->json(['status' => false, 'message' => 'Invalid Input', 'errors' => $val->errors() ], 401);
+      return $this->G_ValidatorFailResponse($val);
     }
 
 
     if(Plan::where('id', $id)->avatar != $req->avatar) {
-      Plan::where('id', $id)->update(['avatar' => $this->AvatarUpload($req)]);
+      Plan::where('id', $id)->update(['avatar' => $this->G_AvatarUpload($req->avatar)]);
     }
 
     $plan = Plan::where('id', $id)->update([
@@ -165,21 +132,17 @@ class PlanController extends Controller
       'spot_pay' => $req->spot_pay,
       'spot_service' => $req->spot_service,
     ]);
-    return response()->json([...$this->ReturnDefault($req->user()->role), 'data' => $plan]);
+    return response()->json([...$this->G_ReturnDefault($req), 'data' => $plan]);
 
   }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Request $req, string $id)
-    {
-      if($req->user()->role == 2) {
-        Plan::where('id', $id)->delete();
+  public function destroy(Request $req, string $id) {
+    if($req->user()->role == 2) {
+      Plan::where('id', $id)->delete();
 
-        return response()->json([...$this->ReturnDefault($req->user()->role), 'data' => 1]);
-      }
-
-      return $this->UnauthorizedResponse();
+      return response()->json([...$this->G_ReturnDefault($req), 'data' => 1]);
     }
+
+    return $this->G_UnauthorizedResponse();
+  }
 }

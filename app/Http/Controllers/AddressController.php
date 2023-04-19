@@ -7,8 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 class AddressController extends Controller
 {
-  public function index()
-  {
+  public function index() {
     $provinces = DB::table('address_provinces')->orderBy('name')->get();
     $out = [];
     $index = 0;

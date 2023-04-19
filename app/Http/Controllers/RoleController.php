@@ -7,10 +7,6 @@ use App\Models\User;
 
 class RoleController extends Controller
 {
-  private function ReturnDefault($role) {
-    return ['status' => true, 'message' => 'success', 'role' => $role];
-  }
-
   public function index(Request $req) {
     if($req->user()->role == 2) {
       $data = [
@@ -72,8 +68,8 @@ class RoleController extends Controller
         ],
       ];
 
-      return response()->json([...$this->ReturnDefault($req->user()->role), 'data' => $data]);
+      return response()->json([...$this->G_ReturnDefault($req), 'data' => $data]);
     }
-    return $this->UnauthorizedResponse();
+    return $this->G_UnauthorizedResponse();
   }
 }

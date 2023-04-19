@@ -64,6 +64,15 @@ const isAdmin = computed(() => {
   if ($auth.auth.role == 2) {
     return [
       {
+        name: 'TRANSACTIONS',
+      },
+      {
+        name: 'Transactions',
+        icon: 'fa-map-pin',
+        link: { name: 'transaction-list' }
+      },
+
+      {
         name: 'USERS',
       },
       {

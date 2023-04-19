@@ -11,15 +11,7 @@ use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
-  private function ReturnDefault($role) {
-    return ['status' => true, 'message' => 'success', 'role' => $role];
-  }
-
-  private function UnauthorizedResponse() {
-    return response()->json(['status' => false, 'message' => 'Logout'], 401);
-  }
-
-  public function getCount($req) {
+  private function getCount($req) {
     if($req->user()->role == 2) {
       $count = [
         'all'     => User::count(),
@@ -45,20 +37,7 @@ class UserController extends Controller
 
       return response()->json(['status' => true, 'message' => 'success', 'data' => $data], 200);
     }
-    return $this->UnauthorizedResponse();
-  }
-
-  private function AvatarUpload($req) {
-    $image = $req->avatar;
-    list($type, $image) = explode(';', $image);
-    list(, $image) = explode(',', $image);
-
-    $image = base64_decode($image);
-    $imageName = time(). '.jpg';
-    $location = '/uploads/'.$imageName;
-    file_put_contents('uploads/'.$imageName, $image);
-
-    return $location;
+    return $this->G_UnauthorizedResponse();
   }
 
   public function index(Request $req) {
@@ -73,7 +52,7 @@ class UserController extends Controller
     ]);
 
     if($val->fails()) {
-      return response()->json(['status' => false, 'message' => 'Invalid Input', 'errors' => $val->errors() ], 401);
+      return $this->G_ValidatorFailResponse($val);
     }
 
     $user = User::select('*');
@@ -124,9 +103,10 @@ class UserController extends Controller
 
       $data = $user->orderBy('created_at', 'desc')->paginate(10);
 
-      return response()->json([...$this->ReturnDefault($req->user()->role), 'data' => $data], 200);
+      return response()->json([...$this->G_ReturnDefault($req), 'data' => $data], 200);
     }
-    return response()->json(['status' => false, 'message' => 'Logout'], 401);
+
+    return $this->G_UnauthorizedResponse();
   }
 
   public function store(Request $req) {
@@ -154,7 +134,7 @@ class UserController extends Controller
       ]);
 
       if($val->fails()) {
-        return response()->json(['status' => false, 'message' => 'Invalid Input', 'errors' => $val->errors() ], 401);
+        return $this->G_ValidatorFailResponse($val);
       }
 
       $person = Person::create([
@@ -188,10 +168,10 @@ class UserController extends Controller
         'notify_mobile' => $req->notifyMobile,
       ]);
 
-      return response()->json([...$this->ReturnDefault($req->user()->role)]);
+      return response()->json([...$this->G_ReturnDefault($req)]);
     }
 
-    $this->UnauthorizedResponse();
+    return $this->G_UnauthorizedResponse();
   }
 
   /**
@@ -227,7 +207,7 @@ class UserController extends Controller
       ]);
 
       if($val->fails()) {
-        return response()->json(['status' => false, 'message' => 'Invalid Input', 'errors' => $val->errors() ], 401);
+        return $this->G_ValidatorFailReponse($val);
       }
 
       $person = Person::where('id', $req->person_id)->update([
@@ -256,21 +236,21 @@ class UserController extends Controller
       }
 
       if(!User::where('id', $id)->where('avatar', $req->avatar)->first()) {
-        User::where('id', $id)->update(['avatar' => $this->AvatarUpload($req)]);
+        User::where('id', $id)->update(['avatar' => $this->G_AvatarUpload($req->avatar)]);
       }
 
-      return response()->json([...$this->ReturnDefault($req->user()->role),]);
+      return response()->json([...$this->G_ReturnDefault($req),]);
     }
 
-    return $this->UnauthorizedResponse();
+    return $this->G_UnauthorizedResponse();
   }
 
   public function destroy(string $id, Request $req) {
     if($req->user()->role == 2) {
       User::find($id)->delete();
-      return response()->json([...$this->ReturnDefault($req->user()->role)], 200);
+      return response()->json([...$this->G_ReturnDefault($req)], 200);
     }
 
-    return response()->json(['status' => false, 'message' => 'Logout'], 401);
+    return $this->G_UnauthorizedResponse();
   }
 }

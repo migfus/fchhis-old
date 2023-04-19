@@ -38,6 +38,16 @@ const router = createRouter({
         title: "Dashboard",
       },
     },
+    // NOTE TRANSACTIONS
+    {
+      path: "/transaction/list",
+      name: "transaction-list",
+      component: () => import("@/views/transaction/TransactionPage.vue"),
+      meta: {
+        title: "Transaction's Management",
+        role: 2, //admin
+      },
+    },
     // NOTE PLANS
     {
       path: "/plans",

@@ -7,10 +7,6 @@ use App\Models\User;
 
 class DashboardController extends Controller
 {
-  private function ReturnDefault($role) {
-    return ['status' => true, 'message' => 'success', 'role' => $role];
-  }
-
   private function RolesData() {
     $data = [
       [
@@ -71,7 +67,7 @@ class DashboardController extends Controller
   {
     if($req->user()->role == 2) {
       return response()->json([
-        ...$this->ReturnDefault($req->user()->role),
+        ...$this->G_ReturnDefault($req),
         'data' => [
           'usersCount' => User::count(),
           'transactionCount' => 10000,
@@ -81,7 +77,7 @@ class DashboardController extends Controller
       ], 200);
     }
 
-    return response()->json(['status' => false, 'message' => 'Logout'], 401);
+    return $this->G_UnauthorizedResponse();
   }
 
   /**

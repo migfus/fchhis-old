@@ -8,11 +8,13 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PlanController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\TransactionController;
 
 Route::controller(AuthController::class)->group(function () {
   Route::post('/login', 'Login');
 });
 Route::apiResource('/address', AddressController::class)->only(['index']);
+
 
 Route::middleware('auth:sanctum')->group(function () {
   Route::controller(AuthController::class)->group(function () {
@@ -24,4 +26,5 @@ Route::middleware('auth:sanctum')->group(function () {
   Route::apiResource('/dashboard', DashboardController::class)->only(['index']);
   Route::apiResource('/plan', PlanController::class)->only(['index', 'destroy', 'store', 'update']);
   Route::apiResource('/role', RoleController::class)->only(['index']);
+  Route::apiResource('/transactions', TransactionController::class)->only(['index']);
 });

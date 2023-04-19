@@ -9,10 +9,6 @@ use App\Models\User;
 
 class AuthController extends Controller
 {
-  private function ReturnDefault($role = null) {
-    return ['status' => true, 'message' => 'success', 'role' => $role];
-  }
-
   public function Login(Request $req) {
     $val = Validator::make($req->all(), [
       'email' => 'required|email',
@@ -20,7 +16,7 @@ class AuthController extends Controller
     ]);
 
     if($val->fails()) {
-      return $this->ValidationErrorResponse();
+      return $this->G_ValidatorFailResponse();
     }
 
     $user = User::where('email', $req->email)->first();
@@ -29,7 +25,7 @@ class AuthController extends Controller
     }
 
     return response()->json([
-      ...$this->returnDefault($user->role), 'data' => [
+      ...$this->G_ReturnDefault(), 'data' => [
         'auth' => $user,
         'token' => $user->createToken('token idk')->plainTextToken],
     ], 200);
@@ -42,44 +38,32 @@ class AuthController extends Controller
     ]);
 
     if($val->fails()) {
-      return $this->ValidationErrorResponse();
+      return $this->G_ValidatorFailResponse($val);
     }
 
     $user = User::find($req->user()->id)->first();
     if(!$user || !Hash::check($req->currentPassword, $user->password)) {
-      return response()->json(['status' => false, 'message' => 'Invalid Credential!'], 401);
+      return $this->G_UnauthorizedResponse('Invalid Password');
     }
 
     $user = User::find($req->user()->id)->update(['password' => Hash::make($req->newPassword)]);
 
-    return response()->json([...$this->returnDefault($req->user()->role), 'data' => true]);
-  }
-
-  private function ValidationErrorResponse($data = '') {
-    return response()->json(['status' => false, 'message' => 'Invalid Input', 'data' => $data], 401);
+    return $this->G_UnauthorizedResponse();
   }
 
   public function ChangeAvatar(Request $req) {
-    $validator = Validator::make($req->all(), [
+    $val = Validator::make($req->all(), [
       'file' => 'required'
     ]);
 
-    if($validator->fails()) {
-      response()->json(['status' => false, 'message' => 'Invalid Input']);
+    if($val->fails()) {
+      return $this->G_ValidatorFailResponse($val);
     }
-    $image = $req->file;
-    list($type, $image) = explode(';', $image);
-    list(, $image) = explode(',', $image);
-
-    $image = base64_decode($image);
-    $imageName = time(). '.jpg';
-    $location = '/uploads/'.$imageName;
-    file_put_contents('uploads/'.$imageName, $image);
 
     $user = User::find($req->user()->id);
-    $user->avatar =  $location;
+    $user->avatar =  $this->G_AvatarUpload($req->file);
     $user->save();
 
-    return response()->json([...$this->ReturnDefault($req->user()->role), 'file' => $location]);
+    return response()->json([...$this->G_ReturnDefault($req), 'file' => $location]);
   }
 }
