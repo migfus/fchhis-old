@@ -4,19 +4,39 @@ import { useAuthStore } from "@/store/auth/auth";
 const router = createRouter({
   history: createWebHistory(import.meta.env.APP_URL),
   routes: [
-    // NOTE OUTSIDE
+    // NOTE PAGES
     {
       path: "/",
-      redirect: { name: "dashboard" },
+      name: 'home',
+      component: () => import('@/views/pages/HomePage.vue'),
+      meta: {
+        title: 'Home',
+      }
     },
+    {
+      path: "/about",
+      name: 'about',
+      component: () => import('@/views/pages/AboutPage.vue'),
+      meta: {
+        title: 'About',
+      }
+    },
+    {
+      path: "/contact",
+      name: 'contact',
+      component: () => import('@/views/pages/ContactPage.vue'),
+      meta: {
+        title: 'Contact',
+      }
+    },
+    // NOTE OUTSIDE
+
     {
       path: "/login",
       name: "login",
       component: () => import("@/views/auth/LoginPage.vue"),
       meta: {
-        noNav: true,
         title: "Login",
-        noAuth: true,
       },
     },
     {
@@ -24,7 +44,6 @@ const router = createRouter({
       name: "forgot",
       component: () => import("@/views/auth/ForgotPasswordPage.vue"),
       meta: {
-        noNav: true,
         title: "Forgot Password",
       },
     },
@@ -35,7 +54,9 @@ const router = createRouter({
       name: "dashboard",
       component: () => import("@/views/dashboard/DashboardPage.vue"),
       meta: {
+        sideBar: true,
         title: "Dashboard",
+        auth: true,
       },
     },
     // NOTE TRANSACTIONS
@@ -46,6 +67,8 @@ const router = createRouter({
       meta: {
         title: "All Transactions",
         role: 2, //admin
+        auth: true,
+        sideBar: true,
       },
     },
     // NOTE PLANS
@@ -56,6 +79,8 @@ const router = createRouter({
       meta: {
         title: "Plans' Management",
         role: 2, //admin
+        auth: true,
+        sideBar: true,
       },
     },
     // NOTE USERS
@@ -66,6 +91,8 @@ const router = createRouter({
       meta: {
         title: "Users' Management",
         role: 2, //admin
+        auth: true,
+        sideBar: true,
       },
     },
     {
@@ -75,6 +102,8 @@ const router = createRouter({
       meta: {
         title: "User's Roles",
         role: 2, //admin
+        auth: true,
+        sideBar: true,
       },
     },
     // NOTE ACCOUNT SETTINGS
@@ -87,6 +116,8 @@ const router = createRouter({
         ),
       meta: {
         title: "Account Settings",
+        auth: true,
+        sideBar: true,
       },
     },
     {
@@ -96,6 +127,17 @@ const router = createRouter({
         import("@/views/account-settings/security/SecurityPage.vue"),
       meta: {
         title: "Security",
+        auth: true,
+        sideBar: true,
+      },
+    },
+    // NOTE OTHER
+    {
+      path: "/:pathMatch(.*)*",
+      name: 'error',
+      component: () => import("@/views/pages/ErrorPage.vue"),
+      meta: {
+        title: "Page not Found!",
       },
     },
   ],
@@ -105,9 +147,22 @@ const TITLE = "Future Care and Helping Hands Insurance Service";
 router.beforeEach(async (to, from) => {
   const $auth = useAuthStore();
 
+
+
   if ($auth.token == "" && to.name !== "login") {
     return { name: "login" };
   }
+
+  if(!to.meta.auth && !$auth.token) {
+    return { name: 'error'};
+  }
+
+  if(to.meta.role) {
+    if(to.meta.role != $auth.auth.role) {
+      return { name: 'error'}
+    }
+  }
+
 });
 
 router.afterEach((to) => {

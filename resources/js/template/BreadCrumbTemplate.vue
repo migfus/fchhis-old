@@ -1,6 +1,6 @@
 <template>
   <section class="content-header">
-    <div class="container-fluid">
+    <div :class="$props.fluid ? 'container-fluid' : 'container'">
       <div class="card mb-0">
         <div class="card-body p-3">
           <div class="row mx-1">
@@ -25,6 +25,12 @@
 import { useRoute } from 'vue-router'
 
 const $route = useRoute();
+const $props = defineProps({
+  fluid: {
+    type: Boolean,
+    default: false,
+  }
+});
 </script>
 
 <style scoped>

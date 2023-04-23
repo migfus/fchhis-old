@@ -154,7 +154,7 @@ class UserController extends Controller
       $avatar = null;
 
       if($req->avatar != '') {
-        $avatar = $this->AvatarUpload($req);
+        $avatar = $this->G_AvatarUpload($req->avatar);
       }
 
       $user = User::create([

@@ -7,16 +7,29 @@ export const useTransactionStore = defineStore('transaction', () => {
   const config = reactive({
     loading: false,
     viewAll: false,
+    notify: localStorage.getItem('transaction-notify') ? false : true,
+    form: '',
+    tableView: false
   })
   const params = reactive ({
     search: '',
     filter: '',
+    target: 6, // show transaction by role (idK)
+    filter: '',
+    search: '',
+    start: '',
+    end: '',
   })
 
-  async function GetAPI() {
+  function NotifyToggle() {
+    config.notify = false
+    localStorage.setItem('transaction-notify', true)
+  }
+
+  async function GetAPI(page = 1) {
     config.loading = true
     try {
-      let { data: {data }} = await axios.get('/api/transactions')
+      let { data: {data }} = await axios.get('/api/transactions', { params: { ...params, page: page} })
       content.value = data
     }
     catch(e) {
@@ -41,5 +54,6 @@ export const useTransactionStore = defineStore('transaction', () => {
     GetAPI,
     Update,
     Delete,
+    NotifyToggle,
   }
 })

@@ -1,8 +1,21 @@
 <template>
   <footer class="main-footer">
-    <div class="float-right d-none d-sm-block">
-      <b>Version</b> 0.0.1
+    <div :class="fluid ? 'container-fluid' : 'container'">
+      <div class="float-right d-none d-sm-block">
+        <b>Version</b> 0.0.5
+      </div>
+      <strong>Copyright © </strong>Future Care and Helping Hands Insurance Services
     </div>
-    <strong>Copyright © </strong>Future Care and Helping Hands Insurance Services<a href="https://adminlte.io"> </a>
+
+
   </footer>
 </template>
+
+<script setup>
+const $props = defineProps({
+  fluid: {
+    type: Boolean,
+    default: false,
+  }
+});
+</script>

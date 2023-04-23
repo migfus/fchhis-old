@@ -1,51 +1,22 @@
 <template>
   <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+    <div class="container-xl">
+      <ul class="navbar-nav">
+        <li v-for="row in pages" :key="row.name" class="nav-item d-none d-sm-inline-block">
+          <RouterLink :to="{ name: row.link }" class="nav-link">{{ row.name }}</RouterLink>
+        </li>
+      </ul>
 
-    <ul class="navbar-nav">
-      <li class="nav-item">
-        <a class="nav-link" data-widget="pushmenu" href="#" role="button" ref="hiddenMenu"><i class="fas fa-bars"></i></a>
-      </li>
-      <li v-for="row in pages" :key="row.name" class="nav-item d-none d-sm-inline-block">
-        <RouterLink :to="{ name: row.link }" class="nav-link">{{ row.name }}</RouterLink>
-      </li>
-    </ul>
+      <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">
 
-    <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">
+        <NotificationDropdown />
+        <UserDropDown />
 
-      <NotificationDropdown />
-      <UserDropDown />
-
-    </ul>
-  </nav>
-
-  <aside class="main-sidebar sidebar-dark-primary elevation-4">
-
-    <RouterLink to="/" class="brand-link">
-      <img src="http://fchhis.migfus20.com/images/logo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
-        style="opacity: .8">
-      <span class="brand-text ml-2">FCHHIS</span>
-    </RouterLink>
-
-    <div class="sidebar">
-
-      <nav class="mt-2">
-        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-
-          <li v-for="row in menu" :key="row.name" :class="`${row.icon ? 'nav-item' : 'nav-header'}`">
-            <RouterLink v-if="row.icon" :to="row.link" :class="`${$route.name == row.link.name ? 'active' : ''} nav-link`"
-              @click="HideSideBar">
-              <i :class="`nav-icon fas ${row.icon}`"></i>
-              <p>
-                {{ row.name }}
-              </p>
-            </RouterLink>
-            <div v-else> {{ row.name }}</div>
-          </li>
-
-        </ul>
-      </nav>
+      </ul>
     </div>
-  </aside>
+
+
+  </nav>
 </template>
 
 <script setup>
@@ -213,9 +184,10 @@ const pages = ref([
 ]);
 
 onMounted(() => {
-  document.body.classList.remove('layout-top-nav');
-  document.body.classList.add('sidebar-mini')
+  document.body.classList.add('layout-top-nav');
+  document.body.classList.remove('sidebar-mini')
 });
+
 </script>
 
 <style scoped>

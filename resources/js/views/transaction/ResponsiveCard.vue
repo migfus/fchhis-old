@@ -53,39 +53,41 @@
       <div class="card-body">
         <div class="row mb-2">
           <div class="col-12 col-md-6 col-lg-4 col-xl-3">
-            <div>Refered: <strong>[Juan Do do]</strong></div>
-            <div>Plan: <strong>[bla]</strong></div>
-            <div>Target: <strong>[bla]</strong></div>
-            <div>Transact: <strong>[2,000]</strong></div>
-            <div>Total: <strong>[12,089]</strong></div>
+            <div>Payment: <strong class="text-success">+{{ NumberAddComma(row.amount) }}</strong></div>
+            <div>Accumulated: <strong>{{ NumberAddComma(100) }}</strong></div>
+            <div>To Pay: <strong>1,000</strong></div>
             <hr class="mt-1" />
-          </div>
-          <div class="col-12 col-md-6 col-lg-4 col-xl-3">
-            <div>Username: <strong>[bla]</strong></div>
-            <div>Email: <strong>[bla]</strong></div>
-            <div>Name:
-              <strong>
-                [bla]
-              </strong>
-            </div>
-            <div>Birth Day: <strong>[bla]</strong></div>
-            <div>Birth Place: <strong>[bla]</strong></div>
-            <hr class="mt-1" />
-          </div>
-          <div class="col-12 col-md-6 col-lg-4 col-xl-3">
 
-            <div>Created On: <strong>[bla]</strong></div>
-            <div>Encoded By: <strong>[bla]</strong></div>
-            <div>Role: <strong>[bla]</strong></div>
-            <div>Phone: <strong>[bla]</strong></div>
-            <div>Last Active: <strong>[Sep 31, 2022]</strong></div>
-            <hr class="mt-1" />
+
           </div>
           <div class="col-12 col-md-6 col-lg-4 col-xl-3">
-            <div>Province: <strong>[bla]</strong></div>
-            <div>City: <strong>[bla]</strong></div>
-            <div>Address: <strong>[bla]</strong></div>
-            <div>Sex: <strong>Male</strong></div>
+            <div>Payed By: <strong class="text-success">{{ FullNameConvert(row.client.person.lastName,
+              row.client.person.firstName,
+              row.client.person.midName, row.client.person.extName) }}</strong></div>
+            <div>Username: <strong>{{ row.client.username }}</strong></div>
+            <div>Email: <strong>{{ row.client.email }}</strong></div>
+            <hr class="mt-1" />
+
+
+          </div>
+          <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+            <div>Encoded By: <strong class="text-info">{{ FullNameConvert(row.staff.person.lastName,
+              row.staff.person.firstName,
+              row.staff.person.midName, row.staff.person.extName) }}</strong></div>
+            <div>Referred By: <strong class="text-warning">{{ FullNameConvert(row.agent.person.lastName,
+              row.agent.person.firstName,
+              row.agent.person.midName, row.agent.person.extName) }}</strong></div>
+            <div>Referal ID: <strong> {{ row.agent.id }} </strong> </div>
+            <!-- <div>Birth Day: <strong>[bla]</strong></div>
+            <div>Birth Place: <strong>[bla]</strong></div> -->
+            <hr class="mt-1" />
+
+          </div>
+          <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+            <div>Province: <strong>{{ NumberAddComma(row.plan.name) }}</strong></div>
+            <div>Spot Payment: <strong>{{ NumberAddComma(row.plan.spot_pay) }}</strong></div>
+            <div>Spot Service: <strong>{{ NumberAddComma(row.plan.spot_service) }}</strong></div>
+            <!-- <div>Contract Price: <strong>{{ NumberAddComma(row.plan.contract_price) }}</strong></div> -->
             <hr class="mt-1" />
           </div>
         </div>
