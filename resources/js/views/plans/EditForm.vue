@@ -6,7 +6,7 @@
           <h3 class="card-title"><strong>Add Plan</strong></h3>
         </div>
         <div class="card-body">
-          <Form v-slot="{ errors }" :validation-schema="schema" validate-on-mount @submit="$plan.AddAPI()">
+          <Form v-slot="{ errors }" :validation-schema="schema" validate-on-mount @submit="$plan.UpdateAPI()">
             <div class="row">
 
               <div class="col-12 col-md-6">
@@ -75,7 +75,7 @@
                   <div class="row">
                     <div class="col-6">
                       <label for="spot_payment">Spot Payment</label>
-                      <Field v-model="$plan.input.spot" name="spot_payment" type="text" class="form-control"
+                      <Field v-model="$plan.input.spot_pay" name="spot_payment" type="text" class="form-control"
                         id="spot_payment" placeholder="Enter Spot Payment" />
                       <div class="mb-2 text-danger">
                         <ErrorMessage name="spot_payment" />

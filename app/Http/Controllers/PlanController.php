@@ -84,6 +84,10 @@ class PlanController extends Controller
         'spot_pay' => $req->spot_payment,
         'spot_service' => $req->spot_service,
         'user_id' => $req->user()->id,
+        'annual' => $req->annual,
+        'semi_annual' => $req->semi_annual,
+        'quarterly' => $req->quarterly,
+        'monthly' => $req->monthly
       ]);
       return response()->json([...$this->G_ReturnDefault($req), 'data' => $plan]);
     }
@@ -131,9 +135,12 @@ class PlanController extends Controller
       'contract_price' => $req->contract_price,
       'spot_pay' => $req->spot_pay,
       'spot_service' => $req->spot_service,
+      'annual' => $req->annual,
+      'semi_annual' => $req->semi_annual,
+      'quarterly' => $req->quarterly,
+      'monthly' => $req->monthly
     ]);
     return response()->json([...$this->G_ReturnDefault($req), 'data' => $plan]);
-
   }
 
   public function destroy(Request $req, string $id) {

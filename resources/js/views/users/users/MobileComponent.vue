@@ -11,8 +11,10 @@
                 moment(row.created_at).local().format('MMMD, YYYY') }} </span>
 
               <img v-if="row.avatar" :src="row.avatar" style="height: 2em;" class="img-circle float-left mr-3">
-              <VueAvatar v-else :username="row.username" style="height: 1.5em; width: 1.5em" :alt="row.username"
-                class="img-circle float-left mr-3" />
+              <VueAvatar v-else-if="row.username" :username="row.username" style="height: 1.5em; width: 1.5em"
+                :alt="row.username" class="img-circle float-left mr-3" />
+              <img v-else src="/images/logo.png" style="height: 2em;" class="img-circle float-left mr-3">
+
 
               <BadgeComponent :role="row.role" />
               <div>
@@ -22,11 +24,15 @@
               </div>
               <div><strong>{{ row.username }}</strong></div>
             </div>
-            <div class="d-none d-md-inline col-md-6 col-xl-4">
+            <div v-if="row.email" class="d-none d-md-inline col-md-6 col-xl-4">
               <span class="d-inline d-xl-none float-right text-secondary"> {{
                 moment(row.created_at).local().format('MMMD, YYYY') }} </span>
               <div>Email: <strong>{{ row.email }}</strong></div>
               <div>Role: <strong>{{ RoleToDesc(row.role) }}</strong></div>
+            </div>
+            <div v-else class="d-none d-md-inline col-md-6 col-xl-4">
+              Link: <a :href="row.OR" target="_blank">{{ `http://127.0.0.1:8000/register?or=${row.OR}` }}</a>
+              <div class="text-danger">Unregistered</div>
             </div>
             <div class="d-none d-xl-inline col-12 col-md-6 col-xl-4">
               <span class="float-right text-secondary"> {{ moment(row.created_at).local().format('MMM D, YYYY') }}

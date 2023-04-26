@@ -9,8 +9,11 @@
             </div>
             <div class="col-sm-6">
               <ol class="breadcrumb float-sm-right">
-                <li class="breadcrumb-item">
+                <li v-if="$route.meta.auth" class="breadcrumb-item">
                   <RouterLink :to="{ name: 'dashboard' }">Dashboard</RouterLink>
+                </li>
+                <li v-else class="breadcrumb-item">
+                  <RouterLink :to="{ name: 'home' }">Home</RouterLink>
                 </li>
                 <li class="breadcrumb-item active">{{ $route.meta.title }}</li>
               </ol>

@@ -23,7 +23,11 @@ class PlanSeeder extends Seeder
           'desc' => 'For Non-Insured Person always pay the balance -71 & up.',
           'contract_price' => 27000,
           'spot_pay' => 26000,
-          'spot_service' => 28000
+          'spot_service' => 28000,
+          'annual' => 5064,
+          'semi_annual' => 2532,
+          'quarterly' => 1266,
+          'monthly' => 450,
         ],
         [
           'id'   => 2,
@@ -35,7 +39,11 @@ class PlanSeeder extends Seeder
           'desc' => '',
           'contract_price' => 29700,
           'spot_pay' => 27000,
-          'spot_service' => 29000
+          'spot_service' => 29000,
+          'annual' => 5556,
+          'semi_annual' => 2778,
+          'quarterly' => 1389,
+          'monthly' => 495,
         ],
         [
           'id'   => 3,
@@ -47,7 +55,11 @@ class PlanSeeder extends Seeder
           'desc' => '',
           'contract_price' => 39000,
           'spot_pay' => 30000,
-          'spot_service' => 33000
+          'spot_service' => 33000,
+          'annual' => 7320,
+          'semi_annual' => 3660,
+          'quarterly' => 1830,
+          'monthly' => 650,
         ],
         [
           'id'   => 4,
@@ -59,7 +71,11 @@ class PlanSeeder extends Seeder
           'desc' => 'The Wooder Full Glass (Dual Memorial Package)',
           'contract_price' => 78000,
           'spot_pay' => 68000,
-          'spot_service' => 73000
+          'spot_service' => 73000,
+          'annual' => 14640,
+          'semi_annual' => 7320,
+          'quarterly' => 3660,
+          'monthly' => 1300,
         ]
       ];
 

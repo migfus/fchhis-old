@@ -40,6 +40,44 @@ class UserController extends Controller
     return $this->G_UnauthorizedResponse();
   }
 
+  private function ORStore($req) {
+    $val = Validator::make($req->all(), [
+      'or' => 'required',
+      'mobile' => 'required',
+      'plan' => 'required',
+      'transaction' => '',
+      'lastName' => 'required',
+      'firstName' => 'required',
+      'midName' => '',
+      'extName' => '',
+    ]);
+
+
+    if($val->fails()) {
+      return $this->G_ValidatorFailResponse($val);
+    }
+
+    $person = Person::create([
+      'created_by_user_id' => $req->user()->id,
+      'lastName'  => $req->lastName,
+      'firstName' => $req->firstName,
+      'midName'   => $req->midName,
+      'extName'   => $req->extName,
+      'mobile'    => $req->mobile,
+    ]);
+
+    $user = User::create([
+      'person_id'=> $person->id,
+      'plan_id'  => $req->plan,
+      'role'     => 6,
+      'notify_mobile' => $req->notifyMobile,
+      'OR' => $req->or,
+    ]);
+
+
+    return response()->json([...$this->G_ReturnDefault($req)]);
+  }
+
   public function index(Request $req) {
     if($req->count)
       return $this->getCount($req);
@@ -111,6 +149,11 @@ class UserController extends Controller
 
   public function store(Request $req) {
     if($req->user()->role == 2) {
+      if($req->or) {
+        if($req->or != '') {
+          return $this->ORStore($req);
+        }
+      }
 
       $val = Validator::make($req->all(), [
         'avatar'   => '',

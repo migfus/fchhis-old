@@ -80,6 +80,10 @@
               <i class="fas fa-plus-square d-inline d-xl-none"></i>
               <span class="d-none d-xl-inline">Add User</span>
             </button>
+            <button @click="$user.ChangeForm('or')" class="btn btn-info float-right mr-1">
+              <i class="fas fa-plus-square d-inline d-xl-none"></i>
+              <span class="d-none d-xl-inline">Add OR</span>
+            </button>
 
             <button @click="$user.config.tableView = !$user.config.tableView" class="btn btn-info mr-1 float-right">
               <i :class="`fas ${$user.config.tableView ? 'fa-bars' : 'fa-table'}`"></i>

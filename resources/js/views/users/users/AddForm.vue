@@ -222,7 +222,7 @@
 
 <script setup>
 import { useUserStore } from '@/store/users/users'
-import { computed, ref, onMounted } from 'vue'
+import { computed, ref } from 'vue'
 import moment from 'moment'
 import { useAddressStore } from '@/store/system/address'
 import { Form, Field, ErrorMessage, configure, } from 'vee-validate'
@@ -254,10 +254,6 @@ const schema = Yup.object({
   address: Yup.string().required('Specific Address is Required'),
 })
 
-function getImage(event) {
-  console.log({ event })
-}
-
 const age = computed(() => {
   try {
     return moment().diff($user.input.bday, 'years')
@@ -283,14 +279,6 @@ function GeneratePasword(length = 8) {
     $user.input.password = result;
   }
 }
-
-function Submit() {
-  alert()
-}
-
-onMounted(() => {
-  $plan.GetAPI()
-});
 </script>
 
 <style scoped>

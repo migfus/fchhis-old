@@ -3,11 +3,11 @@ import { defineStore } from "pinia";
 import axios from "axios";
 
 export const useDashboardStore = defineStore("dashboard", () => {
-  const content = ref({ usersCount: false, transactionCount: false });
+  const content = ref(false);
 
-  async function GetAPI() {
+  async function GetAPI(role) {
     try {
-      let { data : {data}}  = await axios.get("/api/dashboard");
+      let { data : {data}}  = await axios.get(`/api/dashboard?role=${role}`);
       console.log(data)
       content.value = data;
     }

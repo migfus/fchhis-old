@@ -22,6 +22,10 @@ return new class extends Migration
             $table->decimal('contract_price', 7, 2);
             $table->decimal('spot_pay', 7, 2);
             $table->decimal('spot_service', 7, 2);
+            $table->decimal('annual', 7, 2);
+            $table->decimal('semi_annual', 7, 2);
+            $table->decimal('quarterly', 7, 2);
+            $table->decimal('monthly', 7, 2);
             $table->timestamps();
         });
     }

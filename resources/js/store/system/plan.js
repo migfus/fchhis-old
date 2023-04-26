@@ -106,6 +106,19 @@ export const usePlanStore = defineStore('plan', ()=> {
     ChangeForm('update')
   }
 
+  async function UpdateAPI() {
+    config.loading = true
+    try {
+      let { data: { data } } = await axios.put('/api/plan', input.value)
+      console.log({data})
+      GetAPI()
+    }
+    catch(e) {
+      console.log({e})
+    }
+    config.loading = false
+  }
+
   return {
     content,
     count,
@@ -120,6 +133,7 @@ export const usePlanStore = defineStore('plan', ()=> {
     DeleteAPI,
     AddAPI,
     ChangeForm,
-    Update
+    Update,
+    UpdateAPI,
   }
 })

@@ -19,6 +19,10 @@ class Plan extends Model
       'spot_pay',
       'spot_service',
       'user_id',
+      'annual',
+      'semi_annual',
+      'quarterly',
+      'monthly'
   ];
 
   public function users() {

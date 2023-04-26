@@ -1,17 +1,21 @@
 <template>
   <nav class="main-header navbar navbar-expand navbar-white navbar-light">
     <div class="container-xl">
+
+      <RouterLink :to="{ name: 'home' }" class="navbar-brand">
+        <img src="/images/logo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-1" style="opacity: .8">
+        <span class="brand-text ml-1">FCHHIS</span>
+      </RouterLink>
+
       <ul class="navbar-nav">
         <li v-for="row in pages" :key="row.name" class="nav-item d-none d-sm-inline-block">
-          <RouterLink :to="{ name: row.link }" class="nav-link">{{ row.name }}</RouterLink>
+          <RouterLink :to="{ name: row.link }" :class="`nav-link ${$route.name == row.link} ? 'active' : ''`">{{
+            row.name }}</RouterLink>
         </li>
       </ul>
 
       <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">
-
-        <NotificationDropdown />
         <UserDropDown />
-
       </ul>
     </div>
 
@@ -22,9 +26,9 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
-import NotificationDropdown from './NotificationDropdown.vue';
-import UserDropDown from './UserDropDown.vue';
+
 import { useAuthStore } from '@/store/auth/auth';
+import UserDropDown from './UserDropDown.vue';
 
 const $route = useRoute();
 const $auth = useAuthStore();
@@ -180,6 +184,11 @@ const pages = ref([
   {
     name: 'Contact',
     link: "contact"
+  },
+
+  {
+    name: 'FAQs',
+    link: "faq"
   },
 ]);
 

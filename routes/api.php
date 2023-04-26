@@ -12,6 +12,8 @@ use App\Http\Controllers\TransactionController;
 
 Route::controller(AuthController::class)->group(function () {
   Route::post('/login', 'Login');
+  Route::post('/or', 'ORCheck');
+  Route::post('/register', 'Register');
 });
 Route::apiResource('/address', AddressController::class)->only(['index']);
 

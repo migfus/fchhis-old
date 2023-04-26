@@ -14,15 +14,15 @@ return new class extends Migration
         Schema::create('people', function (Blueprint $table) {
             $table->id();
             $table->integer('created_by_user_id')->unsigned();
-            $table->string('lastName');
-            $table->string('firstName');
+            $table->string('lastName')->nullable();
+            $table->string('firstName')->nullable();
             $table->string('midName')->nullable();
             $table->string('extName')->nullable();
-            $table->date('bday');
-            $table->integer('bplace_id');
+            $table->date('bday')->nullable();
+            $table->integer('bplace_id')->nullable();
             $table->boolean('sex')->default(0);
-            $table->integer('address_id')->comment('city ID, Province'); //city, province
-            $table->string('address')->comment('Specific Address');  //specific,
+            $table->integer('address_id')->comment('city ID, Province')->nullable(); //city, province
+            $table->string('address')->comment('Specific Address')->nullable();  //specific,
             $table->decimal('mobile', 10, 0)->nullable();
             $table->timestamps();
         });

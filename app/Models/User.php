@@ -26,7 +26,8 @@ class User extends Authenticatable
       'avatar',
       'plan_id',
       'notify_mobile',
-      'role'
+      'role',
+      'OR'
   ];
 
   /**

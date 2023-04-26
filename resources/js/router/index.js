@@ -3,6 +3,13 @@ import { useAuthStore } from "@/store/auth/auth";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.APP_URL),
+  scrollBehavior(to, from, savedPosition) {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve({ left: 0, top: 0, behavior: 'smooth' })
+      }, 500)
+    })
+  },
   routes: [
     // NOTE PAGES
     {
@@ -29,6 +36,14 @@ const router = createRouter({
         title: 'Contact',
       }
     },
+    {
+      path: '/faq',
+      name: 'faq',
+      component: () => import('@/views/pages/FaqPage.vue'),
+      meta: {
+        title: 'FAQs'
+      }
+    },
     // NOTE OUTSIDE
 
     {
@@ -45,6 +60,22 @@ const router = createRouter({
       component: () => import("@/views/auth/ForgotPasswordPage.vue"),
       meta: {
         title: "Forgot Password",
+      },
+    },
+    {
+      path: "/register",
+      name: "register",
+      component: () => import("@/views/auth/RegisterPage.vue"),
+      meta: {
+        title: "Register",
+      },
+    },
+    {
+      path: "/register/fill",
+      name: "register-fill",
+      component: () => import("@/views/auth/RegisterFillPage.vue"),
+      meta: {
+        title: "Register",
       },
     },
 
@@ -149,17 +180,19 @@ router.beforeEach(async (to, from) => {
 
 
 
-  if ($auth.token == "" && to.name !== "login") {
-    return { name: "login" };
-  }
+  // if ($auth.token == "" && to.name !== "login") {
+  //   return { name: "login" };
+  // }
 
-  if(!to.meta.auth && !$auth.token) {
-    return { name: 'error'};
+  if(to.meta.auth && !$auth.token && to.meta.name != 'login') {
+    return { name: 'login'};
+    // return false
   }
 
   if(to.meta.role) {
-    if(to.meta.role != $auth.auth.role) {
-      return { name: 'error'}
+    if(to.meta.role != $auth.auth.role && to.meta.name != 'error') {
+      // return { name: 'error'}
+      return false
     }
   }
 

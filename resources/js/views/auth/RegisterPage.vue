@@ -13,19 +13,20 @@
 
       <div class="card">
         <div class="card-body login-card-body">
-          <p class="login-box-msg">We will send you a link for password recovery</p>
-          <Form v-slot="{ errors }" :validation-schema="schema" validate-on-mount @submit="$auth.Login(input)">
+          <p class="login-box-msg">Please Enter OR Number</p>
+          <Form v-slot="{ errors }" :validation-schema="schema" validate-on-mount @submit="$register.ORAPI()">
 
             <div class="input-group">
-              <Field v-model="input.email" name="email" type="email" class="form-control" placeholder="Email" />
+              <Field v-model="$register.params.or" name="or" type="text" class="form-control"
+                placeholder="YYYYMMDD-XXX" />
               <div class="input-group-append">
                 <div class="input-group-text">
-                  <span class="fas fa-envelope"></span>
+                  <span class="fas fa-arrow-right"></span>
                 </div>
               </div>
             </div>
             <div class="mb-3 text-danger">
-              <ErrorMessage name="email" />
+              <ErrorMessage name="or" />
             </div>
 
             <div class="row">
@@ -34,8 +35,8 @@
               </div>
 
               <div class="col-12">
-                <button type="submit" class="btn btn-info btn-block" :disabled="Object.keys(errors).length != 0">Send
-                  Recovery</button>
+                <button type="submit" class="btn btn-info btn-block" :disabled="Object.keys(errors).length != 0">{{
+                  $register.config.loading ? 'Loading' : 'Register' }}</button>
               </div>
 
             </div>
@@ -57,25 +58,23 @@
 <script setup>
 import { Form, Field, ErrorMessage, configure } from 'vee-validate'
 import * as Yup from 'yup'
-import { reactive, onMounted } from 'vue'
-import { useAuthStore } from '../../store/auth/auth'
+import { onMounted } from 'vue'
+import { useRoute } from 'vue-router'
+import { useRegisterStore } from '@/store/auth/register'
 
 configure({
   validateOnInput: true,
 })
 
-const $auth = useAuthStore();
+const $route = useRoute();
+const $register = useRegisterStore();
 
 const schema = Yup.object({
-  email: Yup.string().required('Email is Required').email('Invalid Email'),
+  or: Yup.string().required('OR is Required'),
 })
 
-const input = reactive({
-  email: '',
-});
-
 onMounted(() => {
-  input.email = 'admin@gmail.com'
+  $register.params.or = $route.query.or || ''
 });
 </script>
 

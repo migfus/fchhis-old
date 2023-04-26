@@ -1,6 +1,8 @@
 <template>
   <nav class="main-header navbar navbar-expand navbar-white navbar-light">
 
+
+
     <ul class="navbar-nav">
       <li class="nav-item">
         <a class="nav-link" data-widget="pushmenu" href="#" role="button" ref="hiddenMenu"><i class="fas fa-bars"></i></a>
@@ -12,7 +14,6 @@
 
     <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">
 
-      <NotificationDropdown />
       <UserDropDown />
 
     </ul>
@@ -209,6 +210,10 @@ const pages = ref([
   {
     name: 'Contact',
     link: "contact"
+  },
+  {
+    name: 'FAQs',
+    link: "faq"
   },
 ]);
 

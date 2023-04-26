@@ -2,10 +2,11 @@
   <div class="row">
     <!-- NOTE ADD/EDIT -->
     <EditForm v-if="$user.config.form == 'update'" />
+    <ORForm v-else-if="$user.config.form == 'or'" />
     <AddForm v-else-if="$user.config.form" />
 
     <!-- NOTE REPORT -->
-    <ReportForm />
+    <!-- <ReportForm /> -->
 
     <UserSummary />
 
@@ -26,6 +27,8 @@
 
 <script setup>
 import { useUserStore } from '@/store/users/users'
+import { usePlanStore } from '@/store/system/plan'
+import { onMounted } from 'vue';
 
 import UserSummary from './UserSummary.vue'
 import AddForm from './AddForm.vue'
@@ -35,6 +38,12 @@ import TableComponent from './TableComponent.vue'
 import MobileComponent from './MobileComponent.vue'
 import PaginationComponent from './PaginationComponent.vue'
 import ReportForm from './ReportForm.vue'
+import ORForm from './ORForm.vue'
 
 const $user = useUserStore();
+const $plan = usePlanStore();
+
+onMounted(() => {
+  $plan.GetAPI();
+});
 </script>

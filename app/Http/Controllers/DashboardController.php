@@ -143,6 +143,10 @@ class DashboardController extends Controller
       ], 200);
     }
 
+    if($req->user()->role == 6) {
+      return response()->json(['test' => 'test']);
+    }
+
     return $this->G_UnauthorizedResponse();
   }
 }

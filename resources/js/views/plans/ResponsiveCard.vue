@@ -43,10 +43,10 @@
             <div>Contract Price: <strong>{{ NumberAddComma(row.contract_price) }}</strong></div>
             <div>Spot Payment: <strong>{{ NumberAddComma(row.spot_pay) }}</strong></div>
             <div>Spot Service: <strong>{{ NumberAddComma(row.spot_service) }}</strong></div>
-            <div>Annual: <strong>[123]</strong></div>
-            <div>Semi-Annual: <strong>[123]</strong></div>
-            <div>Quarterly: <strong>[12,089]</strong></div>
-            <div>Monthly: <strong>[12,089]</strong></div>
+            <div>Annual: <strong>{{ NumberAddComma(row.annual) }}</strong></div>
+            <div>Semi-Annual: <strong>{{ NumberAddComma(row.semi_annual) }}</strong></div>
+            <div>Quarterly: <strong>{{ NumberAddComma(row.quarterly) }}</strong></div>
+            <div>Monthly: <strong>{{ NumberAddComma(row.monthly) }}</strong></div>
           </div>
 
         </div>
