@@ -124,8 +124,7 @@ class DashboardController extends Controller
       ->get();
   }
 
-  public function index(Request $req)
-  {
+  public function index(Request $req) {
     if($req->user()->role == 2) {
       return response()->json([
         ...$this->G_ReturnDefault($req),
@@ -144,9 +143,42 @@ class DashboardController extends Controller
     }
 
     if($req->user()->role == 6) {
-      return response()->json(['test' => 'test']);
+      return $this->Client($req);
     }
 
     return $this->G_UnauthorizedResponse();
+  }
+
+  public function Client(Request $req) {
+    $transactions = Transaction::where('client_id', $req->user()->id)->orderBy('created_at', 'DESC')->get();
+
+    $start = Carbon::parse(Transaction::where('client_id', $req->user()->id)->orderBy('created_at', 'ASC')->first()->created_at)->startOfYear()->format('Ym');
+
+    $summaryTransaction = [];
+    $count = 0;
+    while(Carbon::now()->subMonths($count)->format('Ym') >= $start) {
+      $summaryTransaction [Carbon::now()->subMonths($count)->format('Y')] []= [
+        Carbon::now()->subMonths($count)->startOfMonth(),
+        Transaction::where('client_id', $req->user()->id)
+          ->where('created_at', '>=', Carbon::now()->subMonths($count)->startOfMonth())
+          ->where('created_at', '<=', Carbon::now()->subMonths($count)->endOfMonth())
+          ->sum('amount'),
+        ];
+      // $summaryTransaction [Carbon::now()->subMonths($count)->format('Y')]
+      $count++;
+    }
+
+    // for($i = 0; $i < 10; $i++) {
+    //   $summaryTransaction [] = Carbon::now()->subMonths($i)->format('Ym');
+    // }
+
+    return response()->json([
+      ...$this->G_ReturnDefault($req),
+      'data' => [
+        'transactions' => $transactions,
+        'summaryTransaction' => $summaryTransaction,
+        'sumTransactions' => Transaction::where('client_id', $req->user()->id)->sum('amount'),
+      ]
+    ]);
   }
 }

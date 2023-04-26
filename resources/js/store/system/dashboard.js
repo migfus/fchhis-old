@@ -7,7 +7,7 @@ export const useDashboardStore = defineStore("dashboard", () => {
 
   async function GetAPI(role) {
     try {
-      let { data : {data}}  = await axios.get(`/api/dashboard?role=${role}`);
+      let { data : {data}}  = await axios.get(`/api/dashboard`);
       console.log(data)
       content.value = data;
     }
