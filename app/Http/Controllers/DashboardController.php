@@ -229,6 +229,16 @@ class DashboardController extends Controller
   }
 
   private function Staff(Request $req) {
-    return 1;
+    $data = [
+      'total' => User::where('role', 6)->count(),
+      'clients' => User::where('role', 6)
+        ->whereHas('person', function($q) use($req){
+          $q->where('created_by_user_id', $req->user()->id);
+        })
+        ->count(),
+      'inactive' => User::whereNotNull('OR')->where('role', 6)->whereNull('email')->count()
+    ];
+
+    return response()->json([...$this->G_ReturnDefault($req), 'data' => $data]);
   }
 }

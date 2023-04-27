@@ -110,6 +110,27 @@ const isAdmin = computed(() => {
   return []
 })
 
+const isStaff = computed(() => {
+  if ($auth.auth.role == 5) {
+    return [
+      {
+        name: 'CLIENTS',
+      },
+      {
+        name: 'All Transactions',
+        icon: 'fa-receipt',
+        link: { name: 'transactions-all' }
+      },
+      {
+        name: 'Clients',
+        icon: 'fa-users',
+        link: { name: 'users-list' }
+      },
+    ]
+  }
+  return []
+})
+
 const menu = ref([
   // NOTE DASHBOARD
   {
@@ -122,6 +143,7 @@ const menu = ref([
   },
   // USERS
   ...isAdmin.value,
+  ...isStaff.value,
   // {
   //   name: 'Manager',
   //   icon: 'fa-user-friends',

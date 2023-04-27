@@ -9,7 +9,8 @@
             </div>
             <div class="col-sm-6">
               <ol class="breadcrumb float-sm-right">
-                <li v-if="$route.meta.auth" class="breadcrumb-item">
+                <li v-if="$route.name == 'dashboard'"></li>
+                <li v-else-if="$route.meta.auth" class="breadcrumb-item">
                   <RouterLink :to="{ name: 'dashboard' }">Dashboard</RouterLink>
                 </li>
                 <li v-else class="breadcrumb-item">

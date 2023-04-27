@@ -3,24 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Transaction;
+use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 
-class TransactionController extends Controller
+class ClientController extends Controller
 {
-
-  public function index(Request $req)
-  {
-    if($req->user()->role == 2) {
-      return response()->json([
-        ...$this->G_ReturnDefault($req),
-        'data' => Transaction::with(['client.person', 'staff.person', 'agent.person', 'plan'])->paginate(10),
-      ]);
-    }
-
+  public function index(Request $req) {
     $val = Validator::make($req->all(), [
       'limit' => 'required|numeric|min:1|max:10',
-      'search' => ''
     ]);
 
     if($val->fails()) {
@@ -28,12 +18,15 @@ class TransactionController extends Controller
     }
 
     if($req->user()->role == 5) {
-      $data = Transaction::with(['plan', 'client.person'])->limit($req->limit)->orderBy('created_at', 'DESC')->get();
-
-      return response()->json([
-        ...$this->G_ReturnDefault($req),
-        'data' => $data
-      ]);
+      $data = User::limit($req->limit)
+        ->with([
+          'person',
+          'plan',
+        ])
+        ->withSum('client_transactions', 'amount')
+        ->orderBy('created_at', 'DESC')
+        ->get();
+      return response()->json([...$this->G_ReturnDefault($req), 'data' => $data]);
     }
 
     return $this->G_UnauthorizedResponse();
