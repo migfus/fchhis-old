@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('people', function (Blueprint $table) {
             $table->id();
             $table->integer('created_by_user_id')->unsigned();
+            $table->integer('agent_id')->unsigned()->nullable();
             $table->string('lastName')->nullable();
             $table->string('firstName')->nullable();
             $table->string('midName')->nullable();

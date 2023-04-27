@@ -13,6 +13,7 @@ class DatabaseSeeder extends Seeder
         PersonSeeder::class,
         PlanSeeder::class,
         TransactionSeeder::class,
+        BeneficiarySeeder::class,
 
         AddressSQL::class,
       ]);

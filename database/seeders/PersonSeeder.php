@@ -26,6 +26,7 @@ class PersonSeeder extends Seeder
           'address_id' => 1,
           'address' => '[address]',
           'mobile' => 9978885555,
+          'agent_id'=> 3,
         ],
         [
           'id' => 2,
@@ -40,6 +41,7 @@ class PersonSeeder extends Seeder
           'address_id' => 1,
           'address' => '[address]',
           'mobile' => 9978885555,
+          'agent_id'=> 3,
         ],
         [
           'id' => 3,
@@ -54,6 +56,7 @@ class PersonSeeder extends Seeder
           'address_id' => 1,
           'address' => '[address]',
           'mobile' => 9978885555,
+          'agent_id'=> 3,
         ],
         [
           'id' => 4,
@@ -68,6 +71,7 @@ class PersonSeeder extends Seeder
           'address_id' => 1,
           'address' => '[address]',
           'mobile' => 9978885555,
+          'agent_id'=> 3,
         ],
         [
           'id' => 5,
@@ -82,6 +86,7 @@ class PersonSeeder extends Seeder
           'address_id' => 1,
           'address' => '[address]',
           'mobile' => 9978885555,
+          'agent_id'=> 3,
         ],
         [
           'id' => 6,
@@ -96,6 +101,7 @@ class PersonSeeder extends Seeder
           'address_id' => 1,
           'address' => '[address]',
           'mobile' => 9978885555,
+          'agent_id'=> 3,
         ],
         [
           'id' => 7,
@@ -110,6 +116,7 @@ class PersonSeeder extends Seeder
           'address_id' => 1,
           'address' => '[address]',
           'mobile' => 9978885555,
+          'agent_id'=> 3,
         ],
       ];
 
@@ -131,6 +138,7 @@ class PersonSeeder extends Seeder
           'address_id' => $idx,
           'address'  => $faker->lastName,
           'mobile' => 9978885555,
+          // 'agent_id'=> 3,
         ]);
       }
     }

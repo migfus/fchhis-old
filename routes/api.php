@@ -9,6 +9,8 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PlanController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\BeneficiaryController;
+use App\Http\Controllers\DownHeadController;
 
 Route::controller(AuthController::class)->group(function () {
   Route::post('/login', 'Login');
@@ -29,4 +31,6 @@ Route::middleware('auth:sanctum')->group(function () {
   Route::apiResource('/plan', PlanController::class)->only(['index', 'destroy', 'store', 'update']);
   Route::apiResource('/role', RoleController::class)->only(['index']);
   Route::apiResource('/transactions', TransactionController::class)->only(['index']);
+  Route::apiResource('/beneficiary', BeneficiaryController::class)->only(['index', 'destroy', 'store', 'update']);
+  Route::apiResource('/downhead', DownHeadController::class)->only(['index']);
 });

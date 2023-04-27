@@ -50,49 +50,14 @@
         </div>
       </div>
 
-      <div class="card">
-        <div class="card-header">
-          <h4 class="card-title"><strong>Beneficiaries</strong></h4>
+      <BeneficiaryCard />
 
-          <div class="card-tools">
-            <div class="input-group input-group-sm">
-              <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
-              <div class="input-group-append">
-                <button type="submit" class="btn btn-default">
-                  <i class="fas fa-search"></i>
-                </button>
-                <button type="submit" class="btn btn-success">
-                  Add
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="card-body">
-          <table class="table table-hover text-nowrap">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Age</th>
-                <th width="100">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="row in 5">
-                <td>Juan De loslos</td>
-                <td>12</td>
-                <td>
-                  <button class="btn btn-info btn-sm mr-1"><i class="fas fa-pen"></i></button>
-                  <button class="btn btn-danger btn-sm px-2"><i class="fas fa-times"></i></button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
+
+
     </div>
 
     <div class="col-12 col-md-6">
+
       <div class="card">
         <div class="card-header">
           <h4 class="card-title"><strong>Transactions</strong></h4>
@@ -148,10 +113,11 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
 import { useDashboardStore } from '@/store/system/dashboard'
-import { NumberAddComma, } from '@/helpers/converter'
+import { NumberAddComma } from '@/helpers/converter'
 import moment from 'moment'
+
+import BeneficiaryCard from './BeneficiariesCard.vue'
 
 const $dash = useDashboardStore();
 </script>

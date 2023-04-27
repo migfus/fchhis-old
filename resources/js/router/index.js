@@ -180,9 +180,9 @@ router.beforeEach(async (to, from) => {
 
 
 
-  // if ($auth.token == "" && to.name !== "login") {
-  //   return { name: "login" };
-  // }
+  if ($auth.token == "" && to.name !== "login") {
+    return { name: "login" };
+  }
 
   if(to.meta.auth && !$auth.token && to.meta.name != 'login') {
     return { name: 'login'};

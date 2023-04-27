@@ -12,6 +12,18 @@ class BeneficiarySeeder extends Seeder
      */
     public function run(): void
     {
-        //
+      $data = [
+        [
+          'person_id' => 5,
+          'lastName' => 'John',
+          'firstName' => 'Juan',
+          'midName' => 'N',
+          'extName' => '',
+        ],
+      ];
+
+      foreach($data as $row) {
+        \App\Models\Beneficiary::create($row);
+      }
     }
 }

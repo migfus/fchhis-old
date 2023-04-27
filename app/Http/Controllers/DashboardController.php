@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Transaction;
 use Carbon\Carbon;
+use App\Models\Beneficiary;
 
 class DashboardController extends Controller
 {
@@ -125,6 +126,7 @@ class DashboardController extends Controller
   }
 
   public function index(Request $req) {
+    // NOTE ADMIN
     if($req->user()->role == 2) {
       return response()->json([
         ...$this->G_ReturnDefault($req),
@@ -142,11 +144,55 @@ class DashboardController extends Controller
       ], 200);
     }
 
+    // NOTE AGENT
+    if($req->user()->role == 4) {
+      return $this->Agent($req);
+    }
+
+    // NOTE STAFF
+    if($req->user()->role == 5) {
+      return $this->Staff($req);
+    }
+
+    // NOTE CLIENT
     if($req->user()->role == 6) {
       return $this->Client($req);
     }
 
     return $this->G_UnauthorizedResponse();
+  }
+
+  public function Agent(Request $req) {
+    $transactions = Transaction::where('client_id', $req->user()->id)->orderBy('created_at', 'DESC')->get();
+
+    $start = Carbon::parse(Transaction::where('client_id', $req->user()->id)->orderBy('created_at', 'ASC')->first()->created_at)->startOfYear()->format('Ym');
+
+    $summaryTransaction = [];
+    $count = 0;
+    while(Carbon::now()->subMonths($count)->format('Ym') >= $start) {
+      $summaryTransaction [Carbon::now()->subMonths($count)->format('Y')] []= [
+        Carbon::now()->subMonths($count)->startOfMonth(),
+        Transaction::where('client_id', $req->user()->id)
+          ->where('created_at', '>=', Carbon::now()->subMonths($count)->startOfMonth())
+          ->where('created_at', '<=', Carbon::now()->subMonths($count)->endOfMonth())
+          ->sum('amount'),
+        ];
+      // $summaryTransaction [Carbon::now()->subMonths($count)->format('Y')]
+      $count++;
+    }
+
+    // for($i = 0; $i < 10; $i++) {
+    //   $summaryTransaction [] = Carbon::now()->subMonths($i)->format('Ym');
+    // }
+
+    return response()->json([
+      ...$this->G_ReturnDefault($req),
+      'data' => [
+        'transactions' => $transactions,
+        'summaryTransaction' => $summaryTransaction,
+        'sumTransactions' => Transaction::where('client_id', $req->user()->id)->sum('amount'),
+      ]
+    ]);
   }
 
   public function Client(Request $req) {
@@ -180,5 +226,9 @@ class DashboardController extends Controller
         'sumTransactions' => Transaction::where('client_id', $req->user()->id)->sum('amount'),
       ]
     ]);
+  }
+
+  private function Staff(Request $req) {
+    return 1;
   }
 }

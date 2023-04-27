@@ -21,6 +21,7 @@ class Person extends Model
       'address_id',
       'address',
       'mobile',
+      'agent_id',
     ];
 
   public function user() {
