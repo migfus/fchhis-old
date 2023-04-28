@@ -1,8 +1,11 @@
 import { ref, reactive } from 'vue'
 import { defineStore } from 'pinia'
 import axios from 'axios'
+import { $DebugInfo, $Err, $Log } from '@/helpers/debug'
 
 export const usePlanStore = defineStore('plan', ()=> {
+  $DebugInfo('PlanStore')
+
   const content = ref([])
   const count = ref([])
   const config = reactive({
@@ -39,7 +42,7 @@ export const usePlanStore = defineStore('plan', ()=> {
       content.value = data
     }
     catch(e) {
-      console.log({e})
+      $Err('GetAPI', {e})
     }
     config.loading = false
   }
@@ -51,7 +54,7 @@ export const usePlanStore = defineStore('plan', ()=> {
       count.value = data
     }
     catch(e) {
-      console.log({e})
+      $Err('GetCount Err', {e})
     }
     config.loadingCount = false
   }
@@ -71,10 +74,10 @@ export const usePlanStore = defineStore('plan', ()=> {
     content.value.splice(idx, 1)
     try {
       let { data: { data}} = await axios.delete('/api/plan/' + id)
-      console.log({data})
+      $Log('DeleteAPI', {data})
     }
     catch(e) {
-      console.log(e)
+      $Log('DeleteAPI Error', {e})
     }
   }
 
@@ -82,11 +85,11 @@ export const usePlanStore = defineStore('plan', ()=> {
     config.loading = true
     try {
       let { data: { data } } = await axios.post('/api/plan', input.value)
-      console.log({data})
+      $Log('AddAPI', {data})
       GetAPI()
     }
     catch(e) {
-      console.log({e})
+      $Err('AddAPI Err', {e})
     }
     config.loading = false
   }
@@ -110,11 +113,11 @@ export const usePlanStore = defineStore('plan', ()=> {
     config.loading = true
     try {
       let { data: { data } } = await axios.put('/api/plan', input.value)
-      console.log({data})
+      $Log('UpdateAPI', {data})
       GetAPI()
     }
     catch(e) {
-      console.log({e})
+      $Err('UpdateAPI Err', {e})
     }
     config.loading = false
   }
