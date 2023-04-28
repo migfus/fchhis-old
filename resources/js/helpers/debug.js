@@ -1,8 +1,30 @@
 
 const debug = true;
 
-export const $DebugInfo = (name) => {
-  if(debug)
+let called = false;
+let name = '';
+export const $DebugInfo = (_name) => {
+  name = _name;
+  called = false;
+}
+
+export const $Err = (msg, input) => {
+  if (debug) {
+    message();
+    return console.log(`%c${msg}`, "color: red", input);
+  }
+}
+
+export const $Log = (msg, input) => {
+  if (debug) {
+    message();
+    return console.log(`%c${msg}`, "color: cyan", input);
+  }
+}
+
+function message() {
+  if(!called) {
+    called = true;
     console.log(
       `%cDEBUG %cENABLED %c===========================>%c${name}%c<=========================🥴`,
       "color: red",
@@ -11,12 +33,5 @@ export const $DebugInfo = (name) => {
       'color: cyan',
       'color: green'
     )
-}
-
-export const $Err = (msg, input) => {
-  if (debug) return console.log(`%c${msg}`, "color: red", input);
-}
-
-export const $Log = (msg, input) => {
-  if (debug) return console.log(`%c${msg}`, "color: cyan", input);
+  }
 }
