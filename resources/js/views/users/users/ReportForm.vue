@@ -35,10 +35,13 @@
 import { ref } from 'vue'
 import { read, utils, writeFile } from 'xlsx';
 import axios from 'axios'
+import { $DebugInfo, $Err, $Log } from '@/helpers/debug';
+
+$DebugInfo('ReportForm')
 
 async function Export() {
   let data = await axios.get('"https://sheetjs.com/pres.numbers')
-  console.log(utils.sheet_to_json(read(data)))
+  $Log('Export', utils.sheet_to_json(read(data)))
 
   // const table = ref()
   // const excel = utils.table_to_book(table)

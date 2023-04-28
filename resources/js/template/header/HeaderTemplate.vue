@@ -124,7 +124,7 @@ const isStaff = computed(() => {
       {
         name: 'Clients',
         icon: 'fa-users',
-        link: { name: 'users-list' }
+        link: { name: 'clients-list' }
       },
     ]
   }
@@ -233,10 +233,10 @@ const pages = ref([
     name: 'Contact',
     link: "contact"
   },
-  {
-    name: 'FAQs',
-    link: "faq"
-  },
+  // {
+  //   name: 'FAQs',
+  //   link: "faq"
+  // },
 ]);
 
 onMounted(() => {

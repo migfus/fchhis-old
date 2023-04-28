@@ -2,9 +2,13 @@ import { ref } from "vue";
 import { defineStore } from "pinia";
 import { useToast } from "vue-toastification";
 import axios from "axios";
+import { useDashboardStore } from '@/store/system/dashboard'
+import { $Err, $DebugInfo} from '@/helpers/debug'
 
 export const useAuthStore = defineStore("auth", () => {
+  $DebugInfo('AuthStore');
   const $toast = useToast();
+  const $dash = useDashboardStore();
 
   const auth = ref(JSON.parse(localStorage.getItem("auth")) || {});
   const token = ref(localStorage.getItem("token") || "");
@@ -31,6 +35,7 @@ export const useAuthStore = defineStore("auth", () => {
     localStorage.removeItem("token");
     localStorage.removeItem("auth");
     this.$router.push({ name: "login" });
+    $dash.content = false
     if (mode) {
       $toast.success("Logout", { position: "bottom-right" });
     } else {
@@ -50,7 +55,7 @@ export const useAuthStore = defineStore("auth", () => {
       $toast.success("Successfully Login", { position: "bottom-right" });
       this.$router.push({ name: "dashboard" });
     } catch (e) {
-      console.log("login error", e);
+      $Err("login error", e);
     }
   }
 

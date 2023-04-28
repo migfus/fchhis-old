@@ -1,8 +1,10 @@
 import { ref, reactive } from 'vue'
 import { defineStore } from 'pinia'
 import axios from 'axios'
+import { $DebugInfo, $Err, $Log } from '@/helpers/debug'
 
 export const useTransactionStore = defineStore('transaction', () => {
+  $DebugInfo('TransactionStore')
   const content = ref([])
   const config = reactive({
     loading: false,
@@ -33,7 +35,7 @@ export const useTransactionStore = defineStore('transaction', () => {
       content.value = data
     }
     catch(e) {
-      console.log({e})
+      $Err('GetAPI Err', {e})
     }
     config.loading = false
   }

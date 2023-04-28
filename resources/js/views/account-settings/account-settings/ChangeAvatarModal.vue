@@ -38,9 +38,10 @@
 import VuePictureCropper, { cropper } from 'vue-picture-cropper'
 import { ref } from 'vue';
 import axios from 'axios';
-
+import { $DebugInfo, $Err, $Log } from '@/helpers/debug';
 import { useAuthStore } from '@/store/auth/auth';
 
+$DebugInfo("ChangeAvatarModalVUE")
 const $auth = useAuthStore();
 
 const uploadInput = ref(null);
@@ -88,10 +89,10 @@ async function UploadImage(file) {
   try {
     let { data } = await axios.post('/api/avatar', { file: file })
     $auth.UpdateAvatar(data.file)
-    console.log('uploaded', data.file)
+    $Log('UploadAPI', data.file)
   }
   catch (e) {
-    console.log('avatar upload error:', e)
+    $Err('UploadAPI Error', e)
   }
 }
 

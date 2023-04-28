@@ -1,7 +1,9 @@
 import axios from "axios";
 import { useAuthStore } from "../store/auth/auth";
+import { $DebugInfo, $Err, $Log} from '@/helpers/debug'
 
 export default function jwtInterceptor() {
+  $DebugInfo('JWT Interceptor')
   const $auth = useAuthStore();
 
   axios.interceptors.request.use((config) => {
@@ -17,12 +19,12 @@ export default function jwtInterceptor() {
       if (response.data.auth) {
         $auth.role = response.data.auth.role;
         $auth.auth = response.data.auth;
-        console.log("Role Updated");
+        $Log("Role Updated");
       }
       return response;
     },
     (error) => {
-      console.log("auth error: ", error);
+      $Err("auth error: ", error);
 
       const { status } = error.response;
       const { data } = error.response;

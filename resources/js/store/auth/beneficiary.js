@@ -1,9 +1,11 @@
 import { ref, reactive, watch} from 'vue'
 import { defineStore } from 'pinia'
 import axios from 'axios'
-
+import { $Err, $DebugInfo, $Log} from '@/helpers/debug'
 
 export const useBeneficiaryStore = defineStore('beneficiary', () => {
+  $DebugInfo("BeneficiaryStore")
+
   const content = ref(null)
   const query = reactive({
     search: '',
@@ -45,7 +47,7 @@ export const useBeneficiaryStore = defineStore('beneficiary', () => {
       content.value = data
     }
     catch(e) {
-      console.log({e})
+      $Err('Get API', {e})
     }
     config.loading = false
   }
@@ -53,24 +55,24 @@ export const useBeneficiaryStore = defineStore('beneficiary', () => {
   async function StoreAPI() {
     try {
       let { data: {data}} = await axios.post('/api/beneficiary', params)
-      console.log({data})
+      $Log('Store API', {data})
       GetAPI();
       ChangeForm('')
     }
     catch(e) {
-      console.log({e})
+      $Err('Store API Error', {e})
     }
   }
 
   async function UpdateAPI(id) {
     try {
       let { data: {data}} = await axios.put(`/api/beneficiary/${id}`, params)
-      console.log({data})
+      $Log("Update API", {data})
       GetAPI();
       ChangeForm('')
     }
     catch(e) {
-      console.log({e})
+      $Err("Update API ERRor", {e})
     }
   }
 
@@ -78,10 +80,10 @@ export const useBeneficiaryStore = defineStore('beneficiary', () => {
     content.value.splice(idx, 1)
     try {
       let { data: {data}} = await axios.delete(`/api/beneficiary/${id}`)
-      console.log({data})
+      $Log("Delete API Response", {data})
     }
     catch(e) {
-      console.log({e})
+      $Err("Delete API Error", {e})
     }
   }
 

@@ -186,10 +186,10 @@ const pages = ref([
     link: "contact"
   },
 
-  {
-    name: 'FAQs',
-    link: "faq"
-  },
+  // {
+  //   name: 'FAQs',
+  //   link: "faq"
+  // },
 ]);
 
 onMounted(() => {

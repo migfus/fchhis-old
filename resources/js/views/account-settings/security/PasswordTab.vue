@@ -51,6 +51,9 @@ import * as Yup from 'yup'
 import { Form, Field, ErrorMessage, configure, } from 'vee-validate'
 import axios from 'axios'
 import { useToast } from "vue-toastification";
+import { $DebugInfo, $Err, $Log } from '@/helpers/debug';
+
+$DebugInfo('PasswordTabVue')
 
 configure({
   validateOnInput: true,
@@ -74,11 +77,12 @@ const $toast = useToast();
 async function Update() {
   try {
     const { data } = await axios.post('/api/change-password', input)
-    // console.log(data.data)
+    $Log('UpdateAPI', data.data)
     $toast.success('Successfuly Changed')
     Object.assign(input, { currentPassword: '', newPassword: '', confirmPassword: '' })
   }
   catch (e) {
+    $Err('UpdateAPI Err', { e })
     $toast.error('Incorrect Current Password')
   }
 }

@@ -214,9 +214,11 @@ import { Form, Field, ErrorMessage, configure, } from 'vee-validate'
 import * as Yup from 'yup'
 import { useRegisterStore } from '@/store/auth/register'
 import { useRouter } from 'vue-router'
+import { $DebugInfo, $Err, $Log } from '@/helpers/debug'
 
 import AvatarUpload from './AvatarUpload.vue'
 
+$DebugInfo('RegisterFillPage');
 const $address = useAddressStore();
 const $register = useRegisterStore();
 const $router = useRouter();
@@ -267,7 +269,7 @@ function GeneratePasword(length = 8) {
 }
 
 onMounted(() => {
-  console.log($register.content)
+  $Log('onMounted', $register.content)
   if (!$register.content) {
     $router.push({ name: 'register', query: { error: 'Invalid OR', or: '' } })
   }

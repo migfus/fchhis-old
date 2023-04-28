@@ -11,7 +11,7 @@
             <div class="row">
 
               <div class="col-12 col-md-6">
-                <RouterLink :to="{ name: 'users-list' }">
+                <RouterLink :to="{ name: 'clients-list' }">
                   <div class="info-box mb-3 bg-info">
                     <span class="info-box-icon"><i class="fas fa-users"></i></span>
                     <div class="info-box-content">
@@ -141,7 +141,7 @@
                 </tr>
               </tbody>
             </table>
-            <RouterLink :to="{ name: 'users-list' }" class="btn btn-info m-3 float-right">More</RouterLink>
+            <RouterLink :to="{ name: 'clients-list' }" class="btn btn-info m-3 float-right">More</RouterLink>
           </div>
         </div>
       </div>

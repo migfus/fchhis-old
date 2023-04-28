@@ -1,11 +1,12 @@
 import { ref, reactive } from 'vue'
 import { defineStore } from 'pinia'
 import axios from 'axios'
+import { $DebugInfo, $Err, $Log} from '@/helpers/debug'
 
 export const useRegisterStore = defineStore('register', () => {
-  const content = ref({
+  $DebugInfo("RegisterStore")
 
-  })
+  const content = ref({})
   const params = reactive({
     or: '',
   })
@@ -26,7 +27,7 @@ export const useRegisterStore = defineStore('register', () => {
       }
     }
     catch(e) {
-      console.log(e)
+      $Err('OR API ERROR: ' + {e})
     }
     config.loading = false
   }
@@ -35,11 +36,11 @@ export const useRegisterStore = defineStore('register', () => {
     config.loading = true
     try {
       let { data: { data}} = await axios.post('/api/register', params)
-      console.log({data})
+      $Log('Register API', {data})
       this.$router.push({ name: 'login', query: {email: params.email}})
     }
     catch(e) {
-      console.log({e})
+      $Err('Register API', {e})
     }
     config.loading = false
   }

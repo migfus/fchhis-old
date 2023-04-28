@@ -1,9 +1,11 @@
 import { ref, reactive} from 'vue'
 import { defineStore } from 'pinia'
 import axios from 'axios'
-
+import { $DebugInfo, $Err} from '@/helpers/debug'
 
 export const useDownHeadStore = defineStore('downhead', () => {
+  $DebugInfo("DownHeadStore")
+
   const content = ref(null)
   const query = reactive({
     search: '',
@@ -19,7 +21,7 @@ export const useDownHeadStore = defineStore('downhead', () => {
       content.value = data
     }
     catch(e) {
-      console.log({e})
+      $Err("GetAPI Err", {e})
     }
     config.loading = false
   }

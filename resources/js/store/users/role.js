@@ -1,8 +1,10 @@
 import { reactive, ref } from 'vue'
 import { defineStore } from 'pinia'
 import axios from 'axios'
+import { $DebugInfo, $Err, $Log } from '@/helpers/debug'
 
 export const useRoleStore = defineStore('role', () => {
+  $DebugInfo('RoleStore')
   const content = ref([
     {
       id: 6,
@@ -54,7 +56,7 @@ export const useRoleStore = defineStore('role', () => {
       content.value = data
     }
     catch(e) {
-      console.log({e})
+      $Err('RoleGetAPI Err', {e})
     }
   }
 

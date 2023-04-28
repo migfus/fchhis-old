@@ -1,8 +1,11 @@
 import { ref, reactive } from 'vue'
 import { defineStore } from 'pinia'
 import axios from 'axios'
+import { $DebugInfo, $Err, $Log} from '@/helpers/debug'
 
 export const useClientStore = defineStore('clients', () => {
+  $DebugInfo("ClientStore")
+
   const content = ref(false)
   const params = ref({
    ...InitParams()
@@ -27,7 +30,7 @@ export const useClientStore = defineStore('clients', () => {
       content.value = data
     }
     catch (e) {
-      console.log({ e })
+      $Err("GEt API Error", {e})
     }
     config.loading = false
   }

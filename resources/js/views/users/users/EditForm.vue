@@ -235,6 +235,7 @@ import { Form, Field, ErrorMessage, configure, } from 'vee-validate'
 import * as Yup from 'yup'
 import { usePlanStore } from '@/store/system/plan'
 import { CityIDToProvinceID } from '@/helpers/converter'
+import { $DebugInfo, $Err, $Log } from '../../../helpers/debug'
 
 import AvatarUpload from './AvatarUpload.vue'
 
@@ -245,6 +246,7 @@ const $plan = usePlanStore();
 const BDayProvinceID = ref(CityIDToProvinceID($user.input.person.bplace_id));
 const AddressProvinceID = ref(CityIDToProvinceID($user.input.person.address_id));
 
+$DebugInfo('EditFormVue')
 configure({
   validateOnInput: true,
 })
@@ -261,7 +263,7 @@ const schema = Yup.object({
 })
 
 function getImage(event) {
-  console.log({ event })
+  $Log('getImage', { event })
 }
 
 const age = computed(() => {

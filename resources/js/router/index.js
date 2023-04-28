@@ -137,6 +137,30 @@ const router = createRouter({
         sideBar: true,
       },
     },
+
+    // NOTE CLIENTS
+    {
+      path: "/clients",
+      name: "clients-list",
+      component: () => import("@/views/clients/ClientPage.vue"),
+      meta: {
+        title: "Users' Management",
+        role: 5, //client only
+        auth: true,
+        sideBar: true,
+      },
+    },
+    // {
+    //   path: "/users/roles",
+    //   name: "users-roles",
+    //   component: () => import("@/views/users/roles/RolePage.vue"),
+    //   meta: {
+    //     title: "User's Roles",
+    //     role: 2, //admin
+    //     auth: true,
+    //     sideBar: true,
+    // },
+
     // NOTE ACCOUNT SETTINGS
     {
       path: "/account-settings",
@@ -180,11 +204,11 @@ router.beforeEach(async (to, from) => {
 
 
 
-  if ($auth.token == "" && to.name !== "login") {
-    return { name: "login" };
-  }
+  // if ($auth.token == "" && to.name !== "login") {
+  //   return { name: "login" };
+  // }
 
-  if(to.meta.auth && !$auth.token && to.meta.name != 'login') {
+  if(to.meta.auth && $auth.token == '' && to.meta.name != 'login') {
     return { name: 'login'};
     // return false
   }

@@ -50,6 +50,7 @@ import BreadCrumbTemplate from './template/BreadCrumbTemplate.vue';
 import { useRoute } from 'vue-router';
 import { onMounted } from 'vue'
 import { useAddressStore } from '@/store/system/address'
+import { $Err } from '@/helpers/debug'
 
 import "vue-toastification/dist/index.css";
 
@@ -58,5 +59,6 @@ const $address = useAddressStore();
 
 onMounted(() => {
   $address.GetAPI();
+  $Err("test", "error")
 });
 </script>

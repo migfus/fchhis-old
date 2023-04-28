@@ -3,8 +3,10 @@ import { defineStore } from 'pinia'
 import axios from 'axios'
 import { useToast } from 'vue-toastification'
 import { useRoute } from 'vue-router'
+import { $DebugInfo, $Err, $Log } from '@/helpers/debug'
 
 export const useUserStore = defineStore('users', () => {
+  $DebugInfo('UserStore')
   const $toast = useToast();
   const $route = useRoute();
 
@@ -87,7 +89,7 @@ export const useUserStore = defineStore('users', () => {
       list.value = data
     }
     catch (e) {
-      console.log({ e })
+      $Err('GetAPI Errr', { e })
     }
     config.loading = false
   }
@@ -101,7 +103,7 @@ export const useUserStore = defineStore('users', () => {
       counts.value = data
     }
     catch(e) {
-      console.log({ e })
+      $Err('GetCount Err', { e })
     }
     config.countLoading = false
   }
@@ -112,10 +114,10 @@ export const useUserStore = defineStore('users', () => {
       try {
         let { data } = await axios.delete(`/api/users/${id}`)
         GetAPI()
-        console.log({ data })
+        $Log('DeleteAPI', { data })
       }
       catch (e) {
-        console.log({ e })
+        $Err('DeleteAPI Err', { e })
       }
     }
   }
@@ -124,13 +126,13 @@ export const useUserStore = defineStore('users', () => {
     config.loading = true
     try {
       let { data : {data } } = await axios.post(`/api/users`, input.value)
-      console.log({ data })
+      $Log('AddAPI', { data })
       GetAPI()
       ChangeForm('')
       $toast.success('Successfully added');
     }
     catch (e) {
-      console.log({ e })
+      $Err('AddAPI Error', { e })
     }
     config.loading = false
     window.scrollTo({
@@ -160,12 +162,12 @@ export const useUserStore = defineStore('users', () => {
     config.loading = true
     try {
       let { data: { data}} = await axios.put(`/api/users/${input.value.id}`, input.value)
-      console.log({data})
+      $Log('UpdateAPI', {data})
       GetAPI()
       $toast.success('Successfully updated');
     }
     catch(e) {
-      console.log({e})
+      $Err('UpdateAPi Error', {e})
     }
     config.loading = false
     window.scrollTo({

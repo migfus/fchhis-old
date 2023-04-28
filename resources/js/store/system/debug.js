@@ -2,7 +2,7 @@ import { ref } from "vue";
 import { defineStore } from "pinia";
 
 export const useDebugStore = defineStore("debug", () => {
-  const enabled = ref(true);
+  const enabled = ref(false);
 
   function Err(message, input) {
     if (enabled.value) return console.log(`%c${message}`, "color: red", input);
