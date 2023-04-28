@@ -44,6 +44,6 @@
 </template>
 
 <script setup>
-import SliderComponent from './SliderComponent.vue';
-import PricingComponent from './PricingComponent.vue';
+import SliderComponent from './component/SliderComponent.vue';
+import PricingComponent from './component/PricingComponent.vue';
 </script>

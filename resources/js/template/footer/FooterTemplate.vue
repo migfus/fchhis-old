@@ -68,7 +68,7 @@
     </section>
     <div :class="fluid ? 'container-fluid' : 'container'">
       <div class="float-right d-none d-sm-block">
-        <b>Version</b> 0.0.5
+        <b>Version</b> 0.0.7
       </div>
       <strong>Copyright © 2023 </strong>Future Care and Helping Hands Insurance Services
     </div>

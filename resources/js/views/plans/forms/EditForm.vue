@@ -157,7 +157,7 @@ import { QuillEditor } from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css';
 import { usePlanStore } from '@/store/system/plan'
 
-import AvatarUpload from './AvatarUpload.vue'
+import AvatarUpload from '../modals/AvatarUpload.vue'
 
 configure({
   validateOnInput: true,

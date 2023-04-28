@@ -104,7 +104,7 @@ import { ref, reactive } from 'vue'
 import { Bar as BarComponent } from 'vue-chartjs'
 import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js'
 import moment from 'moment'
-import { useDashboardStore } from '@/store/system/dashboard'
+import { useDashboardStore } from '@/store/dashboard/dashboard'
 import { FullNameConvert, NumberAddComma, GetPercentage } from '@/helpers/converter'
 
 import PercentComponent from './PercentComponent.vue'

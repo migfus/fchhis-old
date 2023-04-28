@@ -44,7 +44,7 @@
 </template>
 
 <script setup>
-import { useDashboardStore } from '@/store/system/dashboard';
+import { useDashboardStore } from '@/store/dashboard/dashboard';
 import { NumberAddComma } from '@/helpers/converter'
 
 const $dash = useDashboardStore();

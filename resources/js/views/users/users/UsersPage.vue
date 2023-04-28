@@ -30,15 +30,15 @@ import { useUserStore } from '@/store/users/users'
 import { usePlanStore } from '@/store/system/plan'
 import { onMounted } from 'vue';
 
-import UserSummary from './UserSummary.vue'
-import AddForm from './AddForm.vue'
-import EditForm from './EditForm.vue'
-import SearchComponent from './SearchComponent.vue'
-import TableComponent from './TableComponent.vue'
-import MobileComponent from './MobileComponent.vue'
-import PaginationComponent from './PaginationComponent.vue'
-import ReportForm from './ReportForm.vue'
-import ORForm from './ORForm.vue'
+import UserSummary from './contents/UserSummary.vue'
+import AddForm from './forms/AddForm.vue'
+import EditForm from './forms/EditForm.vue'
+import SearchComponent from './search/SearchComponent.vue'
+import TableComponent from './contents/TableComponent.vue'
+import MobileComponent from './contents/MobileComponent.vue'
+import PaginationComponent from './components/PaginationComponent.vue'
+import ReportForm from './forms/ReportForm.vue'
+import ORForm from './forms/ORForm.vue'
 
 const $user = useUserStore();
 const $plan = usePlanStore();

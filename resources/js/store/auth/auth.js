@@ -2,7 +2,7 @@ import { ref } from "vue";
 import { defineStore } from "pinia";
 import { useToast } from "vue-toastification";
 import axios from "axios";
-import { useDashboardStore } from '@/store/system/dashboard'
+import { useDashboardStore } from '@/store/dashboard/dashboard'
 import { $Err, $DebugInfo} from '@/helpers/debug'
 
 export const useAuthStore = defineStore("auth", () => {
@@ -37,7 +37,7 @@ export const useAuthStore = defineStore("auth", () => {
     this.$router.push({ name: "login" });
     $dash.content = false
     if (mode) {
-      $toast.success("Logout", { position: "bottom-right" });
+      $toast.success("Successfuly Logout", { position: "bottom-right" });
     } else {
       $toast.error("Session Expired", { position: "bottom-right" });
     }
@@ -45,16 +45,13 @@ export const useAuthStore = defineStore("auth", () => {
 
   async function Login(input) {
     try {
-      let {
-        data: {
-          data: { auth, token },
-        },
-      } = await axios.post("/api/login", input);
-      UpdateAuth(auth);
-      UpdateToken(token);
-      $toast.success("Successfully Login", { position: "bottom-right" });
+      let { data: { data } } = await axios.post("/api/login", input);
+      UpdateAuth(data.auth);
+      UpdateToken(data.token);
+      $toast.success("Successfully Login");
       this.$router.push({ name: "dashboard" });
     } catch (e) {
+      $toast.error("Incorrect credentials")
       $Err("login error", e);
     }
   }

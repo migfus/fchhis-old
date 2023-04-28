@@ -1,13 +1,36 @@
-export const pages = () => {
-  const home = {
+export const pages = [
+  // NOTE PAGES
+  {
     path: "/",
-    name: "home",
-    component: () => import("@/views/auth/LoginPage.vue"),
+    name: 'home',
+    component: () => import('@/views/pages/HomePage.vue'),
     meta: {
-      noNav: true,
-      title: "Login",
-      noAuth: true,
-    },
-  }
-  return { ...home }
-}
+      title: 'Home',
+    }
+  },
+  {
+    path: "/about",
+    name: 'about',
+    component: () => import('@/views/pages/AboutPage.vue'),
+    meta: {
+      title: 'About',
+    }
+  },
+  {
+    path: "/contact",
+    name: 'contact',
+    component: () => import('@/views/pages/ContactPage.vue'),
+    meta: {
+      title: 'Contact',
+    }
+  },
+  {
+    path: '/faq',
+    name: 'faq',
+    component: () => import('@/views/pages/FaqPage.vue'),
+    meta: {
+      title: 'FAQs'
+    }
+  },
+]
+

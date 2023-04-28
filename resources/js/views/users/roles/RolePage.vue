@@ -5,5 +5,5 @@
 </template>
 
 <script setup>
-import ResponsiveCard from './ResponsiveCard.vue';
+import ResponsiveCard from './contents/ResponsiveCard.vue';
 </script>

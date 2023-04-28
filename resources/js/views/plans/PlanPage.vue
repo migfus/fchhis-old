@@ -12,11 +12,11 @@
 <script setup>
 import { usePlanStore } from '@/store/system/plan'
 
-import ResponsiveCard from './ResponsiveCard.vue'
-import PlanRanking from './PlanRanking.vue'
-import SearchCard from './SearchCard.vue'
-import AddForm from './AddForm.vue'
-import EditForm from './EditForm.vue'
+import ResponsiveCard from './contents/ResponsiveCard.vue'
+import PlanRanking from './contents/PlanRanking.vue'
+import SearchCard from './search/SearchCard.vue'
+import AddForm from './forms/AddForm.vue'
+import EditForm from './forms/EditForm.vue'
 
 const $plan = usePlanStore();
 </script>

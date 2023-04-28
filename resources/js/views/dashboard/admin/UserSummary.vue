@@ -102,7 +102,7 @@
 
 <script setup>
 import { ref } from 'vue'
-import { useDashboardStore } from '@/store/system/dashboard'
+import { useDashboardStore } from '@/store/dashboard/dashboard'
 import {
   Chart as ChartJS,
   CategoryScale,

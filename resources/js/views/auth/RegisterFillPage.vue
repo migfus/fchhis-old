@@ -216,7 +216,7 @@ import { useRegisterStore } from '@/store/auth/register'
 import { useRouter } from 'vue-router'
 import { $DebugInfo, $Err, $Log } from '@/helpers/debug'
 
-import AvatarUpload from './AvatarUpload.vue'
+import AvatarUpload from './modals/AvatarUploadModal.vue'
 
 $DebugInfo('RegisterFillPage');
 const $address = useAddressStore();

@@ -108,7 +108,7 @@
 import moment from "moment"
 import { useUserStore } from '@/store/users/users'
 import { RoleToDesc } from '@/helpers/converter'
-import BadgeComponent from './BadgeComponent.vue'
+import BadgeComponent from '../components/BadgeComponent.vue'
 import { FullNameConvert } from '@/helpers/converter'
 import { CityIDToFullAddress, ProvinceIDToDesc, CityIDToDesc } from '@/helpers/converter'
 import VueAvatar from "@webzlodimir/vue-avatar";

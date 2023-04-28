@@ -43,12 +43,8 @@
 
             <div class="row">
               <div class="col-8">
-                <div class="icheck-primary">
-                  <input type="checkbox" id="remember">
-                  <label for="remember" class="ml-2">
-                    Remember Me
-                  </label>
-                </div>
+                <RouterLink :to="{ name: 'forgot' }">I forgot my password</RouterLink>
+
               </div>
 
               <div class="col-4">
@@ -58,10 +54,6 @@
 
             </div>
           </Form>
-
-          <p class="mb-1">
-            <RouterLink :to="{ name: 'forgot' }">I forgot my password</RouterLink>
-          </p>
         </div>
 
       </div>
@@ -95,10 +87,6 @@ const input = reactive({
   email: '',
   password: '',
 });
-
-function Submit() {
-  $auth.Login(input.value)
-}
 
 onMounted(() => {
   input.email = 'admin@gmail.com',

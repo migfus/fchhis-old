@@ -43,14 +43,13 @@
 </template>
 
 <script setup>
-import FooterTemplate from './template/FooterTemplate.vue'
-import HeaderTemplate from './template/header/HeaderTemplate.vue'
-import HeaderNoSideBar from './template/header/HeaderNoSideBar.vue';
-import BreadCrumbTemplate from './template/BreadCrumbTemplate.vue';
+import FooterTemplate from '@/template/footer/FooterTemplate.vue'
+import HeaderTemplate from '@/template/header/HeaderTemplate.vue'
+import HeaderNoSideBar from '@/template/header/HeaderNoSideBar.vue';
+import BreadCrumbTemplate from '@/template/header/BreadCrumbTemplate.vue';
 import { useRoute } from 'vue-router';
 import { onMounted } from 'vue'
 import { useAddressStore } from '@/store/system/address'
-import { $Err } from '@/helpers/debug'
 
 import "vue-toastification/dist/index.css";
 
@@ -59,6 +58,5 @@ const $address = useAddressStore();
 
 onMounted(() => {
   $address.GetAPI();
-  $Err("test", "error")
 });
 </script>

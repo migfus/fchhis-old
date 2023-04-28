@@ -19,7 +19,7 @@ export default function jwtInterceptor() {
       if (response.data.auth) {
         $auth.role = response.data.auth.role;
         $auth.auth = response.data.auth;
-        $Log("Role Updated");
+        $Log("Role Updated", {response});
       }
       return response;
     },

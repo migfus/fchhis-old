@@ -70,7 +70,7 @@
 </template>
 
 <script setup>
-import { useBeneficiaryStore } from '@/store/auth/beneficiary';
+import { useBeneficiaryStore } from '@/store/dashboard/beneficiary';
 import { Form, Field, ErrorMessage, configure, } from 'vee-validate'
 import * as Yup from 'yup'
 

@@ -87,10 +87,10 @@
 
 <script setup>
 import { useAuthStore } from '@/store/auth/auth';
-import NotificationTab from './NotificationTab.vue';
-import PreferenceTab from './PreferenceTab.vue';
+import NotificationTab from './tabs/NotificationTab.vue';
+import PreferenceTab from './tabs/PreferenceTab.vue';
 import { RoleToDesc } from '@/helpers/converter'
-import ChangeAvatarModal from './ChangeAvatarModal.vue';
+import ChangeAvatarModal from './modals/ChangeAvatarModal.vue';
 
 const $auth = useAuthStore();
 </script>

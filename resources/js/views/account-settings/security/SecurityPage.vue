@@ -31,7 +31,7 @@
 </template>
 
 <script setup>
-import PasswordTab from './PasswordTab.vue';
+import PasswordTab from './tabs/PasswordTab.vue';
 
 
 </script>

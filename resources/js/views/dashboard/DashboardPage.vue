@@ -18,7 +18,7 @@
 
 <script setup>
 import { onMounted } from 'vue';
-import { useDashboardStore } from '@/store/system/dashboard'
+import { useDashboardStore } from '@/store/dashboard/dashboard'
 import { useAuthStore } from '@/store/auth/auth'
 
 import AdminSectionAdmin from './admin/AdminSection.vue';

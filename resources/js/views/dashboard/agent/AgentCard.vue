@@ -51,7 +51,7 @@
 
 <script setup>
 import { onMounted, watch } from 'vue';
-import { useDownHeadStore } from '@/store/auth/downhead'
+import { useDownHeadStore } from '@/store/dashboard/downhead'
 import { throttle } from 'lodash'
 import { FullNameConvert, } from '@/helpers/converter'
 

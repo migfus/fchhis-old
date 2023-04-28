@@ -50,7 +50,7 @@
 </template>
 
 <script setup>
-import { useBeneficiaryStore } from '@/store/auth/beneficiary'
+import { useBeneficiaryStore } from '@/store/dashboard/beneficiary'
 import { onMounted } from 'vue'
 import { FullNameConvert, AgeConverter } from '@/helpers/converter'
 import { watch } from 'vue'
