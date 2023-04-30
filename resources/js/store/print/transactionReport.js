@@ -79,22 +79,24 @@ export const useTransactionReportStore = defineStore('transaction-report', () =>
       {
         margin: [0, 2, 0, 0],
         table: {
-          widths: [160, 160, 160],
+          widths: [100, 110, 140, 120],
           body: [
             [
               { text: 'Plan', bold: true },
               { text: 'Payment Type', bold: true },
               { text: 'Amount', bold: true },
+              { text: 'Date & Time', bold: true },
             ],
             // LOOP
 
-            ...input.body.map(m => [`${m.plan}`, `${m.type}`, NumberAddComma(m.amount) ])
+            ...input.body.map(m => [`${m.plan}`, `${m.type}`, NumberAddComma(m.amount), m.date ])
 
             ,
             [
               {},
               { text: 'Total: ', bold: true, alignment: 'right' },
               { text: NumberAddComma(_sum(input.body, 'amount')), bold: true },
+              {},
             ]
           ]
         }
