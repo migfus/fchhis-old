@@ -14,6 +14,7 @@ class DatabaseSeeder extends Seeder
         PlanSeeder::class,
         TransactionSeeder::class,
         BeneficiarySeeder::class,
+        PayTypeSeeder::class,
 
         AddressSQL::class,
       ]);

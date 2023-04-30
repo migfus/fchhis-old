@@ -11,14 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('transactions', function (Blueprint $table) {
+        Schema::create('pay_types', function (Blueprint $table) {
             $table->id();
-            $table->integer('agent_id'); // refered agent
-            $table->integer('staff_id'); // staff
-            $table->integer('client_id'); // user_id
-            $table->tinyInteger('pay_type_id')->unsigned();
-            $table->integer('plan_id');
-            $table->decimal('amount', 8, 2);
+            $table->string('name');
             $table->timestamps();
         });
     }
@@ -28,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('transactions');
+        Schema::dropIfExists('pay_types');
     }
 };

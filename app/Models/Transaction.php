@@ -9,7 +9,7 @@ class Transaction extends Model
 {
   use HasFactory;
 
-  protected $fillable = ['referral_id', 'client_id', 'plan_id', 'amount'];
+  protected $fillable = ['referral_id', 'client_id', 'plan_id', 'amount', 'pay_type_id'];
 
   public function client() {
     return $this->belongsTo(User::class, 'client_id');
@@ -25,5 +25,9 @@ class Transaction extends Model
 
   public function plan() {
     return $this->belongsTo(Plan::class);
+  }
+
+  public function pay_type() {
+    return $this->belongsTo(PayType::class, 'pay_type_id');
   }
 }

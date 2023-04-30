@@ -196,7 +196,10 @@ class DashboardController extends Controller
   }
 
   public function Client(Request $req) {
-    $transactions = Transaction::where('client_id', $req->user()->id)->orderBy('created_at', 'DESC')->get();
+    $transactions = Transaction::where('client_id', $req->user()->id)
+      ->with(['client.person', 'staff.person', 'plan', 'pay_type'])
+      ->orderBy('created_at', 'DESC')
+      ->get();
 
     $start = Carbon::parse(Transaction::where('client_id', $req->user()->id)->orderBy('created_at', 'ASC')->first()->created_at)->startOfYear()->format('Ym');
 

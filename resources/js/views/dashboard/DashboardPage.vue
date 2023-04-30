@@ -25,7 +25,7 @@ import AdminSectionAdmin from './admin/AdminSection.vue';
 import UserSummaryAdmin from './admin/UserSummary.vue';
 import TopPerformerAdmin from './admin/TopPerformer.vue';
 
-import ClientDashboard from './client/ClientDashboard.vue';
+import ClientDashboard from './client/ClientPage.vue';
 import AgentCard from './agent/AgentCard.vue';
 import StaffCard from './staff/StaffCard.vue';
 

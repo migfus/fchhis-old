@@ -73,12 +73,12 @@ const isAdmin = computed(() => {
         link: { name: 'transactions-all' }
       },
       {
-        name: 'Agent Transactions',
+        name: 'Agent',
         icon: 'fa-list-ol',
         link: { name: 'transactions-all' }
       },
       {
-        name: 'Client Transactions',
+        name: 'Client',
         icon: 'fa-list-ol',
         link: { name: 'transactions-all' }
       },

@@ -19,6 +19,7 @@ class TransactionSeeder extends Seeder
         'client_id' => 1,
         'plan_id' => 1,
         'amount' => 1250,
+        'pay_type_id' => 2, // querterly
       ],
     ];
 
@@ -34,6 +35,7 @@ class TransactionSeeder extends Seeder
         'client_id' => $idx + 2,
         'plan_id' => rand(1,4),
         'amount' => rand(700, 75000),
+        'pay_type_id' => rand(1, 6)
       ]);
     }
   }

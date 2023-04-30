@@ -56,8 +56,8 @@ import { FullNameConvert, AgeConverter } from '@/helpers/converter'
 import { watch } from 'vue'
 import { throttle } from 'lodash'
 
-import AddCard from './AddCard.vue'
-import UpdateCard from './UpdateCard.vue'
+import AddCard from '../forms/AddCard.vue'
+import UpdateCard from '../forms/UpdateCard.vue'
 
 const $ben = useBeneficiaryStore();
 

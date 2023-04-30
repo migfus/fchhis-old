@@ -21,6 +21,7 @@ class UserSeeder extends Seeder
           'avatar'   => 'https://cdn1.iconfinder.com/data/icons/user-pictures/100/female1-512.png',
           'role'     => 2, //admin,
           'notify_mobile' => true,
+          'pay_type_id' => 1,
         ],
         [
           'person_id'=> 2,
@@ -31,6 +32,7 @@ class UserSeeder extends Seeder
           'avatar'   => 'https://cdn1.iconfinder.com/data/icons/user-pictures/100/female1-512.png',
           'role'     => 3, //manager
           'notify_mobile' => true,
+          'pay_type_id' => 2,
         ],
         [
           'person_id'=> 3,
@@ -41,6 +43,7 @@ class UserSeeder extends Seeder
           'avatar'   => 'https://cdn1.iconfinder.com/data/icons/user-pictures/100/female1-512.png',
           'role'     => 4, //agent
           'notify_mobile' => true,
+          'pay_type_id' => 3,
         ],
         [
           'person_id'=> 4,
@@ -51,6 +54,7 @@ class UserSeeder extends Seeder
           'avatar'   => 'https://cdn1.iconfinder.com/data/icons/user-pictures/100/female1-512.png',
           'role'     => 5, //staff
           'notify_mobile' => true,
+          'pay_type_id' => 4,
         ],
         [
           'person_id'=> 5,
@@ -61,6 +65,7 @@ class UserSeeder extends Seeder
           'avatar'   => 'https://cdn1.iconfinder.com/data/icons/user-pictures/100/female1-512.png',
           'role'     => 6, //client
           'notify_mobile' => true,
+          'pay_type_id' => 6,
         ],
         [
           'person_id'=> 6,
@@ -71,6 +76,7 @@ class UserSeeder extends Seeder
           'avatar'   => 'https://cdn1.iconfinder.com/data/icons/user-pictures/100/female1-512.png',
           'role'     => 0, //inactive
           'notify_mobile' => true,
+          'pay_type_id' => 1,
         ],
         [
           'person_id'=> 7,
@@ -81,6 +87,7 @@ class UserSeeder extends Seeder
           'avatar'   => 'https://cdn1.iconfinder.com/data/icons/user-pictures/100/female1-512.png',
           'role'     => 1, //banned
           'notify_mobile' => true,
+          'pay_type_id' => 3,
         ],
 
         // [
@@ -109,6 +116,7 @@ class UserSeeder extends Seeder
           'password' => Hash::make('12345678'),
           'role'     => 6,
           'notify_mobile' => true,
+          'pay_type_id' => 3,
         ]);
       }
     }

@@ -6,5 +6,6 @@
 
 <script setup>
 import ResponsiveCard from './contents/ResponsiveCard.vue';
+
 </script>
 
