@@ -30,9 +30,6 @@
         </tbody>
       </table>
 
-      <div>
-        <button class="btn btn-success btn-sm float-right mt-2"><i class="fas fa-print mr-2"></i>Print</button>
-      </div>
     </div>
   </div>
 </template>

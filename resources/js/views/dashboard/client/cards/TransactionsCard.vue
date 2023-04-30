@@ -84,7 +84,7 @@ function Print(input) {
     header: {
       name: 'testname'
     },
-    body: $dash.content.transactions.map(m => { return { plan: m.plan.name, type: '[monthly]', amount: m.amount } }),
+    body: $dash.content.transactions.map(m => { return { plan: m.plan.name, type: m.pay_type.name, amount: m.amount } }),
   })
 }
 </script>
