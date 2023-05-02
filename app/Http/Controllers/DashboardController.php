@@ -163,39 +163,6 @@ class DashboardController extends Controller
   }
 
   public function Agent(Request $req) {
-    $transactions = Transaction::where('client_id', $req->user()->id)->orderBy('created_at', 'DESC')->get();
-
-    $start = Carbon::parse(Transaction::where('client_id', $req->user()->id)->orderBy('created_at', 'ASC')->first()->created_at)->startOfYear()->format('Ym');
-
-    $summaryTransaction = [];
-    $count = 0;
-    while(Carbon::now()->subMonths($count)->format('Ym') >= $start) {
-      $summaryTransaction [Carbon::now()->subMonths($count)->format('Y')] []= [
-        Carbon::now()->subMonths($count)->startOfMonth(),
-        Transaction::where('client_id', $req->user()->id)
-          ->where('created_at', '>=', Carbon::now()->subMonths($count)->startOfMonth())
-          ->where('created_at', '<=', Carbon::now()->subMonths($count)->endOfMonth())
-          ->sum('amount'),
-        ];
-      // $summaryTransaction [Carbon::now()->subMonths($count)->format('Y')]
-      $count++;
-    }
-
-    // for($i = 0; $i < 10; $i++) {
-    //   $summaryTransaction [] = Carbon::now()->subMonths($i)->format('Ym');
-    // }
-
-    return response()->json([
-      ...$this->G_ReturnDefault($req),
-      'data' => [
-        'transactions' => $transactions,
-        'summaryTransaction' => $summaryTransaction,
-        'sumTransactions' => Transaction::where('client_id', $req->user()->id)->sum('amount'),
-      ]
-    ]);
-  }
-
-  public function Client(Request $req) {
     $transactions = Transaction::where('client_id', $req->user()->id)
       ->with(['client.person', 'staff.person', 'plan', 'pay_type'])
       ->orderBy('created_at', 'DESC')
@@ -212,6 +179,45 @@ class DashboardController extends Controller
           ->where('created_at', '>=', Carbon::now()->subMonths($count)->startOfMonth())
           ->where('created_at', '<=', Carbon::now()->subMonths($count)->endOfMonth())
           ->sum('amount'),
+        ];
+      $count++;
+    }
+
+
+    // NOTE AGENT PART
+    $clients = User::with('person')->paginate(10);
+
+    return response()->json([
+      ...$this->G_ReturnDefault($req),
+      'data' => [
+        'transactions' => $transactions,
+        'summaryTransaction' => $summaryTransaction,
+        'sumTransactions' => Transaction::where('client_id', $req->user()->id)->sum('amount'),
+        'agent' => [
+          'transactions' => '',
+          'clients' => $clients,
+        ]
+      ]
+    ]);
+  }
+
+  public function Client(Request $req) {
+    $transactions = Transaction::where('client_id', $req->user()->id)
+      ->with(['client.person', 'staff.person', 'plan', 'pay_type'])
+      ->orderBy('created_at', 'DESC')
+      ->get();
+
+    $start = Carbon::parse(Transaction::where('client_id', $req->user()->id)->orderBy('created_at', 'ASC')->first()->created_at)->startOfYear()->format('Ym');
+
+    $summaryTransaction = [];
+    $count = 0;
+    while(Carbon::now()->subMonths($count)->format('Ym') >= $start) {
+      $summaryTransaction [Carbon::now()->subMonths($count)->format('Y')] []= [
+          Carbon::now()->subMonths($count)->startOfMonth(),
+        Transaction::where('client_id', $req->user()->id)
+          ->where('created_at', '>=', Carbon::now()->subMonths($count)->startOfMonth())
+          ->where('created_at', '<=', Carbon::now()->subMonths($count)->endOfMonth())
+            ->sum('amount'),
         ];
       // $summaryTransaction [Carbon::now()->subMonths($count)->format('Y')]
       $count++;

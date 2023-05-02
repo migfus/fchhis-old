@@ -6,7 +6,7 @@ import "admin-lte/dist/js/adminlte";
 
 import { createApp, markRaw } from "vue";
 import { createPinia } from "pinia";
-import router from "./router";
+import router from "./router/router";
 import Toast from "vue-toastification";
 
 import App from "./App.vue";
