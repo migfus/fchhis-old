@@ -12,6 +12,7 @@ use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\BeneficiaryController;
 use App\Http\Controllers\DownHeadController;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\PayTypeController;
 
 Route::controller(AuthController::class)->group(function () {
   Route::post('/login', 'Login');
@@ -25,6 +26,7 @@ Route::middleware('auth:sanctum')->group(function () {
   Route::controller(AuthController::class)->group(function () {
     Route::post('/change-password', 'ChangePassword');
     Route::post('/avatar', 'ChangeAvatar');
+    Route::get('/profile', 'Profile');
   });
 
   Route::apiResource('/users', UserController::class)->only(['index', 'destroy', 'store', 'update']);
@@ -35,4 +37,5 @@ Route::middleware('auth:sanctum')->group(function () {
   Route::apiResource('/beneficiary', BeneficiaryController::class)->only(['index', 'destroy', 'store', 'update']);
   Route::apiResource('/downhead', DownHeadController::class)->only(['index']);
   Route::apiResource('/client', ClientController::class)->only(['index']);
+  Route::apiResource('/pay-type', PayTypeController::class)->only(['index']);
 });

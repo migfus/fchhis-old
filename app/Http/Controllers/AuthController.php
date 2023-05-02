@@ -146,4 +146,10 @@ class AuthController extends Controller
 
     return $this->G_UnauthorizedResponse();
   }
+
+  public function Profile(Request $req) {
+    return response()->json([
+      'data' => User::where('id', $req->user()->id)->with('person')->first(),
+    ], 200);
+  }
 }

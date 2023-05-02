@@ -57,7 +57,10 @@ export const AgeConverter = (bday) => {
 }
 
 export const NumberAddComma = (num)  => {
-  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  if(num) {
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
+  return '0.00'
 }
 
 // SECTION ADDRESS
@@ -111,4 +114,10 @@ export const CityIDToProvinceID = (id) => {
 
 export const GetPercentage = (num1, num2) => {
   return (((num1 - num2) / num1) * 100).toFixed(2);
+}
+
+export const Sum = (items, prop) => {
+  return items.reduce( function(a, b){
+      return Number(a) + Number(b[prop]);
+  }, 0);
 }

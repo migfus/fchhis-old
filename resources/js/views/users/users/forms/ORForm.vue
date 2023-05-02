@@ -61,6 +61,13 @@
                 </div>
 
                 <div class="form-group">
+                  <label>Payment Type</label>
+                  <select v-model="$user.input.pay_types" class="form-control">
+                    <option v-for="row in $payTypes.content" :value="row.id">{{ row.name }}</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
                   <label for="mid-input">Initial Transaction</label>
                   <Field v-model="$user.input.transaction" name="transaction" type="text" class="form-control"
                     id="mid-input" placeholder="Optional" />

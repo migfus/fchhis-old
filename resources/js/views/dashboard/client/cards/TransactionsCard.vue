@@ -63,13 +63,15 @@ import { ref } from 'vue'
 import moment from 'moment'
 import { $DebugInfo, $Log } from '@/helpers/debug'
 import { useDashboardStore } from '@/store/dashboard/dashboard'
-import { NumberAddComma } from '@/helpers/converter'
+import { NumberAddComma, FullNameConvert } from '@/helpers/converter'
 import { useTransactionReportStore } from '@/store/print/transactionReport'
+import { useProfileStore } from '@/store/auth/profile'
 
 import ReceiptModal from '../modals/ReceiptModal.vue'
 
 const $dash = useDashboardStore();
 const $report = useTransactionReportStore();
+const $profile = useProfileStore();
 
 const data = ref(false);
 
@@ -82,7 +84,7 @@ function OpenReceipt(row) {
 function Print(input) {
   $report.Print({
     header: {
-      name: 'testname'
+      name: FullNameConvert($profile.content.person.lastName, $profile.content.person.firstName, $profile.content.person.midName, $profile.content.person.extName)
     },
     body: $dash.content.transactions.map(m => { return { plan: m.plan.name, type: m.pay_type.name, amount: m.amount, date: moment(m.created_at).format('MM/DD/YYYY HH:MM A') } }),
   })

@@ -22,6 +22,17 @@ export const useTransactionStore = defineStore('transaction', () => {
     start: '',
     end: '',
   })
+  const query = reactive({
+    search: '',
+    filter: '',
+    target: 6, // show transaction by role (idK)
+    filter: '',
+    search: '',
+    start: '',
+    end: '',
+    limit: 10,
+  })
+  const _sum = ref(0)
 
   function NotifyToggle() {
     config.notify = false
@@ -31,8 +42,9 @@ export const useTransactionStore = defineStore('transaction', () => {
   async function GetAPI(page = 1) {
     config.loading = true
     try {
-      let { data: {data }} = await axios.get('/api/transactions', { params: { ...params, page: page} })
+      let { data: {data, sum}} = await axios.get('/api/transactions', { params: { ...query, page: page} })
       content.value = data
+      _sum.value = sum
     }
     catch(e) {
       $Err('GetAPI Err', {e})
@@ -52,6 +64,8 @@ export const useTransactionStore = defineStore('transaction', () => {
     content,
     config,
     params,
+    _sum,
+    query,
 
     GetAPI,
     Update,

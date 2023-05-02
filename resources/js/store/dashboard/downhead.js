@@ -9,6 +9,8 @@ export const useDownHeadStore = defineStore('downhead', () => {
   const content = ref(null)
   const query = reactive({
     search: '',
+    start: '',
+    end: '',
   })
   const config = reactive({
     loading: false,

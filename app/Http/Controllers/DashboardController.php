@@ -186,6 +186,16 @@ class DashboardController extends Controller
 
     // NOTE AGENT PART
     $clients = User::with('person')->paginate(10);
+    $tansCurrent = User::with('person')
+      ->whereHas('person', function($q) use($req) { $q->where('agent_id', $req->user()->id); } )
+      ->where('created_at', '>=', Carbon::now()->startOfMonth())
+      ->where('created_at', '<=', Carbon::now()->endOfMonth())
+      ->count();
+    $transPast = User::with('person')
+    ->whereHas('person', function($q) use($req) { $q->where('agent_id', $req->user()->id); } )
+    ->where('created_at', '>=', Carbon::now()->subMonths(1)->startOfMonth())
+    ->where('created_at', '<=', Carbon::now()->subMonths(1)->endOfMonth())
+    ->count();
 
     return response()->json([
       ...$this->G_ReturnDefault($req),
@@ -196,6 +206,13 @@ class DashboardController extends Controller
         'agent' => [
           'transactions' => '',
           'clients' => $clients,
+        ],
+        'counts' => [
+          'clients' => User::with(['person'])
+            ->whereHas('person', function($q) use($req) { $q->where('agent_id', $req->user()->id); })->count(),
+          'transactions' => Transaction::where('agent_id', $req->user()->id)->count(),
+          'inactive' => User::whereNotNull('OR')->whereNull('email')->count(),
+          'current' => (($tansCurrent OR 1/ $transPast OR 1) * 100)
         ]
       ]
     ]);

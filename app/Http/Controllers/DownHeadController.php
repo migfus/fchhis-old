@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Person;
+use App\Models\User;
 
 class DownHeadController extends Controller
 {
@@ -11,13 +11,19 @@ class DownHeadController extends Controller
      * Display a listing of the resource.
      */
     public function index(Request $req) {
+      // SECTION AGENT
       if($req->user()->role == 4) {
-        $data = Person::where('agent_id', $req->user()->id)
-          ->where(function($q) use($req){
-            $q->where('lastName', 'LIKE', '%'.$req->search.'%')
-            ->orWhere('firstName', 'LIKE', '%'.$req->search.'%')
-            ->orWhere('midName', 'LIKE', '%'.$req->search.'%')
-            ->orWhere('extName', 'LIKE', '%'.$req->search.'%');
+        $data = User::with([
+            'plan',
+            'person',
+            'pay_type',
+          ])
+          ->where('created_at', '>=', $req->start)
+          ->where('created_at', '<=', $req->end)
+          ->withSum('client_transactions', 'amount')
+          ->whereHas('person', function($q) use($req){
+            $q->where('agent_id', $req->user()->id)
+              ->where('lastName', 'LIKE', '%'.$req->search.'%');
           })
           ->get();
         return response()->json([...$this->G_ReturnDefault(), 'data' => $data]);
