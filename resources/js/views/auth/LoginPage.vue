@@ -48,7 +48,10 @@
               </div>
 
               <div class="col-4">
-                <button type="submit" class="btn btn-info btn-block" :disabled="Object.keys(errors).length != 0">Sign
+                <button v-if="$auth.config.loading" type="submit" class="btn btn-info btn-block" disabled><i
+                    class="fas fa-spinner fa-spin"></i></button>
+                <button v-else type="submit" class="btn btn-info btn-block"
+                  :disabled="Object.keys(errors).length != 0">Sign
                   In</button>
               </div>
 

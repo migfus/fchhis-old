@@ -27,7 +27,8 @@ class User extends Authenticatable
       'plan_id',
       'notify_mobile',
       'role',
-      'OR'
+      'OR',
+      'pay_type_id'
   ];
 
   /**

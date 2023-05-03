@@ -62,8 +62,8 @@
 
                 <div class="form-group">
                   <label>Payment Type</label>
-                  <select v-model="$user.input.pay_types" class="form-control">
-                    <option v-for="row in $payTypes.content" :value="row.id">{{ row.name }}</option>
+                  <select v-model="$user.input.pay_type" class="form-control">
+                    <option v-for="row in $payType.content" :value="row.id">{{ row.name }}</option>
                   </select>
                 </div>
 
@@ -140,10 +140,12 @@ import { usePlanStore } from '@/store/system/plan'
 import { Form, Field, ErrorMessage, configure, } from 'vee-validate'
 import * as Yup from 'yup'
 import moment from 'moment'
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
+import { usePayTypeStore } from '@/store/system/payTypes'
 
 const $user = useUserStore();
 const $plan = usePlanStore();
+const $payType = usePayTypeStore();
 
 configure({
   validateOnInput: true,
@@ -173,6 +175,10 @@ function GeneratePasword(length = 4) {
 
   $user.input.or = `${moment().format('YYYYMMDD')}-${result}`;
 }
+
+onMounted(() => {
+  $payType.GetAPI()
+});
 </script>
 
 <style scoped>

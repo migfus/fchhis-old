@@ -37,7 +37,7 @@
             <div class="d-none d-xl-inline col-12 col-md-6 col-xl-4">
               <span class="float-right text-secondary"> {{ moment(row.created_at).local().format('MMM D, YYYY') }}
               </span>
-              <div>Plan: <strong>{{ row.plan.name }}</strong></div>
+              <div>Plan: <strong>{{ `${row.plan.name} (${row.pay_type.name})` }}</strong></div>
               <div>Total: <strong>{{ NumberAddComma(row.plan.spot_pay) }}</strong></div>
             </div>
           </div>
@@ -47,8 +47,10 @@
       <div class="card-body">
         <div class="row mb-2">
           <div class="col-12 col-md-6 col-lg-4 col-xl-3">
-            <div>Refered: <strong>[Juan Do do]</strong></div>
-            <div>Plan: <strong>{{ row.plan.name }}</strong></div>
+            <div>Refered: <strong>{{ FullNameConvert(row.person.referred.person.lastName,
+              row.person.referred.person.firstName, row.person.referred.person.midName,
+              row.person.referred.person.extName) }}</strong></div>
+            <div>Plan: <strong>{{ `${row.plan.name} (${row.pay_type.name})` }}</strong></div>
             <div>Target: <strong>{{ NumberAddComma(row.plan.spot_pay) }}</strong></div>
             <div>Transact: <strong>[2,000]</strong></div>
             <div>Total: <strong>[12,089]</strong></div>

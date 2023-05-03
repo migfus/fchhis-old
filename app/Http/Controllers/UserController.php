@@ -50,6 +50,7 @@ class UserController extends Controller
       'firstName' => 'required',
       'midName' => '',
       'extName' => '',
+      'pay_type' => 'required'
     ]);
 
 
@@ -72,6 +73,7 @@ class UserController extends Controller
       'role'     => 6,
       'notify_mobile' => $req->notifyMobile,
       'OR' => $req->or,
+      'pay_type' => $req->pay_type
     ]);
 
 
@@ -115,22 +117,22 @@ class UserController extends Controller
         // NOTE SEARCH FILTER
         switch($req->filter) {
           case 'email':
-            $user->where('email', 'LIKE', '%'.$req->search.'%')->with(['person.user', 'plan']); // OK No whereRelation
+            $user->where('email', 'LIKE', '%'.$req->search.'%')->with(['person.user', 'plan', 'pay_type', 'person.referred']); // OK No whereRelation
             break;
           case 'address':
-            $user->with(['person.user', 'plan'])
+            $user->with(['person.user', 'plan', 'pay_type', 'person.referred'])
               ->whereHas('person.user', function($q) use ($req) {
                 $q->where('address', 'LIKE', '%'.$req->search.'%');
               });
             break;
           case 'plans':
-            $user->with(['person.user', 'plan'])
+            $user->with(['person.user', 'plan', 'pay_type', 'person.referred'])
               ->whereHas('plan', function($q) use ($req) {
                 $q->where('name', 'LIKE', '%'.$req->search.'%');
               });
             break;
           default:
-            $user->with(['person.user', 'plan'])
+            $user->with(['person.user', 'plan', 'pay_type', 'person.referred.person'])
               ->whereHas('person.user', function($q) use ($req) {
                 $q->where('lastName', 'LIKE', '%'.$req->search.'%')
                   ->orWhere('firstName', 'LIKE', '%'.$req->search.'%')

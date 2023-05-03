@@ -27,4 +27,8 @@ class Person extends Model
   public function user() {
     return $this->belongsTo(User::class, 'created_by_user_id');
   }
+
+  public function referred() {
+    return $this->belongsTo(User::class, 'agent_id');
+  }
 }

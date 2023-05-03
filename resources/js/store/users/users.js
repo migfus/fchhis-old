@@ -41,6 +41,7 @@ export const useUserStore = defineStore('users', () => {
       notifyMobile: true,
       role: 'client',
       plan: 1,
+      pay_type: 1,
 
       lastName: '',
       firstName: '',
@@ -51,7 +52,7 @@ export const useUserStore = defineStore('users', () => {
       bplaceID: 258,
       addressID: 258,
       address: '',
-    }
+  }
   }
 
   function RemoveNotify() {

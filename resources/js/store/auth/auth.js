@@ -1,4 +1,4 @@
-import { ref } from "vue";
+import { ref, reactive } from "vue";
 import { defineStore } from "pinia";
 import { useToast } from "vue-toastification";
 import axios from "axios";
@@ -13,6 +13,9 @@ export const useAuthStore = defineStore("auth", () => {
   const auth = ref(JSON.parse(localStorage.getItem("auth")) || {});
   const token = ref(localStorage.getItem("token") || "");
   const role = auth.role;
+  const config = reactive({
+    loading: false
+  })
 
   function UpdateToken(input) {
     token.value = input;
@@ -44,6 +47,7 @@ export const useAuthStore = defineStore("auth", () => {
   }
 
   async function Login(input) {
+    config.loading = true
     try {
       let { data: { data } } = await axios.post("/api/login", input);
       UpdateAuth(data.auth);
@@ -54,6 +58,7 @@ export const useAuthStore = defineStore("auth", () => {
       $toast.error("Incorrect credentials")
       $Err("login error", e);
     }
+    config.loading = false
   }
 
   function CheckAuth() {
@@ -68,6 +73,7 @@ export const useAuthStore = defineStore("auth", () => {
     auth,
     token,
     role,
+    config,
 
     UpdateAuth,
     UpdateToken,
