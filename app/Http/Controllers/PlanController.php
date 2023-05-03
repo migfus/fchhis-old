@@ -29,7 +29,7 @@ class PlanController extends Controller
     }
 
     $data;
-    if($req->user()->role == 2) {
+    if($req->user()->role == 2 || $req->user()->role == 5) {
       switch($req->filter) {
         case 'desc':
           $data = $plan->where('desc', 'LIKE', '%' . $req->search .'%')->get();

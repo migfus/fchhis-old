@@ -68,7 +68,7 @@
     </section>
     <div :class="fluid ? 'container-fluid' : 'container'">
       <div class="float-right d-none d-sm-block">
-        <b>Version</b> 0.0.7
+        <b>Version</b> {{ version }}
       </div>
       <strong>Copyright © 2023 </strong>Future Care and Helping Hands Insurance Services
     </div>
@@ -84,4 +84,6 @@ const $props = defineProps({
     default: false,
   }
 });
+
+const version = import.meta.env.VITE_VER;
 </script>

@@ -13,6 +13,7 @@ use App\Http\Controllers\BeneficiaryController;
 use App\Http\Controllers\DownHeadController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\PayTypeController;
+use App\Http\Controllers\AgentController;
 
 Route::controller(AuthController::class)->group(function () {
   Route::post('/login', 'Login');
@@ -38,4 +39,5 @@ Route::middleware('auth:sanctum')->group(function () {
   Route::apiResource('/downhead', DownHeadController::class)->only(['index']);
   Route::apiResource('/client', ClientController::class)->only(['index']);
   Route::apiResource('/pay-type', PayTypeController::class)->only(['index']);
+  Route::apiResource('/agent', AgentController::class)->only(['index']);
 });

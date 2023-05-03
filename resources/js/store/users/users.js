@@ -42,6 +42,7 @@ export const useUserStore = defineStore('users', () => {
       role: 'client',
       plan: 1,
       pay_type: 1,
+      agent: '',
 
       lastName: '',
       firstName: '',

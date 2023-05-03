@@ -1,10 +1,12 @@
 import axios from "axios";
 import { useAuthStore } from "../store/auth/auth";
 import { $DebugInfo, $Err, $Log} from '@/helpers/debug'
+import { useToast } from "vue-toastification";
 
 export default function jwtInterceptor() {
   $DebugInfo('JWT Interceptor')
   const $auth = useAuthStore();
+  const $toast = useToast();
 
   axios.interceptors.request.use((config) => {
     if ($auth.token) {
@@ -33,6 +35,9 @@ export default function jwtInterceptor() {
       }
       if (status === 401 && data.message == "Unauthenticated.") {
         $auth.Logout();
+      }
+      if(status === 401 && data.message == 'Invalid Input') {
+        $toast.error(JSON.stringify(data.errors))
       }
       return Promise.reject(error);
     }

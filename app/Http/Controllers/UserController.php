@@ -12,6 +12,7 @@ use Illuminate\Validation\Rule;
 class UserController extends Controller
 {
   private function getCount($req) {
+    // SECTION ADMIN
     if($req->user()->role == 2) {
       $count = [
         'all'     => User::count(),
@@ -37,6 +38,20 @@ class UserController extends Controller
 
       return response()->json(['status' => true, 'message' => 'success', 'data' => $data], 200);
     }
+    // SECTION STAFF
+    if($req->user()->role == 5) {
+      $count = [
+        'clients' => User::where('role', 6)->count(),
+        'inactive'=> User::where('role', 6)->whereNotNull('OR')->whereNull('email')->count(),
+      ];
+
+      $data = [
+        ['name' => 'Clients', 'count' => $count['clients'], 'color' => 'success', 'icon' => 'fa-child'],
+        ['name' => 'Inactive','count' => $count['inactive'],'color' => 'secondary','icon'=> 'fa-moon'],
+      ];
+
+      return response()->json(['status' => true, 'message' => 'success', 'data' => $data], 200);
+    }
     return $this->G_UnauthorizedResponse();
   }
 
@@ -50,7 +65,8 @@ class UserController extends Controller
       'firstName' => 'required',
       'midName' => '',
       'extName' => '',
-      'pay_type' => 'required'
+      'pay_type' => 'required',
+      'agent' => 'required',
     ]);
 
 
@@ -65,15 +81,16 @@ class UserController extends Controller
       'midName'   => $req->midName,
       'extName'   => $req->extName,
       'mobile'    => $req->mobile,
+      'agent_id'  => $req->agent,
     ]);
 
     $user = User::create([
       'person_id'=> $person->id,
       'plan_id'  => $req->plan,
-      'role'     => 6,
+      'role'     => 6, // NOTE client only
       'notify_mobile' => $req->notifyMobile,
       'OR' => $req->or,
-      'pay_type' => $req->pay_type
+      'pay_type_id' => $req->pay_type
     ]);
 
 
@@ -95,9 +112,10 @@ class UserController extends Controller
       return $this->G_ValidatorFailResponse($val);
     }
 
-    $user = User::select('*');
-
+    // SECTION ADMIN
     if($req->user()->role == 2) {
+      $user = User::select('*');
+
       // NOTE ROLE FITLER
       if($req->role < 7) {
         $user->where('role', $req->role);
@@ -133,6 +151,58 @@ class UserController extends Controller
             break;
           default:
             $user->with(['person.user', 'plan', 'pay_type', 'person.referred.person'])
+              ->whereHas('person.user', function($q) use ($req) {
+                $q->where('lastName', 'LIKE', '%'.$req->search.'%')
+                  ->orWhere('firstName', 'LIKE', '%'.$req->search.'%')
+                  ->orWhere('midName', 'LIKE', '%'.$req->search.'%');
+              });
+        }
+      }
+
+      $data = $user->orderBy('created_at', 'desc')->paginate(10);
+
+      return response()->json([...$this->G_ReturnDefault($req), 'data' => $data], 200);
+    }
+
+    // SECTION STAFF
+    if($req->user()->role == 5) {
+      $user = User::select('*')->where('role', 6);
+
+      // NOTE ROLE FITLER
+      if($req->role < 7) {
+        $user->where('role', $req->role);
+      }
+
+      // NOTE DATE RANGE FILTER
+      if((bool)strtotime($req->start) OR (bool)strtotime($req->end)) {
+        if((bool)strtotime($req->start)) {
+          $user->where('created_at', '>=', $req->start);
+        }
+        if((bool)strtotime($req->end)) {
+          $user->where('created_at', '<=', $req->end);
+        }
+        $user->with(['person.user', 'plan']);
+      }
+      else {
+        // NOTE SEARCH FILTER
+        switch($req->filter) {
+          case 'email':
+            $user->where('email', 'LIKE', '%'.$req->search.'%')->with(['person.user', 'plan', 'pay_type', 'person.referred'])->withSum('client_transactions', 'amount'); // OK No whereRelation
+            break;
+          case 'address':
+            $user->with(['person.user', 'plan', 'pay_type', 'person.referred'])->withSum('client_transactions', 'amount')
+              ->whereHas('person.user', function($q) use ($req) {
+                $q->where('address', 'LIKE', '%'.$req->search.'%');
+              });
+            break;
+          case 'plans':
+            $user->with(['person.user', 'plan', 'pay_type', 'person.referred'])->withSum('client_transactions', 'amount')
+              ->whereHas('plan', function($q) use ($req) {
+                $q->where('name', 'LIKE', '%'.$req->search.'%');
+              });
+            break;
+          default:
+            $user->with(['person.user', 'plan', 'pay_type', 'person.referred.person'])->withSum('client_transactions', 'amount')
               ->whereHas('person.user', function($q) use ($req) {
                 $q->where('lastName', 'LIKE', '%'.$req->search.'%')
                   ->orWhere('firstName', 'LIKE', '%'.$req->search.'%')
@@ -216,14 +286,83 @@ class UserController extends Controller
       return response()->json([...$this->G_ReturnDefault($req)]);
     }
 
+    if($req->user()->role == 5) {
+      if($req->or) {
+        if($req->or != '') {
+          return $this->ORStore($req);
+        }
+      }
+
+      $val = Validator::make($req->all(), [
+        'avatar'   => '',
+        'username' => 'required|unique:users',
+        'email'    => 'required|email|unique:users',
+        'password' => 'required|min:8',
+        'mobile'   => 'required',
+        'notifyMobile' => 'required',
+        'role'     => 'required',
+        'plan'     => 'required',
+        'agent'    => 'required',
+
+        'lastName' => 'required',
+        'firstName'=> 'required',
+        'midName'  => '',
+        'extName'  => '',
+        'sex'      => 'required',
+        'bday'     => 'required',
+        'bplaceID' => 'required',
+        'addressID'=> 'required',
+        'address'  => 'required',
+        'pay_type' => 'required',
+      ]);
+
+      if($val->fails()) {
+        return $this->G_ValidatorFailResponse($val);
+      }
+
+      $person = Person::create([
+        'created_by_user_id' => $req->user()->id,
+        'lastName'  => $req->lastName,
+        'firstName' => $req->firstName,
+        'midName'   => $req->midName,
+        'extName'   => $req->extName,
+        'bday'      => $req->bday,
+        'bplace_id' => $req->bplaceID,
+        'sex'       => $req->sex,
+        'address_id'=> $req->bplaceID,
+        'address'   => $req->address,
+        'mobile'    => $req->mobile,
+        'agent_id'  => $req->agent,
+      ]);
+
+      $avatar = null;
+
+      if($req->avatar != '') {
+        $avatar = $this->G_AvatarUpload($req->avatar);
+      }
+
+      $user = User::create([
+        'person_id'=> $person->id,
+        'plan_id'  => $req->plan,
+        'username' => $req->username,
+        'email'    => $req->email,
+        'password' => Hash::make($req->password),
+        'avatar'   => $avatar,
+        'role'     => 6, // NOTE Client Only
+        'notify_mobile' => $req->notifyMobile,
+        'pay_type_id' => $req->pay_type,
+      ]);
+
+      return response()->json([...$this->G_ReturnDefault($req)]);
+    }
+
     return $this->G_UnauthorizedResponse();
   }
 
   /**
    * Display the specified resource.
    */
-  public function show(string $id)
-  {
+  public function show(string $id) {
       //
   }
 
@@ -239,6 +378,7 @@ class UserController extends Controller
         'notify_mobile' => 'required',
         'role'     => 'required',
         'plan_id'  => 'required',
+        'pay_type_id' => 'required',
 
         'person.lastName'  => 'required',
         'person.firstName' => 'required',
@@ -249,6 +389,7 @@ class UserController extends Controller
         'person.bplace_id' => 'required',
         'person.address_id'=> 'required',
         'person.address'   => 'required',
+        'person.agent_id'  => 'required',
       ]);
 
       if($val->fails()) {
@@ -266,6 +407,7 @@ class UserController extends Controller
         'address_id'=> $req->person['address_id'],
         'address'   => $req->person['address'],
         'mobile'    => $req->person['mobile'],
+        'agent_id'  => $req->person['agent_id'],
       ]);
 
       $user = User::where('id', $id)->update([
@@ -274,6 +416,7 @@ class UserController extends Controller
         'email'    => $req->email,
         'role'     => $req->role,
         'notify_mobile' => $req->notify_mobile,
+        'pay_type_id' => $req->pay_type_id,
       ]);
 
       if($req->password) {

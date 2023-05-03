@@ -27,7 +27,7 @@
         <h3>Future Care & Helping Hands Insurance Service</h3>
       </div>
       <div class="loading-bg" style="margin-top: 0px">
-        <h3>Development 0.0.7</h3>
+        <h3>Development {{ env('VITE_VER') }}</h3>
       </div>
     </div>
 
