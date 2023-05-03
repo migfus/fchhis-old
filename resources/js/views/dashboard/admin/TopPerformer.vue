@@ -135,42 +135,4 @@ const _chart = reactive({
 }
 );
 
-const data = ref([
-  {
-    avatar: 'http://127.0.0.1:8000/uploads/1681300488.jpg',
-    name: 'Schwarzenegger Belonio',
-    sale: '12,000',
-    clients: 12,
-  },
-  {
-    avatar: 'http://127.0.0.1:8000/uploads/1681300488.jpg',
-    name: 'Juan Deloslos',
-    sale: '6,000',
-    clients: 6,
-  },
-  {
-    avatar: 'http://127.0.0.1:8000/uploads/1681300488.jpg',
-    name: 'Juan Deloslos',
-    sale: '6,000',
-    clients: 6,
-  },
-  {
-    avatar: 'http://127.0.0.1:8000/uploads/1681300488.jpg',
-    name: 'Juan Deloslos',
-    sale: '6,000',
-    clients: 6,
-  },
-  {
-    avatar: 'http://127.0.0.1:8000/uploads/1681300488.jpg',
-    name: 'Juan Deloslos',
-    sale: '6,000',
-    clients: 6,
-  },
-  {
-    avatar: 'http://127.0.0.1:8000/uploads/1681300488.jpg',
-    name: 'Bunhog SDfsdrf',
-    sale: '2,000',
-    clients: 1,
-  },
-]);
 </script>

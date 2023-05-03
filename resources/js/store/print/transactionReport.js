@@ -1,7 +1,7 @@
 import { ref, reactive, computed} from 'vue'
 import { defineStore } from 'pinia'
-import pdfMake from "pdfmake/build/pdfmake";
-import pdfFonts from "pdfmake/build/vfs_fonts";
+import pdfFonts from 'pdfmake/build/vfs_fonts.js';
+import pdfMake from "pdfmake";
 import { $DebugInfo, $Log, $Err} from '@/helpers/debug';
 import axios from 'axios'
 import DeviceDetector from "device-detector-js";
@@ -13,7 +13,7 @@ export const useTransactionReportStore = defineStore('transaction-report', () =>
 
   const deviceDetector = new DeviceDetector();
   const device = deviceDetector.parse(navigator.userAgent)
-  pdfMake.vfs = pdfFonts.pdfMake.vfs;
+  pdfMake.vfs = pdfFonts;
 
   const ipAddress = ref('')
 
@@ -107,7 +107,7 @@ export const useTransactionReportStore = defineStore('transaction-report', () =>
       pageMargins: [ 40, 20, 40, 60 ],
       pageSize: 'A4',
       images: {
-        logo: 'http://127.0.0.1:8000/images/logo.png',
+        logo: 'https://fchhis.migfus20.com/images/logo.png',
         dti: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/DTI_PH_new_logo.svg/1200px-DTI_PH_new_logo.svg.png'
       },
       header: [],

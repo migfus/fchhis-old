@@ -22,8 +22,8 @@
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
 
     <RouterLink to="/" class="brand-link">
-      <img src="http://fchhis.migfus20.com/images/logo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
-        style="opacity: .8">
+      <img src="https://fchhis.migfus20.com/images/logo.png" alt="AdminLTE Logo"
+        class="brand-image img-circle elevation-3" style="opacity: .8">
       <span class="brand-text ml-2">FCHHIS</span>
     </RouterLink>
 

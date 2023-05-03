@@ -6,7 +6,8 @@
           <div class="col-lg-4 col-md-6">
             <div class="widget-about font-md mb-md-5 mb-lg-0">
               <div class="mb-2">
-                <RouterLink :to="{ name: 'home' }"><img src="/images/logo.png" alt="logo" style="width: 70px">
+                <RouterLink :to="{ name: 'home' }"><img src="https://fchhis.migfus20.com/images/logo.png" alt="logo"
+                    style="width: 70px">
                 </RouterLink>
               </div>
               <h6 class="my-2 text-secondary">

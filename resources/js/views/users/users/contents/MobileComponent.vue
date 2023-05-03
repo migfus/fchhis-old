@@ -13,7 +13,8 @@
               <img v-if="row.avatar" :src="row.avatar" style="height: 2em;" class="img-circle float-left mr-3">
               <VueAvatar v-else-if="row.username" :username="row.username" style="height: 1.5em; width: 1.5em"
                 :alt="row.username" class="img-circle float-left mr-3" />
-              <img v-else src="/images/logo.png" style="height: 2em;" class="img-circle float-left mr-3">
+              <img v-else src="https://fchhis.migfus20.com/images/logo.png" style="height: 2em;"
+                class="img-circle float-left mr-3">
 
 
               <BadgeComponent :role="row.role" />
@@ -31,7 +32,7 @@
               <div>Role: <strong>{{ RoleToDesc(row.role) }}</strong></div>
             </div>
             <div v-else class="d-none d-md-inline col-md-6 col-xl-4">
-              Link: <a :href="row.OR" target="_blank">{{ `http://127.0.0.1:8000/register?or=${row.OR}` }}</a>
+              Link: <a :href="row.OR" target="_blank">{{ `https://fchhis.migfus20.com/register?or=${row.OR}` }}</a>
               <div class="text-danger">Unregistered</div>
             </div>
             <div class="d-none d-xl-inline col-12 col-md-6 col-xl-4">

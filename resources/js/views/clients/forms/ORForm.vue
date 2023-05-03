@@ -172,7 +172,7 @@ const schema = Yup.object({
 })
 const url = computed(() => {
   if ($user.input.or) {
-    return `http://127.0.0.1:8000/register?or=${$user.input.or}`
+    return `https://fchhis.migfus20.com/register?or=${$user.input.or}`
   }
   return ''
 })
