@@ -1,5 +1,5 @@
 <template>
-  <div class="card">
+  <div class="card table-responsive">
     <div class="card-header">
       <h4 class="card-title"><strong>Transactions</strong></h4>
 
