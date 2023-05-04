@@ -24,6 +24,7 @@ export const userReportStore = defineStore('user-report', () => {
   };
 
   function Print(input) {
+    console.log({input})
     getIP()
 
     const pdfContent = ref([
@@ -78,18 +79,20 @@ export const userReportStore = defineStore('user-report', () => {
       },
       {
         margin: [0, 2, 0, 0],
+        fontSize: 12,
         table: {
-          widths: [100, 110, 140, 120],
+          widths: ['auto', 80, 80, 80],
           body: [
             [
               { text: 'Name', bold: true },
-            { text: 'Plan', bold: true },
+              { text: 'Plan', bold: true },
               { text: 'Payment Type', bold: true },
               { text: 'Amount', bold: true },
+              // { text: 'Date', bold: true },
             ],
             // LOOP
 
-            ...input.body.map(m => [`${m.name}`, `${m.plan}`, `${m.type}`, NumberAddComma(m.amount)])
+            ...input.body.map(m => [m._name, m.plan, m.type, `${m.amount || 0}`])
 
             ,
             [
@@ -107,7 +110,8 @@ export const userReportStore = defineStore('user-report', () => {
       pageMargins: [ 40, 20, 40, 60 ],
       pageSize: 'A4',
       images: {
-        logo: 'https://fchhis.migfus20.com/images/logo.png',
+        // logo: 'https://fchhis.migfus20.com/images/logo.png',
+        logo: 'http://127.0.0.1:8000/images/logo.png',
         dti: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/DTI_PH_new_logo.svg/1200px-DTI_PH_new_logo.svg.png'
       },
       header: [],

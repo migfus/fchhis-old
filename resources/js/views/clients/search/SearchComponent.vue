@@ -73,7 +73,7 @@
               style="width: 42px">
               &nbsp;
             </button>
-            <button v-else @click="Print()" class="btn btn-info mr-1 float-right">
+            <button v-else @click="PrintAPI()" class="btn btn-info mr-1 float-right">
               <i class="fas fa-print"></i>
             </button>
 
@@ -88,13 +88,14 @@
 </template>
 
 <script setup>
-import { computed, watch, onMounted } from 'vue'
+import { computed, watch, onMounted, ref } from 'vue'
 import { useUserStore } from '@/store/users/users'
 import moment from 'moment'
 import { throttle } from 'lodash'
 import { userReportStore } from '@/store/print/userReport'
 import { useProfileStore } from '@/store/auth/profile'
 import { FullNameConvert } from '@/helpers/converter'
+import axios from 'axios'
 
 import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
@@ -102,6 +103,8 @@ import '@vuepic/vue-datepicker/dist/main.css'
 const $user = useUserStore();
 const $print = userReportStore();
 const $profile = useProfileStore();
+
+const content = ref([])
 
 const printTitle = computed(() => {
   if ($user.params.start || $user.params.end) {
@@ -112,13 +115,38 @@ const printTitle = computed(() => {
   }
 })
 
+async function PrintAPI() {
+  try {
+    let { data: { data } } = await axios.get('/api/users', {
+      params: {
+        page: 1,
+        print: true,
+        ...$user.params,
+      }
+    })
+    content.value = data
+    Print()
+  }
+  catch (err) {
+    console.error({ err })
+  }
+}
+
 function Print() {
   $print.Print({
     header: {
       title: printTitle.value,
       name: FullNameConvert($profile.content.person.lastName, $profile.content.person.firstName, $profile.content.person.midName, $profile.content.person.extName)
     },
-    body: [10].map(m => { return { plan: '', type: '', amount: '', date: '' } }),
+    body: content.value.map(m => {
+      return {
+        _name: FullNameConvert(m.person.lastName, m.person.firstName, m.person.midName, m.person.extName),
+        plan: m.plan.name,
+        type: m.pay_type.name,
+        created: moment(m.created_at).format("MM/DD/YYYY"),
+        amount: m.client_transactions_sum_amount,
+      }
+    }),
   })
 }
 

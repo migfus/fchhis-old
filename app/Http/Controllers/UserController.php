@@ -115,9 +115,36 @@ class UserController extends Controller
     return response()->json([...$this->G_ReturnDefault($req)]);
   }
 
+  private function Print($req) {
+    // SECTION STAFF
+    if($req->user()->role == 5) {
+      $user = User::select('*')->where('role', 6);
+
+      // NOTE DATE RANGE FILTER
+      if((bool)strtotime($req->start) OR (bool)strtotime($req->end)) {
+        if((bool)strtotime($req->start)) {
+          $user->where('created_at', '>=', $req->start);
+        }
+        if((bool)strtotime($req->end)) {
+          $user->where('created_at', '<=', $req->end);
+        }
+        $user->with(['person.user', 'plan', 'pay_type', 'person.referred.person'])->withSum('client_transactions', 'amount');
+      }
+      else {
+        $user->with(['person.user', 'plan', 'pay_type', 'person.referred.person'])->withSum('client_transactions', 'amount');
+      }
+
+      $data = $user->orderBy('created_at', 'desc')->get();
+
+      return response()->json([...$this->G_ReturnDefault($req), 'data' => $data], 200);
+    }
+  }
+
   public function index(Request $req) {
     if($req->count)
       return $this->getCount($req);
+    if($req->print)
+      return $this->Print($req);
 
     $val = Validator::make($req->all(), [
       'role' => 'required|numeric',
@@ -229,7 +256,7 @@ class UserController extends Controller
         }
       }
 
-      $data = $user->orderBy('created_at', 'desc')->paginate(10);
+      $data = $user->orderBy('created_at', 'desc')->paginate(0);
 
       return response()->json([...$this->G_ReturnDefault($req), 'data' => $data], 200);
     }
