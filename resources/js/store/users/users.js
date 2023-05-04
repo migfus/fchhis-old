@@ -53,6 +53,8 @@ export const useUserStore = defineStore('users', () => {
       bplaceID: 258,
       addressID: 258,
       address: '',
+      transaction: 0,
+
   }
   }
 

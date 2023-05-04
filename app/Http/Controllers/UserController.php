@@ -8,6 +8,7 @@ use App\Models\Person;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
+use App\Models\Transaction;
 
 class UserController extends Controller
 {
@@ -67,6 +68,7 @@ class UserController extends Controller
       'extName' => '',
       'pay_type' => 'required',
       'agent' => 'required',
+      'transaction' => 'required',
     ]);
 
 
@@ -84,13 +86,29 @@ class UserController extends Controller
       'agent_id'  => $req->agent,
     ]);
 
+    $avatar = null;
+
+    if($req->avatar != '') {
+      $avatar = $this->G_AvatarUpload($req->avatar);
+    }
+
     $user = User::create([
       'person_id'=> $person->id,
       'plan_id'  => $req->plan,
       'role'     => 6, // NOTE client only
       'notify_mobile' => $req->notifyMobile,
       'OR' => $req->or,
-      'pay_type_id' => $req->pay_type
+      'pay_type_id' => $req->pay_type,
+      'avatar' => $avatar,
+    ]);
+
+    Transaction::create([
+      'agent_id'  => $req->agent,
+      'staff_id'  => $req->user()->id,
+      'client_id' => $person->id,
+      'pay_type_id' => $req->pay_type,
+      'amount'  =>  $req->transaction,
+      'plan_id' => $req->plan,
     ]);
 
 
@@ -314,6 +332,7 @@ class UserController extends Controller
         'addressID'=> 'required',
         'address'  => 'required',
         'pay_type' => 'required',
+        'transaction' => 'required',
       ]);
 
       if($val->fails()) {
@@ -351,6 +370,15 @@ class UserController extends Controller
         'role'     => 6, // NOTE Client Only
         'notify_mobile' => $req->notifyMobile,
         'pay_type_id' => $req->pay_type,
+      ]);
+
+      Transaction::create([
+        'agent_id'  => $req->agent,
+        'staff_id'  => $req->user()->id,
+        'client_id' => $person->id,
+        'pay_type_id' => $req->pay_type,
+        'amount'  =>  $req->transaction,
+        'plan_id' => $req->plan,
       ]);
 
       return response()->json([...$this->G_ReturnDefault($req)]);
@@ -415,6 +443,68 @@ class UserController extends Controller
         'username' => $req->username,
         'email'    => $req->email,
         'role'     => $req->role,
+        'notify_mobile' => $req->notify_mobile,
+        'pay_type_id' => $req->pay_type_id,
+      ]);
+
+      if($req->password) {
+        User::where('id', $id)->update(['password' => Hash::make($req->password)]);
+      }
+
+      if(!User::where('id', $id)->where('avatar', $req->avatar)->first()) {
+        User::where('id', $id)->update(['avatar' => $this->G_AvatarUpload($req->avatar)]);
+      }
+
+      return response()->json([...$this->G_ReturnDefault($req),]);
+    }
+
+    // SECTION STAFF
+    if($req->user()->role == 5) {
+
+      $val = Validator::make($req->all(), [
+        'avatar'   => '',
+        'username' => ['required', Rule::unique('users', 'username')->ignore($req->id)],
+        'email'    => ['required', 'email', Rule::unique('users', 'email')->ignore($req->id)],
+        'password' => '',
+        'person.mobile' => 'required',
+        'notify_mobile' => 'required',
+        'plan_id'  => 'required',
+        'pay_type_id' => 'required',
+
+        'person.lastName'  => 'required',
+        'person.firstName' => 'required',
+        'person.midName'   => '',
+        'person.extName'   => '',
+        'person.sex'       => 'required',
+        'person.bday'      => 'required',
+        'person.bplace_id' => 'required',
+        'person.address_id'=> 'required',
+        'person.address'   => 'required',
+        'person.agent_id'  => 'required',
+      ]);
+
+      if($val->fails()) {
+        return $this->G_ValidatorFailReponse($val);
+      }
+
+      $person = Person::where('id', $req->person_id)->update([
+        'lastName'  => $req->person['lastName'],
+        'firstName' => $req->person['firstName'],
+        'midName'   => $req->person['midName'],
+        'extName'   => $req->person['extName'],
+        'bday'      => $req->person['bday'],
+        'bplace_id' => $req->person['bplace_id'],
+        'sex'       => $req->person['sex'],
+        'address_id'=> $req->person['address_id'],
+        'address'   => $req->person['address'],
+        'mobile'    => $req->person['mobile'],
+        'agent_id'  => $req->person['agent_id'],
+      ]);
+
+      $user = User::where('id', $id)->update([
+        'plan_id'  => $req->plan_id,
+        'username' => $req->username,
+        'email'    => $req->email,
         'notify_mobile' => $req->notify_mobile,
         'pay_type_id' => $req->pay_type_id,
       ]);

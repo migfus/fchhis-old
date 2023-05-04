@@ -74,15 +74,7 @@
 
                 <div class="form-group">
                   <label>Role</label>
-                  <select v-model="$user.input.role" class="form-control">
-                    <option :value="6">Client</option>
-                    <option :value="5">Staff</option>
-                    <option :value="4">Agent</option>
-                    <option :value="3">Manager</option>
-                    <option :value="2">Admin</option>
-                    <option :value="1">Ban</option>
-                    <option :value="0">Inactive</option>
-                  </select>
+                  <input value="Client" disabled ntype="text" class="form-control" />
                 </div>
 
                 <div class="form-group">
@@ -102,7 +94,10 @@
                 <div class="form-group">
                   <label>Agent</label>
                   <Field name="agent" as='select' v-model="$user.input.person.agent_id" class="form-control">
-                    <option v-for="row in $agent.content" :value="row.id">{{ row.person.lastName }}</option>
+                    <option v-for="row in $agent.content" :value="row.id">
+                      {{ FullNameConvert(row.person.lastName, row.person.firstName, row.person.midName,
+                        row.person.extName) }}
+                    </option>
                   </Field>
                   <div class="mb-2 text-danger">
                     <ErrorMessage name="agent" />
@@ -251,7 +246,7 @@ import { useAddressStore } from '@/store/system/address'
 import { Form, Field, ErrorMessage, configure, } from 'vee-validate'
 import * as Yup from 'yup'
 import { usePlanStore } from '@/store/system/plan'
-import { CityIDToProvinceID } from '@/helpers/converter'
+import { CityIDToProvinceID, FullNameConvert } from '@/helpers/converter'
 import { $DebugInfo, $Err, $Log } from '@/helpers/debug'
 import { useAgentStore } from '@/store/users/agent'
 import { usePayTypeStore } from '@/store/system/payTypes'

@@ -14,7 +14,7 @@
                 <div class="users-list clearfix d-flex justify-content-center">
                   <li class="pt-0 w-100">
                     <img data-toggle="modal" data-target="#avatar-modal"
-                      :src="$user.input.avatar || 'https://i.imgflip.com/437aqu.jpg?a466704'"
+                      :src="$user.input.avatar || 'https://fchhis.migfus20.com/images/logo.png'"
                       style="width: 162px; height: 162px" alt="User Image">
                     <button data-toggle="modal" data-target="#avatar-modal" class="btn btn-info ml-2">Upload
                       Avatar</button>
@@ -85,8 +85,14 @@
                 </div>
 
                 <div class="form-group">
+                  <label for="mid-input">Initial Transaction</label>
+                  <Field v-model="$user.input.transaction" name="transaction" type="text" class="form-control"
+                    id="mid-input" placeholder="Optional" />
+                </div>
+
+                <div class="form-group">
                   <label>Payment Type</label>
-                  <select v-model="$user.input.pay_type" class="form-control">
+                  <select v-model="$user.input.pay_type_id" class="form-control">
                     <option v-for="row in $payType.content" :value="row.id">{{ row.name }}</option>
                   </select>
                 </div>
@@ -94,7 +100,10 @@
                 <div class="form-group">
                   <label>Agent</label>
                   <Field name="agent" as='select' v-model="$user.input.agent" class="form-control">
-                    <option v-for="row in $agent.content" :value="row.id">{{ row.person.lastName }}</option>
+                    <option v-for="row in $agent.content" :value="row.id">
+                      {{ FullNameConvert(row.person.lastName, row.person.firstName, row.person.midName,
+                        row.person.extName) }}
+                    </option>
                   </Field>
                   <div class="mb-2 text-danger">
                     <ErrorMessage name="agent" />

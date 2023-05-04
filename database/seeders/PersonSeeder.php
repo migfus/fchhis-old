@@ -138,7 +138,7 @@ class PersonSeeder extends Seeder
           'address_id' => $idx,
           'address'  => $faker->lastName,
           'mobile' => 9978885555,
-          // 'agent_id'=> 3,
+          'agent_id'=> rand(1, 6),
         ]);
       }
     }
