@@ -234,15 +234,16 @@ class DashboardController extends Controller
         Transaction::where('client_id', $req->user()->id)
           ->where('created_at', '>=', Carbon::now()->subMonths($count)->startOfMonth())
           ->where('created_at', '<=', Carbon::now()->subMonths($count)->endOfMonth())
+          // ->orderBy('created_at', 'DESC')
             ->sum('amount'),
         ];
       // $summaryTransaction [Carbon::now()->subMonths($count)->format('Y')]
       $count++;
     }
 
-    // for($i = 0; $i < 10; $i++) {
-    //   $summaryTransaction [] = Carbon::now()->subMonths($i)->format('Ym');
-    // }
+
+
+
 
     return response()->json([
       ...$this->G_ReturnDefault($req),
