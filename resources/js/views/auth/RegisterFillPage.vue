@@ -14,7 +14,7 @@
                 <div class="users-list clearfix d-flex justify-content-center">
                   <li class="pt-0 w-100">
                     <img data-toggle="modal" data-target="#avatar-modal"
-                      :src="$register.params.avatar || 'https://i.imgflip.com/437aqu.jpg?a466704'"
+                      :src="$register.params.avatar || 'https://fchhis.migfus20.com/images/logo.png'"
                       style="width: 162px; height: 162px" alt="User Image">
                     <button data-toggle="modal" data-target="#avatar-modal" class="btn btn-info ml-2">Upload
                       Avatar</button>

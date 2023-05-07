@@ -14,7 +14,7 @@
                 <div class="users-list clearfix d-flex justify-content-center">
                   <li class="pt-0 w-100">
                     <img data-toggle="modal" data-target="#avatar-modal"
-                      :src="$user.input.avatar || 'https://i.imgflip.com/437aqu.jpg?a466704'"
+                      :src="$user.input.avatar || 'https://fchhis.migfus20.com/images/logo.png'"
                       style="width: 162px; height: 162px" alt="User Image">
                     <button data-toggle="modal" data-target="#avatar-modal" class="btn btn-info ml-2">Upload
                       Avatar</button>
@@ -90,6 +90,26 @@
                   <select v-model="$user.input.plan_id" class="form-control">
                     <option v-for="row in $plan.content" :value="row.id">{{ row.name }}</option>
                   </select>
+                </div>
+
+                <div class="form-group">
+                  <label>Payment Type</label>
+                  <select v-model="$user.input.pay_type_id" class="form-control">
+                    <option v-for="row in $payType.content" :value="row.id">{{ row.name }}</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label>Agent</label>
+                  <Field name="agent" as='select' v-model="$user.input.person.agent_id" class="form-control">
+                    <option v-for="row in $agent.content" :value="row.id">
+                      {{ FullNameConvert(row.person.lastName, row.person.firstName, row.person.midName,
+                        row.person.extName) }}
+                    </option>
+                  </Field>
+                  <div class="mb-2 text-danger">
+                    <ErrorMessage name="agent" />
+                  </div>
                 </div>
 
               </div>
@@ -234,14 +254,18 @@ import { useAddressStore } from '@/store/system/address'
 import { Form, Field, ErrorMessage, configure, } from 'vee-validate'
 import * as Yup from 'yup'
 import { usePlanStore } from '@/store/system/plan'
-import { CityIDToProvinceID } from '@/helpers/converter'
+import { CityIDToProvinceID, FullNameConvert } from '@/helpers/converter'
 import { $DebugInfo, $Err, $Log } from '@/helpers/debug'
+import { useAgentStore } from '@/store/users/agent'
+import { usePayTypeStore } from '@/store/system/payTypes'
 
 import AvatarUpload from '../modals/AvatarUpload.vue'
 
 const $address = useAddressStore();
 const $user = useUserStore();
 const $plan = usePlanStore();
+const $agent = useAgentStore();
+const $payType = usePayTypeStore();
 
 const BDayProvinceID = ref(CityIDToProvinceID($user.input.person.bplace_id));
 const AddressProvinceID = ref(CityIDToProvinceID($user.input.person.address_id));
@@ -298,7 +322,9 @@ function Submit() {
 
 onMounted(() => {
   $plan.GetAPI()
-})
+  $agent.GetAPI()
+  $payType.GetAPI()
+});
 
 </script>
 

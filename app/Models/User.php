@@ -58,6 +58,10 @@ class User extends Authenticatable
     return $this->belongsTo(Plan::class, 'plan_id', 'id');
   }
 
+  public function agent_users() {
+    return $this->hasMany(Person::class, 'agent_id');
+  }
+
   public function agent_transactions() {
     return $this->hasMany(Transaction::class, 'agent_id', 'id');
   }

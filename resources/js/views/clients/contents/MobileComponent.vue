@@ -94,6 +94,9 @@
             <button class="btn btn-secondary btn-sm float-right mr-1">
               Info
             </button>
+            <button @click="Print(row)" class="btn btn-info btn-sm float-right mr-1">
+              Print
+            </button>
           </div>
         </div>
 
@@ -114,6 +117,47 @@ import { CityIDToFullAddress, ProvinceIDToDesc, CityIDToDesc } from '@/helpers/c
 import VueAvatar from "@webzlodimir/vue-avatar";
 import "@webzlodimir/vue-avatar/dist/style.css";
 import { NumberAddComma } from '@/helpers/converter';
+import { ref } from 'vue'
+import { userReportStore } from '@/store/print/userPrint'
 
 const $user = useUserStore();
+const $print = userReportStore();
+
+const content = ref([
+  {
+    person: {
+      lastName: 'last',
+      firstName: 'first',
+      midName: '',
+      extName: '',
+    },
+    transactions: [
+      {
+        amount: 1,
+      },
+      {
+        amount: 2,
+      }
+    ]
+  }
+])
+
+function Print(row) {
+  $print.Print({
+    header: {
+      title: 'Client Details',
+      name: FullNameConvert(row.person.lastName, row.person.firstName, row.person.midName, row.person.extName)
+    },
+    body: content.value.map(m => {
+      console.log({ m })
+      return {
+        _name: FullNameConvert(m.person.lastName, m.person.firstName, m.person.midName, m.person.extName),
+        plan: 'n/a',
+        type: 'n/a',
+        created: moment(m.created_at).format("MM/DD/YYYY"),
+        amount: m.client_transactions_sum_amount,
+      }
+    }),
+  })
+}
 </script>

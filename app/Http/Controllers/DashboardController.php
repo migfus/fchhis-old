@@ -224,6 +224,7 @@ class DashboardController extends Controller
       ->orderBy('created_at', 'DESC')
       ->get();
 
+    // return Transaction::where('client_id', $req->user()->id)->get();
     $start = Carbon::parse(Transaction::where('client_id', $req->user()->id)->orderBy('created_at', 'ASC')->first()->created_at)->startOfYear()->format('Ym');
 
     $summaryTransaction = [];

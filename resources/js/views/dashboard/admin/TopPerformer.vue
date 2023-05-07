@@ -31,7 +31,7 @@
                 <td width="200">
                   <small v-if="idx < 5" class="mr-1">
                     <PercentComponent :num1="Number(row.agent_transactions_sum_amount)" :num2="Number($dash.content.topPerformer[idx +
-                        1].agent_transactions_sum_amount)" />
+                      1].agent_transactions_sum_amount)" />
                   </small>
                   <small v-else class="mr-1">
                     <PercentComponent :num1="0" :num2="0" />
@@ -41,7 +41,7 @@
                 <td width="150">
                   <small v-if="idx < 5" class="mr-1">
                     <PercentComponent :num1="Number(row.agent_transactions_count)" :num2="Number($dash.content.topPerformer[idx +
-                        1].agent_transactions_count)" />
+                      1].agent_transactions_count)" />
                   </small>
                   <small v-else class="mr-1">
                     <PercentComponent :num1="0" :num2="0" />

@@ -53,7 +53,7 @@
               row.person.referred.person.extName) }}</strong></div>
             <div>Plan: <strong>{{ `${row.plan.name} (${row.pay_type.name})` }}</strong></div>
             <div>Target: <strong>{{ NumberAddComma(row.plan.spot_pay) }}</strong></div>
-            <div>Transact: <strong>[2,000]</strong></div>
+            <div>Total Transact: <strong>{{ NumberAddComma(row.client_transactions_sum_amount) }}</strong></div>
             <div>Total: <strong>[12,089]</strong></div>
             <hr class="mt-1" />
           </div>

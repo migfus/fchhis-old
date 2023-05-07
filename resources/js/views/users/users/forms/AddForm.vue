@@ -14,7 +14,7 @@
                 <div class="users-list clearfix d-flex justify-content-center">
                   <li class="pt-0 w-100">
                     <img data-toggle="modal" data-target="#avatar-modal"
-                      :src="$user.input.avatar || 'https://i.imgflip.com/437aqu.jpg?a466704'"
+                      :src="$user.input.avatar || 'https://fchhis.migfus20.com/images/logo.png'"
                       style="width: 162px; height: 162px" alt="User Image">
                     <button data-toggle="modal" data-target="#avatar-modal" class="btn btn-info ml-2">Upload
                       Avatar</button>
@@ -90,6 +90,32 @@
                   <select v-model="$user.input.plan" class="form-control">
                     <option v-for="row in $plan.content" :value="row.id">{{ row.name }}</option>
                   </select>
+                </div>
+
+                <div class="form-group">
+                  <label>Payment Type</label>
+                  <select v-model="$user.input.pay_type_id" class="form-control">
+                    <option v-for="row in $payType.content" :value="row.id">{{ row.name }}</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="mid-input">Initial Transaction</label>
+                  <Field v-model="$user.input.transaction" name="transaction" type="text" class="form-control"
+                    id="mid-input" placeholder="Optional" />
+                </div>
+
+                <div class="form-group">
+                  <label>Agent</label>
+                  <Field name="agent" as='select' v-model="$user.input.agent" class="form-control">
+                    <option v-for="row in $agent.content" :value="row.id">
+                      {{ FullNameConvert(row.person.lastName, row.person.firstName, row.person.midName,
+                        row.person.extName) }}
+                    </option>
+                  </Field>
+                  <div class="mb-2 text-danger">
+                    <ErrorMessage name="agent" />
+                  </div>
                 </div>
 
               </div>
@@ -222,18 +248,23 @@
 
 <script setup>
 import { useUserStore } from '@/store/users/users'
-import { computed, ref } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import moment from 'moment'
 import { useAddressStore } from '@/store/system/address'
 import { Form, Field, ErrorMessage, configure, } from 'vee-validate'
 import * as Yup from 'yup'
 import { usePlanStore } from '@/store/system/plan'
+import { usePayTypeStore } from '@/store/system/payTypes'
+import { useAgentStore } from '@/store/users/agent'
+import { FullNameConvert } from '@/helpers/converter'
 
 import AvatarUpload from '../modals/AvatarUpload.vue'
 
 const $address = useAddressStore();
 const $user = useUserStore();
 const $plan = usePlanStore();
+const $payType = usePayTypeStore();
+const $agent = useAgentStore();
 
 const BDayProvinceID = ref(16);
 const AddressProvinceID = ref(16);
@@ -279,6 +310,11 @@ function GeneratePasword(length = 8) {
     $user.input.password = result;
   }
 }
+
+onMounted(() => {
+  $payType.GetAPI()
+  $agent.GetAPI()
+});
 </script>
 
 <style scoped>

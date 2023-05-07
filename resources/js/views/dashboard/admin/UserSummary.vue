@@ -27,7 +27,8 @@
             <tbody>
               <tr v-for="row in $dash.content.newUsers" :key="row.username">
                 <td>
-                  <img :src="row.avatar" alt="Product 1" class="img-circle img-size-32 mr-2">
+                  <img :src="row.avatar || 'https://fchhis.migfus20.com/images/logo.png'" alt="Product 1"
+                    class="img-circle img-size-32 mr-2">
                   {{ row.username }}
                 </td>
                 <td>{{ row.email }}</td>

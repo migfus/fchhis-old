@@ -62,7 +62,7 @@
 
                 <div class="form-group">
                   <label>Payment Type</label>
-                  <select v-model="$user.input.pay_type" class="form-control">
+                  <select v-model="$user.input.pay_type_id" class="form-control">
                     <option v-for="row in $payType.content" :value="row.id">{{ row.name }}</option>
                   </select>
                 </div>
@@ -71,6 +71,19 @@
                   <label for="mid-input">Initial Transaction</label>
                   <Field v-model="$user.input.transaction" name="transaction" type="text" class="form-control"
                     id="mid-input" placeholder="Optional" />
+                </div>
+
+                <div class="form-group">
+                  <label>Agent</label>
+                  <Field name="agent" as='select' v-model="$user.input.agent" class="form-control">
+                    <option v-for="row in $agent.content" :value="row.id">
+                      {{ FullNameConvert(row.person.lastName, row.person.firstName, row.person.midName,
+                        row.person.extName) }}
+                    </option>
+                  </Field>
+                  <div class="mb-2 text-danger">
+                    <ErrorMessage name="agent" />
+                  </div>
                 </div>
 
                 <label for="">URL Registratino for Client: <a :href="url" target="_blank">{{ url }}</a></label>
@@ -142,10 +155,13 @@ import * as Yup from 'yup'
 import moment from 'moment'
 import { computed, onMounted } from 'vue'
 import { usePayTypeStore } from '@/store/system/payTypes'
+import { useAgentStore } from '@/store/users/agent'
+import { FullNameConvert } from '@/helpers/converter'
 
 const $user = useUserStore();
 const $plan = usePlanStore();
 const $payType = usePayTypeStore();
+const $agent = useAgentStore();
 
 configure({
   validateOnInput: true,
@@ -178,6 +194,7 @@ function GeneratePasword(length = 4) {
 
 onMounted(() => {
   $payType.GetAPI()
+  $agent.GetAPI()
 });
 </script>
 

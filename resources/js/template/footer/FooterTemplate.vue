@@ -17,7 +17,7 @@
 
                 <strong>Phone: </strong>0916-859-8192
               </h6>
-              <h6 class="my-2 text-secondary">
+              <h6 class="my-2 text-secondary text-truncate">
 
                 <strong>Email: </strong>futurecareandhelpinghandsinsuranceservices@gmail.com
               </h6>

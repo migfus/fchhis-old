@@ -180,22 +180,26 @@ class UserController extends Controller
         // NOTE SEARCH FILTER
         switch($req->filter) {
           case 'email':
-            $user->where('email', 'LIKE', '%'.$req->search.'%')->with(['person.user', 'plan', 'pay_type', 'person.referred']); // OK No whereRelation
+            $user->where('email', 'LIKE', '%'.$req->search.'%')->with(['person.user', 'plan', 'pay_type', 'person.referred'])
+              ->withSum('client_transactions', 'amount'); // OK No whereRelation
             break;
           case 'address':
             $user->with(['person.user', 'plan', 'pay_type', 'person.referred'])
+              ->withSum('client_transactions', 'amount')
               ->whereHas('person.user', function($q) use ($req) {
                 $q->where('address', 'LIKE', '%'.$req->search.'%');
               });
             break;
           case 'plans':
             $user->with(['person.user', 'plan', 'pay_type', 'person.referred'])
+              ->withSum('client_transactions', 'amount')
               ->whereHas('plan', function($q) use ($req) {
                 $q->where('name', 'LIKE', '%'.$req->search.'%');
               });
             break;
           default:
             $user->with(['person.user', 'plan', 'pay_type', 'person.referred.person'])
+              ->withSum('client_transactions', 'amount')
               ->whereHas('person.user', function($q) use ($req) {
                 $q->where('lastName', 'LIKE', '%'.$req->search.'%')
                   ->orWhere('firstName', 'LIKE', '%'.$req->search.'%')
@@ -232,22 +236,22 @@ class UserController extends Controller
         // NOTE SEARCH FILTER
         switch($req->filter) {
           case 'email':
-            $user->where('email', 'LIKE', '%'.$req->search.'%')->with(['person.user', 'plan', 'pay_type', 'person.referred'])->withSum('client_transactions', 'amount'); // OK No whereRelation
+            $user->where('email', 'LIKE', '%'.$req->search.'%')->with(['person.user', 'plan', 'pay_type', 'person.referred', 'client_transactions'])->withSum('client_transactions', 'amount'); // OK No whereRelation
             break;
           case 'address':
-            $user->with(['person.user', 'plan', 'pay_type', 'person.referred'])->withSum('client_transactions', 'amount')
+            $user->with(['person.user', 'plan', 'pay_type', 'person.referred', 'client_transactions'])->withSum('client_transactions', 'amount')
               ->whereHas('person.user', function($q) use ($req) {
                 $q->where('address', 'LIKE', '%'.$req->search.'%');
               });
             break;
           case 'plans':
-            $user->with(['person.user', 'plan', 'pay_type', 'person.referred'])->withSum('client_transactions', 'amount')
+            $user->with(['person.user', 'plan', 'pay_type', 'person.referred', 'client_transactions'])->withSum('client_transactions', 'amount')
               ->whereHas('plan', function($q) use ($req) {
                 $q->where('name', 'LIKE', '%'.$req->search.'%');
               });
             break;
           default:
-            $user->with(['person.user', 'plan', 'pay_type', 'person.referred.person'])->withSum('client_transactions', 'amount')
+            $user->with(['person.user', 'plan', 'pay_type', 'person.referred.person', 'client_transactions'])->withSum('client_transactions', 'amount')
               ->whereHas('person.user', function($q) use ($req) {
                 $q->where('lastName', 'LIKE', '%'.$req->search.'%')
                   ->orWhere('firstName', 'LIKE', '%'.$req->search.'%')
@@ -291,6 +295,8 @@ class UserController extends Controller
         'bplaceID' => 'required',
         'addressID'=> 'required',
         'address'  => 'required',
+        'pay_type_id' => 'required',
+        'agent'    => 'required',
       ]);
 
       if($val->fails()) {
@@ -309,6 +315,7 @@ class UserController extends Controller
         'address_id'=> $req->bplaceID,
         'address'   => $req->address,
         'mobile'    => $req->mobile,
+        'agent_id'  => $req->agent
       ]);
 
       $avatar = null;
@@ -326,6 +333,16 @@ class UserController extends Controller
         'avatar'   => $avatar,
         'role'     => $req->role,
         'notify_mobile' => $req->notifyMobile,
+        'pay_type_id' => $req->pay_type_id,
+      ]);
+
+      Transaction::create([
+        'agent_id'  => $req->agent,
+        'staff_id'  => $req->user()->id,
+        'client_id' => $person->id,
+        'pay_type_id' => $req->pay_type_id,
+        'amount'  =>  $req->transaction,
+        'plan_id' => $req->plan,
       ]);
 
       return response()->json([...$this->G_ReturnDefault($req)]);
@@ -414,9 +431,6 @@ class UserController extends Controller
     return $this->G_UnauthorizedResponse();
   }
 
-  /**
-   * Display the specified resource.
-   */
   public function show(string $id) {
       //
   }
