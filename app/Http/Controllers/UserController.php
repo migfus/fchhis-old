@@ -236,22 +236,55 @@ class UserController extends Controller
         // NOTE SEARCH FILTER
         switch($req->filter) {
           case 'email':
-            $user->where('email', 'LIKE', '%'.$req->search.'%')->with(['person.user', 'plan', 'pay_type', 'person.referred', 'client_transactions'])->withSum('client_transactions', 'amount'); // OK No whereRelation
+            $user->where('email', 'LIKE', '%'.$req->search.'%')
+              ->with([
+                'person.user',
+                'plan',
+                'pay_type',
+                'person.referred',
+                'client_transactions.plan',
+                'client_transactions.pay_type'
+              ])
+              ->withSum('client_transactions', 'amount'); // OK No whereRelation
             break;
           case 'address':
-            $user->with(['person.user', 'plan', 'pay_type', 'person.referred', 'client_transactions'])->withSum('client_transactions', 'amount')
+            $user->with([
+                'person.user',
+                'plan',
+                'pay_type',
+                'person.referred',
+                'client_transactions.plan',
+                'client_transactions.pay_type'
+                ])
+              ->withSum('client_transactions', 'amount')
               ->whereHas('person.user', function($q) use ($req) {
                 $q->where('address', 'LIKE', '%'.$req->search.'%');
               });
             break;
           case 'plans':
-            $user->with(['person.user', 'plan', 'pay_type', 'person.referred', 'client_transactions'])->withSum('client_transactions', 'amount')
+            $user->with([
+                'person.user',
+                'plan',
+                'pay_type',
+                'person.referred',
+                'client_transactions.plan',
+                'client_transactions.pay_type'
+              ])
+              ->withSum('client_transactions', 'amount')
               ->whereHas('plan', function($q) use ($req) {
                 $q->where('name', 'LIKE', '%'.$req->search.'%');
               });
             break;
           default:
-            $user->with(['person.user', 'plan', 'pay_type', 'person.referred.person', 'client_transactions'])->withSum('client_transactions', 'amount')
+            $user->with([
+                'person.user',
+                'plan',
+                'pay_type',
+                'person.referred.person',
+                'client_transactions.plan',
+                'client_transactions.pay_type'
+              ])
+              ->withSum('client_transactions', 'amount')
               ->whereHas('person.user', function($q) use ($req) {
                 $q->where('lastName', 'LIKE', '%'.$req->search.'%')
                   ->orWhere('firstName', 'LIKE', '%'.$req->search.'%')

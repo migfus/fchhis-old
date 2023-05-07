@@ -113,49 +113,36 @@ import { useUserStore } from '@/store/users/users'
 import { RoleToDesc } from '@/helpers/converter'
 import BadgeComponent from '../components/BadgeComponent.vue'
 import { FullNameConvert } from '@/helpers/converter'
-import { CityIDToFullAddress, ProvinceIDToDesc, CityIDToDesc } from '@/helpers/converter'
+import { CityIDToFullAddress, ProvinceIDToDesc, CityIDToDesc, NumberAddComma } from '@/helpers/converter'
 import VueAvatar from "@webzlodimir/vue-avatar";
 import "@webzlodimir/vue-avatar/dist/style.css";
-import { NumberAddComma } from '@/helpers/converter';
 import { ref } from 'vue'
-import { userReportStore } from '@/store/print/userPrint'
+import { userDetailStore } from '@/store/print/userDetails'
 
 const $user = useUserStore();
-const $print = userReportStore();
+const $details = userDetailStore();
 
-const content = ref([
-  {
-    person: {
-      lastName: 'last',
-      firstName: 'first',
-      midName: '',
-      extName: '',
-    },
-    transactions: [
-      {
-        amount: 1,
-      },
-      {
-        amount: 2,
-      }
-    ]
-  }
-])
 
 function Print(row) {
-  $print.Print({
+  $details.Print({
     header: {
       title: 'Client Details',
-      name: FullNameConvert(row.person.lastName, row.person.firstName, row.person.midName, row.person.extName)
+      name: FullNameConvert(row.person.lastName, row.person.firstName, row.person.midName, row.person.extName),
+      created_at: moment(row.created_at).format('MM/DD/YYYY'),
+      username: row.username,
+      bday: moment(row.person.bday).format('MM/DD/YYYY'),
+      bplace: CityIDToFullAddress(row.person.bplace_id),
+      sex: row.person.sex ? 'Male' : 'Female',
+      address: `${row.person.address}, ${CityIDToFullAddress(row.person.address_id)}`,
+      email: row.email,
+      mobile: row.person.mobile,
     },
-    body: content.value.map(m => {
-      console.log({ m })
+    body: row.client_transactions.map(m => {
       return {
-        _name: FullNameConvert(m.person.lastName, m.person.firstName, m.person.midName, m.person.extName),
-        plan: 'n/a',
-        type: 'n/a',
+        name: m.plan.name,
+        type: m.pay_type.name,
+        amount: m.amount,
         created: moment(m.created_at).format("MM/DD/YYYY"),
-        amount: m.client_transactions_sum_amount,
       }
     }),
   })
