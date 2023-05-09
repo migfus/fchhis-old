@@ -48,7 +48,6 @@ export const useTransactionStore = defineStore('transaction', () => {
     try {
       let { data: {data, sum}} = await axios.get('/api/transactions', { params: { ...query, page: page} })
       content.value = data
-      _sum.value = sum
     }
     catch(e) {
       $Err('GetAPI Err', {e})

@@ -83,13 +83,12 @@
                   <th>Plan</th>
                   <th>Name</th>
                   <th>Plan</th>
-                  <th>More</th>
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="row in $trans.content">
+                <tr v-for="row in $trans.content.data">
                   <td>
-                    <img :src="row.plan.avatar || 'https://fchhis.migfus20.com/images/logo.png'" alt="Product 1"
+                    <img :src="row.client.avatar || 'https://fchhis.migfus20.com/images/logo.png'" alt="Product 1"
                       class="img-circle img-size-32 mr-2" style="width: 30px; height: 30px">
                     {{ row.plan.name }}
                   </td>
@@ -102,17 +101,14 @@
                   <td class="text-success text-bold">
                     +{{ NumberAddComma(row.amount) }}
                   </td>
-                  <td>
-                    <a href="#" class="text-warning">
-                      <i class="fas fa-receipt"></i>
-                    </a>
-                  </td>
                 </tr>
               </tbody>
             </table>
             <RouterLink :to="{ name: 'transactions-all' }" class="btn btn-info m-3 float-right">More</RouterLink>
           </div>
         </div>
+
+        <!-- <div v-for="row in $trans.content.data" class="card">{{ $trans.content }}</div> -->
       </div>
 
       <div class="col-12 col-md-6">
@@ -127,7 +123,6 @@
                   <th>Name</th>
                   <th>Transacts</th>
                   <th>Plan</th>
-                  <th>More</th>
                 </tr>
               </thead>
               <tbody>
@@ -144,11 +139,6 @@
                   <td v-else>0</td>
                   <td>
                     {{ row.plan.name }}
-                  </td>
-                  <td>
-                    <a href="#" class="text-muted">
-                      <i class="fas fa-search"></i>
-                    </a>
                   </td>
                 </tr>
               </tbody>

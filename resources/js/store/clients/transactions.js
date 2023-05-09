@@ -6,7 +6,8 @@ import { $DebugInfo, $Err, $Log} from '@/helpers/debug'
 export const useTransactionStore = defineStore('transactions-clients', () => {
   $DebugInfo('TransactionStore')
 
-  const content = ref(false)
+  const content = ref([])
+
   const params = ref({
    ...InitParams()
   })
