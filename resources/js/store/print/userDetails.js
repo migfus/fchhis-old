@@ -1,21 +1,19 @@
-import { ref, reactive, computed} from 'vue'
+import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
-import { $DebugInfo, $Log, $Err} from '@/helpers/debug';
-import axios from 'axios'
+import { $DebugInfo, $Log } from '@/helpers/debug';
 import DeviceDetector from "device-detector-js";
 import { NumberAddComma } from '@/helpers/converter'
-import moment from 'moment'
+import { useAuthStore } from '@/store/auth/auth'
 
 export const userDetailStore = defineStore('user-details', () => {
   $DebugInfo("UserReport")
 
+  const $auth = useAuthStore();
   const deviceDetector = new DeviceDetector();
   const device = deviceDetector.parse(navigator.userAgent)
   pdfMake.vfs = pdfFonts;
-
-  const ipAddress = ref('')
 
   function _sum(items, prop){
     return items.reduce( function(a, b){
@@ -24,9 +22,6 @@ export const userDetailStore = defineStore('user-details', () => {
   };
 
   function Print(input) {
-    console.log({input})
-    getIP()
-
     const pdfContent = ref([
       {
         columns: [
@@ -147,7 +142,7 @@ export const userDetailStore = defineStore('user-details', () => {
         columns: [
           [
             { text: window.location.href, alignment: 'left' },
-            { text: `Client IP: ${ipAddress.value}`, alignment: 'left' },
+            { text: `Client IP: ${$auth.ip}`, alignment: 'left' },
           ],
           { text: `${device.client.name}, ${device.os.name} ${device.os.version}`, alignment: 'right' },
         ],
@@ -157,16 +152,6 @@ export const userDetailStore = defineStore('user-details', () => {
     // pdfMake.createPdf({}).open();
     pdfMake.createPdf(template.value).open();
     $Log("Print", template.value)
-  }
-
-  async function getIP() {
-    try {
-      const { ip } = await axios.get('https://api.ipify.org/?format=json')
-      ipAddress.value = ip
-    }
-    catch(e) {
-
-    }
   }
 
   return {

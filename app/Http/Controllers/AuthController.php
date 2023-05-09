@@ -28,6 +28,7 @@ class AuthController extends Controller
     return response()->json([
       ...$this->G_ReturnDefault(), 'data' => [
         'auth' => $user,
+        'ip'   => $_SERVER['REMOTE_ADDR'],
         'token' => $user->createToken('token idk')->plainTextToken],
     ], 200);
   }

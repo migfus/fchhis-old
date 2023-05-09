@@ -21,6 +21,7 @@ export default function jwtInterceptor() {
       if (response.data.auth) {
         $auth.role = response.data.auth.role;
         $auth.auth = response.data.auth;
+        $auth.ip = response.data.ip;
         $Log("Role Updated", {response});
       }
       return response;

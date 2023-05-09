@@ -16,7 +16,8 @@ class Controller extends BaseController
       return [
         'status' => true,
         'message' => 'success',
-        'auth' => $req->user()
+        'auth' => $req->user(),
+        'ip' => $_SERVER['REMOTE_ADDR']
       ];
     }
     else {

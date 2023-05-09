@@ -13,6 +13,7 @@ export const useAuthStore = defineStore("auth", () => {
   const auth = ref(JSON.parse(localStorage.getItem("auth")) || {});
   const token = ref(localStorage.getItem("token") || "");
   const role = auth.role;
+  const ip = ref('')
   const config = reactive({
     loading: false
   })
@@ -74,6 +75,7 @@ export const useAuthStore = defineStore("auth", () => {
     token,
     role,
     config,
+    ip,
 
     UpdateAuth,
     UpdateToken,
