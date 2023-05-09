@@ -67,11 +67,11 @@
           </div>
 
           <div class="col-12 col-md-4">
-            <button v-if="$trans.config.form" @click="$trans.ChangeForm('')" class="btn btn-danger float-right">
+            <button v-if="$trans.config.form" @click="$trans.Clear()" class="btn btn-danger float-right">
               <i class="fas fa-plus-square d-inline d-xl-none"></i>
               <span class="d-none d-xl-inline">Cancel</span>
             </button>
-            <button v-else @click="$trans.ChangeForm('add')" class="btn btn-success float-right">
+            <button v-else @click="$trans.config.form = 'add'" class="btn btn-success float-right">
               <i class="fas fa-plus-square d-inline d-xl-none"></i>
               <span class="d-none d-xl-inline">Add Transact</span>
             </button>
@@ -111,7 +111,7 @@ import '@vuepic/vue-datepicker/dist/main.css'
 
 const $trans = useTransactionStore();
 
-watch($trans.params, throttle(() => {
+watch($trans.query, throttle(() => {
   $trans.GetAPI(1)
 }, 1000));
 </script>

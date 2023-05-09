@@ -89,8 +89,8 @@
               <tbody>
                 <tr v-for="row in $trans.content">
                   <td>
-                    <img :src="row.plan.avatar" alt="Product 1" class="img-circle img-size-32 mr-2"
-                      style="width: 30px; height: 30px">
+                    <img :src="row.plan.avatar || 'https://fchhis.migfus20.com/images/logo.png'" alt="Product 1"
+                      class="img-circle img-size-32 mr-2" style="width: 30px; height: 30px">
                     {{ row.plan.name }}
                   </td>
                   <td>

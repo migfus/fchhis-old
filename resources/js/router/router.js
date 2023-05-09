@@ -95,7 +95,7 @@ const router = createRouter({
       component: () => import("@/views/transaction/AllTransactionPage.vue"),
       meta: {
         title: "All Transactions",
-        role: 2, //admin
+        role: 5, //admin
         auth: true,
         sideBar: true,
       },
@@ -200,7 +200,10 @@ router.beforeEach(async (to, from) => {
   }
 
   if(to.meta.role) {
-    if(to.meta.role != $auth.auth.role && to.meta.name != 'error') {
+    if($auth.auth.role == 2) {
+
+    }
+    else if(to.meta.role != $auth.auth.role && to.meta.name != 'error') {
       // return { name: 'error'}
       return false
     }

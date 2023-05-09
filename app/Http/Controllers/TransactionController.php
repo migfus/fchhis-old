@@ -46,14 +46,16 @@ class TransactionController extends Controller
 
     // SECTION STAFF
     if($req->user()->role == 5) {
-      $data = Transaction::with(['plan', 'client.person'])
-        ->limit($req->limit)
-        ->orderBy('created_at', 'DESC')
-        ->get();
-
       return response()->json([
         ...$this->G_ReturnDefault($req),
-        'data' => $data
+        'data' => Transaction::with([
+            'client.person',
+            'staff.person',
+            'agent.person',
+            'plan',
+            'pay_type'
+          ])
+          ->paginate(10),
       ]);
     }
 

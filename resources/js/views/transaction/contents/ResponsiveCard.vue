@@ -32,13 +32,13 @@
             <div class="d-none d-xl-inline col-12 col-md-6 col-xl-4">
               <span class="float-right text-secondary"> {{ moment(row.created_at).format('MMM D YYYY') }}
               </span>
-              <div>Encoded By: <strong>
+              <div>Staff: <strong>
                   {{
                     FullNameConvert(row.staff.person.lastName, row.staff.person.firstName, row.staff.person.midName,
                       row.staff.person.extName)
                   }}
                 </strong></div>
-              <div>Refered: <strong>
+              <div>Agent: <strong>
                   {{
                     FullNameConvert(row.agent.person.lastName, row.agent.person.firstName, row.agent.person.midName,
                       row.agent.person.extName)
@@ -71,12 +71,30 @@
 
           </div>
           <div class="col-12 col-md-6 col-lg-4 col-xl-3">
-            <div>Encoded By: <strong class="text-info">{{ FullNameConvert(row.staff.person.lastName,
-              row.staff.person.firstName,
-              row.staff.person.midName, row.staff.person.extName) }}</strong></div>
-            <div>Referred By: <strong class="text-warning">{{ FullNameConvert(row.agent.person.lastName,
-              row.agent.person.firstName,
-              row.agent.person.midName, row.agent.person.extName) }}</strong></div>
+            <div>Staff:
+              <strong class="text-info">
+                {{
+                  FullNameConvert(
+                    row.staff.person.lastName,
+                    row.staff.person.firstName,
+                    row.staff.person.midName,
+                    row.staff.person.extName
+                  )
+                }}
+              </strong>
+            </div>
+            <div>Agent:
+              <strong class="text-warning">
+                {{
+                  FullNameConvert(
+                    row.agent.person.lastName,
+                    row.agent.person.firstName,
+                    row.agent.person.midName,
+                    row.agent.person.extName
+                  )
+                }}
+              </strong>
+            </div>
             <div>Referal ID: <strong> {{ row.agent.id }} </strong> </div>
             <!-- <div>Birth Day: <strong>[bla]</strong></div>
             <div>Birth Place: <strong>[bla]</strong></div> -->
@@ -92,16 +110,40 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-12">
-            <button @click="$user.Delete(row.id, idx)" class="btn btn-danger btn-sm float-right">
+          <div class="col-12 col-md-6">
+            <div v-if="$auth.auth.id != row.staff_id" class="alert alert-light mb-0 p-0 px-2" role="alert">
+              Accessable only by:
+              <strong>
+                {{
+                  FullNameConvert(
+                    row.staff.person.lastName,
+                    row.staff.person.firstName,
+                    row.staff.person.midName,
+                    row.staff.person.extName
+                  )
+                }}
+              </strong>
+            </div>
+          </div>
+          <div class="col-12 col-md-6">
+            <button v-if="$auth.auth.role == 2" @click="$trans.Delete(row.id, idx)"
+              class="btn btn-danger btn-sm float-right">
               Remove
             </button>
-            <button @click="$user.Update(row)" class="btn btn-warning btn-sm float-right mr-1">
+
+            <button v-if="$auth.auth.id == row.staff_id" @click="$user.Update(row)"
+              class="btn btn-warning btn-sm float-right mr-1">
               Edit
             </button>
-            <button class="btn btn-secondary btn-sm float-right mr-1">
-              Info
+            <button v-else class="btn btn-warning btn-sm float-right mr-1" Disabled>
+              You can't edit
             </button>
+
+            <button class="btn btn-info btn-sm float-right mr-1">
+              Print
+            </button>
+
+
           </div>
         </div>
 
@@ -116,6 +158,8 @@
 import { useTransactionStore } from '@/store/transaction/transaction'
 import { NumberAddComma, FullNameConvert } from '@/helpers/converter'
 import moment from 'moment'
+import { useAuthStore } from '@/store/auth/auth'
 
 const $trans = useTransactionStore();
+const $auth = useAuthStore();
 </script>

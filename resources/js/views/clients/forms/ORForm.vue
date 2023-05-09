@@ -156,6 +156,7 @@ import moment from 'moment'
 import { computed, onMounted } from 'vue'
 import { usePayTypeStore } from '@/store/system/payTypes'
 import { useAgentStore } from '@/store/users/agent'
+import { FullNameConvert } from '@/helpers/converter'
 
 const $user = useUserStore();
 const $plan = usePlanStore();
