@@ -34,7 +34,7 @@ Route::middleware('auth:sanctum')->group(function () {
   Route::apiResource('/dashboard', DashboardController::class)->only(['index']);
   Route::apiResource('/plan', PlanController::class)->only(['index', 'destroy', 'store', 'update']);
   Route::apiResource('/role', RoleController::class)->only(['index']);
-  Route::apiResource('/transactions', TransactionController::class)->only(['index']);
+  Route::apiResource('/transactions', TransactionController::class)->only(['index', 'store']);
   Route::apiResource('/beneficiary', BeneficiaryController::class)->only(['index', 'destroy', 'store', 'update']);
   Route::apiResource('/downhead', DownHeadController::class)->only(['index']);
   Route::apiResource('/client', ClientController::class)->only(['index']);

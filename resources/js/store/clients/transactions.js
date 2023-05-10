@@ -21,6 +21,16 @@ export const useTransactionStore = defineStore('transactions-clients', () => {
 
   function InitParams() {
     return {
+      client: {
+        person: {
+          id: '',
+        }
+      },
+      agent: {
+        person: {
+          id: '',
+        }
+      }
     }
   }
 

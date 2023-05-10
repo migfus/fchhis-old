@@ -22,6 +22,7 @@ class TransactionController extends Controller
 
     // SECTION ADMIN
     if($req->user()->role == 2) {
+      return 'test';
       return response()->json([
         ...$this->G_ReturnDefault($req),
         'data' => Transaction::with(['client.person', 'staff.person', 'agent.person', 'plan'])->paginate(10),
@@ -55,6 +56,7 @@ class TransactionController extends Controller
             'plan',
             'pay_type'
           ])
+          ->orderBy('created_at', 'DESC')
           ->paginate(10),
       ]);
     }
@@ -65,9 +67,37 @@ class TransactionController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $req)
     {
-        //
+      $val = Validator::make($req->all(), [
+        'agent.person.id' => 'required',
+        'client.person.id' => 'required',
+        'amount' => 'required',
+        'or' => 'required',
+        'pay_type_id' => 'required',
+        'plan.id' => 'required',
+      ]);
+
+      if($val->fails()) {
+        return $this->G_ValidatorFailResponse($val);
+      }
+
+      if($req->user()->role == 5) {
+        // return $req->client['person']['id'];
+
+        Transaction::create([
+          'agent_id' => $req->agent['person']['id'],
+          'staff_id' => $req->user()->id,
+          'client_id' => $req->client['person']['id'],
+          'pay_type_id' => $req->pay_type_id,
+          'plan_id' => $req->plan['id'],
+          'amount' => $req->amount,
+        ]);
+
+        return response()->json([...$this->G_ReturnDefault($req), 'data' => true]);
+      }
+
+      return $this->G_UnauthorizedResponse();
     }
 
     /**

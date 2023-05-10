@@ -18,23 +18,33 @@ export const useTransactionStore = defineStore('transaction', () => {
   })
   const query = reactive({
     search: '',
-    filter: '',
     target: 6, // show transaction by role (idK)
     filter: '',
     search: '',
     start: '',
     end: '',
     limit: 10,
+    role: '',
   })
 
   function InitValue() {
     return {
       or: '',
       amount: 0,
-      plan_id: '',
+      plan: {
+        id: '',
+      },
       pay_type_id: '',
-      client_id: '',
-      agent_id: '',
+      client: {
+        person: {
+          id: '',
+        }
+      },
+      agent: {
+        person: {
+          id: '',
+        }
+      },
     }
   }
 
@@ -53,6 +63,24 @@ export const useTransactionStore = defineStore('transaction', () => {
       $Err('GetAPI Err', {e})
     }
     config.loading = false
+  }
+
+  async function AddAPI() {
+    try {
+      let { data: {data}} = await axios.post('/api/transactions', params)
+      GetAPI(1)
+      Object.assign(params, InitValue())
+      config.form = ''
+
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: 'smooth',
+      })
+    }
+    catch (e) {
+      $Err('AddAPI Err', {e})
+    }
   }
 
   function UpdateAPI() {
@@ -81,6 +109,7 @@ export const useTransactionStore = defineStore('transaction', () => {
 
     Clear,
     GetAPI,
+    AddAPI,
     DeleteAPI,
     UpdateAPI,
   }

@@ -98,6 +98,8 @@
       </div>
     </div>
   </div>
+  <SelectClient />
+  <SelectAgent />
 </template>
 
 <script setup>
@@ -108,6 +110,8 @@ import { throttle } from 'lodash'
 
 import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
+import SelectClient from './../modals/SelectClient.vue'
+import SelectAgent from './../modals/SelectAgent.vue'
 
 const $trans = useTransactionStore();
 

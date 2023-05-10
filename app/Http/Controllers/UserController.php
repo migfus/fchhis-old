@@ -215,11 +215,13 @@ class UserController extends Controller
 
     // SECTION STAFF
     if($req->user()->role == 5) {
-      $user = User::select('*')->where('role', 6);
-
+      $user = User::select('*');
       // NOTE ROLE FITLER
-      if($req->role < 7) {
-        $user->where('role', $req->role);
+      if($req->role == 4) {
+        $user->where('role', 4);
+      }
+      else {
+        $user->where('role', 6);
       }
 
       // NOTE DATE RANGE FILTER
@@ -282,7 +284,7 @@ class UserController extends Controller
                 'pay_type',
                 'person.referred.person',
                 'client_transactions.plan',
-                'client_transactions.pay_type'
+                'client_transactions.pay_type',
               ])
               ->withSum('client_transactions', 'amount')
               ->whereHas('person.user', function($q) use ($req) {

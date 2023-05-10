@@ -116,6 +116,25 @@ export const GetPercentage = (num1, num2) => {
   return (((num1 - num2) / num1) * 100).toFixed(2);
 }
 
+export const PlanToAmount = (pay_type_id, plan) => {
+  switch (pay_type_id) {
+    case 1:
+      return plan.monthly
+    case 2:
+      return plan.querterly
+    case 3:
+      return plan.semi_annual
+    case 4:
+      return plan.annual
+    case 5:
+      return plan.spot_pay
+    case 6:
+      return plan.spot_service
+    default:
+      return 0
+  }
+}
+
 export const Sum = (items, prop) => {
   return items.reduce( function(a, b){
       return Number(a) + Number(b[prop]);
