@@ -44,7 +44,7 @@
               </div>
 
               <div class="col-12 col-md-6">
-                <RouterLink :to="{ name: 'users-list' }">
+                <RouterLink :to="{ name: 'transactions-all', }">
                   <div class="info-box mb-3 bg-warning">
                     <span class="info-box-icon"><i class="fas fa-receipt"></i></span>
                     <div class="info-box-content">
@@ -55,7 +55,7 @@
               </div>
 
               <div class="col-12 col-md-6">
-                <RouterLink :to="{ name: 'users-list' }">
+                <RouterLink :to="{ name: 'transactions-all', query: { form: 'add' } }">
                   <div class="info-box mb-3 bg-secondary">
                     <span class="info-box-icon"><i class="fas fa-file-medical"></i></span>
                     <div class="info-box-content">

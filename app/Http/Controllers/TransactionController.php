@@ -13,7 +13,10 @@ class TransactionController extends Controller
     // SECTION VALIDATION
     $val = Validator::make($req->all(), [
       'limit' => 'required|numeric|min:1|max:10',
-      'search' => ''
+      'search' => '',
+      'start' => '',
+      'end' => '',
+      'filter' => '',
     ]);
 
     if($val->fails()) {
@@ -47,58 +50,91 @@ class TransactionController extends Controller
 
     // SECTION STAFF
     if($req->user()->role == 5) {
+      $trans = Transaction::select('*');
+
+      if((bool)strtotime($req->start) OR (bool)strtotime($req->end)) {
+        if((bool)strtotime($req->start)) {
+          $trans->where('created_at', '>=', $req->start);
+        }
+        if((bool)strtotime($req->end)) {
+          $trans->where('created_at', '<=', $req->end);
+        }
+      }
+
+      $trans->with([
+        'client.person',
+        'staff.person',
+        'agent.person',
+        'plan',
+        'pay_type'
+      ]);
+
+      switch($req->filter) {
+        case 'email':
+          $trans->whereHas('client', function($q) use($req) {
+            $q->where('email', 'LIKE', '%'.$req->search.'%');
+          });
+          break;
+        case 'address':
+          $trans->whereHas('client.person', function($q) use($req) {
+            $q->where('address', 'LIKE', '%'.$req->search.'%');
+          });
+          break;
+        case 'plans':
+          $trans->whereHas('plan', function($q) use($req) {
+            $q->where('name', 'LIKE', '%'.$req->search.'%');
+          });
+          break;
+        default:
+          $trans->whereHas('client.person', function($q) use($req) {
+            $q->where('lastName', 'LIKE', '%'.$req->search.'%')
+              ->orWhere('firstName', 'LIKE', '%'.$req->search.'%');
+          });
+      }
+
+      $data = $trans->orderBy('created_at', 'DESC')
+      ->paginate(10);
+
       return response()->json([
         ...$this->G_ReturnDefault($req),
-        'data' => Transaction::with([
-            'client.person',
-            'staff.person',
-            'agent.person',
-            'plan',
-            'pay_type'
-          ])
-          ->orderBy('created_at', 'DESC')
-          ->paginate(10),
+        'data' => $data,
       ]);
     }
 
     return $this->G_UnauthorizedResponse();
   }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $req)
-    {
-      $val = Validator::make($req->all(), [
-        'agent.person.id' => 'required',
-        'client.person.id' => 'required',
-        'amount' => 'required',
-        'or' => 'required',
-        'pay_type_id' => 'required',
-        'plan.id' => 'required',
+  public function store(Request $req) {
+    $val = Validator::make($req->all(), [
+      'agent.person.id' => 'required',
+      'client.person.id' => 'required',
+      'amount' => 'required',
+      'or' => 'required',
+      'pay_type_id' => 'required',
+      'plan.id' => 'required',
+    ]);
+
+    if($val->fails()) {
+      return $this->G_ValidatorFailResponse($val);
+    }
+
+    if($req->user()->role == 5) {
+      // return $req->client['person']['id'];
+
+      Transaction::create([
+        'agent_id' => $req->agent['person']['id'],
+        'staff_id' => $req->user()->id,
+        'client_id' => $req->client['person']['id'],
+        'pay_type_id' => $req->pay_type_id,
+        'plan_id' => $req->plan['id'],
+        'amount' => $req->amount,
       ]);
 
-      if($val->fails()) {
-        return $this->G_ValidatorFailResponse($val);
-      }
-
-      if($req->user()->role == 5) {
-        // return $req->client['person']['id'];
-
-        Transaction::create([
-          'agent_id' => $req->agent['person']['id'],
-          'staff_id' => $req->user()->id,
-          'client_id' => $req->client['person']['id'],
-          'pay_type_id' => $req->pay_type_id,
-          'plan_id' => $req->plan['id'],
-          'amount' => $req->amount,
-        ]);
-
-        return response()->json([...$this->G_ReturnDefault($req), 'data' => true]);
-      }
-
-      return $this->G_UnauthorizedResponse();
+      return response()->json([...$this->G_ReturnDefault($req), 'data' => true]);
     }
+
+    return $this->G_UnauthorizedResponse();
+  }
 
     /**
      * Display the specified resource.

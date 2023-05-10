@@ -19,7 +19,7 @@ export const useTransactionStore = defineStore('transaction', () => {
   const query = reactive({
     search: '',
     target: 6, // show transaction by role (idK)
-    filter: '',
+    filter: 'name',
     search: '',
     start: '',
     end: '',

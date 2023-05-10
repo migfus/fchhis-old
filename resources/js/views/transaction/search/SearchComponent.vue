@@ -15,25 +15,11 @@
           </div>
 
           <div class="col-12 col-md-4 mb-2">
-
-            <div class="input-group">
-              <div class="input-group-prepend">
-                <span class="input-group-text"><i class="fas fa-user-check"></i></span>
-              </div>
-              <select v-model="$trans.params.target" class="form-control">
-                <option :value="6">Client (Target)</option>
-                <option :value="5">Staff</option>
-                <option :value="4">Agent</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="col-12 col-md-4 mb-2">
             <div class="input-group">
               <div class="input-group-prepend">
                 <span class="input-group-text"><i class="fas fa-filter"></i></span>
               </div>
-              <select v-model="$trans.params.filter" class="form-control">
+              <select v-model="$trans.query.filter" class="form-control">
                 <!-- <option value="">All (Filter)</option> -->
                 <option value="name">Name</option>
                 <option value="email">Email</option>
@@ -43,9 +29,9 @@
             </div>
           </div>
 
-          <div class="col-12 col-md-4">
+          <div class="col-12 col-md-8">
             <div class="input-group input-group float-right">
-              <input v-model="$trans.params.search" type="text" name="table_search" class="form-control float-right"
+              <input v-model="$trans.query.search" type="text" name="table_search" class="form-control float-right"
                 placeholder="Search">
               <div class="input-group-append">
                 <button type="submit" class="btn btn-default">
@@ -58,11 +44,11 @@
 
         <div class="row mt-2">
           <div class="col-12 col-md-4 mb-2">
-            <VueDatePicker v-model="$trans.params.start" :enable-time-picker="false"
+            <VueDatePicker v-model="$trans.query.start" :enable-time-picker="false"
               :start-date="moment().startOf('month').format('YYYY-MM-DD')" placeholder="Start Date" auto-apply />
           </div>
           <div class="col-12 col-md-4 mb-2">
-            <VueDatePicker v-model="$trans.params.end" :enable-time-picker="false"
+            <VueDatePicker v-model="$trans.query.end" :enable-time-picker="false"
               :start-date="moment().endOf('month').format('YYYY-MM-DD')" placeholder="End Date" auto-apply />
           </div>
 
@@ -103,10 +89,11 @@
 </template>
 
 <script setup>
-import { watch } from 'vue'
+import { watch, onMounted } from 'vue'
 import { useTransactionStore } from '@/store/transaction/transaction'
 import moment from 'moment'
 import { throttle } from 'lodash'
+import { useRoute } from 'vue-router'
 
 import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
@@ -114,8 +101,13 @@ import SelectClient from './../modals/SelectClient.vue'
 import SelectAgent from './../modals/SelectAgent.vue'
 
 const $trans = useTransactionStore();
+const $route = useRoute();
 
 watch($trans.query, throttle(() => {
   $trans.GetAPI(1)
 }, 1000));
+
+onMounted(() => {
+  $trans.config.form = $route.query.form
+});
 </script>
