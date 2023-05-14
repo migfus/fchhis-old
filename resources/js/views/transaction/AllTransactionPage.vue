@@ -1,6 +1,7 @@
 <template>
   <div class="row">
     <AddForm v-if="$trans.config.form == 'add'" />
+    <UpdateForm v-if="$trans.config.form == 'update'" />
 
     <SearchComponent />
     <ResponsiveCard />
@@ -16,6 +17,7 @@ import ResponsiveCard from './contents/ResponsiveCard.vue'
 import PaginationComponent from './components/PaginationComponent.vue';
 import SearchComponent from './search/SearchComponent.vue';
 import AddForm from './forms/AddForm.vue';
+import UpdateForm from './forms/UpdateForm.vue';
 
 const $trans = useTransactionStore();
 

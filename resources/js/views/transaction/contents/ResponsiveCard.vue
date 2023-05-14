@@ -131,7 +131,7 @@
               Remove
             </button>
 
-            <button v-if="$auth.auth.id == row.staff_id" @click="$user.Update(row)"
+            <button v-if="$auth.auth.id == row.staff_id" @click="$trans.Update(row)"
               class="btn btn-warning btn-sm float-right mr-1">
               Edit
             </button>

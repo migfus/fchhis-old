@@ -155,6 +155,7 @@ watch($user.params, throttle(() => {
 }, 1000))
 
 onMounted(() => {
+  $user.params.role = 6
   $user.GetAPI()
   $profile.GetAPI()
 });

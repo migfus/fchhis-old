@@ -83,8 +83,34 @@ export const useTransactionStore = defineStore('transaction', () => {
     }
   }
 
-  function UpdateAPI() {
+  function Update(row) {
+    config.form = 'update'
+    console.log({row})
+    Object.assign(params, row)
 
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: 'smooth',
+    })
+  }
+
+  async function UpdateAPI(id) {
+    try {
+      let { data: {data}} = await axios.put(`/api/transactions/${id}`, params)
+      GetAPI(1)
+      Object.assign(params, InitValue())
+      config.form = ''
+
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: 'smooth',
+      })
+    }
+    catch (e) {
+      $Err('UpdateAPI Err', {e})
+    }
   }
 
   async function DeleteAPI(row, idx) {
@@ -99,8 +125,6 @@ export const useTransactionStore = defineStore('transaction', () => {
     }
   }
 
-
-
   return {
     content,
     config,
@@ -112,5 +136,6 @@ export const useTransactionStore = defineStore('transaction', () => {
     AddAPI,
     DeleteAPI,
     UpdateAPI,
+    Update,
   }
 })

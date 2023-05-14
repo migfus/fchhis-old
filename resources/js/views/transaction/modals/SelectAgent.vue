@@ -16,7 +16,10 @@
               <input v-model="$user.params.search" type="text" class="form-control" id="s-input" placeholder="Search" />
             </div>
 
-            <table class="table table-bordered">
+            <div v-if="$user.config.loading" class="m-5">
+              <i class="h1 fas fa-spin fa-spinner"></i>
+            </div>
+            <table v-else class="table table-bordered">
               <thead>
                 <tr>
                   <th>Name</th>

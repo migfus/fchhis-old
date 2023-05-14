@@ -136,6 +136,40 @@ class TransactionController extends Controller
     return $this->G_UnauthorizedResponse();
   }
 
+  public function update(Request $req, string $id) {
+    $val = Validator::make($req->all(), [
+      'agent.person.id' => 'required',
+      'client.person.id' => 'required',
+      'amount' => 'required',
+      'or' => 'required',
+      'pay_type_id' => 'required',
+      'plan.id' => 'required',
+    ]);
+
+    if($val->fails()) {
+      return $this->G_ValidatorFailResponse($val);
+    }
+
+
+    if($req->user()->role == 5) {
+      // return $req->client['person']['id'];
+
+      Transaction::where('id', $id)
+        ->where('staff_id', $req->user()->id)
+        ->update([
+          'agent_id' => $req->agent['person']['id'],
+          'client_id' => $req->client['person']['id'],
+          'pay_type_id' => $req->pay_type_id,
+          'plan_id' => $req->plan['id'],
+          'amount' => $req->amount,
+        ]);
+
+      return response()->json([...$this->G_ReturnDefault($req), 'data' => true]);
+    }
+
+    return $this->G_UnauthorizedResponse();
+  }
+
     /**
      * Display the specified resource.
      */
@@ -144,13 +178,10 @@ class TransactionController extends Controller
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
+  /**
+   * Update the specified resource in storage.
+   */
+
 
     /**
      * Remove the specified resource from storage.
