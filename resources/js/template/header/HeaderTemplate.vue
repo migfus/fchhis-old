@@ -38,6 +38,7 @@
               <i :class="`nav-icon fas ${row.icon}`"></i>
               <p>
                 {{ row.name }}
+                <span v-if="row.span" class="right badge badge-danger">{{ row.span.content }}</span>
               </p>
             </RouterLink>
             <div v-else> {{ row.name }}</div>
@@ -120,6 +121,12 @@ const isStaff = computed(() => {
         name: 'All Transactions',
         icon: 'fa-receipt',
         link: { name: 'transactions-all' }
+      },
+      {
+        name: 'Overdue',
+        icon: 'fa-exclamation-circle',
+        link: { name: 'overdue' },
+        span: { content: 1, color: 'danger' }
       },
       {
         name: 'Clients',

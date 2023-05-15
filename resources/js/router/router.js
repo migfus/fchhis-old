@@ -100,6 +100,17 @@ const router = createRouter({
         sideBar: true,
       },
     },
+    {
+      path: "/overdue",
+      name: "overdue",
+      component: () => import("@/views/overdue/OverduePage.vue"),
+      meta: {
+        title: "Overdue",
+        role: 5, //admin
+        auth: true,
+        sideBar: true,
+      },
+    },
     // NOTE PLANS
     {
       path: "/plans",
@@ -213,6 +224,8 @@ router.beforeEach(async (to, from) => {
 
 router.afterEach((to) => {
   document.title = to.meta.title ? `${to.meta.title} | ${TITLE}` : "";
+
+  this.cancelSource.cancel("Test")
 });
 
 export default router;

@@ -20,8 +20,4 @@ import AddForm from './forms/AddForm.vue';
 import UpdateForm from './forms/UpdateForm.vue';
 
 const $trans = useTransactionStore();
-
-onMounted(() => {
-  $trans.GetAPI()
-});
 </script>

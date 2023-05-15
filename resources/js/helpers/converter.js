@@ -58,6 +58,7 @@ export const AgeConverter = (bday) => {
 
 export const NumberAddComma = (num)  => {
   if(num) {
+    num = Number(num).toFixed(2);
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
   return '0.00'
@@ -129,6 +130,25 @@ export const PlanToAmount = (pay_type_id, plan) => {
     case 5:
       return plan.spot_pay
     case 6:
+      return plan.spot_service
+    default:
+      return 0
+  }
+}
+
+export const PlanToPay = (pay_type, plan) => {
+  switch (pay_type.name) {
+    case 'Monthly':
+      return plan.monthly * 60
+    case 'Quarterly':
+      return plan.querterly * 24
+    case 'Semi-Annual':
+      return plan.semi_annual * 12
+    case 'Annual':
+      return plan.annual * 6
+    case 'Spot Payment':
+      return plan.spot_pay
+    case 'Spot Service':
       return plan.spot_service
     default:
       return 0

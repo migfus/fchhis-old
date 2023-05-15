@@ -11,27 +11,43 @@
                 {{ moment(row.created_at).format('MMM D YYYY') }}
               </span>
 
-              <img :src="row.client.avatar" style="height: 2em;" class="img-circle float-left mr-3">
+              <img :src="row.client.avatar" style="height: 3em;" class="img-circle float-left mr-3 my-2">
 
+
+              <div class="text-bold h5 mb-1">Amount: <span class="text-success">+{{ NumberAddComma(row.amount) }}</span>
+              </div>
               <div>
-                <strong>
-                  {{
-                    FullNameConvert(row.client.person.lastName, row.client.person.firstName, row.client.person.midName,
-                      row.client.person.extName)
-                  }}
+                {{
+                  FullNameConvert(row.client.person.lastName, row.client.person.firstName, row.client.person.midName,
+                    row.client.person.extName)
+                }}
+              </div>
+              <div>Accumulated:
+                <strong class="text-info">
+                  {{ NumberAddComma(row.client.client_transactions_sum_amount) }}
                 </strong>
               </div>
-              <div>Amount: <strong class="text-success">+{{ NumberAddComma(row.amount) }}</strong></div>
             </div>
             <div class="d-none d-md-inline col-md-6 col-xl-4">
               <span class="d-inline d-xl-none float-right text-secondary">{{ moment(row.created_at).format('MMM D YYYY')
               }}</span>
-              <div>Plan: <strong>{{ row.plan.name }}</strong></div>
-              <div>Total: <strong class="">{{ NumberAddComma(row.plan.spot_pay) }}</strong></div>
+              <div class="h5 mb-1">Plan: <strong>{{ row.plan.name }}</strong></div>
+              <div>To Pay: <strong>{{ NumberAddComma(PlanToPay(row.pay_type, row.plan)) }}</strong>
+              </div>
+              <div>Est. Bal. Due:
+                <strong class="text-danger">
+                  {{ NumberAddComma(PlanToPay(row.pay_type, row.plan) - row.client.client_transactions_sum_amount) }}
+                </strong>
+              </div>
+
+
             </div>
             <div class="d-none d-xl-inline col-12 col-md-6 col-xl-4">
               <span class="float-right text-secondary"> {{ moment(row.created_at).format('MMM D YYYY') }}
               </span>
+              <div class="h5 mb-1">OR:
+                <strong class="text-info">{{ row.or }}</strong>
+              </div>
               <div>Staff: <strong>
                   {{
                     FullNameConvert(row.staff.person.lastName, row.staff.person.firstName, row.staff.person.midName,
@@ -45,6 +61,7 @@
                   }}
                 </strong></div>
 
+
             </div>
           </div>
         </div>
@@ -54,8 +71,11 @@
         <div class="row mb-2">
           <div class="col-12 col-md-6 col-lg-4 col-xl-3">
             <div>Payment: <strong class="text-success">+{{ NumberAddComma(row.amount) }}</strong></div>
-            <div>Accumulated: <strong>{{ NumberAddComma(100) }}</strong></div>
-            <div>To Pay: <strong>1,000</strong></div>
+            <div>Accumulated: <strong class="text-success">{{ NumberAddComma(row.client.client_transactions_sum_amount)
+            }}</strong></div>
+            <div>To Pay: <strong class="text-danger">{{ NumberAddComma(PlanToPay(row.pay_type, row.plan)) }}
+              </strong>
+            </div>
             <hr class="mt-1" />
 
 
@@ -132,15 +152,17 @@
             </button>
 
             <button v-if="$auth.auth.id == row.staff_id" @click="$trans.Update(row)"
-              class="btn btn-warning btn-sm float-right mr-1">
-              Edit
+              class="btn btn-warning float-right mr-1">
+              <i class="fas fa-edit mr-1"></i> Edit
             </button>
-            <button v-else class="btn btn-warning btn-sm float-right mr-1" Disabled>
-              You can't edit
+            <button v-else class="btn btn-danger float-right mr-1" Disabled>
+              <i class="fas fa-ban mr-1"></i> You can't edit
             </button>
+            <!-- {{ `Trans Staff ID: ${row.staff_id}` }}
+            {{ `Auth Staff ID: ${$auth.auth.id}` }} -->
 
-            <button class="btn btn-info btn-sm float-right mr-1">
-              Print
+            <button @click="Print(row)" class="btn btn-info float-right mr-1">
+              <i class="fas fa-print mr-1"></i> Print
             </button>
 
 
@@ -156,10 +178,44 @@
 
 <script setup>
 import { useTransactionStore } from '@/store/transaction/transaction'
-import { NumberAddComma, FullNameConvert } from '@/helpers/converter'
+import { NumberAddComma, FullNameConvert, PlanToPay } from '@/helpers/converter'
 import moment from 'moment'
 import { useAuthStore } from '@/store/auth/auth'
+import { useReceiptStore } from '@/store/print/receipt'
 
 const $trans = useTransactionStore();
 const $auth = useAuthStore();
+const $receipt = useReceiptStore();
+
+function Print(row) {
+  $receipt.Print({
+    header: {
+      date: moment().format('MMM D, YYYY HH:mm A'),
+      or: '[or]',
+      name: FullNameConvert(
+        row.client.person.lastName,
+        row.client.person.firstName,
+        row.client.person.midName,
+        row.client.person.extName,
+      )
+    },
+    body: [
+      {
+        plan: row.plan.name,
+        type: row.pay_type.name,
+        amount: row.amount
+      },
+    ],
+    footer: {
+      payType: 'Cash on Hand',
+      received: FullNameConvert(
+        row.staff.person.lastName,
+        row.staff.person.firstName,
+        row.staff.person.midName,
+        row.staff.person.extName,
+      ),
+    }
+  }
+  )
+}
 </script>

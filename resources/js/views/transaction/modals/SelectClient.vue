@@ -37,7 +37,7 @@
                   </td>
                   <td>{{ row.plan.name }}</td>
                   <td>
-                    1,000.00
+                    <!-- {{ NumberAddComma(row.transaction) }} -->
                   </td>
                   <td>
                     <button @click="Select(row)" type="button" class="btn btn-success btn-sm" data-dismiss="modal"
@@ -61,7 +61,7 @@
 <script setup>
 import { onMounted, watch } from 'vue'
 import { useUserStore } from '@/store/users/users'
-import { throttle } from 'lodash'
+import { debounce } from 'lodash'
 import { FullNameConvert } from '@/helpers/converter'
 import { useTransactionStore } from '@/store/transaction/transaction'
 import { PlanToAmount } from '@/helpers/converter'
@@ -78,12 +78,12 @@ function Select(row) {
   $trans.params.amount = PlanToAmount(row.pay_type_id, row.plan)
 }
 
-watch($user.params, throttle(() => {
+watch($user.params, debounce(() => {
   $user.GetAPI(1)
+  console.log('select client watch trigger')
 }, 1000))
 
 onMounted(() => {
   $user.params.role = 6
-  $user.GetAPI()
 });
 </script>

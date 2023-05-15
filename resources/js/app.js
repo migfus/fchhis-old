@@ -8,6 +8,7 @@ import { createApp, markRaw } from "vue";
 import { createPinia } from "pinia";
 import router from "./router/router";
 import Toast from "vue-toastification";
+import axios from 'axios'
 
 import App from "./App.vue";
 
@@ -18,11 +19,15 @@ pinia.use(({ store }) => {
   store.$router = markRaw(router);
 });
 
-app.use(router);
 app.use(pinia);
 app.use(Toast, { position: "bottom-right" });
 
+const cancelSource = axios.CancelToken.source();
 import jwtInterceptor from "./helpers/jwtInterceptor";
-jwtInterceptor();
+jwtInterceptor(cancelSource);
+app.config.globalProperties.cancelSource = cancelSource;
+
+app.use(router);
+
 
 app.mount("#app");

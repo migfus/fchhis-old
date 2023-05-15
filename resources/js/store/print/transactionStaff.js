@@ -1,16 +1,17 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
-import pdfMake from "pdfmake/build/pdfmake";
-import pdfFonts from "pdfmake/build/vfs_fonts";
-import { $DebugInfo, $Log, $Err} from '@/helpers/debug';
+import pdfFonts from 'pdfmake/build/vfs_fonts.js';
+import pdfMake from "pdfmake";
+import { $DebugInfo, $Log } from '@/helpers/debug';
 import DeviceDetector from "device-detector-js";
 import { NumberAddComma } from '@/helpers/converter'
+import moment from 'moment'
 import { useAuthStore } from '@/store/auth/auth'
 
-export const useReceiptStore = defineStore('receipt', () => {
-  $DebugInfo("ReceiptStore")
+export const useTransactionStaff = defineStore('transaction-staff', () => {
+  $DebugInfo("Transaction Staff")
 
-  const $auth = useAuthStore();
+  const $auth = useAuthStore()
   const deviceDetector = new DeviceDetector();
   const device = deviceDetector.parse(navigator.userAgent)
   pdfMake.vfs = pdfFonts;
@@ -49,7 +50,8 @@ export const useReceiptStore = defineStore('receipt', () => {
               alignment: 'center',
             },
             {
-              text: 'Receipt',
+              text: `${input.header.start} - ${input.header.end}
+              Payment Report`,
               fontSize: 15,
               alignment: 'center',
               margin: [0,10,0,0],
@@ -65,38 +67,25 @@ export const useReceiptStore = defineStore('receipt', () => {
       {
         margin: [0, 20, 0,0],
         table: {
-          widths: [300, 200],
+          widths: [500],
           body: [
-            [
-              `Date & Time: ${input.header.date}`,
-              `OR Number: ${input.header.or}`
-            ],
-            [
-              {
-                text: `Payor: ${input.header.name}`,
-                colSpan: 2,
-              },
-              {}
-            ],
+            [`Date & Time: ${moment().format('MMM D, YYYY HH:mm A')}`],
+            [`Name: ${input.header.name}`],
           ]
         }
       },
       {
-        margin: [0, 2, 0, 0],
+        margin: [0, 20, 0,0],
         table: {
-          widths: [300, 200],
+          widths: [200, 200],
           body: [
             [
-              { text: 'Nature of Collection', bold: true },
-              { text: 'Amount', bold: true },
+              { text: 'Summary', bold: true, colSpan: 2, alignment: 'center'},
+              {},
             ],
-            // LOOP
-
-              ...input.body.map(m => [`${m.plan} (${m.type})`, NumberAddComma(m.amount) ])
-            ,
             [
-              { text: 'Total: ', bold: true, alignment: 'right' },
-              { text: NumberAddComma(_sum(input.body, 'amount')), bold: true },
+              { text: `Total: ${NumberAddComma(_sum(input.body, 'amount'))}`},
+              { text: `Transactions: ${input.body.length}`},
             ]
           ]
         }
@@ -104,23 +93,42 @@ export const useReceiptStore = defineStore('receipt', () => {
       {
         margin: [0, 2, 0, 0],
         table: {
-          widths: [200, 300],
+          widths: [100, 110, 140, 120],
           body: [
             [
-              { text: input.footer.payType, bold: true },
-              { text: `Received by: ${input.footer.received}`, bold: true },
+              { text: 'Transactions', bold: true, colSpan: 4, alignment: 'center'},
+              {},
+              {},
+              {},
             ],
+            [
+              { text: 'Plan', bold: true },
+              { text: 'Payment Type', bold: true },
+              { text: 'Amount', bold: true },
+              { text: 'Date & Time', bold: true },
+            ],
+            // LOOP
+
+            ...input.body.map(m => [`${m.plan}`, `${m.type}`, NumberAddComma(m.amount), m.date ])
+
+            ,
+            [
+              {},
+              { text: 'Total: ', bold: true, alignment: 'right' },
+              { text: NumberAddComma(_sum(input.body, 'amount')), bold: true },
+              {},
+            ]
           ]
         }
-      }
+      },
     ])
 
     const template = ref({
       pageMargins: [ 40, 20, 40, 60 ],
       pageSize: 'A4',
       images: {
-        logo: 'http://127.0.0.1:8000/images/logo.png',
         // logo: 'https://fchhis.migfus20.com/images/logo.png',
+        logo: 'http://127.0.0.1:8000/images/logo.png',
         dti: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/DTI_PH_new_logo.svg/1200px-DTI_PH_new_logo.svg.png'
       },
       header: [],

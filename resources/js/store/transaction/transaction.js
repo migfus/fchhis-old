@@ -6,6 +6,7 @@ import { $DebugInfo, $Err, $Log } from '@/helpers/debug'
 export const useTransactionStore = defineStore('transaction', () => {
   $DebugInfo('TransactionStore')
   const content = ref([])
+  const printContent = ref([])
   const config = reactive({
     loading: false,
     viewAll: false,
@@ -25,6 +26,7 @@ export const useTransactionStore = defineStore('transaction', () => {
     end: '',
     limit: 10,
     role: '',
+    print: false,
   })
 
   function InitValue() {
@@ -61,6 +63,18 @@ export const useTransactionStore = defineStore('transaction', () => {
     }
     catch(e) {
       $Err('GetAPI Err', {e})
+    }
+    config.loading = false
+  }
+
+  async function PrintAPI() {
+    config.loading = true
+    try {
+      let { data: {data}} = await axios.get('/api/transactions', { params: query })
+      printContent.value = data
+    }
+    catch(e) {
+      $Err("PrintAPI Err", {e})
     }
     config.loading = false
   }
@@ -130,9 +144,11 @@ export const useTransactionStore = defineStore('transaction', () => {
     config,
     params,
     query,
+    printContent,
 
     Clear,
     GetAPI,
+    PrintAPI,
     AddAPI,
     DeleteAPI,
     UpdateAPI,

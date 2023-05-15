@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
+            $table->string('or')->unique();
             $table->integer('agent_id'); // refered agent
             $table->integer('staff_id'); // staff
             $table->integer('client_id'); // user_id

@@ -37,7 +37,7 @@
                   </td>
                   <td>{{ row.plan.name }}</td>
                   <td>
-                    1,000.00
+                    <!-- {{ row.}} -->
                   </td>
                   <td>
                     <button @click="$trans.params.agent = row" type="button" class="btn btn-info btn-sm"
@@ -61,19 +61,19 @@
 <script setup>
 import { onMounted, watch } from 'vue'
 import { useUserStore } from '@/store/users/users'
-import { throttle } from 'lodash'
+import { debounce } from 'lodash'
 import { FullNameConvert } from '@/helpers/converter'
 import { useTransactionStore } from '@/store/transaction/transaction'
 
 const $user = useUserStore();
 const $trans = useTransactionStore();
 
-watch($user.params, throttle(() => {
+watch($user.params, debounce(() => {
   $user.GetAPI(1)
+  console.log('select agent watch trigger')
 }, 1000))
 
 onMounted(() => {
   $user.params.role = 4
-  $user.GetAPI()
 });
 </script>

@@ -8,6 +8,40 @@ use Illuminate\Support\Facades\Validator;
 
 class TransactionController extends Controller
 {
+  private function Print($req) {
+    if($req->user()->role == 5) {
+      $trans = Transaction::select('*');
+
+      if((bool)strtotime($req->start) OR (bool)strtotime($req->end)) {
+        if((bool)strtotime($req->start)) {
+          $trans->where('created_at', '>=', $req->start);
+        }
+        if((bool)strtotime($req->end)) {
+          $trans->where('created_at', '<=', $req->end);
+        }
+      }
+
+      $trans->with([
+        'client.person',
+        'client' => function ($q) {
+          $q->withSum('client_transactions', 'amount');
+        },
+        'staff.person',
+        'agent.person',
+        'plan',
+        'pay_type'
+      ]);
+
+      $data = $trans->orderBy('created_at', 'DESC')->get();
+
+      return response()->json([
+        ...$this->G_ReturnDefault($req),
+        'data' => $data,
+      ]);
+    }
+
+    return $this->G_UnauthorizedResponse();
+  }
 
   public function index(Request $req) {
     // SECTION VALIDATION
@@ -17,10 +51,15 @@ class TransactionController extends Controller
       'start' => '',
       'end' => '',
       'filter' => '',
+      'print' => '',
     ]);
 
     if($val->fails()) {
       return $this->G_ValidatorFailResponse($val);
+    }
+
+    if($req->print == 'true') {
+      return $this->Print($req);
     }
 
     // SECTION ADMIN
@@ -34,6 +73,7 @@ class TransactionController extends Controller
 
     // SECTION AGENT
     if($req->user()->role == 4) {
+
       return response()->json([
         ...$this->G_ReturnDefault($req),
         'data' => Transaction::with(['client.person', 'staff.person', 'agent.person', 'plan', 'pay_type'])
@@ -63,6 +103,9 @@ class TransactionController extends Controller
 
       $trans->with([
         'client.person',
+        'client' => function ($q) {
+          $q->withSum('client_transactions', 'amount');
+        },
         'staff.person',
         'agent.person',
         'plan',
@@ -70,6 +113,9 @@ class TransactionController extends Controller
       ]);
 
       switch($req->filter) {
+        case 'or':
+          $trans->where('or', 'LIKE', '%'.$req->search.'%');
+          break;
         case 'email':
           $trans->whereHas('client', function($q) use($req) {
             $q->where('email', 'LIKE', '%'.$req->search.'%');
@@ -112,6 +158,7 @@ class TransactionController extends Controller
       'or' => 'required',
       'pay_type_id' => 'required',
       'plan.id' => 'required',
+      'or',
     ]);
 
     if($val->fails()) {
@@ -122,6 +169,7 @@ class TransactionController extends Controller
       // return $req->client['person']['id'];
 
       Transaction::create([
+        'or' => $req->or,
         'agent_id' => $req->agent['person']['id'],
         'staff_id' => $req->user()->id,
         'client_id' => $req->client['person']['id'],
@@ -144,6 +192,7 @@ class TransactionController extends Controller
       'or' => 'required',
       'pay_type_id' => 'required',
       'plan.id' => 'required',
+      'or'
     ]);
 
     if($val->fails()) {
@@ -157,6 +206,7 @@ class TransactionController extends Controller
       Transaction::where('id', $id)
         ->where('staff_id', $req->user()->id)
         ->update([
+          'or' => $req->or,
           'agent_id' => $req->agent['person']['id'],
           'client_id' => $req->client['person']['id'],
           'pay_type_id' => $req->pay_type_id,
@@ -170,24 +220,11 @@ class TransactionController extends Controller
     return $this->G_UnauthorizedResponse();
   }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
+  public function show(string $id) {
+      //
+  }
 
-  /**
-   * Update the specified resource in storage.
-   */
-
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
+  public function destroy(string $id) {
+      //
+  }
 }

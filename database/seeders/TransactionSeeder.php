@@ -14,6 +14,7 @@ class TransactionSeeder extends Seeder
   {
     $data = [
       [
+        'or' => '123456-123456',
         'agent_id' => 1,
         'staff_id' => 2,
         'client_id' => 1,
@@ -30,6 +31,7 @@ class TransactionSeeder extends Seeder
     $faker = \Faker\Factory::create();
     foreach(range(1,100) as $idx) {
       \App\Models\Transaction::create([
+        'or'       => rand(1000, 100000),
         'agent_id' => $idx + 1,
         'staff_id' => $idx + 3,
         'client_id' => $idx + 2,

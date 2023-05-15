@@ -16,7 +16,8 @@ class Transaction extends Model
     'pay_type_id',
     'plan_id',
     'amount',
-    'agent_id'
+    'agent_id',
+    'or'
   ];
 
   public function client() {
@@ -38,4 +39,8 @@ class Transaction extends Model
   public function pay_type() {
     return $this->belongsTo(PayType::class, 'pay_type_id');
   }
+
+  // public function self_transactions() {
+  //   return $this->hasMany(Transactions::class, '')
+  // }
 }

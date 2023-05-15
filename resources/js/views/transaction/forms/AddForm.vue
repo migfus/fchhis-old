@@ -14,19 +14,22 @@
                 <div class="form-group">
                   <label>Client</label>
                   <div v-if="$trans.params.client.person.id" class="mb-2">
-                    {{
-                      FullNameConvert(
-                        $trans.params.client.person.lastName,
-                        $trans.params.client.person.firstName,
-                        $trans.params.client.person.midName,
-                        $trans.params.client.extName
-                      )
-                    }}
+                    <img :src="$trans.params.client.avatar" style="height: 3em;" class="img-circle float-left mr-3 my-2">
+                    <span class="">
+                      {{
+                        FullNameConvert(
+                          $trans.params.client.person.lastName,
+                          $trans.params.client.person.firstName,
+                          $trans.params.client.person.midName,
+                          $trans.params.client.extName
+                        )
+                      }}
+                    </span>
                   </div>
                   <div>
                     <button @click="SelectClient()" class="btn btn-success" data-toggle="modal"
                       data-target="#modal-client">
-                      Select Client
+                      <i class="fas fa-child mr-2"></i>Select Client
                     </button>
                   </div>
                   <Field v-model="$trans.params.client.person.id" name="client_id" type="hidden" />
@@ -38,6 +41,7 @@
                 <div class="form-group">
                   <label>Agent</label>
                   <div v-if="$trans.params.agent.person.id" class="mb-2">
+                    <img :src="$trans.params.agent.avatar" style="height: 3em;" class="img-circle float-left mr-3 my-2">
                     {{
                       FullNameConvert(
                         $trans.params.agent.person.lastName,
@@ -48,8 +52,9 @@
                     }}
                   </div>
                   <div>
-                    <button @click="SelectAgent()" class="btn btn-info" data-toggle="modal"
-                      data-target="#modal-agent">Select Agent</button>
+                    <button @click="SelectAgent()" class="btn btn-info" data-toggle="modal" data-target="#modal-agent">
+                      <i class="fas fa-handshake mr-2"></i> Select Agent
+                    </button>
                   </div>
                   <Field v-model="$trans.params.agent.person.id" name="agent_id" type="hidden" />
                   <div class="mb-2 text-danger">

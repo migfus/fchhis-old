@@ -92,6 +92,12 @@ export default {
   methods: {
     onPaginationChangePage(page) {
       this.$emit('pagination-change-page', page);
+
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: 'smooth',
+      })
     }
   }
 }
