@@ -94,7 +94,7 @@ const router = createRouter({
       name: "transactions-all",
       component: () => import("@/views/transaction/AllTransactionPage.vue"),
       meta: {
-        title: "All Transactions",
+        title: "Transactions",
         role: 5, //admin
         auth: true,
         sideBar: true,
@@ -145,6 +145,17 @@ const router = createRouter({
         auth: true,
         sideBar: true,
       },
+    },
+    {
+      path: '/user/:id',
+      name: 'user',
+      component: () => import("@/views/user/UserPage.vue"),
+      meta: {
+        title: "User Details",
+        role: 5,
+        auth: true,
+        sideBar: true,
+      }
     },
     // NOTE CLIENTS
     {
@@ -224,8 +235,6 @@ router.beforeEach(async (to, from) => {
 
 router.afterEach((to) => {
   document.title = to.meta.title ? `${to.meta.title} | ${TITLE}` : "";
-
-  this.cancelSource.cancel("Test")
 });
 
 export default router;

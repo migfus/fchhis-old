@@ -10,7 +10,7 @@
               <span class="d-inline d-md-none float-right text-secondary"> {{
                 moment(row.created_at).local().format('MMMD, YYYY') }} </span>
 
-              <img v-if="row.avatar" :src="row.avatar" style="height: 2em;" class="img-circle float-left mr-3">
+              <img v-if="row.avatar" :src="row.avatar" style="height: 3em;" class="img-circle float-left mr-3 mt-2">
               <VueAvatar v-else-if="row.username" :username="row.username" style="height: 1.5em; width: 1.5em"
                 :alt="row.username" class="img-circle float-left mr-3" />
               <img v-else src="https://fchhis.migfus20.com/images/logo.png" style="height: 2em;"
@@ -23,23 +23,24 @@
                   {{ FullNameConvert(row.person.lastName, row.person.firstName, row.person.midName, row.extName) }}
                 </strong>
               </div>
-              <div><strong>{{ row.username }}</strong></div>
+              <div>{{ row.email }}</div>
+              <div>{{ RoleToDesc(row.role) }}</div>
             </div>
-            <div v-if="row.email" class="d-none d-md-inline col-md-6 col-xl-4">
-              <span class="d-inline d-xl-none float-right text-secondary"> {{
-                moment(row.created_at).local().format('MMMD, YYYY') }} </span>
-              <div>Email: <strong>{{ row.email }}</strong></div>
-              <div>Role: <strong>{{ RoleToDesc(row.role) }}</strong></div>
-            </div>
-            <div v-else class="d-none d-md-inline col-md-6 col-xl-4">
-              Link: <a :href="row.OR" target="_blank">{{ `https://fchhis.migfus20.com/register?or=${row.OR}` }}</a>
-              <div class="text-danger">Unregistered</div>
+
+            <div class="d-none d-md-inline col-md-6 col-xl-4">
+              <div>Plan: <strong>{{ row.plan.name }}</strong></div>
+              <div>Total To Pay: <strong>{{ NumberAddComma(PlanToPay(row.pay_type, row.plan)) }}</strong></div>
+              <div>Est. Bal. Due:
+                <strong class="text-danger">
+                  {{ NumberAddComma(PlanToPay(row.pay_type, row.plan) - row.client_transactions_sum_amount) }}
+                </strong>
+              </div>
             </div>
             <div class="d-none d-xl-inline col-12 col-md-6 col-xl-4">
               <span class="float-right text-secondary"> {{ moment(row.created_at).local().format('MMM D, YYYY') }}
               </span>
-              <div>Plan: <strong>{{ `${row.plan.name} (${row.pay_type.name})` }}</strong></div>
-              <div>Total: <strong>{{ NumberAddComma(row.plan.spot_pay) }}</strong></div>
+              <div>Agent: <strong>{{ `${row.plan.name} (${row.pay_type.name})` }}</strong></div>
+              <div>Staff: <strong>{{ NumberAddComma(row.plan.spot_pay) }}</strong></div>
             </div>
           </div>
         </div>
@@ -88,14 +89,15 @@
         </div>
         <div class="row">
           <div class="col-12">
-            <button @click="$user.Update(row)" class="btn btn-warning btn-sm float-right mr-1">
+            <button @click="$user.Update(row)" class="btn btn-warning float-right mr-1">
+              <i class="fas fa-edit"></i>
               Edit
             </button>
-            <button class="btn btn-secondary btn-sm float-right mr-1">
-              Info
-            </button>
-            <button @click="Print(row)" class="btn btn-info btn-sm float-right mr-1">
-              Print
+            <RouterLink :to="`/user/${row.id}`" class="btn btn-success float-right mr-1">
+              <i class="fas fa-info-circle mr-1"></i> Info
+            </RouterLink>
+            <button @click="Print(row)" class="btn btn-info float-right mr-1">
+              <i class="fas fa-print mr-1"></i> Print
             </button>
           </div>
         </div>
@@ -112,16 +114,20 @@ import moment from "moment"
 import { useUserStore } from '@/store/users/users'
 import { RoleToDesc } from '@/helpers/converter'
 import BadgeComponent from '../components/BadgeComponent.vue'
-import { FullNameConvert } from '@/helpers/converter'
-import { CityIDToFullAddress, ProvinceIDToDesc, CityIDToDesc, NumberAddComma } from '@/helpers/converter'
+import {
+  CityIDToFullAddress,
+  ProvinceIDToDesc,
+  CityIDToDesc,
+  NumberAddComma,
+  FullNameConvert,
+  PlanToPay,
+} from '@/helpers/converter'
 import VueAvatar from "@webzlodimir/vue-avatar";
 import "@webzlodimir/vue-avatar/dist/style.css";
-import { ref } from 'vue'
 import { userDetailStore } from '@/store/print/userDetails'
 
 const $user = useUserStore();
 const $details = userDetailStore();
-
 
 function Print(row) {
   $details.Print({

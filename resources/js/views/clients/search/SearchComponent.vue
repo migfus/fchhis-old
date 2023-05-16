@@ -14,7 +14,7 @@
             </div>
           </div>
 
-          <div class="col-12 col-md-3 mb-2">
+          <div class="col-12 col-md-4 mb-2">
             <div class="row">
               <div class="col-6">
                 <VueDatePicker v-model="$user.params.start" :enable-time-picker="false"
@@ -28,7 +28,7 @@
           </div>
 
 
-          <div class="col-12 col-md-3 mb-2">
+          <div class="col-12 col-md-4 mb-2">
             <div class="input-group">
               <div class="input-group-prepend">
                 <span class="input-group-text"><i class="fas fa-filter"></i></span>
@@ -43,7 +43,7 @@
             </div>
           </div>
 
-          <div class="col-12 col-md-3 mb-2">
+          <div class="col-12 col-md-4 mb-2">
             <div class="input-group input-group float-right">
               <input v-model="$user.params.search" type="text" name="table_search" class="form-control float-right"
                 placeholder="Search">
@@ -55,18 +55,16 @@
             </div>
           </div>
 
-          <div class="col-12 col-md-3">
+          <div class="col-12 mt-2">
             <button v-if="$user.config.form" @click="$user.ChangeForm('')" class="btn btn-danger float-right">
               <i class="fas fa-plus-square d-inline d-xl-none"></i>
               <span class="d-none d-xl-inline">Cancel</span>
             </button>
             <button v-else @click="$user.ChangeForm('add')" class="btn btn-success float-right">
-              <i class="fas fa-plus-square d-inline d-xl-none"></i>
-              <span class="d-none d-xl-inline">Add User</span>
+              <i class="fas fa-user-plus mr-1"></i>Add User
             </button>
             <button v-if="$user.config.form == ''" @click="$user.ChangeForm('or')" class="btn btn-info float-right mr-1">
-              <i class="fas fa-plus-square d-inline d-xl-none"></i>
-              <span class="d-none d-xl-inline">Add OR</span>
+              <i class="fas fa-receipt mr-1"></i> Add OR
             </button>
 
             <button v-if="$user.config.loading" class="btn card-loader-content card-loader mr-1 float-right"
@@ -74,13 +72,11 @@
               &nbsp;
             </button>
             <button v-else @click="PrintAPI()" class="btn btn-info mr-1 float-right">
-              <i class="fas fa-print"></i>
+              <i class="fas fa-print mr-1"></i> Print
             </button>
 
           </div>
         </div>
-
-
 
       </div>
     </div>

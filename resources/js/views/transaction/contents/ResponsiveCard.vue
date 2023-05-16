@@ -14,7 +14,7 @@
               <img :src="row.client.avatar" style="height: 3em;" class="img-circle float-left mr-3 my-2">
 
 
-              <div class="text-bold h5 mb-1">Amount: <span class="text-success">+{{ NumberAddComma(row.amount) }}</span>
+              <div class="text-bold h5 mb-1"><span class="text-success">+{{ NumberAddComma(row.amount) }}</span>
               </div>
               <div>
                 {{
@@ -131,7 +131,7 @@
         </div>
         <div class="row">
           <div class="col-12 col-md-6">
-            <div v-if="$auth.auth.id != row.staff_id" class="alert alert-light mb-0 p-0 px-2" role="alert">
+            <div v-if="$auth.auth.id != row.staff_id" class="alert alert-light mb-0 p-1 px-2" role="alert">
               Accessable only by:
               <strong>
                 {{
@@ -161,9 +161,15 @@
             <!-- {{ `Trans Staff ID: ${row.staff_id}` }}
             {{ `Auth Staff ID: ${$auth.auth.id}` }} -->
 
+            <RouterLink :to="`/user/${row.client.id}`" class="btn btn-success float-right mr-1">
+              <i class="fas fa-info-circle mr-1"></i> Info
+            </RouterLink>
+
             <button @click="Print(row)" class="btn btn-info float-right mr-1">
               <i class="fas fa-print mr-1"></i> Print
             </button>
+
+
 
 
           </div>

@@ -466,10 +466,6 @@ class UserController extends Controller
     return $this->G_UnauthorizedResponse();
   }
 
-  public function show(string $id) {
-      //
-  }
-
   public function update(Request $req, string $id) {
     if($req->user()->role == 2) {
 
@@ -603,6 +599,19 @@ class UserController extends Controller
     if($req->user()->role == 2) {
       User::find($id)->delete();
       return response()->json([...$this->G_ReturnDefault($req)], 200);
+    }
+
+    return $this->G_UnauthorizedResponse();
+  }
+
+  public function show(string $id, Request $req) {
+    if($req->user()->role == 5) {
+      $data = User::where('id', $id)
+        ->with(['person', 'client_transactions', 'plan', 'pay_type'])
+        ->withSum('client_transactions', 'amount')
+        ->first();
+
+      return response()->json([...$this->G_ReturnDefault($req), 'data' => $data], 200);
     }
 
     return $this->G_UnauthorizedResponse();

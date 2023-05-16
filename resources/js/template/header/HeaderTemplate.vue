@@ -69,7 +69,7 @@ const isAdmin = computed(() => {
         name: 'TRANSACTIONS',
       },
       {
-        name: 'All Transactions',
+        name: 'Transactions',
         icon: 'fa-list-ol',
         link: { name: 'transactions-all' }
       },
@@ -118,7 +118,7 @@ const isStaff = computed(() => {
         name: 'CLIENTS',
       },
       {
-        name: 'All Transactions',
+        name: 'Transactions',
         icon: 'fa-receipt',
         link: { name: 'transactions-all' }
       },

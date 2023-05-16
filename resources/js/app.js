@@ -22,12 +22,9 @@ pinia.use(({ store }) => {
 app.use(pinia);
 app.use(Toast, { position: "bottom-right" });
 
-const cancelSource = axios.CancelToken.source();
 import jwtInterceptor from "./helpers/jwtInterceptor";
-jwtInterceptor(cancelSource);
-app.config.globalProperties.cancelSource = cancelSource;
+jwtInterceptor();
 
 app.use(router);
-
 
 app.mount("#app");
