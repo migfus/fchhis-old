@@ -11,13 +11,15 @@ class BeneficiaryController extends Controller
 {
   public function index(Request $req) {
     $val = Validator::make($req->all(), [
-      'search' => ''
+      'search' => '',
+      'id' => '',
     ]);
 
     if($val->fails()) {
       return $this->G_ValidatorFailResponse($val);
     }
 
+    // NOTE ADMIN/AGENT
     if($req->user()->role == 6 || $req->user()->role == 4) {
       $data = Beneficiary::where('person_id', User::where('person_id', $req->user()->id)->with('person')->first()->person->id)
         ->where(function($q) use($req) {
@@ -27,6 +29,18 @@ class BeneficiaryController extends Controller
             ->orWhere('extName', 'LIKE', '%'.$req->search.'%');
         })
         ->get();
+      return response()->json([...$this->G_ReturnDefault($req), 'data' => $data]);
+    }
+
+    if($req->user()->role == 5) {
+      $data = Beneficiary::where('person_id', User::where('id', $req->id)->first()->person->id)
+        ->where(function($q) use($req) {
+          $q->where('lastName', 'LIKE', '%'.$req->search.'%')
+            ->orWhere('firstName', 'LIKE', '%'.$req->search.'%')
+            ->orWhere('midName', 'LIKE', '%'.$req->search.'%')
+            ->orWhere('extName', 'LIKE', '%'.$req->search.'%');
+        })
+      ->get();
       return response()->json([...$this->G_ReturnDefault($req), 'data' => $data]);
     }
 
@@ -62,17 +76,6 @@ class BeneficiaryController extends Controller
     return $this->G_UnauthorizedResponse();
   }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Beneficiary $beneficiary)
-    {
-        //
-    }
-
-  /**
-   * Update the specified resource in storage.
-   */
   public function update(Request $req, $id) {
     $val = Validator::make($req->all(), [
       'lastName' => 'required',

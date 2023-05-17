@@ -62,23 +62,6 @@
 
         </div>
 
-        <div class="row m-2">
-          <div class="col-12">
-            <div class="form-group">
-              <label>Diseased</label>
-              <select v-model="dead" class="form-control">
-                <option :value="false">N/A</option>
-                <option :value="'blue'">In Heaven</option>
-                <option
-                  :value="'https://static.wikia.nocookie.net/evil/images/4/42/The_Hell.jpg/revision/latest/scale-to-width-down/1200?cb=20151219215041'">
-                  In Hell</option>
-                <option :value="false">Reincarnated</option>
-                <option></option>
-              </select>
-            </div>
-          </div>
-        </div>
-
       </div>
 
       <BeneficiaryTable />

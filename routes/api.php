@@ -14,6 +14,9 @@ use App\Http\Controllers\DownHeadController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\PayTypeController;
 use App\Http\Controllers\AgentController;
+use App\Http\Controllers\TestController;
+
+Route::apiResource('/test', TestController::class)->only(['index']);
 
 Route::controller(AuthController::class)->group(function () {
   Route::post('/login', 'Login');

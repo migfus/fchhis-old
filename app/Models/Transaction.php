@@ -17,7 +17,7 @@ class Transaction extends Model
     'plan_id',
     'amount',
     'agent_id',
-    'or'
+    'or',
   ];
 
   public function client() {

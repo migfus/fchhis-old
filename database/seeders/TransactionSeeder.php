@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Carbon\Carbon;
 
 class TransactionSeeder extends Seeder
 {
@@ -30,6 +31,8 @@ class TransactionSeeder extends Seeder
 
     $faker = \Faker\Factory::create();
     foreach(range(1,100) as $idx) {
+      $pay_type_id = rand(1,6);
+
       \App\Models\Transaction::create([
         'or'       => rand(1000, 100000),
         'agent_id' => $idx + 1,
@@ -37,7 +40,7 @@ class TransactionSeeder extends Seeder
         'client_id' => $idx + 2,
         'plan_id' => rand(1,4),
         'amount' => rand(700, 75000),
-        'pay_type_id' => rand(1, 6)
+        'pay_type_id' => $pay_type_id,
       ]);
     }
   }

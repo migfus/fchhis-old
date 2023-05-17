@@ -22,6 +22,8 @@ class Person extends Model
       'address',
       'mobile',
       'agent_id',
+      'due_at',
+      'fulfilled_at',
     ];
 
   // FIXME DEPRICATED NEW staff()

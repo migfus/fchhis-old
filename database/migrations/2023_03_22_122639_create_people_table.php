@@ -25,6 +25,8 @@ return new class extends Migration
             $table->integer('address_id')->comment('city ID, Province')->nullable(); //city, province
             $table->string('address')->comment('Specific Address')->nullable();  //specific,
             $table->decimal('mobile', 10, 0)->nullable();
+            $table->date('due_at')->nullable();
+            $table->date('fulfilled_at')->nullable();
             $table->timestamps();
         });
     }

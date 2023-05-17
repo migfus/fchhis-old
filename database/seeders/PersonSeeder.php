@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Carbon\Carbon;
 
 class PersonSeeder extends Seeder
 {
@@ -139,6 +140,7 @@ class PersonSeeder extends Seeder
           'address'  => $faker->lastName,
           'mobile' => 9978885555,
           'agent_id'=> rand(1, 6),
+          'due_at' => Carbon::now(),
         ]);
       }
     }
