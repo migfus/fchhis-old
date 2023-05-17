@@ -35,7 +35,7 @@
         </thead>
         <tbody>
           <tr v-for="row, idx in $ben.content">
-            <td>{{ FullNameConvert(row.lastName, row.firstName, row.midName, row.extName) }}</td>
+            <td>{{ FullNameConvert(row) }}</td>
             <td>{{ AgeConverter(row.bday) }}</td>
             <td>
               <button @click="$ben.Edit(row)" class="btn btn-info btn-sm mr-1"><i class="fas fa-pen"></i></button>

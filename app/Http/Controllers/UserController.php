@@ -245,18 +245,22 @@ class UserController extends Controller
                 'pay_type',
                 'person.referred',
                 'client_transactions.plan',
-                'client_transactions.pay_type'
+                'client_transactions.pay_type',
+                'person.agent.person',
+                'person.staff.person',
               ])
               ->withSum('client_transactions', 'amount'); // OK No whereRelation
             break;
           case 'address':
             $user->with([
-                'person.user',
-                'plan',
-                'pay_type',
-                'person.referred',
-                'client_transactions.plan',
-                'client_transactions.pay_type'
+                  'person.user',
+                  'plan',
+                  'pay_type',
+                  'person.referred',
+                  'client_transactions.plan',
+                  'client_transactions.pay_type',
+                  'person.agent.person',
+                  'person.staff.person',
                 ])
               ->withSum('client_transactions', 'amount')
               ->whereHas('person.user', function($q) use ($req) {
@@ -270,7 +274,9 @@ class UserController extends Controller
                 'pay_type',
                 'person.referred',
                 'client_transactions.plan',
-                'client_transactions.pay_type'
+                'client_transactions.pay_type',
+                'person.agent.person',
+                'person.staff.person',
               ])
               ->withSum('client_transactions', 'amount')
               ->whereHas('plan', function($q) use ($req) {
@@ -285,6 +291,8 @@ class UserController extends Controller
                 'person.referred.person',
                 'client_transactions.plan',
                 'client_transactions.pay_type',
+                'person.agent.person',
+                'person.staff.person',
               ])
               ->withSum('client_transactions', 'amount')
               ->whereHas('person.user', function($q) use ($req) {

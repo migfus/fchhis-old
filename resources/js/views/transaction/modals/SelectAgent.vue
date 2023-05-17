@@ -31,9 +31,7 @@
               <tbody>
                 <tr v-for="row in $user.list.data" :key="row.id">
                   <td>
-                    {{
-                      FullNameConvert(row.person.lastName, row.person.firstName, row.person.midName, row.person.extName)
-                    }}
+                    {{ FullNameConvert(row.person) }}
                   </td>
                   <td>{{ row.plan.name }}</td>
                   <td>

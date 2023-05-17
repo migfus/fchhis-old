@@ -24,11 +24,21 @@ class Person extends Model
       'agent_id',
     ];
 
+  // FIXME DEPRICATED NEW staff()
   public function user() {
     return $this->belongsTo(User::class, 'created_by_user_id');
   }
 
+  // FIXME DEPRICATED NEW agent()
   public function referred() {
     return $this->belongsTo(User::class, 'agent_id');
+  }
+
+  public function agent() {
+    return $this->belongsTo(User::class, 'agent_id');
+  }
+
+  public function staff() {
+    return $this->belongsTo(User::class, 'created_by_user_id');
   }
 }

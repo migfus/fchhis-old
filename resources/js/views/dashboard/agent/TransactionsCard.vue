@@ -40,8 +40,7 @@
           </thead>
           <tbody>
             <tr v-for="row in $trans.content.data">
-              <td>{{ FullNameConvert(row.client.person.lastName, row.client.person.firstName, row.client.person.midName,
-                row.client.person.extName) }} </td>
+              <td>{{ FullNameConvert(row.client.person) }} </td>
               <td class="text-success text-bold">+{{ NumberAddComma(row.amount) }}</td>
             </tr>
           </tbody>
@@ -87,7 +86,7 @@ function currentDate(input = 0) {
 function Print() {
   $print.Print({
     header: {
-      name: FullNameConvert($profile.content.person.lastName, $profile.content.person.firstName, $profile.content.person.midName, $profile.content.person.extName)
+      name: FullNameConvert($profile.content.person)
     },
     body: $trans.content.data.map(m => { return { plan: m.plan.name, type: m.pay_type.name, amount: m.amount, date: moment(m.created_at).format('MM/DD/YYYY HH:MM A') } }),
   })

@@ -25,7 +25,6 @@
 <script setup>
 import { onMounted } from 'vue';
 import { useRoleStore } from '@/store/users/role';
-import { FullNameConvert } from '@/helpers/converter'
 
 const $role = useRoleStore();
 

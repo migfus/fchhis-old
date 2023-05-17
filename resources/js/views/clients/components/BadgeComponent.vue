@@ -1,6 +1,6 @@
 <template>
   <span :class="`img-badge badge badge-left badge-${config.color}`">
-    <i :class="`fas ${config.icon}`"></i>
+    <i :class="`fas ${config.icon} pt-1`"></i>
   </span>
 </template>
 
@@ -34,8 +34,10 @@ const config = computed(() => {
 .img-badge {
   position: absolute;
   z-index: 100;
-  left: 38px;
-  top: 30px;
+  left: 34px;
+  top: 32px;
+  width: 25px;
+  height: 25px;
   border-radius: 50px
 }
 </style>

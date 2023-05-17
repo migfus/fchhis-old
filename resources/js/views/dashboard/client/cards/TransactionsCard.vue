@@ -84,7 +84,7 @@ function OpenReceipt(row) {
 function Print(input) {
   $report.Print({
     header: {
-      name: FullNameConvert($profile.content.person.lastName, $profile.content.person.firstName, $profile.content.person.midName, $profile.content.person.extName)
+      name: FullNameConvert($profile.content.person)
     },
     body: $dash.content.transactions.map(m => { return { plan: m.plan.name, type: m.pay_type.name, amount: m.amount, date: moment(m.created_at).format('MM/DD/YYYY HH:MM A') } }),
   })

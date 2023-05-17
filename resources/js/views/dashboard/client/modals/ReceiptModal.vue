@@ -22,12 +22,7 @@
             Name:
             <strong>
               {{
-                FullNameConvert(
-                  $props.data.client.person.lastName,
-                  $props.data.client.person.firstName,
-                  $props.data.client.person.midName,
-                  $props.data.client.person.extName,
-                )
+                FullNameConvert($props.data.client.person)
               }}
             </strong>
           </div>
@@ -81,12 +76,7 @@ function Print() {
     header: {
       date: moment($props.data.created_at).format('MMM D, YYYY HH:mm A'),
       or: $props.data.id,
-      name: FullNameConvert(
-        $props.data.client.person.lastName,
-        $props.data.client.person.firstName,
-        $props.data.client.person.midName,
-        $props.data.client.person.extName,
-      )
+      name: FullNameConvert($props.data.client.person)
     },
     body: [
       {
@@ -97,12 +87,7 @@ function Print() {
     ],
     footer: {
       payType: 'Cash on Hand',
-      received: FullNameConvert(
-        $props.data.staff.person.lastName,
-        $props.data.staff.person.firstName,
-        $props.data.staff.person.midName,
-        $props.data.staff.person.extName,
-      ),
+      received: FullNameConvert($props.data.staff.person),
     }
   }
   )

@@ -48,9 +48,7 @@
       <div class="card-body">
         <div class="row mb-2">
           <div class="col-12 col-md-6 col-lg-4 col-xl-3">
-            <div>Refered: <strong>{{ FullNameConvert(row.person.referred.person.lastName,
-              row.person.referred.person.firstName, row.person.referred.person.midName,
-              row.person.referred.person.extName) }}</strong></div>
+            <div>Refered: <strong>{{ FullNameConvert(row.person.referred.person) }}</strong></div>
             <div>Plan: <strong>{{ `${row.plan.name} (${row.pay_type.name})` }}</strong></div>
             <div>Target: <strong>{{ NumberAddComma(row.plan.spot_pay) }}</strong></div>
             <div>Total Transact: <strong>{{ NumberAddComma(row.client_transactions_sum_amount) }}</strong></div>
@@ -62,7 +60,7 @@
             <div>Email: <strong>{{ row.email }}</strong></div>
             <div>Name:
               <strong>
-                {{ FullNameConvert(row.person.lastName, row.person.firstName, row.person.midName, row.extName) }}
+                {{ FullNameConvert(row.person) }}
               </strong>
             </div>
             <div>Birth Day: <strong>{{ moment(row.person.bday).local().format('MMM D, YYYY') }}</strong></div>

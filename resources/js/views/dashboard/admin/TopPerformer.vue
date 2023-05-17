@@ -26,7 +26,7 @@
               <tr v-for="(row, idx,) in $dash.content.topPerformer" :key="row.id">
                 <td>
                   <img :src="row.avatar" alt="Product 1" class="img-circle img-size-32 mr-2">
-                  {{ FullNameConvert(row.person.lastName, row.person.firstName, row.person.midName, row.person.extName) }}
+                  {{ FullNameConvert(row.person) }}
                 </td>
                 <td width="200">
                   <small v-if="idx < 5" class="mr-1">

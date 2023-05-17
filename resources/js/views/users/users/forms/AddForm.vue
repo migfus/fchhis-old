@@ -109,8 +109,7 @@
                   <label>Agent</label>
                   <Field name="agent" as='select' v-model="$user.input.agent" class="form-control">
                     <option v-for="row in $agent.content" :value="row.id">
-                      {{ FullNameConvert(row.person.lastName, row.person.firstName, row.person.midName,
-                        row.person.extName) }}
+                      {{ FullNameConvert(row.person) }}
                     </option>
                   </Field>
                   <div class="mb-2 text-danger">

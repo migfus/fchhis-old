@@ -1,5 +1,5 @@
 <template>
-  <div v-if="$user.content" class="row">
+  <div v-if="userContent" class="row" :style="`background-image: url(${dead})`">
     <div class="col-12 col-md-5">
 
       <div class="card card-widget widget-user">
@@ -8,18 +8,13 @@
           style="background: url('https://adminlte.io/themes/v3/dist/img/photo1.png') center center;">
           <h3 class="widget-user-username text-right">
             {{
-              FullNameConvert(
-                $user.content.person.lastName,
-                $user.content.person.firstName,
-                $user.content.person.midName,
-                $user.content.person.extName
-              )
+              FullNameConvert(userContent.person)
             }}
           </h3>
-          <h5 class="widget-user-desc text-right">{{ $user.content.email }}</h5>
+          <h5 class="widget-user-desc text-right">{{ userContent.email }}</h5>
         </div>
         <div class="widget-user-image">
-          <img class="img-circle" :src="$user.content.avatar" alt="User Avatar">
+          <img class="img-circle" :src="userContent.avatar" alt="User Avatar">
         </div>
         <div class="card-footer">
           <div class="row">
@@ -32,7 +27,7 @@
             </div>
             <div class="col-sm-3 border-right">
               <div class="description-block">
-                <h5 class="description-header">{{ $user.content.plan.name }}</h5>
+                <h5 class="description-header">{{ userContent.plan.name }}</h5>
                 <span class="description-text">Plan</span>
               </div>
 
@@ -41,7 +36,7 @@
             <div class="col-sm-3 border-right">
               <div class="description-block">
                 <h5 class="description-header text-success">{{
-                  NumberAddComma($user.content.client_transactions_sum_amount) }}
+                  NumberAddComma(userContent.client_transactions_sum_amount) }}
                 </h5>
                 <span class="description-text">Payed</span>
               </div>
@@ -53,8 +48,8 @@
                 <h5 class="description-header text-danger">
                   {{
                     NumberAddComma(
-                      $user.content.client_transactions_sum_amount -
-                      PlanToPay($user.content.pay_type, $user.content.plan)
+                      userContentclient_transactions_sum_amount -
+                      PlanToPay(userContent.pay_type, userContent.plan)
                     )
                   }}
                 </h5>
@@ -66,6 +61,24 @@
           </div>
 
         </div>
+
+        <div class="row m-2">
+          <div class="col-12">
+            <div class="form-group">
+              <label>Diseased</label>
+              <select v-model="dead" class="form-control">
+                <option :value="false">N/A</option>
+                <option :value="'blue'">In Heaven</option>
+                <option
+                  :value="'https://static.wikia.nocookie.net/evil/images/4/42/The_Hell.jpg/revision/latest/scale-to-width-down/1200?cb=20151219215041'">
+                  In Hell</option>
+                <option :value="false">Reincarnated</option>
+                <option></option>
+              </select>
+            </div>
+          </div>
+        </div>
+
       </div>
 
       <BeneficiaryTable />
@@ -82,15 +95,32 @@
 import { onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { FullNameConvert, NumberAddComma, PlanToPay } from '@/helpers/converter'
-import { useUserDetailsStore } from '@/store/user/userDetails'
+import { ref, reactive } from 'vue'
+import axios from 'axios'
 
 import TransactionTable from './TransactionTable.vue'
 import BeneficiaryTable from './BeneficiaryTable.vue'
 
 const $route = useRoute();
-const $user = useUserDetailsStore();
+
+const userContent = ref(false)
+const config = reactive({
+  loading: false,
+})
+
+async function GetAPI(id) {
+  config.loading = true
+  try {
+    let { data: { data } } = await axios.get('/api/users/' + id)
+    userContent.value = data
+  }
+  catch (e) {
+    $Err('User Details GetAPI', { e })
+  }
+  config.loading = false
+}
 
 onMounted(() => {
-  $user.GetAPI($route.params.id)
+  GetAPI($route.params.id)
 });
 </script>

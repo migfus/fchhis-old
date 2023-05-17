@@ -45,11 +45,11 @@ export const RoleToID = (id) => {
   }
 };
 
-export const FullNameConvert = (last, first, mid, ext) => {
-  if(mid) {
-    return `${last}, ${first} ${mid.charAt(0)}.`
+export const FullNameConvert = (name) => {
+  if(name.midName) {
+    return `${name.lastName}, ${name.firstName} ${name.midName.charAt(0)}.`
   }
-  return `${last}, ${first}`
+  return `${name.lastName}, ${name.lastName}`
 }
 
 export const AgeConverter = (bday) => {

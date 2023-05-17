@@ -71,7 +71,7 @@ async function Print() {
 
   $report.Print({
     header: {
-      name: FullNameConvert($profile.content.person.lastName, $profile.content.person.firstName, $profile.content.person.midName, $profile.content.person.extName),
+      name: FullNameConvert($profile.content.person),
       start: moment($trans.query.start).format("MMM D, YYYY"),
       end: moment($trans.query.end).format("MMM D, YYYY"),
     },

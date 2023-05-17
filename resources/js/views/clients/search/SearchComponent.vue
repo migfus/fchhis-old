@@ -132,11 +132,11 @@ function Print() {
   $print.Print({
     header: {
       title: printTitle.value,
-      name: FullNameConvert($profile.content.person.lastName, $profile.content.person.firstName, $profile.content.person.midName, $profile.content.person.extName)
+      name: FullNameConvert($profile.content.person)
     },
     body: content.value.map(m => {
       return {
-        _name: FullNameConvert(m.person.lastName, m.person.firstName, m.person.midName, m.person.extName),
+        _name: FullNameConvert(m.person),
         plan: m.plan.name,
         type: m.pay_type.name,
         created: moment(m.created_at).format("MM/DD/YYYY"),

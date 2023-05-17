@@ -20,7 +20,7 @@
               <BadgeComponent :role="row.role" />
               <div>
                 <strong>
-                  {{ FullNameConvert(row.person.lastName, row.person.firstName, row.person.midName, row.extName) }}
+                  {{ FullNameConvert(row.person) }}
                 </strong>
               </div>
               <div>{{ row.email }}</div>
@@ -28,7 +28,7 @@
             </div>
 
             <div class="d-none d-md-inline col-md-6 col-xl-4">
-              <div>Plan: <strong>{{ row.plan.name }}</strong></div>
+              <div>Plan: <strong>{{ `${row.plan.name} (${row.pay_type.name})` }}</strong></div>
               <div>Total To Pay: <strong>{{ NumberAddComma(PlanToPay(row.pay_type, row.plan)) }}</strong></div>
               <div>Est. Bal. Due:
                 <strong class="text-danger">
@@ -39,8 +39,17 @@
             <div class="d-none d-xl-inline col-12 col-md-6 col-xl-4">
               <span class="float-right text-secondary"> {{ moment(row.created_at).local().format('MMM D, YYYY') }}
               </span>
-              <div>Agent: <strong>{{ `${row.plan.name} (${row.pay_type.name})` }}</strong></div>
-              <div>Staff: <strong>{{ NumberAddComma(row.plan.spot_pay) }}</strong></div>
+              <div>Agent:
+                <strong>
+                  {{ FullNameConvert(row.person.agent.person) }}
+                </strong>
+              </div>
+              <div>Staff:
+                <strong>
+                  {{ FullNameConvert(row.person.agent.person) }}
+                </strong>
+              </div>
+              <div>Phone: <strong>{{ `${row.person.mobile}` }}</strong></div>
             </div>
           </div>
         </div>
@@ -49,9 +58,7 @@
       <div class="card-body">
         <div class="row mb-2">
           <div class="col-12 col-md-6 col-lg-4 col-xl-3">
-            <div>Refered: <strong>{{ FullNameConvert(row.person.referred.person.lastName,
-              row.person.referred.person.firstName, row.person.referred.person.midName,
-              row.person.referred.person.extName) }}</strong></div>
+            <div>Refered: <strong>{{ FullNameConvert(row.person.referred.person) }}</strong></div>
             <div>Plan: <strong>{{ `${row.plan.name} (${row.pay_type.name})` }}</strong></div>
             <div>Target: <strong>{{ NumberAddComma(row.plan.spot_pay) }}</strong></div>
             <div>Total Transact: <strong>{{ NumberAddComma(row.client_transactions_sum_amount) }}</strong></div>
@@ -63,7 +70,7 @@
             <div>Email: <strong>{{ row.email }}</strong></div>
             <div>Name:
               <strong>
-                {{ FullNameConvert(row.person.lastName, row.person.firstName, row.person.midName, row.extName) }}
+                {{ FullNameConvert(row.person) }}
               </strong>
             </div>
             <div>Birth Day: <strong>{{ moment(row.person.bday).local().format('MMM D, YYYY') }}</strong></div>
@@ -133,7 +140,7 @@ function Print(row) {
   $details.Print({
     header: {
       title: 'Client Details',
-      name: FullNameConvert(row.person.lastName, row.person.firstName, row.person.midName, row.person.extName),
+      name: FullNameConvert(row.person),
       created_at: moment(row.created_at).format('MM/DD/YYYY'),
       username: row.username,
       bday: moment(row.person.bday).format('MM/DD/YYYY'),

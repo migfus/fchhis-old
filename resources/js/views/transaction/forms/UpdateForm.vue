@@ -15,14 +15,7 @@
                 <div class="form-group">
                   <label>Client</label>
                   <div v-if="$trans.params.client.person.id" class="mb-2">
-                    {{
-                      FullNameConvert(
-                        $trans.params.client.person.lastName,
-                        $trans.params.client.person.firstName,
-                        $trans.params.client.person.midName,
-                        $trans.params.client.extName
-                      )
-                    }}
+                    {{ FullNameConvert($trans.params.client.person) }}
                   </div>
                   <div>
                     <button @click="SelectClient()" class="btn btn-success" data-toggle="modal"
@@ -40,12 +33,7 @@
                   <label>Agent</label>
                   <div v-if="$trans.params.agent.person.id" class="mb-2">
                     {{
-                      FullNameConvert(
-                        $trans.params.agent.person.lastName,
-                        $trans.params.agent.person.firstName,
-                        $trans.params.agent.person.midName,
-                        $trans.params.agent.extName
-                      )
+                      FullNameConvert($trans.params.agent.person)
                     }}
                   </div>
                   <div>

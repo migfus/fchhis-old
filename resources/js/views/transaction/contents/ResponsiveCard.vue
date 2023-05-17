@@ -17,10 +17,7 @@
               <div class="text-bold h5 mb-1"><span class="text-success">+{{ NumberAddComma(row.amount) }}</span>
               </div>
               <div>
-                {{
-                  FullNameConvert(row.client.person.lastName, row.client.person.firstName, row.client.person.midName,
-                    row.client.person.extName)
-                }}
+                {{ FullNameConvert(row.client.person) }}
               </div>
               <div>Accumulated:
                 <strong class="text-info">
@@ -48,20 +45,8 @@
               <div class="h5 mb-1">OR:
                 <strong class="text-info">{{ row.or }}</strong>
               </div>
-              <div>Staff: <strong>
-                  {{
-                    FullNameConvert(row.staff.person.lastName, row.staff.person.firstName, row.staff.person.midName,
-                      row.staff.person.extName)
-                  }}
-                </strong></div>
-              <div>Agent: <strong>
-                  {{
-                    FullNameConvert(row.agent.person.lastName, row.agent.person.firstName, row.agent.person.midName,
-                      row.agent.person.extName)
-                  }}
-                </strong></div>
-
-
+              <div>Staff: <strong>{{ FullNameConvert(row.staff.person) }}</strong></div>
+              <div>Agent: <strong>{{ FullNameConvert(row.agent.person) }}</strong></div>
             </div>
           </div>
         </div>
@@ -81,9 +66,7 @@
 
           </div>
           <div class="col-12 col-md-6 col-lg-4 col-xl-3">
-            <div>Payed By: <strong class="text-success">{{ FullNameConvert(row.client.person.lastName,
-              row.client.person.firstName,
-              row.client.person.midName, row.client.person.extName) }}</strong></div>
+            <div>Payed By: <strong class="text-success">{{ FullNameConvert(row.client.person) }}</strong></div>
             <div>Username: <strong>{{ row.client.username }}</strong></div>
             <div>Email: <strong>{{ row.client.email }}</strong></div>
             <hr class="mt-1" />
@@ -94,24 +77,14 @@
             <div>Staff:
               <strong class="text-info">
                 {{
-                  FullNameConvert(
-                    row.staff.person.lastName,
-                    row.staff.person.firstName,
-                    row.staff.person.midName,
-                    row.staff.person.extName
-                  )
+                  FullNameConvert(row.staff.person)
                 }}
               </strong>
             </div>
             <div>Agent:
               <strong class="text-warning">
                 {{
-                  FullNameConvert(
-                    row.agent.person.lastName,
-                    row.agent.person.firstName,
-                    row.agent.person.midName,
-                    row.agent.person.extName
-                  )
+                  FullNameConvert(row.agent.person)
                 }}
               </strong>
             </div>
@@ -135,12 +108,7 @@
               Accessable only by:
               <strong>
                 {{
-                  FullNameConvert(
-                    row.staff.person.lastName,
-                    row.staff.person.firstName,
-                    row.staff.person.midName,
-                    row.staff.person.extName
-                  )
+                  FullNameConvert(row.staff.person)
                 }}
               </strong>
             </div>
@@ -198,12 +166,7 @@ function Print(row) {
     header: {
       date: moment().format('MMM D, YYYY HH:mm A'),
       or: '[or]',
-      name: FullNameConvert(
-        row.client.person.lastName,
-        row.client.person.firstName,
-        row.client.person.midName,
-        row.client.person.extName,
-      )
+      name: FullNameConvert(row.client.person)
     },
     body: [
       {
@@ -214,12 +177,7 @@ function Print(row) {
     ],
     footer: {
       payType: 'Cash on Hand',
-      received: FullNameConvert(
-        row.staff.person.lastName,
-        row.staff.person.firstName,
-        row.staff.person.midName,
-        row.staff.person.extName,
-      ),
+      received: FullNameConvert(row.staff.person),
     }
   }
   )

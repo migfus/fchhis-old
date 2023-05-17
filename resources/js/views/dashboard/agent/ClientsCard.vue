@@ -42,7 +42,7 @@
           <tbody>
             <tr v-for="row in $down.content">
               <!-- <td>{{ row.person.lastName }}</td> -->
-              <td>{{ FullNameConvert(row.person.lastName, row.person.firstName, row.person.midName, row.person.extName) }}
+              <td>{{ FullNameConvert(row.person) }}
               </td>
               <td class="text-bold">{{ `${row.plan.name} (${row.pay_type.name})` }}</td>
               <td class="text-success text-bold">{{ NumberAddComma(row.client_transactions_sum_amount) }}</td>
@@ -81,7 +81,7 @@ const month = ref(0)
 function Print() {
   $print.Print({
     header: {
-      name: FullNameConvert($profile.content.person.lastName, $profile.content.person.firstName, $profile.content.person.midName, $profile.content.person.extName)
+      name: FullNameConvert($profile.content.person)
     },
     body: $down.content.map(m => { return { name: m.person.lastName, plan: m.plan.name, type: m.pay_type.name, amount: m.client_transactions_sum_amount } }),
   })

@@ -93,10 +93,7 @@
                     {{ row.plan.name }}
                   </td>
                   <td>
-                    {{
-                      FullNameConvert(row.client.person.lastName, row.client.person.firstName, row.client.person.midName,
-                        row.client.person.extName)
-                    }}
+                    {{ FullNameConvert(row.client.person) }}
                   </td>
                   <td class="text-success text-bold">
                     +{{ NumberAddComma(row.amount) }}
@@ -130,8 +127,7 @@
                   <td>
                     <img :src="row.avatar || 'https://fchhis.migfus20.com/images/logo.png'" alt="Product 1"
                       class="img-circle img-size-32 mr-2">
-                    {{ FullNameConvert(row.person.lastName, row.person.firstName, row.person.midName, row.person.extName)
-                    }}
+                    {{ FullNameConvert(row.person) }}
                   </td>
                   <td v-if="row.client_transactions_sum_amount" class="text-success">
                     +{{ NumberAddComma(row.client_transactions_sum_amount || 0) }}
