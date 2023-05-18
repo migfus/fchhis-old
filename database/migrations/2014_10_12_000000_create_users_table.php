@@ -14,8 +14,6 @@ return new class extends Migration
       Schema::create('users', function (Blueprint $table) {
         $table->id();
         $table->integer('person_id')->unique();
-        $table->tinyInteger('pay_type_id')->unsigned();
-        $table->string('OR')->unique()->nullable();
         $table->string('username')->unique()->nullable();
         $table->string('email')->unique()->nullable();
         $table->timestamp('email_verified_at')->nullable();
@@ -23,8 +21,7 @@ return new class extends Migration
         $table->string('avatar')->nullable();
         $table->tinyInteger('role')->unsinged()->default(0)
           ->comment('[0-inactive][1-banned][2-admin][3-manager][4-agent][5-staff][6-client]');
-        $table->tinyInteger('plan_id')->unsinged()->default(0)
-          ->comment('[0-inactive][1-banned][2-admin');
+
         $table->boolean('notify_mobile')->default(1);
         $table->rememberToken();
         $table->timestamps();

@@ -6,6 +6,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Validator;
+use App\Models\User;
 
 class Controller extends BaseController
 {
@@ -13,11 +14,15 @@ class Controller extends BaseController
 
   public function G_ReturnDefault($req = null) {
     if($req) {
+      $auth = User::where('id', $req->user()->id)->with('person')->first();
+
       return [
         'status' => true,
         'message' => 'success',
-        'auth' => $req->user(),
-        'ip' => $_SERVER['REMOTE_ADDR']
+        'auth' => [
+          'ip' => $_SERVER['REMOTE_ADDR'],
+          'auth' => $auth,
+        ]
       ];
     }
     else {

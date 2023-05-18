@@ -17,7 +17,8 @@
           <Form v-slot="{ errors }" :validation-schema="schema" validate-on-mount @submit="$auth.Login(input)">
 
             <div class="input-group">
-              <Field v-model="input.email" name="email" type="email" class="form-control" placeholder="Email" />
+              <Field v-model="input.email" name="email" type="text" class="form-control"
+                placeholder="Email or Username" />
               <div class="input-group-append">
                 <div class="input-group-text">
                   <span class="fas fa-envelope"></span>
@@ -82,7 +83,7 @@ const $route = useRoute();
 const $auth = useAuthStore();
 
 const schema = Yup.object({
-  email: Yup.string().required('Email is Required').email('Invalid Email'),
+  email: Yup.string().required('Email or Username is Required'),
   password: Yup.string().required('Password is Required')
 })
 
@@ -92,7 +93,7 @@ const input = reactive({
 });
 
 onMounted(() => {
-  input.email = 'admin@gmail.com',
+  input.email = 'client',
     input.password = '12345678'
 
   if ($route.query.email) {

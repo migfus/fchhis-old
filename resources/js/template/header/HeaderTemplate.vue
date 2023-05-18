@@ -200,11 +200,6 @@ const menu = ref([
     icon: 'fa-user-cog',
     link: { name: 'account-settings' },
   },
-  {
-    name: 'Security',
-    icon: 'fa-shield-alt',
-    link: { name: 'account-settings-security' },
-  },
 
   // SETTINGS
   // {

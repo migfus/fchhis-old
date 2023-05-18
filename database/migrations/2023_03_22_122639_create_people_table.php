@@ -13,19 +13,19 @@ return new class extends Migration
     {
         Schema::create('people', function (Blueprint $table) {
             $table->id();
-            $table->integer('created_by_user_id')->unsigned();
-            $table->integer('agent_id')->unsigned()->nullable();
-            $table->string('lastName')->nullable();
-            $table->string('firstName')->nullable();
-            $table->string('midName')->nullable();
-            $table->string('extName')->nullable();
-            $table->date('bday')->nullable();
-            $table->integer('bplace_id')->nullable();
+            $table->integer('staff_id')->unsigned();
+            $table->integer('agent_id')->unsigned();
+            $table->integer('client_id')->unsigned()->nullable(); // NOTE for Beneficiaries Option
+            $table->tinyInteger('pay_type_id')->unsigned()->nullable();
+            $table->tinyInteger('plan_id')->unsinged()->nullable();
+
+            $table->string('name');
+            $table->date('bday');
+            $table->integer('bplace_id');
             $table->boolean('sex')->default(0);
-            $table->integer('address_id')->comment('city ID, Province')->nullable(); //city, province
-            $table->string('address')->comment('Specific Address')->nullable();  //specific,
-            $table->decimal('mobile', 10, 0)->nullable();
-            $table->date('due_at')->nullable();
+            $table->integer('address_id')->comment('city ID, Province'); //city, province
+            $table->string('address')->comment('Specific Address');  //specific,
+            $table->date('due_at')->nullable(); // NOTE due date
             $table->date('fulfilled_at')->nullable();
             $table->timestamps();
         });

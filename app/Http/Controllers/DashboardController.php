@@ -261,10 +261,10 @@ class DashboardController extends Controller
       'total' => User::where('role', 6)->count(),
       'clients' => User::where('role', 6)
         ->whereHas('person', function($q) use($req){
-          $q->where('created_by_user_id', $req->user()->id);
+          $q->where('staff_id', $req->user()->id);
         })
         ->count(),
-      'inactive' => User::whereNotNull('OR')->where('role', 6)->whereNull('email')->count()
+      'inactive' => 0
     ];
 
     return response()->json([...$this->G_ReturnDefault($req), 'data' => $data]);

@@ -12,7 +12,7 @@ class AuthController extends Controller
 {
   public function Login(Request $req) {
     $val = Validator::make($req->all(), [
-      'email' => 'required|email',
+      'email' => 'required',
       'password' => 'required|min:8',
     ]);
 
@@ -20,7 +20,7 @@ class AuthController extends Controller
       return $this->G_ValidatorFailResponse();
     }
 
-    $user = User::where('email', $req->email)->first();
+    $user = User::where('email', $req->email)->orWhere('username', $req->email)->first();
     if(!$user || !Hash::check($req->password, $user->password)) {
       return response()->json(['status' => false, 'message' => 'Invalid Credential!'], 401);
     }
@@ -45,12 +45,12 @@ class AuthController extends Controller
 
     $user = User::find($req->user()->id)->first();
     if(!$user || !Hash::check($req->currentPassword, $user->password)) {
-      return $this->G_UnauthorizedResponse('Invalid Password');
+      return response()->json(['data' => 'Incorrect Password'], 401);
     }
 
     $user = User::find($req->user()->id)->update(['password' => Hash::make($req->newPassword)]);
 
-    return $this->G_UnauthorizedResponse();
+    return response()->json([...$this->G_ReturnDefault($req), 'data' => $user]);
   }
 
   public function ChangeAvatar(Request $req) {
@@ -90,22 +90,18 @@ class AuthController extends Controller
 
   public function Register(Request $req) {
     $val = Validator::make($req->all(), [
-      'OR' => 'required',
+      'or' => 'required',
       'avatar' => '',
       'email' => 'required|email|unique:users',
-      'notifyMobile' => 'required',
-      'password' => 'required|min:8',
       'username' => 'required|unique:users',
+      'password' => 'required|min:8',
 
       'person.address' => 'required',
       'person.address_id' => 'required',
       'person.bday' => 'required',
       'person.bplace_id' => 'required',
       'person.extName' => '',
-      'person.firstName' => 'required',
-      'person.lastName' => 'required',
-      'person.midName' => '',
-      'person.mobile' => 'required',
+      'person.name' => 'required',
       'person.sex' => 'required',
       'person.id' => 'required',
     ]);

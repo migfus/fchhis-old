@@ -18,7 +18,7 @@ class TransactionSeeder extends Seeder
         'or' => '123456-123456',
         'agent_id' => 1,
         'staff_id' => 2,
-        'client_id' => 1,
+        'client_id' => 6,
         'plan_id' => 1,
         'amount' => 1250,
         'pay_type_id' => 2, // querterly

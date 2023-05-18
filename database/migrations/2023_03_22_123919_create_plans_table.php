@@ -12,21 +12,21 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('plans', function (Blueprint $table) {
-            $table->id();
-            $table->integer('user_id');
-            $table->string('avatar')->nullable();
-            $table->string('name');
-            $table->tinyInteger('age_start');
-            $table->tinyInteger('age_end');
-            $table->text('desc')->nullable();
-            $table->decimal('contract_price', 7, 2);
-            $table->decimal('spot_pay', 7, 2);
-            $table->decimal('spot_service', 7, 2);
-            $table->decimal('annual', 7, 2);
-            $table->decimal('semi_annual', 7, 2);
-            $table->decimal('quarterly', 7, 2);
-            $table->decimal('monthly', 7, 2);
-            $table->timestamps();
+          $table->id();
+          $table->integer('user_id');
+          $table->string('avatar')->nullable();
+          $table->string('name');
+          $table->tinyInteger('age_start');
+          $table->tinyInteger('age_end');
+          $table->text('desc')->nullable();
+          $table->decimal('contract_price', 7, 2);
+          $table->decimal('spot_pay', 7, 2);
+          $table->decimal('spot_service', 7, 2);
+          $table->decimal('annual', 7, 2);
+          $table->decimal('semi_annual', 7, 2);
+          $table->decimal('quarterly', 7, 2);
+          $table->decimal('monthly', 7, 2);
+          $table->timestamps();
         });
     }
 

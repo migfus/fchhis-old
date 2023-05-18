@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Beneficiary;
 use Illuminate\Http\Request;
-use App\Models\User;
+use App\Models\Person;
 use Illuminate\Support\Facades\Validator;
 
 class BeneficiaryController extends Controller
@@ -20,14 +19,9 @@ class BeneficiaryController extends Controller
     }
 
     // NOTE ADMIN/AGENT
-    if($req->user()->role == 6 || $req->user()->role == 4) {
-      $data = Beneficiary::where('person_id', User::where('person_id', $req->user()->id)->with('person')->first()->person->id)
-        ->where(function($q) use($req) {
-          $q->where('lastName', 'LIKE', '%'.$req->search.'%')
-            ->orWhere('firstName', 'LIKE', '%'.$req->search.'%')
-            ->orWhere('midName', 'LIKE', '%'.$req->search.'%')
-            ->orWhere('extName', 'LIKE', '%'.$req->search.'%');
-        })
+    if($req->user()->role == 6) {
+      $data = Person::whereNotNull('client_id')
+        ->where('name', 'LIKE', '%'.$req->search.'%')
         ->get();
       return response()->json([...$this->G_ReturnDefault($req), 'data' => $data]);
     }

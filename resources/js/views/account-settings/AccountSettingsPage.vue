@@ -53,30 +53,16 @@
         <div class="card-header p-0 border-bottom-0">
           <ul class="nav nav-tabs" id="custom-tabs-four-tab" role="tablist">
 
-            <!-- <li class="nav-item">
-              <a class="nav-link active" id="password-tab" data-toggle="pill" href="#password" role="tab"
-                aria-controls="password" aria-selected="true">Information</a>
-            </li> -->
-
             <li class="nav-item">
-              <a class="nav-link active" id="notification-tab" data-toggle="pill" href="#notification" role="tab"
-                aria-controls="notification" aria-selected="true">Notification</a>
+              <a class="nav-link active" id="password-tab" data-toggle="pill" href="#notification" role="tab"
+                aria-controls="notification" aria-selected="true">Change Password</a>
             </li>
 
-            <li class="nav-item">
-              <a class="nav-link" id="preference-tab" data-toggle="pill" href="#notification" role="tab"
-                aria-controls="notification" aria-selected="true">Preference</a>
-            </li>
-            <!-- <li class="nav-item">
-              <a class="nav-link" id="custom-tabs-four-profile-tab" data-toggle="pill" href="#custom-tabs-four-profile"
-                role="tab" aria-controls="custom-tabs-four-profile" aria-selected="false">Profile</a>
-            </li> -->
           </ul>
         </div>
 
         <div class="card-body">
-          <NotificationTab :active="true" id="notification-tab" />
-          <PreferenceTab :active="false" id="preference-tab" />
+          <PasswordTab :active="true" id="password-tab" />
         </div>
 
       </div>
@@ -87,10 +73,10 @@
 
 <script setup>
 import { useAuthStore } from '@/store/auth/auth';
-import NotificationTab from './tabs/NotificationTab.vue';
-import PreferenceTab from './tabs/PreferenceTab.vue';
 import { RoleToDesc } from '@/helpers/converter'
+
 import ChangeAvatarModal from './modals/ChangeAvatarModal.vue';
+import PasswordTab from './tabs/PasswordTab.vue';
 
 const $auth = useAuthStore();
 </script>
@@ -99,5 +85,9 @@ const $auth = useAuthStore();
 .card-primary.card-outline-tabs>.card-header a.active,
 .card-primary.card-outline-tabs>.card-header a.active:hover {
   border-top: 3px solid var(--info);
+}
+
+a {
+  color: #777
 }
 </style>
