@@ -129,7 +129,7 @@
                 <div class="form-group">
                   <div class="row">
                     <div class="col-6">
-                      <label for="bday-input">Birth Day {{ `(${age} Years Old)` }}</label>
+                      <label for="bday-input">Birth Day <span v-if="age">{{ `(${age} Years Old)` }}</span></label>
                       <Field v-model="$register.params.person.bday" name="bday" type="date" class="form-control"
                         id="bday-input" placeholder="Enter Birth Day" />
                       <div class="mb-2 text-danger">

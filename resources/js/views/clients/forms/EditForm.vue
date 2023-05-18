@@ -95,7 +95,7 @@
                   <label>Agent</label>
                   <Field name="agent" as='select' v-model="$user.input.person.agent_id" class="form-control">
                     <option v-for="row in $agent.content" :value="row.id">
-                      {{ FullNameConvert(row.person) }}
+                      {{ row.person.name }}
                     </option>
                   </Field>
                   <div class="mb-2 text-danger">
@@ -162,7 +162,7 @@
                 <div class="form-group">
                   <div class="row">
                     <div class="col-6">
-                      <label for="bday-input">Birth Day {{ `(${age} Years Old)` }}</label>
+                      <label for="bday-input">Birth Day <span v-if="age">{{ `(${age} Years Old)` }}</span></label>
                       <Field v-model="$user.input.person.bday" name="bday" type="date" class="form-control"
                         id="bday-input" placeholder="Enter Birth Day" />
                     </div>
@@ -245,7 +245,7 @@ import { useAddressStore } from '@/store/system/address'
 import { Form, Field, ErrorMessage, configure, } from 'vee-validate'
 import * as Yup from 'yup'
 import { usePlanStore } from '@/store/system/plan'
-import { CityIDToProvinceID, FullNameConvert } from '@/helpers/converter'
+import { CityIDToProvinceID } from '@/helpers/converter'
 import { $DebugInfo, $Err, $Log } from '@/helpers/debug'
 import { useAgentStore } from '@/store/users/agent'
 import { usePayTypeStore } from '@/store/system/payTypes'

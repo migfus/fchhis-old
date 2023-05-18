@@ -15,7 +15,7 @@
         </thead>
         <tbody>
           <tr v-for="row in content" :key="row.id">
-            <td>{{ FullNameConvert(row.person) }}</td>
+            <td>{{ row.person.name }}</td>
             <td>Update software</td>
             <td>
               <div class="progress progress-xs">
@@ -33,7 +33,6 @@
 
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
-import { FullNameConvert } from '@/helpers/converter';
 import { useRoute } from 'vue-router'
 import { $DebugInfo, $Err } from '@/helpers/debug'
 import axios from 'axios'

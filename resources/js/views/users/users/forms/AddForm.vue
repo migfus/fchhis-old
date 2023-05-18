@@ -109,7 +109,7 @@
                   <label>Agent</label>
                   <Field name="agent" as='select' v-model="$user.input.agent" class="form-control">
                     <option v-for="row in $agent.content" :value="row.id">
-                      {{ FullNameConvert(row.person) }}
+                      {{ row.person.name }}
                     </option>
                   </Field>
                   <div class="mb-2 text-danger">
@@ -173,7 +173,7 @@
                 <div class="form-group">
                   <div class="row">
                     <div class="col-6">
-                      <label for="bday-input">Birth Day {{ `(${age} Years Old)` }}</label>
+                      <label for="bday-input">Birth Day <span v-if="age">{{ `(${age} Years Old)` }}</span></label>
                       <Field v-model="$user.input.bday" name="bday" type="date" class="form-control" id="bday-input"
                         placeholder="Enter Birth Day" />
                     </div>
@@ -255,7 +255,6 @@ import * as Yup from 'yup'
 import { usePlanStore } from '@/store/system/plan'
 import { usePayTypeStore } from '@/store/system/payTypes'
 import { useAgentStore } from '@/store/users/agent'
-import { FullNameConvert } from '@/helpers/converter'
 
 import AvatarUpload from '../modals/AvatarUpload.vue'
 

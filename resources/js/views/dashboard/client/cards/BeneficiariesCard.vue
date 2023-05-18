@@ -35,7 +35,7 @@
         </thead>
         <tbody>
           <tr v-for="row, idx in $ben.content">
-            <td>{{ FullNameConvert(row) }}</td>
+            <td>{{ row.name }}</td>
             <td>{{ AgeConverter(row.bday) }}</td>
             <td>
               <button @click="$ben.Edit(row)" class="btn btn-info btn-sm mr-1"><i class="fas fa-pen"></i></button>
@@ -52,7 +52,7 @@
 <script setup>
 import { useBeneficiaryStore } from '@/store/dashboard/beneficiary'
 import { onMounted } from 'vue'
-import { FullNameConvert, AgeConverter } from '@/helpers/converter'
+import { AgeConverter } from '@/helpers/converter'
 import { watch } from 'vue'
 import { throttle } from 'lodash'
 

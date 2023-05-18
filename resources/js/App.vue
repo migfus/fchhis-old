@@ -50,11 +50,13 @@ import BreadCrumbTemplate from '@/template/header/BreadCrumbTemplate.vue';
 import { useRoute } from 'vue-router';
 import { onMounted } from 'vue'
 import { useAddressStore } from '@/store/system/address'
+import { useTestStore } from '@/store/auth/test';
 
 import "vue-toastification/dist/index.css";
 
 const $route = useRoute();
 const $address = useAddressStore();
+const $test = useTestStore();
 
 onMounted(() => {
   $address.GetAPI();

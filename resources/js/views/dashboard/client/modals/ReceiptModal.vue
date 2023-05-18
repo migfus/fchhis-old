@@ -20,11 +20,7 @@
           </div>
           <div>
             Name:
-            <strong>
-              {{
-                FullNameConvert($props.data.client.person)
-              }}
-            </strong>
+            <strong> {{ $props.data.client.person.name }} </strong>
           </div>
           <div>
             Amount:
@@ -57,7 +53,7 @@
 </template>
 
 <script setup>
-import { FullNameConvert, NumberAddComma } from '@/helpers/converter'
+import { NumberAddComma } from '@/helpers/converter'
 import moment from 'moment'
 import { useReceiptStore } from '@/store/print/receipt'
 import { onMounted } from 'vue';
@@ -76,7 +72,7 @@ function Print() {
     header: {
       date: moment($props.data.created_at).format('MMM D, YYYY HH:mm A'),
       or: $props.data.id,
-      name: FullNameConvert($props.data.client.person)
+      name: $props.data.client.person.name
     },
     body: [
       {
@@ -87,7 +83,7 @@ function Print() {
     ],
     footer: {
       payType: 'Cash on Hand',
-      received: FullNameConvert($props.data.staff.person),
+      received: $props.data.staff.person.name,
     }
   }
   )

@@ -46,4 +46,15 @@
 <script setup>
 import SliderComponent from './component/SliderComponent.vue';
 import PricingComponent from './component/PricingComponent.vue';
+import { onMounted, onUnmounted } from 'vue'
+import { useTestStore } from '@/store/auth/test';
+
+const $test = useTestStore();
+
+onMounted(() => {
+  $test.GetAPI()
+});
+onUnmounted(() => {
+  $test.CloseAPI()
+});
 </script>

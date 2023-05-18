@@ -17,7 +17,7 @@
               <div class="text-bold h5 mb-1"><span class="text-success">+{{ NumberAddComma(row.amount) }}</span>
               </div>
               <div>
-                {{ FullNameConvert(row.client.person) }}
+                {{ row.client.person.name }}
               </div>
               <div>Accumulated:
                 <strong class="text-info">
@@ -45,8 +45,8 @@
               <div class="h5 mb-1">OR:
                 <strong class="text-info">{{ row.or }}</strong>
               </div>
-              <div>Staff: <strong>{{ FullNameConvert(row.staff.person) }}</strong></div>
-              <div>Agent: <strong>{{ FullNameConvert(row.agent.person) }}</strong></div>
+              <div>Staff: <strong>{{ row.staff.person.name }}</strong></div>
+              <div>Agent: <strong>{{ row.agent.person.name }}</strong></div>
             </div>
           </div>
         </div>
@@ -66,7 +66,7 @@
 
           </div>
           <div class="col-12 col-md-6 col-lg-4 col-xl-3">
-            <div>Payed By: <strong class="text-success">{{ FullNameConvert(row.client.person) }}</strong></div>
+            <div>Payed By: <strong class="text-success">{{ row.client.person.name }}</strong></div>
             <div>Username: <strong>{{ row.client.username }}</strong></div>
             <div>Email: <strong>{{ row.client.email }}</strong></div>
             <hr class="mt-1" />
@@ -75,18 +75,10 @@
           </div>
           <div class="col-12 col-md-6 col-lg-4 col-xl-3">
             <div>Staff:
-              <strong class="text-info">
-                {{
-                  FullNameConvert(row.staff.person)
-                }}
-              </strong>
+              <strong class="text-info"> {{ row.staff.person.name }} </strong>
             </div>
             <div>Agent:
-              <strong class="text-warning">
-                {{
-                  FullNameConvert(row.agent.person)
-                }}
-              </strong>
+              <strong class="text-warning"> {{ row.agent.person.name }} </strong>
             </div>
             <div>Referal ID: <strong> {{ row.agent.id }} </strong> </div>
             <!-- <div>Birth Day: <strong>[bla]</strong></div>
@@ -107,9 +99,7 @@
             <div v-if="$auth.auth.id != row.staff_id" class="alert alert-light mb-0 p-1 px-2" role="alert">
               Accessable only by:
               <strong>
-                {{
-                  FullNameConvert(row.staff.person)
-                }}
+                {{ row.staff.person.name }}
               </strong>
             </div>
           </div>
@@ -152,7 +142,7 @@
 
 <script setup>
 import { useTransactionStore } from '@/store/transaction/transaction'
-import { NumberAddComma, FullNameConvert, PlanToPay } from '@/helpers/converter'
+import { NumberAddComma, PlanToPay } from '@/helpers/converter'
 import moment from 'moment'
 import { useAuthStore } from '@/store/auth/auth'
 import { useReceiptStore } from '@/store/print/receipt'
@@ -166,7 +156,7 @@ function Print(row) {
     header: {
       date: moment().format('MMM D, YYYY HH:mm A'),
       or: '[or]',
-      name: FullNameConvert(row.client.person)
+      name: row.client.person.name
     },
     body: [
       {
@@ -177,7 +167,7 @@ function Print(row) {
     ],
     footer: {
       payType: 'Cash on Hand',
-      received: FullNameConvert(row.staff.person),
+      received: row.staff.person.name,
     }
   }
   )

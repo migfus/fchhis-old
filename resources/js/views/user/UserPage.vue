@@ -7,9 +7,7 @@
         <div class="widget-user-header text-white"
           style="background: url('https://adminlte.io/themes/v3/dist/img/photo1.png') center center;">
           <h3 class="widget-user-username text-right">
-            {{
-              FullNameConvert(userContent.person)
-            }}
+            {{ userContent.person.name }}
           </h3>
           <h5 class="widget-user-desc text-right">{{ userContent.email }}</h5>
         </div>
@@ -77,7 +75,7 @@
 <script setup>
 import { onMounted } from 'vue'
 import { useRoute } from 'vue-router'
-import { FullNameConvert, NumberAddComma, PlanToPay } from '@/helpers/converter'
+import { NumberAddComma, PlanToPay } from '@/helpers/converter'
 import { ref, reactive } from 'vue'
 import axios from 'axios'
 

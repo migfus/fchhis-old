@@ -28,22 +28,28 @@ export default function jwtInterceptor() {
       return response;
     },
     (error) => {
-      $Err("auth error: ", error);
+      if(axios.isCancel(error)) {
+        $Log('Interceptor','Cancelled')
+        return true;
+      }
+      else {
+        const { status } = error.response;
+        const { data } = error.response;
+        if (status === 401 && data.message == "Logout") {
+          $auth.Logout();
+        }
+        if (status === 401 && data.message == "Unauthenticated.") {
+          $auth.Logout();
+        }
+        if(status === 401 && data.message == 'Invalid Input') {
+          $toast.error(JSON.stringify(data.errors))
+        }
+        if(status === 429) {
+          alert("Too Many Requests of Data!")
+        }
+      }
 
-      const { status } = error.response;
-      const { data } = error.response;
-      if (status === 401 && data.message == "Logout") {
-        $auth.Logout();
-      }
-      if (status === 401 && data.message == "Unauthenticated.") {
-        $auth.Logout();
-      }
-      if(status === 401 && data.message == 'Invalid Input') {
-        $toast.error(JSON.stringify(data.errors))
-      }
-      if(status === 429) {
-        alert("Too Many Requests of Data!")
-      }
+
       return Promise.reject(error);
     }
   );

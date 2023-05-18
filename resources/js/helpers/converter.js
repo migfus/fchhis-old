@@ -45,13 +45,6 @@ export const RoleToID = (id) => {
   }
 };
 
-export const FullNameConvert = (name) => {
-  if(name.midName) {
-    return `${name.lastName}, ${name.firstName} ${name.midName.charAt(0)}.`
-  }
-  return `${name.lastName}, ${name.lastName}`
-}
-
 export const AgeConverter = (bday) => {
   return moment().diff(bday, 'years');
 }

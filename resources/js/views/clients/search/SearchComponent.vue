@@ -90,7 +90,6 @@ import moment from 'moment'
 import { throttle } from 'lodash'
 import { userReportStore } from '@/store/print/userReport'
 import { useProfileStore } from '@/store/auth/profile'
-import { FullNameConvert } from '@/helpers/converter'
 import axios from 'axios'
 
 import VueDatePicker from '@vuepic/vue-datepicker'
@@ -132,11 +131,11 @@ function Print() {
   $print.Print({
     header: {
       title: printTitle.value,
-      name: FullNameConvert($profile.content.person)
+      name: $profile.content.person.name
     },
     body: content.value.map(m => {
       return {
-        _name: FullNameConvert(m.person),
+        _name: m.person.name,
         plan: m.plan.name,
         type: m.pay_type.name,
         created: moment(m.created_at).format("MM/DD/YYYY"),

@@ -20,7 +20,7 @@
               <BadgeComponent :role="row.role" />
               <div>
                 <strong>
-                  {{ FullNameConvert(row.person.lastName, row.person.firstName, row.person.midName, row.extName) }}
+                  {{ row.person.name }}
                 </strong>
               </div>
               <div><strong>{{ row.username }}</strong></div>
@@ -48,7 +48,7 @@
       <div class="card-body">
         <div class="row mb-2">
           <div class="col-12 col-md-6 col-lg-4 col-xl-3">
-            <div>Refered: <strong>{{ FullNameConvert(row.person.referred.person) }}</strong></div>
+            <div>Refered: <strong>{{ row.person.referred.person.name }}</strong></div>
             <div>Plan: <strong>{{ `${row.plan.name} (${row.pay_type.name})` }}</strong></div>
             <div>Target: <strong>{{ NumberAddComma(row.plan.spot_pay) }}</strong></div>
             <div>Total Transact: <strong>{{ NumberAddComma(row.client_transactions_sum_amount) }}</strong></div>
@@ -60,7 +60,7 @@
             <div>Email: <strong>{{ row.email }}</strong></div>
             <div>Name:
               <strong>
-                {{ FullNameConvert(row.person) }}
+                {{ row.person.name }}
               </strong>
             </div>
             <div>Birth Day: <strong>{{ moment(row.person.bday).local().format('MMM D, YYYY') }}</strong></div>
@@ -110,7 +110,6 @@ import moment from "moment"
 import { useUserStore } from '@/store/users/users'
 import { RoleToDesc } from '@/helpers/converter'
 import BadgeComponent from '../components/BadgeComponent.vue'
-import { FullNameConvert } from '@/helpers/converter'
 import { CityIDToFullAddress, ProvinceIDToDesc, CityIDToDesc } from '@/helpers/converter'
 import VueAvatar from "@webzlodimir/vue-avatar";
 import "@webzlodimir/vue-avatar/dist/style.css";

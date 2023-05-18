@@ -42,7 +42,7 @@
           <tbody>
             <tr v-for="row in $down.content">
               <!-- <td>{{ row.person.lastName }}</td> -->
-              <td>{{ FullNameConvert(row.person) }}
+              <td>{{ row.person.name }}
               </td>
               <td class="text-bold">{{ `${row.plan.name} (${row.pay_type.name})` }}</td>
               <td class="text-success text-bold">{{ NumberAddComma(row.client_transactions_sum_amount) }}</td>
@@ -65,7 +65,7 @@
 import { onMounted, watch } from 'vue';
 import { useDownHeadStore } from '@/store/dashboard/downhead'
 import { throttle } from 'lodash'
-import { FullNameConvert, NumberAddComma } from '@/helpers/converter'
+import { NumberAddComma } from '@/helpers/converter'
 import moment from 'moment'
 import { ref } from 'vue'
 import { $DebugInfo, $Err, $Log } from '@/helpers/debug'
@@ -81,7 +81,7 @@ const month = ref(0)
 function Print() {
   $print.Print({
     header: {
-      name: FullNameConvert($profile.content.person)
+      name: $profile.content.person.name
     },
     body: $down.content.map(m => { return { name: m.person.lastName, plan: m.plan.name, type: m.pay_type.name, amount: m.client_transactions_sum_amount } }),
   })

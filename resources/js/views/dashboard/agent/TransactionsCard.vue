@@ -40,7 +40,7 @@
           </thead>
           <tbody>
             <tr v-for="row in $trans.content.data">
-              <td>{{ FullNameConvert(row.client.person) }} </td>
+              <td>{{ row.client.person.name }} </td>
               <td class="text-success text-bold">+{{ NumberAddComma(row.amount) }}</td>
             </tr>
           </tbody>
@@ -60,7 +60,7 @@
 import { onMounted, watch } from 'vue';
 import { useTransactionStore } from '@/store/transaction/transaction'
 import { throttle } from 'lodash'
-import { FullNameConvert, NumberAddComma, Sum } from '@/helpers/converter'
+import { NumberAddComma, Sum } from '@/helpers/converter'
 import moment from 'moment'
 import { ref } from 'vue'
 import { useAgentTransactionStore } from '@/store/print/agentTransaction'
@@ -86,7 +86,7 @@ function currentDate(input = 0) {
 function Print() {
   $print.Print({
     header: {
-      name: FullNameConvert($profile.content.person)
+      name: $profile.content.person.name
     },
     body: $trans.content.data.map(m => { return { plan: m.plan.name, type: m.pay_type.name, amount: m.amount, date: moment(m.created_at).format('MM/DD/YYYY HH:MM A') } }),
   })

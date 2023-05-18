@@ -18,13 +18,11 @@ const pinia = createPinia();
 pinia.use(({ store }) => {
   store.$router = markRaw(router);
 });
-
 app.use(pinia);
 app.use(Toast, { position: "bottom-right" });
+app.use(router);
 
 import jwtInterceptor from "./helpers/jwtInterceptor";
 jwtInterceptor();
-
-app.use(router);
 
 app.mount("#app");

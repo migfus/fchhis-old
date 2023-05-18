@@ -16,7 +16,7 @@
                   <div v-if="$trans.params.client.person.id" class="mb-2">
                     <img :src="$trans.params.client.avatar" style="height: 3em;" class="img-circle float-left mr-3 my-2">
                     <span class="">
-                      {{ FullNameConvert($trans.params.client.person) }}
+                      {{ $trans.params.client.person.name }}
                     </span>
                   </div>
                   <div>
@@ -35,7 +35,7 @@
                   <label>Agent</label>
                   <div v-if="$trans.params.agent.person.id" class="mb-2">
                     <img :src="$trans.params.agent.avatar" style="height: 3em;" class="img-circle float-left mr-3 my-2">
-                    {{ FullNameConvert($trans.params.agent.person) }}
+                    {{ $trans.params.agent.person.name }}
                   </div>
                   <div>
                     <button @click="SelectAgent()" class="btn btn-info" data-toggle="modal" data-target="#modal-agent">
@@ -112,7 +112,7 @@ import { usePlanStore } from '@/store/system/plan'
 import { usePayTypeStore } from '@/store/system/payTypes'
 import { useAgentStore } from '@/store/users/agent'
 import { useTransactionStore } from '@/store/transaction/transaction'
-import { FullNameConvert, PlanToAmount } from '@/helpers/converter'
+import { PlanToAmount } from '@/helpers/converter'
 import { useUserStore } from '@/store/users/users'
 
 

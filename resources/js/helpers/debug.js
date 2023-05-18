@@ -1,8 +1,7 @@
-
 const debug = true;
-
 let called = false;
 let name = '';
+
 export const $DebugInfo = (_name) => {
   name = _name;
   called = false;

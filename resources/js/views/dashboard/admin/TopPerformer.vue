@@ -26,7 +26,7 @@
               <tr v-for="(row, idx,) in $dash.content.topPerformer" :key="row.id">
                 <td>
                   <img :src="row.avatar" alt="Product 1" class="img-circle img-size-32 mr-2">
-                  {{ FullNameConvert(row.person) }}
+                  {{ row.person.name }}
                 </td>
                 <td width="200">
                   <small v-if="idx < 5" class="mr-1">
@@ -105,7 +105,7 @@ import { Bar as BarComponent } from 'vue-chartjs'
 import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js'
 import moment from 'moment'
 import { useDashboardStore } from '@/store/dashboard/dashboard'
-import { FullNameConvert, NumberAddComma, GetPercentage } from '@/helpers/converter'
+import { NumberAddComma, GetPercentage } from '@/helpers/converter'
 
 import PercentComponent from './PercentComponent.vue'
 

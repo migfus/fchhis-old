@@ -31,7 +31,7 @@
               <tbody>
                 <tr v-for="row in $user.list.data" :key="row.id">
                   <td>
-                    {{ FullNameConvert(row.person) }}
+                    {{ row.person.name }}
                   </td>
                   <td>{{ row.plan.name }}</td>
                   <td>
@@ -60,7 +60,6 @@
 import { onMounted, watch } from 'vue'
 import { useUserStore } from '@/store/users/users'
 import { debounce } from 'lodash'
-import { FullNameConvert } from '@/helpers/converter'
 import { useTransactionStore } from '@/store/transaction/transaction'
 
 const $user = useUserStore();

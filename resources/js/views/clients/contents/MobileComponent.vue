@@ -20,7 +20,7 @@
               <BadgeComponent :role="row.role" />
               <div>
                 <strong>
-                  {{ FullNameConvert(row.person) }}
+                  {{ row.person }}
                 </strong>
               </div>
               <div>{{ row.email }}</div>
@@ -41,12 +41,12 @@
               </span>
               <div>Agent:
                 <strong>
-                  {{ FullNameConvert(row.person.agent.person) }}
+                  {{ row.person.agent.person }}
                 </strong>
               </div>
               <div>Staff:
                 <strong>
-                  {{ FullNameConvert(row.person.agent.person) }}
+                  {{ row.person.agent.person.name }}
                 </strong>
               </div>
               <div>Phone: <strong>{{ `${row.person.mobile}` }}</strong></div>
@@ -58,7 +58,7 @@
       <div class="card-body">
         <div class="row mb-2">
           <div class="col-12 col-md-6 col-lg-4 col-xl-3">
-            <div>Refered: <strong>{{ FullNameConvert(row.person.referred.person) }}</strong></div>
+            <div>Refered: <strong>{{ row.person.referred.person.name }}</strong></div>
             <div>Plan: <strong>{{ `${row.plan.name} (${row.pay_type.name})` }}</strong></div>
             <div>Target: <strong>{{ NumberAddComma(row.plan.spot_pay) }}</strong></div>
             <div>Total Transact: <strong>{{ NumberAddComma(row.client_transactions_sum_amount) }}</strong></div>
@@ -70,7 +70,7 @@
             <div>Email: <strong>{{ row.email }}</strong></div>
             <div>Name:
               <strong>
-                {{ FullNameConvert(row.person) }}
+                {{ row.person.name }}
               </strong>
             </div>
             <div>Birth Day: <strong>{{ moment(row.person.bday).local().format('MMM D, YYYY') }}</strong></div>
@@ -126,7 +126,6 @@ import {
   ProvinceIDToDesc,
   CityIDToDesc,
   NumberAddComma,
-  FullNameConvert,
   PlanToPay,
 } from '@/helpers/converter'
 import VueAvatar from "@webzlodimir/vue-avatar";
@@ -140,7 +139,7 @@ function Print(row) {
   $details.Print({
     header: {
       title: 'Client Details',
-      name: FullNameConvert(row.person),
+      name: row.person.name,
       created_at: moment(row.created_at).format('MM/DD/YYYY'),
       username: row.username,
       bday: moment(row.person.bday).format('MM/DD/YYYY'),

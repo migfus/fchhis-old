@@ -93,7 +93,7 @@
                     {{ row.plan.name }}
                   </td>
                   <td>
-                    {{ FullNameConvert(row.client.person) }}
+                    {{ row.client.person.name }}
                   </td>
                   <td class="text-success text-bold">
                     +{{ NumberAddComma(row.amount) }}
@@ -127,7 +127,7 @@
                   <td>
                     <img :src="row.avatar || 'https://fchhis.migfus20.com/images/logo.png'" alt="Product 1"
                       class="img-circle img-size-32 mr-2">
-                    {{ FullNameConvert(row.person) }}
+                    {{ row.person.name }}
                   </td>
                   <td v-if="row.client_transactions_sum_amount" class="text-success">
                     +{{ NumberAddComma(row.client_transactions_sum_amount || 0) }}
@@ -151,7 +151,7 @@
 import { onMounted } from 'vue';
 import { useClientStore } from '@/store/clients/clients';
 import { useTransactionStore } from '@/store/clients/transactions'
-import { FullNameConvert, NumberAddComma } from '@/helpers/converter'
+import { NumberAddComma } from '@/helpers/converter'
 
 const $client = useClientStore();
 const $trans = useTransactionStore();

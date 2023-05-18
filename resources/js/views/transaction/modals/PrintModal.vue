@@ -51,7 +51,6 @@ import '@vuepic/vue-datepicker/dist/main.css'
 import { computed } from 'vue'
 import { useTransactionStaff } from '@/store/print/transactionStaff'
 import { useProfileStore } from '@/store/auth/profile'
-import { FullNameConvert } from '@/helpers/converter'
 
 const $trans = useTransactionStore();
 const $report = useTransactionStaff();
@@ -71,7 +70,7 @@ async function Print() {
 
   $report.Print({
     header: {
-      name: FullNameConvert($profile.content.person),
+      name: $profile.content.person.name,
       start: moment($trans.query.start).format("MMM D, YYYY"),
       end: moment($trans.query.end).format("MMM D, YYYY"),
     },

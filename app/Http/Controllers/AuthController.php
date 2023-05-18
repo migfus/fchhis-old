@@ -66,7 +66,7 @@ class AuthController extends Controller
     $user->avatar =  $this->G_AvatarUpload($req->file);
     $user->save();
 
-    return response()->json([...$this->G_ReturnDefault($req), 'file' => $location]);
+    return response()->json([...$this->G_ReturnDefault($req), 'file' => true]);
   }
 
   public function ORCheck(Request $req) {

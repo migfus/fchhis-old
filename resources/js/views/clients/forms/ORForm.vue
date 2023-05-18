@@ -77,7 +77,7 @@
                   <label>Agent</label>
                   <Field name="agent" as='select' v-model="$user.input.agent" class="form-control">
                     <option v-for="row in $agent.content" :value="row.id">
-                      {{ FullNameConvert(row.person) }}
+                      {{ row.person.name }}
                     </option>
                   </Field>
                   <div class="mb-2 text-danger">
@@ -155,7 +155,6 @@ import moment from 'moment'
 import { computed, onMounted } from 'vue'
 import { usePayTypeStore } from '@/store/system/payTypes'
 import { useAgentStore } from '@/store/users/agent'
-import { FullNameConvert } from '@/helpers/converter'
 
 const $user = useUserStore();
 const $plan = usePlanStore();
