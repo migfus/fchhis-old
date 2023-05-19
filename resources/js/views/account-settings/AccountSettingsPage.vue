@@ -6,12 +6,12 @@
       <div class="card card-widget widget-user">
         <div class="widget-user-header text-white"
           style="background: url(https://adminlte.io/themes/v3/dist/img/photo1.png) center center; ">
-          <h3 class="widget-user-username text-right">{{ $auth.auth.email }}</h3>
-          <h5 class="widget-user-desc text-right">{{ RoleToDesc($auth.auth.role) }}</h5>
+          <h3 class="widget-user-username text-right">{{ $auth.content.auth.email }}</h3>
+          <h5 class="widget-user-desc text-right">{{ RoleToDesc($auth.content.auth.role) }}</h5>
         </div>
         <div class="widget-user-image">
           <img data-toggle="modal" data-target="#avatar-modal" style="cursor: pointer" class="img-circle"
-            :src="$auth.auth.avatar" alt="User Avatar">
+            :src="$auth.content.auth.avatar" alt="User Avatar">
         </div>
         <div class="card-footer pt-3">
           <div class="row">
@@ -42,7 +42,7 @@
     </div> <!-- SECTION COL -->
   </div>
   <!-- <ChangeAvatarModal /> -->
-  <UploadAvatarModal v-model="$auth.auth.avatar" @update="PostAPI" />
+  <UploadAvatarModal v-model="$auth.content.auth.avatar" @update="PostAPI" />
 </template>
 
 <script setup>
@@ -58,7 +58,8 @@ const $auth = useAuthStore();
 
 async function PostAPI() {
   try {
-    let { data } = await axios.post('/api/avatar', { file: $auth.auth.avatar })
+    let { data } = await axios.post('/api/avatar', { file: $auth.content.auth.avatar })
+    $auth.UpdateLocalStorage()
   }
   catch (e) {
     console.log({ e })

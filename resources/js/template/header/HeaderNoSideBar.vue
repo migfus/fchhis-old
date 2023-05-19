@@ -28,7 +28,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 
-import { useAuthStore } from '@/store/auth/auth';
+import { useAuthStore } from '@/store/auth/AuthStore';
 import UserDropDown from './UserDropDown.vue';
 
 const $route = useRoute();
@@ -37,7 +37,7 @@ const $auth = useAuthStore();
 const hiddenMenu = ref()
 
 const isAdmin = computed(() => {
-  if ($auth.auth.role == 2) {
+  if ($auth.content.role == 2) {
     return [
       {
         name: 'TRANSACTIONS',

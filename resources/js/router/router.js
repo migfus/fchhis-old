@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
-import { useAuthStore } from "@/store/auth/auth";
+import { useAuthStore } from "@/store/auth/AuthStore";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.APP_URL),
@@ -199,11 +199,9 @@ const TITLE = "Future Care and Helping Hands Insurance Service";
 router.beforeEach(async (to, from) => {
   const $auth = useAuthStore();
 
-
-
-  // if ($auth.token == "" && to.name !== "login") {
-  //   return { name: "login" };
-  // }
+if ($auth.token == "" && to.name !== "login") {
+    return { name: "login" };
+  }
 
   if(to.meta.auth && $auth.token == '' && to.meta.name != 'login') {
     return { name: 'login'};
@@ -211,10 +209,10 @@ router.beforeEach(async (to, from) => {
   }
 
   if(to.meta.role) {
-    if($auth.auth.role == 2) {
+    if($auth.content.role == 2) {
 
     }
-    else if(to.meta.role != $auth.auth.role && to.meta.name != 'error') {
+    else if(to.meta.role != $auth.content.role && to.meta.name != 'error') {
       // return { name: 'error'}
       return false
     }

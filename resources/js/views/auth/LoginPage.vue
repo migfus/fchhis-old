@@ -72,7 +72,7 @@
 import { Form, Field, ErrorMessage, configure } from 'vee-validate'
 import * as Yup from 'yup'
 import { reactive, onMounted } from 'vue'
-import { useAuthStore } from '../../store/auth/auth'
+import { useAuthStore } from '@/store/auth/AuthStore'
 import { useRoute } from 'vue-router'
 
 configure({

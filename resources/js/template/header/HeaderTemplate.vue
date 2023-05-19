@@ -1,8 +1,5 @@
 <template>
   <nav class="main-header navbar navbar-expand navbar-white navbar-light">
-
-
-
     <ul class="navbar-nav">
       <li class="nav-item">
         <a class="nav-link" data-widget="pushmenu" href="#" role="button" ref="hiddenMenu"><i class="fas fa-bars"></i></a>
@@ -13,9 +10,7 @@
     </ul>
 
     <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">
-
       <UserDropDown />
-
     </ul>
   </nav>
 
@@ -28,7 +23,6 @@
     </RouterLink>
 
     <div class="sidebar">
-
       <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
 
@@ -53,9 +47,8 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
-import NotificationDropdown from './NotificationDropdown.vue';
 import UserDropDown from './UserDropDown.vue';
-import { useAuthStore } from '@/store/auth/auth';
+import { useAuthStore } from '@/store/auth/AuthStore';
 
 const $route = useRoute();
 const $auth = useAuthStore();
@@ -63,77 +56,82 @@ const $auth = useAuthStore();
 const hiddenMenu = ref()
 
 const isAdmin = computed(() => {
-  if ($auth.auth.role == 2) {
-    return [
-      {
-        name: 'TRANSACTIONS',
-      },
-      {
-        name: 'Transactions',
-        icon: 'fa-list-ol',
-        link: { name: 'transactions-all' }
-      },
-      {
-        name: 'Agent',
-        icon: 'fa-list-ol',
-        link: { name: 'transactions-all' }
-      },
-      {
-        name: 'Client',
-        icon: 'fa-list-ol',
-        link: { name: 'transactions-all' }
-      },
+  if ($auth.content.auth.role) {
+    if ($auth.content.auth.role == 2) {
+      return [
+        {
+          name: 'TRANSACTIONS',
+        },
+        {
+          name: 'Transactions',
+          icon: 'fa-list-ol',
+          link: { name: 'transactions-all' }
+        },
+        {
+          name: 'Agent',
+          icon: 'fa-list-ol',
+          link: { name: 'transactions-all' }
+        },
+        {
+          name: 'Client',
+          icon: 'fa-list-ol',
+          link: { name: 'transactions-all' }
+        },
 
-      {
-        name: 'USERS',
-      },
-      {
-        name: 'Users',
-        icon: 'fa-users',
-        link: { name: 'users-list' }
-      },
-      {
-        name: 'Roles',
-        icon: 'fa-tasks',
-        link: { name: 'users-roles' }
-      },
+        {
+          name: 'USERS',
+        },
+        {
+          name: 'Users',
+          icon: 'fa-users',
+          link: { name: 'users-list' }
+        },
+        {
+          name: 'Roles',
+          icon: 'fa-tasks',
+          link: { name: 'users-roles' }
+        },
 
-      {
-        name: 'ADMIN',
-      },
-      {
-        name: 'Plans',
-        icon: 'fa-map-pin',
-        link: { name: 'plans' }
-      },
-    ]
+        {
+          name: 'ADMIN',
+        },
+        {
+          name: 'Plans',
+          icon: 'fa-map-pin',
+          link: { name: 'plans' }
+        },
+      ]
+    }
   }
+
   return []
 })
 
 const isStaff = computed(() => {
-  if ($auth.auth.role == 5) {
-    return [
-      {
-        name: 'CLIENTS',
-      },
-      {
-        name: 'Transactions',
-        icon: 'fa-receipt',
-        link: { name: 'transactions-all' }
-      },
-      {
-        name: 'Overdue',
-        icon: 'fa-exclamation-circle',
-        link: { name: 'overdue' },
-        span: { content: 1, color: 'danger' }
-      },
-      {
-        name: 'Clients',
-        icon: 'fa-users',
-        link: { name: 'clients-list' }
-      },
-    ]
+  if ($auth.content.auth.role) {
+    if ($auth.content.auth.role == 5) {
+      return [
+        {
+          name: 'CLIENTS',
+        },
+        {
+          name: 'Transactions',
+          icon: 'fa-receipt',
+          link: { name: 'transactions-all' }
+        },
+        {
+          name: 'Overdue',
+          icon: 'fa-exclamation-circle',
+          link: { name: 'overdue' },
+          span: { content: 1, color: 'danger' }
+        },
+        {
+          name: 'Clients',
+          icon: 'fa-users',
+          link: { name: 'clients-list' }
+        },
+      ]
+    }
   }
   return []
 })

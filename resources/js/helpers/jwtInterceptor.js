@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useAuthStore } from "../store/auth/auth";
+import { useAuthStore } from "@/store/auth/AuthStore";
 import { $DebugInfo, $Err, $Log} from '@/helpers/debug'
 import { useToast } from "vue-toastification";
 
@@ -20,9 +20,7 @@ export default function jwtInterceptor() {
   axios.interceptors.response.use(
     (response) => {
       if (response.data.auth) {
-        $auth.role = response.data.auth.auth.role;
-        $auth.auth = response.data.auth.auth;
-        $auth.ip = response.data.auth.ip;
+        $auth.content = response.data.auth;
         $Log("Role Updated", {response});
       }
       return response;

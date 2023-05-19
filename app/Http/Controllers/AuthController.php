@@ -20,7 +20,7 @@ class AuthController extends Controller
       return $this->G_ValidatorFailResponse();
     }
 
-    $user = User::where('email', $req->email)->orWhere('username', $req->email)->first();
+    $user = User::where('email', $req->email)->orWhere('username', $req->email)->with('person')->first();
     if(!$user || !Hash::check($req->password, $user->password)) {
       return response()->json(['status' => false, 'message' => 'Invalid Credential!'], 401);
     }
@@ -66,7 +66,7 @@ class AuthController extends Controller
     $user->avatar =  $this->G_AvatarUpload($req->file);
     $user->save();
 
-    return response()->json([...$this->G_ReturnDefault($req), 'file' => true]);
+    return response()->json([...$this->G_ReturnDefault($req), 'file' => $user->avatar]);
   }
 
   public function ORCheck(Request $req) {

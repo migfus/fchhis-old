@@ -18,5 +18,9 @@ export const useAddressStore = defineStore('address', () => {
     }
   }
 
-  return { content, GetAPI }
+  return {
+    content,
+
+    GetAPI
+  }
 });
