@@ -233,7 +233,7 @@ class UserController extends Controller
         ->where('created_at', '>=', $req->start)
         ->where('created_at', '<=', $req->end)
         ->orderBy('name', 'ASC')
-        ->all();
+        ->get();
 
       return response()->json([...$this->G_ReturnDefault($req), 'data' => $data]);
     }

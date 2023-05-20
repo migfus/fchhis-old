@@ -58,7 +58,7 @@ export const useReceiptStore = defineStore('receipt', () => {
           ],
           {
             width: 50,
-            image: 'dti',
+            text: ''
           }
         ],
       },

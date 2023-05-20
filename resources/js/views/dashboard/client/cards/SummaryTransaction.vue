@@ -37,7 +37,16 @@
 <script setup>
 import { useStatisticStore } from '@/store/dashboard/StatisticStore';
 import { NumberAddComma } from '@/helpers/converter'
+import { onMounted, onUnmounted } from 'vue'
 
 const $stat = useStatisticStore();
+
+onMounted(() => {
+  $stat.GetAPI()
+});
+
+onUnmounted(() => {
+  $stat.content = []
+});
 </script>
 

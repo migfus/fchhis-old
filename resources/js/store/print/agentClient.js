@@ -6,7 +6,7 @@ import { $DebugInfo, $Log } from '@/helpers/debug';
 import DeviceDetector from "device-detector-js";
 import { NumberAddComma } from '@/helpers/converter'
 import moment from 'moment'
-import { useAuthStore } from '@/store/auth/auth'
+import { useAuthStore } from '@/store/auth/AuthStore'
 
 export const useAgentClientStore = defineStore('agent-client-report', () => {
   $DebugInfo("TransactionReport")
@@ -51,7 +51,8 @@ export const useAgentClientStore = defineStore('agent-client-report', () => {
               alignment: 'center',
             },
             {
-              text: `${moment().format('MMM YYYY')} Client's Report`,
+              text: `${input.header.start} - ${input.header.end}
+              Agent's Report`,
               fontSize: 15,
               alignment: 'center',
               margin: [0,10,0,0],
@@ -60,7 +61,7 @@ export const useAgentClientStore = defineStore('agent-client-report', () => {
           ],
           {
             width: 50,
-            image: 'dti',
+            text: ''
           }
         ],
       },
@@ -81,7 +82,7 @@ export const useAgentClientStore = defineStore('agent-client-report', () => {
           body: [
             [
               { text: 'Name', bold: true },
-            { text: 'Plan', bold: true },
+              { text: 'Plan', bold: true },
               { text: 'Payment Type', bold: true },
               { text: 'Amount', bold: true },
             ],
@@ -105,7 +106,8 @@ export const useAgentClientStore = defineStore('agent-client-report', () => {
       pageMargins: [ 40, 20, 40, 60 ],
       pageSize: 'A4',
       images: {
-        logo: 'https://fchhis.migfus20.com/images/logo.png',
+        // logo: 'https://fchhis.migfus20.com/images/logo.png',
+        logo: 'http://127.0.0.1:8000/images/logo.png',
         dti: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/DTI_PH_new_logo.svg/1200px-DTI_PH_new_logo.svg.png'
       },
       header: [],
@@ -122,7 +124,7 @@ export const useAgentClientStore = defineStore('agent-client-report', () => {
         columns: [
           [
             { text: window.location.href, alignment: 'left' },
-            { text: `Client IP: ${$auth.ip}`, alignment: 'left' },
+            { text: `Client IP: ${input.header.ip}`, alignment: 'left' },
           ],
           { text: `${device.client.name}, ${device.os.name} ${device.os.version}`, alignment: 'right' },
         ],

@@ -7,7 +7,7 @@ import axios from 'axios'
 import DeviceDetector from "device-detector-js";
 import { NumberAddComma } from '@/helpers/converter'
 import moment from 'moment'
-import { useAuthStore } from '@/store/auth/auth'
+import { useAuthStore } from '@/store/auth/AuthStore'
 
 export const useAgentTransactionStore = defineStore('agent=transaction-report', () => {
   $DebugInfo("AgetnTransactionsss")
@@ -52,7 +52,8 @@ export const useAgentTransactionStore = defineStore('agent=transaction-report', 
               alignment: 'center',
             },
             {
-              text: `${moment().format("MMM YYYY")} Transaction Report`,
+              text: `${input.header.start} - ${input.header.end}
+              Agent's Report`,
               fontSize: 15,
               alignment: 'center',
               margin: [0,10,0,0],
@@ -61,7 +62,7 @@ export const useAgentTransactionStore = defineStore('agent=transaction-report', 
           ],
           {
             width: 50,
-            image: 'dti',
+            text: ''
           }
         ],
       },
@@ -78,17 +79,21 @@ export const useAgentTransactionStore = defineStore('agent=transaction-report', 
       {
         margin: [0, 2, 0, 0],
         table: {
-          widths: [100, 110, 140, 120],
+          widths: [100, 100, 100, 140],
           body: [
             [
+              { text: 'Name', bold: true },
               { text: 'Plan', bold: true },
-              { text: 'Payment Type', bold: true },
               { text: 'Amount', bold: true },
               { text: 'Date & Time', bold: true },
             ],
             // LOOP
 
-            ...input.body.map(m => [`${m.plan}`, `${m.type}`, NumberAddComma(m.amount), m.date ])
+            ...input.body.map(m => [
+              `${m.name}`,
+              `${m.plan} (${m.type})`,
+              NumberAddComma(m.amount), m.date
+            ])
 
             ,
             [
@@ -106,7 +111,8 @@ export const useAgentTransactionStore = defineStore('agent=transaction-report', 
       pageMargins: [ 40, 20, 40, 60 ],
       pageSize: 'A4',
       images: {
-        logo: 'https://fchhis.migfus20.com/images/logo.png',
+        // logo: 'https://fchhis.migfus20.com/images/logo.png',
+        logo: 'http://127.0.0.1:8000/images/logo.png',
         dti: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/DTI_PH_new_logo.svg/1200px-DTI_PH_new_logo.svg.png'
       },
       header: [],

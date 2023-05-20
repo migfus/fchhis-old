@@ -1,6 +1,6 @@
 <template>
-  <div v-if="$stat.content" class="row">
-    <div class="col-md-3 col-sm-6 col-12">
+  <div class="row">
+    <div v-if="$stat.content" class="col-md-3 col-sm-6 col-12">
       <div class="info-box">
         <span class="info-box-icon bg-success"><i class="fas fa-child"></i></span>
         <div class="info-box-content">
@@ -16,12 +16,17 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue'
+import { onMounted, onUnmounted } from 'vue'
 import { useStatisticStore } from '@/store/dashboard/StatisticStore'
 
 const $stat = useStatisticStore();
 
 onMounted(() => {
   $stat.GetAPI()
+  console.log('summary cards onMOunted')
+});
+
+onUnmounted(() => {
+  $stat.content = []
 });
 </script>

@@ -18,7 +18,7 @@
         <RouterLink :to="{ name: 'account-settings' }" class="dropdown-item">Account Settings</RouterLink>
       </li>
       <li>
-        <a href="#" class="dropdown-item" @click="$auth.Logout()">Logout</a>
+        <a href="#" class="dropdown-item" @click="Logout()">Logout</a>
       </li>
     </ul>
   </li>
@@ -33,8 +33,21 @@
 <script setup>
 import { useAuthStore } from '@/store/auth/AuthStore';
 import NotificationDropdown from './NotificationDropdown.vue';
+import { useRouter } from 'vue-router'
+import { useToast } from 'vue-toastification'
 
+const $router = useRouter();
 const $auth = useAuthStore();
+const $toast = useToast();
+
+function Logout() {
+  $auth.content = {}
+  $auth.token = ''
+
+  $toast.success('Logout successful')
+  $router.push({ name: 'login' })
+  $router.push({ name: 'login' })
+}
 </script>
 
 <style scoped>

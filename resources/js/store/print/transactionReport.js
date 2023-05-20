@@ -59,7 +59,7 @@ export const useTransactionReportStore = defineStore('transaction-report', () =>
           ],
           {
             width: 50,
-            image: 'dti',
+            text: ''
           }
         ],
       },

@@ -9,6 +9,7 @@ export const useUsersStore = defineStore('useUsersStore', () => {
   let cancel;
 
   const content = ref(null)
+  const print = ref(null)
   const config = reactive({
     loading: false
   })
@@ -33,6 +34,19 @@ export const useUsersStore = defineStore('useUsersStore', () => {
     config.loading = false
   }
 
+  async function PrintAPI() {
+    try {
+      let { data: {data}} = await axios.get('/api/users', {
+        cancelToken: new CancelToken(function executor(c) { cancel = c; }),
+        params: { ...query, print: true}
+      })
+      print.value = data
+    }
+    catch(e) {
+      $Err('UsersStore PrintAPI Error', {e})
+    }
+  }
+
   function CancelAPI() {
     cancel()
   }
@@ -41,8 +55,10 @@ export const useUsersStore = defineStore('useUsersStore', () => {
     content,
     config,
     query,
+    print,
 
     GetAPI,
+    PrintAPI,
     CancelAPI,
   }
 })
