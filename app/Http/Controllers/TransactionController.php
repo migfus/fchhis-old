@@ -43,7 +43,21 @@ class TransactionController extends Controller
     return $this->G_UnauthorizedResponse();
   }
 
+  // SECTION INDEX
   public function index(Request $req) {
+    switch($req->user()->role) {
+      default:
+        return $this->ClientIndex($req);
+    }
+
+    return $this->G_UnauthorizedResponse();
+
+
+
+
+
+
+
     // SECTION VALIDATION
     $val = Validator::make($req->all(), [
       'limit' => 'required|numeric|min:1|max:10',
@@ -147,9 +161,37 @@ class TransactionController extends Controller
       ]);
     }
 
-    return $this->G_UnauthorizedResponse();
+
   }
 
+  private function ClientIndex($req) {
+    $val = Validator::make($req->all(), [
+      'search' => '',
+      'sort' => 'required'
+    ]);
+
+    if($val->fails()) {
+      return $this->G_ValidatorFailResponse($val);
+    }
+
+    $data = Transaction::where('client_id', $req->user()->person->id)
+      ->with(['plan', 'pay_type', 'client', 'staff'])
+      ->whereHas('plan', function($q) use($req) {
+        $q->where('name', 'LIKE', '%' . $req->search. '%');
+      })
+      ->orderBy('created_at', $req->sort)
+      ->paginate(10);
+
+    $sum = Transaction::where('client_id', $req->user()->person->id)->sum('amount');
+
+    return response()->json([
+      ...$this->G_ReturnDefault($req),
+      'data' => $data,
+      'sum'  => $sum,
+    ]);
+  }
+
+  // SECTION STORE
   public function store(Request $req) {
     $val = Validator::make($req->all(), [
       'agent.person.id' => 'required',

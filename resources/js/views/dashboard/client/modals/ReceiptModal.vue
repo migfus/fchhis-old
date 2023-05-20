@@ -15,12 +15,12 @@
           <div>
             OR Number:
             <strong class="text-info">
-              {{ $props.data.id }}
+              {{ $props.data.or }}
             </strong>
           </div>
           <div>
             Name:
-            <strong> {{ $props.data.client.person.name }} </strong>
+            <strong> {{ $props.data.client.name }} </strong>
           </div>
           <div>
             Amount:
@@ -71,8 +71,8 @@ function Print() {
   $receipt.Print({
     header: {
       date: moment($props.data.created_at).format('MMM D, YYYY HH:mm A'),
-      or: $props.data.id,
-      name: $props.data.client.person.name
+      or: $props.data.or,
+      name: $props.data.client.name
     },
     body: [
       {
@@ -83,7 +83,7 @@ function Print() {
     ],
     footer: {
       payType: 'Cash on Hand',
-      received: $props.data.staff.person.name,
+      received: $props.data.staff.name,
     }
   }
   )

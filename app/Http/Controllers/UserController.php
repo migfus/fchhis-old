@@ -12,135 +12,18 @@ use App\Models\Transaction;
 
 class UserController extends Controller
 {
-  private function getCount($req) {
-    // SECTION ADMIN
-    if($req->user()->role == 2) {
-      $count = [
-        'all'     => User::count(),
-        'clients' => User::where('role', 6)->count(),
-        'staff'   => User::where('role', 5)->count(),
-        'agent'   => User::where('role', 4)->count(),
-        'manager' => User::where('role', 3)->count(),
-        'admin'   => User::where('role', 2)->count(),
-        'inactive'=> User::where('role', 0)->count(),
-        'banned'  => User::where('role', 1)->count(),
-      ];
-
-      $data = [
-        ['name' => 'All',     'count' => $count['all'],     'color' => 'info',    'icon' => 'fa-users'],
-        ['name' => 'Clients', 'count' => $count['clients'], 'color' => 'success', 'icon' => 'fa-child'],
-        ['name' => 'Staff',   'count' => $count['staff'],   'color' => 'info',    'icon' => 'fa-user-edit'],
-        ['name' => 'Agent',   'count' => $count['agent'],   'color' => 'purple',  'icon' => 'fa-handshake'],
-        ['name' => 'Manager', 'count' => $count['manager'], 'color' => 'orange',  'icon' => 'fa-tasks'],
-        ['name' => 'Admin',   'count' => $count['admin'],   'color' => 'warning', 'icon' => 'fa-crown'],
-        ['name' => 'Inactive','count' => $count['inactive'],'color' => 'secondary','icon'=> 'fa-moon'],
-        ['name' => 'Banned',  'count' => $count['banned'],  'color' => 'danger',  'icon' => 'fa-ban'],
-      ];
-
-      return response()->json(['status' => true, 'message' => 'success', 'data' => $data], 200);
-    }
-    // SECTION STAFF
-    if($req->user()->role == 5) {
-      $count = [
-        'clients' => User::where('role', 6)->count(),
-        'inactive'=> User::where('role', 6)->whereNotNull('OR')->whereNull('email')->count(),
-      ];
-
-      $data = [
-        ['name' => 'Clients', 'count' => $count['clients'], 'color' => 'success', 'icon' => 'fa-child'],
-        ['name' => 'Inactive','count' => $count['inactive'],'color' => 'secondary','icon'=> 'fa-moon'],
-      ];
-
-      return response()->json(['status' => true, 'message' => 'success', 'data' => $data], 200);
-    }
-    return $this->G_UnauthorizedResponse();
-  }
-
-  private function ORStore($req) {
-    $val = Validator::make($req->all(), [
-      'or' => 'required',
-      'mobile' => 'required',
-      'plan' => 'required',
-      'transaction' => '',
-      'lastName' => 'required',
-      'firstName' => 'required',
-      'midName' => '',
-      'extName' => '',
-      'pay_type' => 'required',
-      'agent' => 'required',
-      'transaction' => 'required',
-    ]);
-
-
-    if($val->fails()) {
-      return $this->G_ValidatorFailResponse($val);
-    }
-
-    $person = Person::create([
-      'created_by_user_id' => $req->user()->id,
-      'lastName'  => $req->lastName,
-      'firstName' => $req->firstName,
-      'midName'   => $req->midName,
-      'extName'   => $req->extName,
-      'mobile'    => $req->mobile,
-      'agent_id'  => $req->agent,
-    ]);
-
-    $avatar = null;
-
-    if($req->avatar != '') {
-      $avatar = $this->G_AvatarUpload($req->avatar);
-    }
-
-    $user = User::create([
-      'person_id'=> $person->id,
-      'plan_id'  => $req->plan,
-      'role'     => 6, // NOTE client only
-      'notify_mobile' => $req->notifyMobile,
-      'OR' => $req->or,
-      'pay_type_id' => $req->pay_type,
-      'avatar' => $avatar,
-    ]);
-
-    Transaction::create([
-      'agent_id'  => $req->agent,
-      'staff_id'  => $req->user()->id,
-      'client_id' => $person->id,
-      'pay_type_id' => $req->pay_type,
-      'amount'  =>  $req->transaction,
-      'plan_id' => $req->plan,
-    ]);
-
-
-    return response()->json([...$this->G_ReturnDefault($req)]);
-  }
-
-  private function Print($req) {
-    // SECTION STAFF
-    if($req->user()->role == 5) {
-      $user = User::select('*')->where('role', 6);
-
-      // NOTE DATE RANGE FILTER
-      if((bool)strtotime($req->start) OR (bool)strtotime($req->end)) {
-        if((bool)strtotime($req->start)) {
-          $user->where('created_at', '>=', $req->start);
-        }
-        if((bool)strtotime($req->end)) {
-          $user->where('created_at', '<=', $req->end);
-        }
-        $user->with(['person.user', 'plan', 'pay_type', 'person.referred.person'])->withSum('client_transactions', 'amount');
-      }
-      else {
-        $user->with(['person.user', 'plan', 'pay_type', 'person.referred.person'])->withSum('client_transactions', 'amount');
-      }
-
-      $data = $user->orderBy('created_at', 'desc')->get();
-
-      return response()->json([...$this->G_ReturnDefault($req), 'data' => $data], 200);
-    }
-  }
-
+  // SECTION INDEX
   public function index(Request $req) {
+    switch($req->user()->role) {
+      default:
+      return $this->ClientIndex($req);
+    }
+
+    return $this->G_UnauthorizedResponse();
+
+
+
+
     if($req->count)
       return $this->getCount($req);
     if($req->print)
@@ -308,7 +191,151 @@ class UserController extends Controller
       return response()->json([...$this->G_ReturnDefault($req), 'data' => $data], 200);
     }
 
+  }
+
+  private function ClientIndex($req) {
+    $val = Validator::make($req->all(), [
+      'sort' => 'required',
+      'search' => '',
+    ]);
+
+    if($val->fails()) {
+      return $this->G_ValidatorFailResponse($val);
+    }
+
+    $data = Person::where('client_id', $req->user()->person->id)
+      ->where('name', 'LIKE', '%'.$req->search.'%')
+      ->paginate(10);
+
+    return response()->json([...$this->G_ReturnDefault($req), 'data' => $data]);
+  }
+
+  private function getCount($req) {
+    // SECTION ADMIN
+    if($req->user()->role == 2) {
+      $count = [
+        'all'     => User::count(),
+        'clients' => User::where('role', 6)->count(),
+        'staff'   => User::where('role', 5)->count(),
+        'agent'   => User::where('role', 4)->count(),
+        'manager' => User::where('role', 3)->count(),
+        'admin'   => User::where('role', 2)->count(),
+        'inactive'=> User::where('role', 0)->count(),
+        'banned'  => User::where('role', 1)->count(),
+      ];
+
+      $data = [
+        ['name' => 'All',     'count' => $count['all'],     'color' => 'info',    'icon' => 'fa-users'],
+        ['name' => 'Clients', 'count' => $count['clients'], 'color' => 'success', 'icon' => 'fa-child'],
+        ['name' => 'Staff',   'count' => $count['staff'],   'color' => 'info',    'icon' => 'fa-user-edit'],
+        ['name' => 'Agent',   'count' => $count['agent'],   'color' => 'purple',  'icon' => 'fa-handshake'],
+        ['name' => 'Manager', 'count' => $count['manager'], 'color' => 'orange',  'icon' => 'fa-tasks'],
+        ['name' => 'Admin',   'count' => $count['admin'],   'color' => 'warning', 'icon' => 'fa-crown'],
+        ['name' => 'Inactive','count' => $count['inactive'],'color' => 'secondary','icon'=> 'fa-moon'],
+        ['name' => 'Banned',  'count' => $count['banned'],  'color' => 'danger',  'icon' => 'fa-ban'],
+      ];
+
+      return response()->json(['status' => true, 'message' => 'success', 'data' => $data], 200);
+    }
+    // SECTION STAFF
+    if($req->user()->role == 5) {
+      $count = [
+        'clients' => User::where('role', 6)->count(),
+        'inactive'=> User::where('role', 6)->whereNotNull('OR')->whereNull('email')->count(),
+      ];
+
+      $data = [
+        ['name' => 'Clients', 'count' => $count['clients'], 'color' => 'success', 'icon' => 'fa-child'],
+        ['name' => 'Inactive','count' => $count['inactive'],'color' => 'secondary','icon'=> 'fa-moon'],
+      ];
+
+      return response()->json(['status' => true, 'message' => 'success', 'data' => $data], 200);
+    }
     return $this->G_UnauthorizedResponse();
+  }
+
+  private function ORStore($req) {
+    $val = Validator::make($req->all(), [
+      'or' => 'required',
+      'mobile' => 'required',
+      'plan' => 'required',
+      'transaction' => '',
+      'lastName' => 'required',
+      'firstName' => 'required',
+      'midName' => '',
+      'extName' => '',
+      'pay_type' => 'required',
+      'agent' => 'required',
+      'transaction' => 'required',
+    ]);
+
+
+    if($val->fails()) {
+      return $this->G_ValidatorFailResponse($val);
+    }
+
+    $person = Person::create([
+      'created_by_user_id' => $req->user()->id,
+      'lastName'  => $req->lastName,
+      'firstName' => $req->firstName,
+      'midName'   => $req->midName,
+      'extName'   => $req->extName,
+      'mobile'    => $req->mobile,
+      'agent_id'  => $req->agent,
+    ]);
+
+    $avatar = null;
+
+    if($req->avatar != '') {
+      $avatar = $this->G_AvatarUpload($req->avatar);
+    }
+
+    $user = User::create([
+      'person_id'=> $person->id,
+      'plan_id'  => $req->plan,
+      'role'     => 6, // NOTE client only
+      'notify_mobile' => $req->notifyMobile,
+      'OR' => $req->or,
+      'pay_type_id' => $req->pay_type,
+      'avatar' => $avatar,
+    ]);
+
+    Transaction::create([
+      'agent_id'  => $req->agent,
+      'staff_id'  => $req->user()->id,
+      'client_id' => $person->id,
+      'pay_type_id' => $req->pay_type,
+      'amount'  =>  $req->transaction,
+      'plan_id' => $req->plan,
+    ]);
+
+
+    return response()->json([...$this->G_ReturnDefault($req)]);
+  }
+
+  private function Print($req) {
+    // SECTION STAFF
+    if($req->user()->role == 5) {
+      $user = User::select('*')->where('role', 6);
+
+      // NOTE DATE RANGE FILTER
+      if((bool)strtotime($req->start) OR (bool)strtotime($req->end)) {
+        if((bool)strtotime($req->start)) {
+          $user->where('created_at', '>=', $req->start);
+        }
+        if((bool)strtotime($req->end)) {
+          $user->where('created_at', '<=', $req->end);
+        }
+        $user->with(['person.user', 'plan', 'pay_type', 'person.referred.person'])->withSum('client_transactions', 'amount');
+      }
+      else {
+        $user->with(['person.user', 'plan', 'pay_type', 'person.referred.person'])->withSum('client_transactions', 'amount');
+      }
+
+      $data = $user->orderBy('created_at', 'desc')->get();
+
+      return response()->json([...$this->G_ReturnDefault($req), 'data' => $data], 200);
+    }
   }
 
   public function store(Request $req) {

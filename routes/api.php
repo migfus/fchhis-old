@@ -15,6 +15,8 @@ use App\Http\Controllers\ClientController;
 use App\Http\Controllers\PayTypeController;
 use App\Http\Controllers\AgentController;
 use App\Http\Controllers\TestController;
+use App\Http\Controllers\StatisticController;
+
 
 Route::apiResource('/test', TestController::class)->only(['index']);
 
@@ -40,10 +42,11 @@ Route::middleware('auth:sanctum')->group(function () {
   Route::apiResource('/dashboard', DashboardController::class)->only(['index']);
   Route::apiResource('/plan', PlanController::class)->only(['index', 'destroy', 'store', 'update']);
   Route::apiResource('/role', RoleController::class)->only(['index']);
-  Route::apiResource('/transactions', TransactionController::class)->only(['index', 'store', 'update']);
+  Route::apiResource('/transaction', TransactionController::class)->only(['index', 'store', 'update']);
   Route::apiResource('/beneficiary', BeneficiaryController::class)->only(['index', 'destroy', 'store', 'update']);
   Route::apiResource('/downhead', DownHeadController::class)->only(['index']);
   Route::apiResource('/client', ClientController::class)->only(['index']);
   Route::apiResource('/pay-type', PayTypeController::class)->only(['index']);
   Route::apiResource('/agent', AgentController::class)->only(['index']);
+  Route::apiResource('/statictic', StatisticController::class)->only(['index']);
 });

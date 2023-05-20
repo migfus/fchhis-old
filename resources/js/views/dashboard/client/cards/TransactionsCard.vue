@@ -1,18 +1,23 @@
 <template>
-  <div class="card table-responsive">
+  <div v-if="$trans.content" class="card table-responsive">
     <div class="card-header">
       <h4 class="card-title"><strong>Transactions</strong></h4>
 
-      <!-- <div class="card-tools">
-            <div class="input-group input-group-sm">
-              <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
-              <div class="input-group-append">
-                <button type="submit" class="btn btn-default">
-                  <i class="fas fa-search"></i>
-                </button>
-              </div>
-            </div>
-          </div> -->
+      <div class="card-tools">
+        <div class="input-group input-group-sm">
+          <input v-model="$trans.query.search" type="text" name="table_search" class="form-control float-right"
+            placeholder="Search">
+          <div class="input-group-append">
+            <button type="submit" class="btn btn-default">
+              <i class="fas fa-search"></i>
+            </button>
+            <button class="btn btn-sm btn-info">
+              <i v-if="$trans.query.sort == 'ASC'" @click="$trans.query.sort = 'DESC'" class="fas fa-sort-up"></i>
+              <i v-else @click="$trans.query.sort = 'ASC'" class="fas fa-sort-down"></i>
+            </button>
+          </div>
+        </div>
+      </div>
 
     </div>
     <div class="card-body">
@@ -27,7 +32,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="row in $dash.content.transactions">
+          <tr v-for="row in $trans.content.data">
             <td>{{ row.id }}</td>
             <td class="text-success text-bold">+{{ NumberAddComma(row.amount) }}</td>
             <td class="text-bold">{{ `${row.plan.name} (${row.pay_type.name})` }}</td>
@@ -40,16 +45,17 @@
         </tbody>
       </table>
       <div class='mt-3'>
-        Total: <strong v-if="$dash.content.sumTransactions" class="text-success">
-          {{ NumberAddComma($dash.content.sumTransactions) }}
+        Total: <strong v-if="$trans.content.sumTransactions" class="text-success">
+          {{ NumberAddComma($trans.content.sum) }}
         </strong>
 
-        <button data-toggle="modal" data-target="#receipt-modal" @click="Print($dash.content.transactions)"
+        <button data-toggle="modal" data-target="#receipt-modal" @click="Print($trans.content.transactions)"
           class="btn btn-success btn-sm mr-1 float-right">Print</button>
       </div>
       <!-- <div>
             To Pay: <strong class="text-orange">78,000.00</strong>
           </div> -->
+
 
     </div>
     <ReceiptModal v-if="data" :data="data" />
@@ -59,19 +65,20 @@
 
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import moment from 'moment'
 import { $DebugInfo, $Log } from '@/helpers/debug'
-import { useDashboardStore } from '@/store/dashboard/dashboard'
+import { useTransactionStore } from '@/store/transactions/TransactionStore'
 import { NumberAddComma } from '@/helpers/converter'
 import { useTransactionReportStore } from '@/store/print/transactionReport'
-import { useProfileStore } from '@/store/auth/profile'
+import { useAuthStore } from '@/store/auth/AuthStore'
+import { throttle } from 'lodash'
 
 import ReceiptModal from '../modals/ReceiptModal.vue'
 
-const $dash = useDashboardStore();
+const $trans = useTransactionStore();
 const $report = useTransactionReportStore();
-const $profile = useProfileStore();
+const $auth = useAuthStore();
 
 const data = ref(false);
 
@@ -81,12 +88,20 @@ function OpenReceipt(row) {
   data.value = row
 }
 
-function Print(input) {
+function Print() {
   $report.Print({
     header: {
-      name: $profile.content.person.name
+      name: $auth.content.auth.person.name
     },
-    body: $dash.content.transactions.map(m => { return { plan: m.plan.name, type: m.pay_type.name, amount: m.amount, date: moment(m.created_at).format('MM/DD/YYYY HH:MM A') } }),
+    body: $trans.content.data.map(m => { return { plan: m.plan.name, type: m.pay_type.name, amount: m.amount, date: moment(m.created_at).format('MM/DD/YYYY HH:MM A') } }),
   })
 }
+
+onMounted(() => {
+  $trans.GetAPI(1)
+});
+
+watch($trans.query, throttle(() => {
+  $trans.GetAPI(1)
+}, 1000));
 </script>

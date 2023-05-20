@@ -23,7 +23,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="row, index in $dash.content.summaryTransaction">
+          <tr v-for="row, index in $stat.content">
             <td>{{ index }}</td>
             <td v-for="row2 in row.slice().reverse()">{{ NumberAddComma(row2[1]) }}</td>
           </tr>
@@ -35,11 +35,9 @@
 </template>
 
 <script setup>
-import { useDashboardStore } from '@/store/dashboard/dashboard'
+import { useStatisticStore } from '@/store/dashboard/StatisticStore';
 import { NumberAddComma } from '@/helpers/converter'
 
-const $dash = useDashboardStore();
-
-
+const $stat = useStatisticStore();
 </script>
 

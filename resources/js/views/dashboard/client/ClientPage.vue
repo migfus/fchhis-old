@@ -16,3 +16,4 @@ import BeneficiaryCard from './cards/BeneficiariesCard.vue'
 import TransactionsCard from './cards/TransactionsCard.vue'
 import SummaryTransaction from './cards/SummaryTransaction.vue'
 </script>
+

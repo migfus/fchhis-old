@@ -3,8 +3,8 @@ import { defineStore } from 'pinia'
 import { $DebugInfo, $Err} from '@/helpers/debug'
 import axios from 'axios'
 
-export const useStatisticStore = defineStore('statisticStore', () => {
-  $DebugInfo('useStatisticStore')
+export const useUsersStore = defineStore('useUsersStore', () => {
+  $DebugInfo('useUsersStore')
   const CancelToken = axios.CancelToken;
   let cancel;
 
@@ -12,18 +12,23 @@ export const useStatisticStore = defineStore('statisticStore', () => {
   const config = reactive({
     loading: false
   })
+  const query = reactive({
+    search: '',
+    sort: 'ASC',
+  })
 
   // SECTION API
-  async function GetAPI() {
+  async function GetAPI(page = 1) {
     config.loading = true
     try {
-      let { data: {data}} = await axios.get('/api/statictic', {
-        cancelToken: new CancelToken(function executor(c) { cancel = c; })
+      let { data: {data}} = await axios.get('/api/users', {
+        cancelToken: new CancelToken(function executor(c) { cancel = c; }),
+        params: { ...query, page: page}
       })
       content.value = data
     }
     catch(e) {
-      $Err('StatisticStore GetAPI Error', {e})
+      $Err('UsersStore GetAPI Error', {e})
     }
     config.loading = false
   }
@@ -35,6 +40,7 @@ export const useStatisticStore = defineStore('statisticStore', () => {
   return {
     content,
     config,
+    query,
 
     GetAPI,
     CancelAPI,
