@@ -54,7 +54,6 @@
                 </tbody>
               </table>
             </div>
-            <button type="button" :class="`w-100 btn btn-lg btn-${row.color} bg-${row.color}`">Get Plan</button>
           </div>
         </div>
       </div>

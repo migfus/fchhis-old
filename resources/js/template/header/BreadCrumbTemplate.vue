@@ -16,7 +16,7 @@
                 <li v-else class="breadcrumb-item">
                   <RouterLink :to="{ name: 'home' }">Home</RouterLink>
                 </li>
-                <li class="breadcrumb-item active">{{ $route.meta.title }}</li>
+                <li v-if="$route.name != 'home'" class="breadcrumb-item active">{{ $route.meta.title }}</li>
               </ol>
             </div>
           </div>

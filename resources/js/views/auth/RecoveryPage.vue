@@ -12,23 +12,35 @@
         </RouterLink>
       </div> <!--SECTION LOGO-->
 
-      <div class="card">
+      <div v-if="$auth.config.confirm" class="card">
         <div class="card-body login-card-body">
           <p class="login-box-msg">We will send you a link for password recovery</p>
-          <Form v-slot="{ errors }" :validation-schema="schema" validate-on-mount @submit="$auth.RecoveryAPI(input)">
+          <Form v-slot="{ errors }" :validation-schema="schema" validate-on-mount
+            @submit="$auth.ChangePasswordAPI(input)">
 
             <div class="input-group">
-              <Field v-model="input.email" name="email" type="email" class="form-control" placeholder="Email" />
+              <Field v-model="input.newPassword" name="newPassword" type="password" class="form-control"
+                placeholder="New Password" />
               <div class="input-group-append">
                 <div class="input-group-text">
-                  <span class="fas fa-envelope"></span>
+                  <span class="fas fa-lock"></span>
                 </div>
               </div>
             </div>
             <div class="mb-3 text-danger">
-              <div v-if="$auth.config.status == 'error'">This email is not registered.</div>
-              <div v-if="$auth.config.status == 'success'" class="text-success">Link Sent! Please check your email.</div>
-              <ErrorMessage name="email" />
+              <ErrorMessage name="newPassword" />
+            </div>
+            <div class="input-group">
+              <Field v-model="input.confirmPassword" name="confirmPassword" type="password" class="form-control"
+                placeholder="Confirm Password" />
+              <div class="input-group-append">
+                <div class="input-group-text">
+                  <span class="fas fa-check-circle"></span>
+                </div>
+              </div>
+            </div>
+            <div class="mb-3 text-danger">
+              <ErrorMessage name="confirmPassword" />
             </div>
 
             <div class="row">
@@ -40,8 +52,7 @@
                 <button v-if="$auth.config.loading" class="btn btn-info btn-block" disabled><i
                     class="fas fa-circle-notch fa-spin"></i></button>
                 <button v-else type="submit" class="btn btn-info btn-block"
-                  :disabled="Object.keys(errors).length != 0">Send
-                  Recovery</button>
+                  :disabled="Object.keys(errors).length != 0">Change Password</button>
               </div>
 
             </div>
@@ -53,9 +64,14 @@
         </div>
 
       </div> <!-- SECTION LOGO -->
+
+      <div v-else class="card">
+        <div class="card-body">
+          Your code is expired: {{ $route.query.code }}
+          <div class="text-info">Please try to resend recovery link</div>
+        </div>
+      </div>
     </div>
-
-
 
   </div>
 </template>
@@ -65,23 +81,28 @@ import { Form, Field, ErrorMessage, configure } from 'vee-validate'
 import * as Yup from 'yup'
 import { reactive, onMounted } from 'vue'
 import { useAuthStore } from '@/store/auth/AuthStore'
+import { useRoute } from 'vue-router'
 
 configure({
   validateOnInput: true,
 })
 
 const $auth = useAuthStore();
+const $route = useRoute();
 
 const schema = Yup.object({
-  email: Yup.string().required('Email is Required').email('Invalid Email'),
+  newPassword: Yup.string().required('New Password Required').min(8, 'Minimum of 8 Characters'),
+  confirmPassword: Yup.string().oneOf([Yup.ref('newPassword'), null], 'Password must match to New Password')
 })
 
 const input = reactive({
-  email: '',
+  newPassword: '',
+  confirmPassword: '',
+  code: $route.query.code
 });
 
 onMounted(() => {
-  input.email = ''
+  $auth.ConfirmRecoveryAPI({ code: $route.query.code })
 });
 </script>
 

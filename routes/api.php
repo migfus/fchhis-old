@@ -22,6 +22,9 @@ Route::controller(AuthController::class)->group(function () {
   Route::post('/login', 'Login');
   Route::post('/or', 'ORCheck');
   Route::post('/register', 'Register');
+  Route::post('/recovery', 'Recovery');
+  Route::post('/recovery-confirm', 'ConfirmRecovery');
+  Route::post('/change-password-recovery', 'ChangePasswordRecovery');
 });
 Route::apiResource('/address', AddressController::class)->only(['index']);
 

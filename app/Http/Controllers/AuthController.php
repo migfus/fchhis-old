@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Models\Person;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ForgotPasswordMailer;
 
 class AuthController extends Controller
 {
@@ -148,5 +150,53 @@ class AuthController extends Controller
     return response()->json([
       'data' => User::where('id', $req->user()->id)->with('person')->first(),
     ], 200);
+  }
+
+  public function Recovery(Request $req) {
+    if(User::where('email', $req->email)->first()) {
+      $code = rand(00000,99999);
+
+      User::where('email', $req->email)->update([
+        'remember_token' => $code
+      ]);
+
+      $data = [
+        'link' => 'http://127.0.0.1:8000/forgot/fill?code='.$code,
+        // 'link' => 'https://fchhis.migfus20.com/forgot/fill?code='.$code,
+        'code' => $code
+      ];
+      Mail::to($req->email)->send(new ForgotPasswordMailer($data));
+
+      return response()->json(['data' => 'success']);
+    }
+
+    return response()->json(['data' => 'error']);
+  }
+
+  public function ConfirmRecovery(Request $req) {
+    if(User::where('remember_token', $req->code)->first()) {
+      return response()->json(['data' => true]);
+    }
+
+    return response()->json(['data' => false]);
+  }
+
+  public function ChangePasswordRecovery(Request $req) {
+    $val = Validator::make($req->all(), [
+      'newPassword' => 'required',
+      'code' => 'required',
+    ]);
+
+    if($val->fails()) {
+      return $this->G_ValidatorFailResponse($val);
+    }
+
+    User::where('remember_token', $req->code)
+      ->update([
+        'password' => Hash::make($req->newPassword),
+        'remember_token' => null
+      ]);
+
+    return response()->json(['data' => true]);
   }
 }

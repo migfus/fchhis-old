@@ -62,6 +62,14 @@ const router = createRouter({
       },
     },
     {
+      path: "/forgot/fill",
+      name: "forgot-recovery",
+      component: () => import("@/views/auth/RecoveryPage.vue"),
+      meta: {
+        title: "Recovery",
+      },
+    },
+    {
       path: "/register",
       name: "register",
       component: () => import("@/views/auth/RegisterPage.vue"),

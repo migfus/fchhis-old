@@ -14,7 +14,7 @@
       <div class="card mb-5">
         <div class="card-body login-card-body">
           <p class="login-box-msg">Sign in to start your session</p>
-          <Form v-slot="{ errors }" :validation-schema="schema" validate-on-mount @submit="$auth.Login(input)">
+          <Form v-slot="{ errors }" :validation-schema="schema" validate-on-mount @submit="$auth.LoginAPI(input)">
 
             <div class="input-group">
               <Field v-model="input.email" name="email" type="text" class="form-control"
@@ -50,7 +50,7 @@
 
               <div class="col-4">
                 <button v-if="$auth.config.loading" type="submit" class="btn btn-info btn-block" disabled><i
-                    class="fas fa-spinner fa-spin"></i></button>
+                    class="fas fa-circle-notch fa-spin"></i></button>
                 <button v-else type="submit" class="btn btn-info btn-block"
                   :disabled="Object.keys(errors).length != 0">Sign
                   In</button>
@@ -93,8 +93,8 @@ const input = reactive({
 });
 
 onMounted(() => {
-  input.email = 'client',
-    input.password = '12345678'
+  input.email = '',
+    input.password = ''
 
   if ($route.query.email) {
     input.email = $route.query.email

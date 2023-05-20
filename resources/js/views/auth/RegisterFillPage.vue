@@ -200,7 +200,7 @@
         </div>
 
       </div>
-      <AvatarUpload />
+      <UploadAvatarModal v-model="$register.params.avatar" />
 
     </div>
   </Transition>
@@ -216,7 +216,7 @@ import { useRegisterStore } from '@/store/auth/register'
 import { useRouter } from 'vue-router'
 import { $DebugInfo, $Err, $Log } from '@/helpers/debug'
 
-import AvatarUpload from './modals/AvatarUploadModal.vue'
+import UploadAvatarModal from '@/components/UploadAvatarModal.vue'
 
 $DebugInfo('RegisterFillPage');
 const $address = useAddressStore();

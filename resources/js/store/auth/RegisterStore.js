@@ -14,6 +14,7 @@ export const useRegisterStore = defineStore('register', () => {
     loading: false,
   })
 
+  // SECTION API
   async function ORAPI() {
     config.loading = true
     try {

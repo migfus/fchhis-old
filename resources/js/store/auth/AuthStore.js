@@ -19,15 +19,22 @@ export const useAuthStore = defineStore("auth", () => {
   })
   const config = reactive({
     loading: false,
+    status: false,
+    confirm: false,
   })
 
-  async function Login(input) {
+  // SECTION API
+  async function LoginAPI(input) {
     config.loading = true
     try{
-      let { data: { data}} = await axios.post('/api/login', input)
+      let { data: { data: {
+
+
+      }}} = await axios.post('/api/login', input)
       content.value = data
       token.value = data.token
       localStorage.setItem('auth', JSON.stringify(data))
+      localStorage.setItem('token', JSON.stringify(data.token))
       $toast.success('Successfuly Login!')
       this.$router.push({ name: 'dashboard'})
     }
@@ -37,25 +44,62 @@ export const useAuthStore = defineStore("auth", () => {
     config.loading = false
   }
 
-  function Logout() {
-    content.value = {
-      auht: { role: false}
+  async function RecoveryAPI(input) {
+    config.loading = true
+    try {
+      let { data: { data }} = await axios.post('/api/recovery', input)
+      config.status = data
     }
+    catch(e) {
+      $Err('RecoveryAPI Error', {e})
+    }
+    config.loading = false
+  }
+
+  async function ConfirmRecoveryAPI(input) {
+    try {
+      let { data: { data }} = await axios.post('/api/recovery-confirm', input)
+      config.confirm = data
+    }
+    catch(e) {
+      $Err('ConfirmRecoveryAPI Error', {e})
+    }
+  }
+
+  async function ChangePasswordAPI(input) {
+    try {
+      let { data: { data }} = await axios.post('/api/change-password-recovery', input)
+      if(data) {
+        this.$router.push({name: 'login'})
+        $toast.success('Successfully changed password')
+      }
+    }
+    catch(e) {
+      $Err('ChangePasswordAPI Error', {e})
+    }
+  }
+
+  // SECTION FUNC
+  function Logout() {
+    content.value = null
     localStorage.removeItem('auth')
     this.$router.push({ name: 'login'})
   }
 
   function UpdateLocalStorage() {
-    console.log(content.value)
-    // localStorage.setItem('auth', JSON.stringify(content.value))
+    localStorage.setItem('auth', JSON.stringify(content.value))
   }
 
   return {
     content,
     config,
+    token,
 
     UpdateLocalStorage,
-    Login,
+    ConfirmRecoveryAPI,
+    ChangePasswordAPI,
+    LoginAPI,
+    RecoveryAPI,
     Logout,
   }
 });

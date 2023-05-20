@@ -46,10 +46,9 @@
 </template>
 
 <script setup>
-import { useAuthStore } from '@/store/auth/auth';
+import { useAuthStore } from '@/store/auth/AuthStore';
 import { RoleToDesc } from '@/helpers/converter'
 
-// import ChangeAvatarModal from './modals/ChangeAvatarModal.vue';
 import PasswordTab from './tabs/PasswordTab.vue';
 import UploadAvatarModal from '@/components/UploadAvatarModal.vue';
 import axios from 'axios';
