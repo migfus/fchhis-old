@@ -9,12 +9,15 @@ export const useTransactionStore = defineStore('TransactionStore', () => {
   let cancel;
 
   const content = ref(null)
+  const print = ref(null)
   const config = reactive({
     loading: false
   })
   const query = reactive({
     search: '',
     sort: 'ASC',
+    start: '',
+    end: '',
   })
 
   // SECTION API
@@ -33,6 +36,19 @@ export const useTransactionStore = defineStore('TransactionStore', () => {
     config.loading = false
   }
 
+  async function PrintAPI() {
+    try {
+      let { data: {data}} = await axios.get('/api/transaction', {
+        cancelToken: new CancelToken(function executor(c) { cancel = c; }),
+        params: { ...query, print: true}
+      })
+      print.value = data
+    }
+    catch(e) {
+      $Err('StatisticStore PrintAPI Error', {e})
+    }
+  }
+
   function CancelAPI() {
     cancel()
   }
@@ -41,8 +57,10 @@ export const useTransactionStore = defineStore('TransactionStore', () => {
     content,
     config,
     query,
+    print,
 
     GetAPI,
+    PrintAPI,
     CancelAPI,
   }
 })

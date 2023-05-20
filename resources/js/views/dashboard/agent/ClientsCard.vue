@@ -1,5 +1,5 @@
 <template>
-  <div class="col-12 col-md-6">
+  <div v-if="$users.content" class="col-12 col-md-6">
 
     <div class="card table-responsive">
       <div class="card-header">
@@ -12,7 +12,7 @@
           </div>
           <div class="col-12 col-md-6">
             <div class="input-group input-group-sm">
-              <input v-model="$down.query.search" type="text" name="table_search" class="form-control float-right"
+              <input v-model="$users.query.search" type="text" name="table_search" class="form-control float-right"
                 placeholder="Search">
               <div class="input-group-append">
                 <button type="submit" class="btn btn-default">
@@ -40,9 +40,9 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="row in $down.content">
+            <tr v-for="row in $users.content.data">
               <!-- <td>{{ row.person.lastName }}</td> -->
-              <td>{{ row.person.name }}
+              <td>{{ row.name }}
               </td>
               <td class="text-bold">{{ `${row.plan.name} (${row.pay_type.name})` }}</td>
               <td class="text-success text-bold">{{ NumberAddComma(row.client_transactions_sum_amount) }}</td>
@@ -51,8 +51,13 @@
         </table>
 
 
+        <div class="row">
+          <div class="col-12">
+            <Bootstrap5Pagination :data="$users.content" :limit="2" @pagination-change-page="$users.GetAPI"
+              class="float-right" />
+          </div>
+        </div>
 
-        <!-- <Bootstrap5Pagination :data="$down.content" :limit="2" @pagination-change-page="$down.GetAPI" /> -->
         <button @click="Print()" class="btn btn-sm btn-info float-right">Print</button>
       </div>
     </div>
@@ -63,43 +68,46 @@
 
 <script setup>
 import { onMounted, watch } from 'vue';
-import { useDownHeadStore } from '@/store/dashboard/downhead'
 import { throttle } from 'lodash'
 import { NumberAddComma } from '@/helpers/converter'
 import moment from 'moment'
 import { ref } from 'vue'
 import { $DebugInfo, $Err, $Log } from '@/helpers/debug'
-import { useAgentClientStore } from '@/store/print/agenClient';
-import { useProfileStore } from '@/store/auth/profile';
+import { useUsersStore } from '@/store/users/UsersStore';
+import { useAuthStore } from '@/store/auth/AuthStore';
+import { useAgentClientStore } from './../../../store/agent/agentClient';
+
+import Bootstrap5Pagination from './../../../components/Bootstrap5Pagination.vue'
 
 $DebugInfo("ClientCard")
-const $down = useDownHeadStore();
+const $users = useUsersStore();
 const $print = useAgentClientStore();
-const $profile = useProfileStore();
+const $auth = useAuthStore()
 const month = ref(0)
 
-function Print() {
+async function Print() {
+  await $users.PrintAPI();
+
   $print.Print({
     header: {
-      name: $profile.content.person.name
+      name: $auth.content.person.name
     },
-    body: $down.content.map(m => { return { name: m.person.lastName, plan: m.plan.name, type: m.pay_type.name, amount: m.client_transactions_sum_amount } }),
+    body: $users.print.map(m => { return { name: m.person.lastName, plan: m.plan.name, type: m.pay_type.name, amount: m.client_transactions_sum_amount } }),
   })
 }
 
 function currentDate(input) {
   month.value += input
-  $down.query.start = moment().startOf('month').subtract(month.value, 'months').format('YYYY-MM-DD')
-  $down.query.end = moment().endOf('month').subtract(month.value, 'months').format('YYYY-MM-DD')
+  $users.query.start = moment().startOf('month').subtract(month.value, 'months').format('YYYY-MM-DD')
+  $users.query.end = moment().endOf('month').subtract(month.value, 'months').format('YYYY-MM-DD')
 }
 
 onMounted(() => {
   currentDate(0)
-  $down.GetAPI()
-  $profile.GetAPI()
+  $users.GetAPI()
 });
 
-watch($down.query, throttle(() => {
-  $down.GetAPI(1)
+watch($users.query, throttle(() => {
+  $users.GetAPI(1)
 }, 1000));
 </script>

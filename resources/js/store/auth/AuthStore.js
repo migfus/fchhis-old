@@ -10,13 +10,7 @@ export const useAuthStore = defineStore("auth", () => {
   const $toast = useToast();
 
   const token = ref(JSON.parse(localStorage.getItem('token')) || '')
-  const content = ref(JSON.parse(localStorage.getItem('auth')) || {
-    auth: {
-      role: false
-    },
-    token: false,
-    ip: false,
-  })
+  const content = ref(JSON.parse(localStorage.getItem('auth')) || {})
   const config = reactive({
     loading: false,
     status: false,
@@ -78,7 +72,7 @@ export const useAuthStore = defineStore("auth", () => {
 
   // SECTION FUNC
   function Logout() {
-    content.value = null
+    content.value = {}
     localStorage.removeItem('auth')
     this.$router.push({ name: 'login'})
   }

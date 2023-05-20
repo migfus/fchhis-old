@@ -1,21 +1,23 @@
 <template>
   <!-- SECTION ADMIN -->
-  <div v-if="$auth.content.auth.role == 2">
-    <!-- <UserSummaryAdmin v-if="$dashboard.content" /> -->
-    <!-- <TopPerformerAdmin v-if="$dashboard.content" /> -->
-    <!-- <AdminSectionAdmin v-if="$dashboard.content" /> -->
-  </div>
-  <!-- SECTION AGENT -->
-  <div v-else-if="$auth.content.auth.role == 4">
-    <AgentCard v-if="$dashboard.content" />
-  </div>
-  <!-- SECTION STAFF -->
-  <div v-else-if="$auth.content.auth.role == 5">
-    <!-- <StaffCard v-if="$dashboard.content" /> -->
-  </div>
-  <!-- SECTION CLIENT -->
-  <div v-else>
-    <ClientDashboard v-if="$stat.content" />
+  <div v-if="Object.keys($auth.content).length != 0">
+    <div v-if="$auth.content.auth.role == 2">
+      <!-- <UserSummaryAdmin v-if="$dashboard.content" /> -->
+      <!-- <TopPerformerAdmin v-if="$dashboard.content" /> -->
+      <!-- <AdminSectionAdmin v-if="$dashboard.content" /> -->
+    </div>
+    <!-- SECTION AGENT -->
+    <div v-else-if="$auth.content.auth.role == 4">
+      <AgentCard v-if="$stat.content" />
+    </div>
+    <!-- SECTION STAFF -->
+    <div v-else-if="$auth.content.auth.role == 5">
+      <!-- <StaffCard v-if="$dashboard.content" /> -->
+    </div>
+    <!-- SECTION CLIENT -->
+    <div v-else>
+      <ClientDashboard v-if="$stat.content" />
+    </div>
   </div>
 </template>
 

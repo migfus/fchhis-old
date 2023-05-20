@@ -37,51 +37,54 @@ const $auth = useAuthStore();
 const hiddenMenu = ref()
 
 const isAdmin = computed(() => {
-  if ($auth.content.role == 2) {
-    return [
-      {
-        name: 'TRANSACTIONS',
-      },
-      {
-        name: 'All Transactions',
-        icon: 'fa-list-ol',
-        link: { name: 'transactions-all' }
-      },
-      {
-        name: 'Agent Transactions',
-        icon: 'fa-list-ol',
-        link: { name: 'transactions-all' }
-      },
-      {
-        name: 'Client Transactions',
-        icon: 'fa-list-ol',
-        link: { name: 'transactions-all' }
-      },
+  if (Object.keys($auth.content).length != 0) {
+    if ($auth.content.role == 2) {
+      return [
+        {
+          name: 'TRANSACTIONS',
+        },
+        {
+          name: 'All Transactions',
+          icon: 'fa-list-ol',
+          link: { name: 'transactions-all' }
+        },
+        {
+          name: 'Agent Transactions',
+          icon: 'fa-list-ol',
+          link: { name: 'transactions-all' }
+        },
+        {
+          name: 'Client Transactions',
+          icon: 'fa-list-ol',
+          link: { name: 'transactions-all' }
+        },
 
-      {
-        name: 'USERS',
-      },
-      {
-        name: 'Users',
-        icon: 'fa-users',
-        link: { name: 'users-list' }
-      },
-      {
-        name: 'Roles',
-        icon: 'fa-tasks',
-        link: { name: 'users-roles' }
-      },
+        {
+          name: 'USERS',
+        },
+        {
+          name: 'Users',
+          icon: 'fa-users',
+          link: { name: 'users-list' }
+        },
+        {
+          name: 'Roles',
+          icon: 'fa-tasks',
+          link: { name: 'users-roles' }
+        },
 
-      {
-        name: 'ADMIN',
-      },
-      {
-        name: 'Plans',
-        icon: 'fa-map-pin',
-        link: { name: 'plans' }
-      },
-    ]
+        {
+          name: 'ADMIN',
+        },
+        {
+          name: 'Plans',
+          icon: 'fa-map-pin',
+          link: { name: 'plans' }
+        },
+      ]
+    }
   }
+
   return []
 })
 

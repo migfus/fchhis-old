@@ -5,20 +5,24 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Models\Transaction;
+use App\Models\User;
+use App\Models\Person;
 
 class StatisticController extends Controller
 {
   // SECTION INDEX
   public function index(Request $req) {
     switch($req->user()->role) {
+      case 4:
+        return $this->AgentIndex($req);
       default:
-      return $this->Client($req);
+        return $this->ClientIndex($req);
     }
 
     return $this->G_UnauthorizedResponse();
   }
 
-  private function Client($req) {
+  private function ClientIndex($req) {
     $start = Carbon::parse(
       Transaction::where('client_id', $req->user()->person->id)
         ->orderBy('created_at', 'ASC')
@@ -42,5 +46,14 @@ class StatisticController extends Controller
     }
 
     return response()->json([...$this->G_ReturnDefault($req), 'data' => $summaryTransaction]);
+  }
+
+  private function AgentIndex($req) {
+    return response()->json([
+      ...$this->G_ReturnDefault($req),
+      'data' => [
+        'clients' => Person::where('agent_id', $req->user()->person->id)->count(),
+      ]
+    ]);
   }
 }

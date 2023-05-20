@@ -15,11 +15,14 @@ class UserController extends Controller
   // SECTION INDEX
   public function index(Request $req) {
     switch($req->user()->role) {
+      case 4:
+        return $this->AgentIndex($req);
+      case 6:
+        return $this->ClientIndex($req);
       default:
-      return $this->ClientIndex($req);
+        return $this->G_UnauthorizedResponse();
     }
 
-    return $this->G_UnauthorizedResponse();
 
 
 
@@ -208,6 +211,43 @@ class UserController extends Controller
       ->paginate(10);
 
     return response()->json([...$this->G_ReturnDefault($req), 'data' => $data]);
+  }
+
+  private function AgentIndex($req) {
+    $val = Validator::make($req->all(), [
+      'sort' => 'required',
+      'search' => '',
+      'start' => '',
+      'end' => '',
+      'print' => ''
+    ]);
+
+    if($val->fails()) {
+      return $this->G_ValidatorFailResponse($val);
+    }
+
+    if($req->print) {
+      $data = Person::with(['plan', 'pay_type'])
+        ->withSum('client_transactions', 'amount')
+        ->where('agent_id', $req->user()->person->id)
+        ->where('created_at', '>=', $req->start)
+        ->where('created_at', '<=', $req->end)
+        ->orderBy('name', 'ASC')
+        ->all();
+
+      return response()->json([...$this->G_ReturnDefault($req), 'data' => $data]);
+    }
+    else {
+      $data = Person::with(['plan', 'pay_type'])
+        ->withSum('client_transactions', 'amount')
+        ->where('agent_id', $req->user()->person->id)
+        ->where('name', 'LIKE', '%'.$req->search.'%')
+        ->where('created_at', '>=', $req->start)
+        ->where('created_at', '<=', $req->end)
+        ->paginate(10);
+
+      return response()->json([...$this->G_ReturnDefault($req), 'data' => $data]);
+    }
   }
 
   private function getCount($req) {

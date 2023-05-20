@@ -43,4 +43,16 @@ class Person extends Model
   public function staff() {
     return $this->belongsTo(User::class, 'created_by_user_id');
   }
+
+  public function plan() {
+    return $this->belongsTo(Plan::class, 'plan_id');
+  }
+
+  public function pay_type() {
+    return $this->belongsTo(PayType::class, 'pay_type_id');
+  }
+
+  public function client_transactions() {
+    return $this->hasMany(Transaction::class, 'client_id');
+  }
 }

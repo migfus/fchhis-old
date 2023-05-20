@@ -19,7 +19,7 @@ class AuthController extends Controller
     ]);
 
     if($val->fails()) {
-      return $this->G_ValidatorFailResponse();
+      return $this->G_ValidatorFailResponse($val);
     }
 
     $user = User::where('email', $req->email)->orWhere('username', $req->email)->with('person')->first();
