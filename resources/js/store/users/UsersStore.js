@@ -11,11 +11,19 @@ export const useUsersStore = defineStore('useUsersStore', () => {
   const content = ref(null)
   const print = ref(null)
   const config = reactive({
-    loading: false
+    loading: false,
+    notify: true,
+    form: '',
+    tableView: false,
+    viewAll: false,
   })
   const query = reactive({
     search: '',
     sort: 'ASC',
+    limit: 10,
+    start: '',
+    end: '',
+    filter: 'name',
   })
 
   // SECTION API

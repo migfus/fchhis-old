@@ -15,11 +15,13 @@ class StatisticController extends Controller
     switch($req->user()->role) {
       case 4:
         return $this->AgentIndex($req);
+      case 5:
+        return $this->StaffIndex($req);
+      case 6:
+        return $this->CientIndex($req);
       default:
-        return $this->ClientIndex($req);
+        return $this->G_UnauthorizedResponse();
     }
-
-    return $this->G_UnauthorizedResponse();
   }
 
   private function ClientIndex($req) {
@@ -53,6 +55,39 @@ class StatisticController extends Controller
       ...$this->G_ReturnDefault($req),
       'data' => [
         'clients' => Person::where('agent_id', $req->user()->person->id)->count(),
+      ]
+    ]);
+  }
+
+  private function StaffIndex($req) {
+
+    return response()->json([
+      ...$this->G_ReturnDefault($req),
+      'data' => [
+        'deceased' => Person::whereNotNull('fulfilled_at')->count(),
+        'transactions' => Transaction::where('created_at', '>=', Carbon::now()->startOfMonth())
+          ->where('created_at', '<=', Carbon::now()->endOfMonth())
+          ->sum('amount'),
+        'clients' => Person::with(['user'])
+          ->where('created_at', '>=', Carbon::now()->startOfMonth())
+          ->where('created_at', '<=', Carbon::now()->endOfMonth())
+          ->whereHas('user', function($q) {
+            $q->where('role', 6);
+          })
+          ->count(),
+        'total' => Person::with(['user'])
+          ->whereHas('user', function($q) {
+            $q->where('role', 6);
+          })
+          ->count(),
+        'agents' => Person::with(['user'])
+          ->whereHas('user', function($q) {
+            $q->where('role', 4);
+          })
+          ->count(),
+        'beneficiaries' => Person::with(['user'])
+          ->whereNotNull('client_id')
+          ->count(),
       ]
     ]);
   }

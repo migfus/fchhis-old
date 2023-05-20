@@ -72,95 +72,21 @@
 
         </div>
 
-        <div class="card">
-          <div class="card-header border-0">
-            <h3 class="card-title">New Transactions</h3>
-          </div>
-          <div class="card-body table-responsive p-0">
-            <table class="table table-striped table-valign-middle">
-              <thead>
-                <tr>
-                  <th>Plan</th>
-                  <th>Name</th>
-                  <th>Plan</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="row in $trans.content.data">
-                  <td>
-                    <img :src="row.client.avatar || 'https://fchhis.migfus20.com/images/logo.png'" alt="Product 1"
-                      class="img-circle img-size-32 mr-2" style="width: 30px; height: 30px">
-                    {{ row.plan.name }}
-                  </td>
-                  <td>
-                    {{ row.client.person.name }}
-                  </td>
-                  <td class="text-success text-bold">
-                    +{{ NumberAddComma(row.amount) }}
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            <RouterLink :to="{ name: 'transactions-all' }" class="btn btn-info m-3 float-right">More</RouterLink>
-          </div>
-        </div>
-
-        <!-- <div v-for="row in $trans.content.data" class="card">{{ $trans.content }}</div> -->
+        <StaffAgentCard />
       </div>
 
       <div class="col-12 col-md-6">
-        <div class="card">
-          <div class="card-header border-0">
-            <h3 class="card-title">New Clients</h3>
-          </div>
-          <div class="card-body table-responsive p-0">
-            <table class="table table-striped table-valign-middle">
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Transacts</th>
-                  <th>Plan</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="row in $client.content">
-                  <td>
-                    <img :src="row.avatar || 'https://fchhis.migfus20.com/images/logo.png'" alt="Product 1"
-                      class="img-circle img-size-32 mr-2">
-                    {{ row.person.name }}
-                  </td>
-                  <td v-if="row.client_transactions_sum_amount" class="text-success">
-                    +{{ NumberAddComma(row.client_transactions_sum_amount || 0) }}
-                  </td>
-                  <td v-else>0</td>
-                  <td>
-                    {{ row.plan.name }}
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            <RouterLink :to="{ name: 'clients-list' }" class="btn btn-info m-3 float-right">More</RouterLink>
-          </div>
-        </div>
+        <StaffTransactionsCard />
       </div>
+
+
     </div>
   </div>
 </template>
 
 <script setup>
-import { onMounted } from 'vue';
-import { useClientStore } from '@/store/clients/clients';
-import { useTransactionStore } from '@/store/clients/transactions'
-import { NumberAddComma } from '@/helpers/converter'
-
-const $client = useClientStore();
-const $trans = useTransactionStore();
-
-onMounted(() => {
-  $client.GetAPI()
-  $trans.query.limit = 4
-  $trans.GetAPI()
-});
+import StaffAgentCard from './StaffAgentCard.vue'
+import StaffTransactionsCard from './StaffTransactionsCard.vue';
 </script>
 
 <style scoped>

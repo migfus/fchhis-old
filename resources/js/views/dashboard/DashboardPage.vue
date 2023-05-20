@@ -12,7 +12,7 @@
     </div>
     <!-- SECTION STAFF -->
     <div v-else-if="$auth.content.auth.role == 5">
-      <!-- <StaffCard v-if="$dashboard.content" /> -->
+      <StaffCard v-if="$stat.content" />
     </div>
     <!-- SECTION CLIENT -->
     <div v-else>
@@ -22,7 +22,7 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue';
+import { onMounted, onUnmounted } from 'vue';
 import { useStatisticStore } from '@/store/dashboard/StatisticStore'
 import { useAuthStore } from '@/store/auth/AuthStore'
 
@@ -32,12 +32,16 @@ import { useAuthStore } from '@/store/auth/AuthStore'
 
 import ClientDashboard from './client/ClientPage.vue';
 import AgentCard from './agent/AgentCard.vue';
-// import StaffCard from './staff/StaffCard.vue';
+import StaffCard from './staff/StaffCard.vue';
 
 const $stat = useStatisticStore();
 const $auth = useAuthStore();
 
 onMounted(() => {
   $stat.GetAPI();
+});
+
+onUnmounted(() => {
+  $stat.content = []
 });
 </script>

@@ -17,6 +17,8 @@ class UserController extends Controller
     switch($req->user()->role) {
       case 4:
         return $this->AgentIndex($req);
+      case 5:
+        return $this->StaffIndex($req);
       case 6:
         return $this->ClientIndex($req);
       default:
@@ -247,6 +249,87 @@ class UserController extends Controller
         ->paginate(10);
 
       return response()->json([...$this->G_ReturnDefault($req), 'data' => $data]);
+    }
+  }
+
+  private function StaffIndex($req) {
+    $val = Validator::make($req->all(), [
+      'sort' => 'required',
+      'search' => '',
+      'start' => '',
+      'end' => '',
+      'print' => '',
+      'limit' => 'required',
+      'filter' => 'required'
+    ]);
+
+    if($val->fails()) {
+      return $this->G_ValidatorFailResponse($val);
+    }
+
+    if($req->print) {
+      $data = Person::with(['plan', 'pay_type'])
+        ->withSum('client_transactions', 'amount')
+        ->where('agent_id', $req->user()->person->id)
+        ->where('created_at', '>=', $req->start)
+        ->where('created_at', '<=', $req->end)
+        ->orderBy('name', 'ASC')
+        ->get();
+
+      return response()->json([...$this->G_ReturnDefault($req), 'data' => $data]);
+    }
+    else {
+      $data = Person::select('*');
+
+      if((bool)strtotime($req->start) OR (bool)strtotime($req->end)) {
+        if((bool)strtotime($req->start)) {
+          $data->where('created_at', '>=', $req->start);
+        }
+        if((bool)strtotime($req->end)) {
+          $data->where('created_at', '<=', $req->end);
+        }
+      }
+
+      switch($req->filter) {
+        case 'plan':
+          $data->with(['plan', 'pay_type', 'agent', 'user', 'staff'])
+            ->whereHas('user', function($q) {
+              $q->where('role', 6);
+            })
+            ->whereHas('plan', function($q) use($req) {
+              $q->where('name', 'LIKE', '%'.$req->search.'%');
+            })
+            ->withSum('client_transactions', 'amount');
+          break;
+        case 'address':
+          $data->with(['plan', 'pay_type', 'agent', 'user', 'staff'])
+            ->whereHas('user', function($q) {
+              $q->where('role', 6);
+            })
+            ->withSum('client_transactions', 'amount')
+            ->where('address', 'LIKE', '%'.$req->search.'%');
+          break;
+        case 'email':
+          $data->with(['plan', 'pay_type', 'agent', 'user', 'staff'])
+            ->whereHas('user', function($q) use($req) {
+              $q->where('role', 6)->where('name', 'LIKE', '%'.$req->search.'%');
+            })
+            ->withSum('client_transactions', 'amount');
+          break;
+        default:
+          $data->with(['plan', 'pay_type', 'agent', 'user', 'staff'])
+            ->whereHas('user', function($q) {
+              $q->where('role', 6);
+            })
+            ->withSum('client_transactions', 'amount')
+            ->where('name', 'LIKE', '%'.$req->search.'%');
+      }
+
+
+      return response()->json([
+        ...$this->G_ReturnDefault($req),
+        'data' => $data->withSum('client_transactions', 'amount')->paginate($req->limit)
+      ]);
     }
   }
 

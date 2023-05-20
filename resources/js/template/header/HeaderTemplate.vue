@@ -47,7 +47,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
-import UserDropDown from './UserDropDown.vue';
+import UserDropDown from './UserDropdown.vue';
 import { useAuthStore } from '@/store/auth/AuthStore';
 
 const $route = useRoute();
@@ -112,12 +112,7 @@ const isStaff = computed(() => {
     if ($auth.content.auth.role == 5) {
       return [
         {
-          name: 'CLIENTS',
-        },
-        {
-          name: 'Transactions',
-          icon: 'fa-receipt',
-          link: { name: 'transactions-all' }
+          name: 'USERS',
         },
         {
           name: 'Overdue',
@@ -128,7 +123,16 @@ const isStaff = computed(() => {
         {
           name: 'Clients',
           icon: 'fa-users',
-          link: { name: 'clients-list' }
+          link: { name: 'users-clients' }
+        },
+
+        {
+          name: 'TRANSACTIONS',
+        },
+        {
+          name: 'Transactions',
+          icon: 'fa-receipt',
+          link: { name: 'transactions-all' }
         },
       ]
     }

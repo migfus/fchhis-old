@@ -26,22 +26,16 @@ class Person extends Model
       'fulfilled_at',
     ];
 
-  // FIXME DEPRICATED NEW staff()
   public function user() {
-    return $this->belongsTo(User::class, 'created_by_user_id');
-  }
-
-  // FIXME DEPRICATED NEW agent()
-  public function referred() {
-    return $this->belongsTo(User::class, 'agent_id');
+    return $this->hasOne(User::class, 'person_id');
   }
 
   public function agent() {
-    return $this->belongsTo(User::class, 'agent_id');
+    return $this->belongsTo(Person::class, 'agent_id');
   }
 
   public function staff() {
-    return $this->belongsTo(User::class, 'created_by_user_id');
+    return $this->belongsTo(Person::class, 'staff_id');
   }
 
   public function plan() {

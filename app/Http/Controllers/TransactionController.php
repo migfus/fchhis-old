@@ -48,6 +48,8 @@ class TransactionController extends Controller
     switch($req->user()->role) {
       case 4:
         return $this->AgentIndex($req);
+      case 5:
+        return $this->StaffIndex($req);
       case 6:
         return $this->ClientIndex($req);
       default:
@@ -240,7 +242,53 @@ class TransactionController extends Controller
         'sum'  => $sum,
       ]);
     }
+  }
 
+  private function StaffIndex($req) {
+    $val = Validator::make($req->all(), [
+      'search' => '',
+      'start' => 'required',
+      'end' => 'required',
+    ]);
+
+    if($val->fails()) {
+      return $this->G_ValidatorFailResponse($val);
+    }
+
+    if($req->print) {
+      $data = Transaction::where('agent_id', $req->user()->person->id)
+        ->with(['plan', 'pay_type', 'client', 'staff'])
+        ->where('created_at', '>=', $req->start)
+        ->where('created_at', '<=', $req->end)
+        ->orderBy('created_at', 'DESC')
+        ->get();
+
+      $sum = Transaction::where('agent_id', $req->user()->person->id)->sum('amount');
+
+      return response()->json([
+        ...$this->G_ReturnDefault($req),
+        'data' => $data,
+        'sum'  => $sum,
+      ]);
+    }
+    else {
+      $data = Transaction::with(['plan', 'pay_type', 'client', 'staff', 'agent'])
+        ->whereHas('client', function($q) use($req) {
+          $q->where('name', 'LIKE', '%' . $req->search. '%');
+        })
+        // ->where('created_at', '>=', $req->start)
+        // ->where('created_at', '<=', $req->end)
+        ->orderBy('created_at', 'DESC')
+        ->paginate($req->limit);
+
+      $sum = Transaction::where('agent_id', $req->user()->person->id)->sum('amount');
+
+      return response()->json([
+        ...$this->G_ReturnDefault($req),
+        'data' => $data,
+        'sum'  => $sum,
+      ]);
+    }
   }
 
   // SECTION STORE

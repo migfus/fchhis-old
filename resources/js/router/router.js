@@ -133,6 +133,17 @@ const router = createRouter({
     },
     // NOTE USERS
     {
+      path: '/users/clients',
+      name: 'users-clients',
+      component: () => import("@/views/users/clients/ClientPage.vue"),
+      meta: {
+        title: 'Clients Management',
+        // role: 5,
+        auth: true,
+        sideBar: true,
+      }
+    },
+    {
       path: "/users/list",
       name: "users-list",
       component: () => import("@/views/users/users/UsersPage.vue"),

@@ -73,4 +73,6 @@ class User extends Authenticatable
   public function pay_type() {
     return $this->belongsTo(PayType::class, 'pay_type_id');
   }
+
+
 }
