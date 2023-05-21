@@ -40,7 +40,7 @@ export default function jwtInterceptor() {
           $auth.Logout();
         }
         if(status === 401 && data.message == 'Invalid Input') {
-          $toast.error(JSON.stringify(data.errors))
+          $toast.error(m)
         }
         if(status === 429) {
           alert("Too Many Requests of Data!")

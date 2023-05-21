@@ -44,8 +44,6 @@ const $users = useUsersStore();
 
 onMounted(() => {
   $users.query.limit = 5;
-  $users.query.start = moment().startOf('month')
-  $users.query.end = moment().endOf('month')
   $users.GetAPI()
 })
 

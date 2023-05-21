@@ -80,12 +80,12 @@ class AuthController extends Controller
       return $this->G_ValidatorFailResponse($val);
     }
 
-    $user = User::where('OR', $req->or)->where('username', null)->with('person')->first();
+    $user = Person::where('or', $req->or)->whereNull('bday')->first();
     if($user) {
       return response()->json(['data' => $user]);
     }
     else {
-      return response()->json(['data' => false]);
+      return response()->json(['data' => false], 401);
 
     }
   }
@@ -98,32 +98,27 @@ class AuthController extends Controller
       'username' => 'required|unique:users',
       'password' => 'required|min:8',
 
-      'person.address' => 'required',
-      'person.address_id' => 'required',
-      'person.bday' => 'required',
-      'person.bplace_id' => 'required',
-      'person.extName' => '',
-      'person.name' => 'required',
-      'person.sex' => 'required',
-      'person.id' => 'required',
+      'address' => 'required',
+      'address_id' => 'required',
+      'bday' => 'required',
+      'bplace_id' => 'required',
+      'name' => 'required',
+      'sex' => 'required',
+      'id' => 'required',
     ]);
 
     if($val->fails()) {
       return $this->G_ValidatorFailResponse($val);
     }
 
-    if(User::where('OR', $req->OR)->where('username', null)->first()) {
-      $person = Person::where('id', $req->person['id'])->update([
-        'lastName'  => $req->person['lastName'],
-        'firstName' => $req->person['firstName'],
-        'midName'   => $req->person['midName'],
-        'extName'   => $req->person['extName'],
-        'bday'      => $req->person['bday'],
-        'bplace_id' => $req->person['bplace_id'],
-        'sex'       => $req->person['sex'],
-        'address_id'=> $req->person['address_id'],
-        'address'   => $req->person['address'],
-        'mobile'    => $req->person['mobile'],
+    if(Person::where('or', $req->or)->whereNull('bday')->first()) {
+      $person = Person::where('id', $req->id)->update([
+        'name'      => $req->name,
+        'bday'      => $req->bday,
+        'bplace_id' => $req->bplace_id,
+        'sex'       => $req->sex,
+        'address_id'=> $req->address_id,
+        'address'   => $req->address,
       ]);
 
       $avatar = null;
@@ -132,15 +127,14 @@ class AuthController extends Controller
         $avatar = $this->G_AvatarUpload($req->avatar);
       }
 
-      $user = User::where('OR', $req->OR)->update([
+      $user = User::where('person_id', Person::where('id', $req->id)->first()->id)->update([
         'username' => $req->username,
         'email'    => $req->email,
         'password' => Hash::make($req->password),
         'avatar'   => $avatar,
-        'notify_mobile' => $req->notifyMobile,
       ]);
 
-      return response()->json([...$this->G_ReturnDefault($req), 'data' => $user]);
+      return response()->json([...$this->G_ReturnDefault(), 'data' => 'success']);
     }
 
     return $this->G_UnauthorizedResponse();

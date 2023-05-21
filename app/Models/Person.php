@@ -11,10 +11,6 @@ class Person extends Model
 
     protected $fillable = [
       'created_by_user_id',
-      'lastName',
-      'firstName',
-      'midName',
-      'extName',
       'bday',
       'bplace_id',
       'sex',
@@ -24,6 +20,13 @@ class Person extends Model
       'agent_id',
       'due_at',
       'fulfilled_at',
+      'staff_id',
+      'name',
+      'pay_type_id',
+      'plan_id',
+      'client_id',
+      'due_at',
+      'or'
     ];
 
   public function user() {
@@ -48,5 +51,9 @@ class Person extends Model
 
   public function client_transactions() {
     return $this->hasMany(Transaction::class, 'client_id');
+  }
+
+  public function phones() {
+    return $this->hasMany(Phone::class);
   }
 }

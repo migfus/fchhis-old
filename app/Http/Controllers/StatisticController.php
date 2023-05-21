@@ -18,7 +18,7 @@ class StatisticController extends Controller
       case 5:
         return $this->StaffIndex($req);
       case 6:
-        return $this->CientIndex($req);
+        return $this->ClientIndex($req);
       default:
         return $this->G_UnauthorizedResponse();
     }

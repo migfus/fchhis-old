@@ -6,7 +6,7 @@
           <h3 class="card-title"><strong>Add User</strong></h3>
         </div>
         <div class="card-body">
-          <Form v-slot="{ errors }" :validation-schema="schema" validate-on-mount @submit="$user.Add">
+          <Form v-slot="{ errors }" :validation-schema="schema" validate-on-mount @submit="$user.StoreAPI()">
             <div class="row">
 
               <div class="col-12 col-md-6">
@@ -14,7 +14,7 @@
                 <div class="users-list clearfix d-flex justify-content-center">
                   <li class="pt-0 w-100">
                     <img data-toggle="modal" data-target="#avatar-modal"
-                      :src="$user.input.avatar || 'https://fchhis.migfus20.com/images/logo.png'"
+                      :src="$user.params.avatar || 'https://fchhis.migfus20.com/images/logo.png'"
                       style="width: 162px; height: 162px" alt="User Image">
                     <button data-toggle="modal" data-target="#avatar-modal" class="btn btn-info ml-2">Upload
                       Avatar</button>
@@ -24,7 +24,7 @@
 
                 <div class="form-group">
                   <label for="username-input">Username</label>
-                  <Field @input="GeneratePasword()" v-model="$user.input.username" name="username" type="text"
+                  <Field @input="GeneratePasword()" v-model="$user.params.username" name="username" type="text"
                     class="form-control" id="username-input" placeholder="Enter Username" />
                   <div class="mb-2 text-danger">
                     <ErrorMessage name="username" />
@@ -34,7 +34,7 @@
 
                 <div class="form-group">
                   <label for="email-input">Email</label>
-                  <Field v-model="$user.input.email" name="email" type="email" class="form-control" id="email-input"
+                  <Field v-model="$user.params.email" name="email" type="email" class="form-control" id="email-input"
                     placeholder="Enter Email" />
                   <div class="mb-2 text-danger">
                     <ErrorMessage name="email" />
@@ -43,7 +43,7 @@
 
                 <label for="password-input">Password</label>
                 <div class="input-group ">
-                  <Field v-model="$user.input.password" name="password" type="text" class="form-control"
+                  <Field v-model="$user.params.password" name="password" type="text" class="form-control"
                     placeholder="Enter or Generate Password" />
                   <div class="input-group-append">
                     <span @click="GeneratePasword()" class="input-group-text" style="cursor: pointer">Generate</span>
@@ -53,61 +53,44 @@
                   <ErrorMessage name="password" />
                 </div>
 
-                <label for="mobile-input">Mobile</label>
-                <div class="input-group">
-                  <Field v-model="$user.input.mobile" name="mobile" type="text" class="form-control"
-                    placeholder="Enter Mobile Number" />
-                  <div class="input-group-append">
-                    <span v-if="$user.input.notifyMobile" @click="$user.input.notifyMobile = !$user.input.notifyMobile"
-                      class="input-group-text bg-success" style="cursor: pointer">
-                      <i class="fas fa-bell"></i>
-                    </span>
-                    <span v-else @click="$user.input.notifyMobile = !$user.input.notifyMobile"
-                      class="input-group-text bg-danger" style="cursor: pointer">
-                      <i class="fas fa-bell-slash"></i>
-                    </span>
-                  </div>
-                </div>
-                <div class="mb-3 text-danger">
-                  <ErrorMessage name="mobile" />
-                </div>
+
 
                 <div class="form-group">
                   <label>Role</label>
-                  <select v-model="$user.input.role" class="form-control">
+                  <select v-model="$user.params.role" class="form-control" disabled>
                     <option :value="6">Client</option>
-                    <option :value="5">Staff</option>
-                    <option :value="4">Agent</option>
-                    <option :value="3">Manager</option>
-                    <option :value="2">Admin</option>
-                    <option :value="1">Ban</option>
-                    <option :value="0">Inactive</option>
                   </select>
                 </div>
 
                 <div class="form-group">
                   <label>Plan</label>
-                  <select v-model="$user.input.plan" class="form-control">
+                  <select v-model="$user.params.plan" class="form-control">
                     <option v-for="row in $plan.content" :value="row.id">{{ row.name }}</option>
                   </select>
                 </div>
 
                 <div class="form-group">
                   <label>Payment Type</label>
-                  <select v-model="$user.input.pay_type_id" class="form-control">
+                  <select v-model="$user.params.pay_type_id" class="form-control">
                     <option v-for="row in $payType.content" :value="row.id">{{ row.name }}</option>
                   </select>
                 </div>
 
                 <div class="form-group">
                   <label for="mid-input">Initial Transaction</label>
-                  <Field v-model="$user.input.transaction" name="transaction" type="text" class="form-control"
+                  <Field v-model="$user.params.transaction" name="transaction" type="text" class="form-control"
                     id="mid-input" placeholder="Optional" />
                 </div>
 
+
+
+              </div>
+
+              <div class="col-12 col-md-6">
+
                 <div class="form-group">
                   <label>Agent</label>
-                  <Field name="agent" as='select' v-model="$user.input.agent" class="form-control">
+                  <Field name="agent" as='select' v-model="$user.params.agent_id" class="form-control">
                     <option v-for="row in $agent.content" :value="row.id">
                       {{ row.person.name }}
                     </option>
@@ -117,53 +100,28 @@
                   </div>
                 </div>
 
-              </div>
-
-              <div class="col-12 col-md-6">
-
+                <label for="mobile-input">Mobile</label>
                 <div class="form-group">
-                  <label for="last-input">Last Name</label>
-                  <Field v-model="$user.input.lastName" name="lastName" type="text" class="form-control" id="last-input"
-                    placeholder="Enter Last Name" />
-                  <div class="mb-2 text-danger">
-                    <ErrorMessage name="lastName" />
+                  <Field v-model="$user.params.mobile" name="mobile" type="text" class="form-control"
+                    placeholder="Enter Mobile Number" />
+                  <div class="mb-3 text-danger">
+                    <ErrorMessage name="mobile" />
                   </div>
                 </div>
 
+
                 <div class="form-group">
-                  <label for="first-input">First Name</label>
-                  <Field v-model="$user.input.firstName" name="firstName" type="text" class="form-control"
-                    id="first-input" placeholder="Enter First Name" />
+                  <label for="last-input">Name</label>
+                  <Field v-model="$user.params.name" name="name" type="text" class="form-control" id="last-input"
+                    placeholder="Enter Complete Name" />
                   <div class="mb-2 text-danger">
-                    <ErrorMessage name="firstName" />
+                    <ErrorMessage name="name" />
                   </div>
-                </div>
-
-                <div class="form-group">
-                  <label for="mid-input">Middle Name (Complete)</label>
-                  <Field v-model="$user.input.midName" name="midName" type="text" class="form-control" id="mid-input"
-                    placeholder="Enter Middle Name" />
-                </div>
-
-                <div class="form-group">
-                  <label>Extension Name</label>
-                  <select v-model="$user.input.extName" class="form-control">
-                    <option value="">N/A</option>
-                    <option value="jr">Jr</option>
-                    <option value="sr">Sr</option>
-                    <option value="i">I</option>
-                    <option value="ii">II</option>
-                    <option value="iii">III</option>
-                    <option value="iv">IV</option>
-                    <option value="v">V</option>
-                    <option value="vi">VI</option>
-                    <option value="vii">VII</option>
-                  </select>
                 </div>
 
                 <div class="form-group">
                   <label>Sex</label>
-                  <select v-model="$user.input.sex" class="form-control">
+                  <select v-model="$user.params.sex" class="form-control">
                     <option :value="true">Male</option>
                     <option :value="false">Female</option>
                   </select>
@@ -174,7 +132,7 @@
                   <div class="row">
                     <div class="col-6">
                       <label for="bday-input">Birth Day <span v-if="age">{{ `(${age} Years Old)` }}</span></label>
-                      <Field v-model="$user.input.bday" name="bday" type="date" class="form-control" id="bday-input"
+                      <Field v-model="$user.params.bday" name="bday" type="date" class="form-control" id="bday-input"
                         placeholder="Enter Birth Day" />
                     </div>
                     <div class="col-6">
@@ -186,7 +144,7 @@
                     </div>
                     <div class="col-12">
                       <label>Birth Place (City)</label>
-                      <Field as="select" name="bplace" v-model="$user.input.bplaceID" class="form-control">
+                      <Field as="select" name="bplace" v-model="$user.params.bplace_id" class="form-control">
                         <option v-for="row in $address.content.find(item => item.id === BDayProvinceID).cities"
                           :key="row.id" :value="row.id">{{ row.name }}</option>
                       </Field>
@@ -208,7 +166,7 @@
                     </div>
                     <div class="col-6">
                       <label>City</label>
-                      <Field v-model="$user.input.addressID" name="addressID" as="select" class="form-control">
+                      <Field v-model="$user.params.address_id" name="addressID" as="select" class="form-control">
                         <option v-for="row in $address.content.find(item => item.id === AddressProvinceID).cities"
                           :key="row.id" :value="row.id">{{ row.name }}</option>
                       </Field>
@@ -221,7 +179,7 @@
 
                 <div class="form-group">
                   <label for="mid-input">Address</label>
-                  <Field v-model="$user.input.address" name="address" type="text" class="form-control" id="mid-input"
+                  <Field v-model="$user.params.address" name="address" type="text" class="form-control" id="mid-input"
                     placeholder="(Ex: Purok 1, Poblacion)" />
                   <div class="mb-2 text-danger">
                     <ErrorMessage name="address" />
@@ -239,27 +197,27 @@
         </div>
 
       </div>
-      <AvatarUpload />
+      <UploadAvatarModal v-model="$user.params.avatar" />
 
     </div>
   </Transition>
 </template>
 
 <script setup>
-import { useUserStore } from '@/store/users/users'
+import { useUsersStore } from '@/store/users/UsersStore'
 import { computed, ref, onMounted } from 'vue'
 import moment from 'moment'
-import { useAddressStore } from '@/store/system/address'
+import { useAddressStore } from '@/store/system/AddressStore'
 import { Form, Field, ErrorMessage, configure, } from 'vee-validate'
 import * as Yup from 'yup'
-import { usePlanStore } from '@/store/system/plan'
-import { usePayTypeStore } from '@/store/system/payTypes'
-import { useAgentStore } from '@/store/users/agent'
+import { usePlanStore } from '@/store/system/PlanStore'
+import { usePayTypeStore } from '@/store/system/PayTypeStore'
+import { useAgentStore } from '@/store/users/AgentStore'
 
-import AvatarUpload from '../modals/AvatarUpload.vue'
+import UploadAvatarModal from '@/components/UploadAvatarModal.vue'
 
 const $address = useAddressStore();
-const $user = useUserStore();
+const $user = useUsersStore();
 const $plan = usePlanStore();
 const $payType = usePayTypeStore();
 const $agent = useAgentStore();
@@ -275,8 +233,7 @@ const schema = Yup.object({
   email: Yup.string().required('Email is Required').email('Invalid Email'),
   password: Yup.string().required('Password is Required').min(8, 'Minimum of 8 Characters'),
   mobile: Yup.string().required('Mobile Number is Required').min(10, 'Minimum of 10 Number'),
-  lastName: Yup.string().required('Last Name is Required'),
-  firstName: Yup.string().required('First Name is Required'),
+  name: Yup.string().required('Name is Required'),
   bday: Yup.date('Invalid Date').required('Birth Day is Required'),
   bplace: Yup.string().required('Birth Place is Required'),
   addressID: Yup.string().required('City is Required'),
@@ -285,7 +242,7 @@ const schema = Yup.object({
 
 const age = computed(() => {
   try {
-    return moment().diff($user.input.bday, 'years')
+    return moment().diff($user.params.bday, 'years')
   }
   catch (e) {
     return '?'
@@ -301,16 +258,18 @@ function GeneratePasword(length = 8) {
     result += characters.charAt(Math.floor(Math.random() * charactersLength));
     counter += 1;
   }
-  if ($user.input.username) {
-    $user.input.password = `${$user.input.username}-${result.substring(0, 3)}`;
+  if ($user.params.username) {
+    $user.params.password = `${$user.params.username}-${result.substring(0, 3)}`;
   }
   else {
-    $user.input.password = result;
+    $user.params.password = result;
   }
 }
 
 onMounted(() => {
   $payType.GetAPI()
+  $address.GetAPI()
+  $plan.GetAPI()
   $agent.GetAPI()
 });
 </script>

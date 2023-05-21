@@ -22,7 +22,6 @@ return new class extends Migration
         $table->tinyInteger('role')->unsinged()->default(0)
           ->comment('[0-inactive][1-banned][2-admin][3-manager][4-agent][5-staff][6-client]');
 
-        $table->boolean('notify_mobile')->default(1);
         $table->rememberToken();
         $table->timestamps();
       });

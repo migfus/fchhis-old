@@ -2,7 +2,8 @@
   <div v-if="$user.content" class="col-12">
 
 
-    <div v-for="(row, idx,) in $user.content.data" :class="`card mb-2 ${$user.config.viewAll ? '' : 'collapsed-card'}`">
+    <div v-for="(row, idx,) in $user.content.data"
+      :class="`card mb-2 ${$user.config.viewAll ? '' : 'collapsed-card'} ${row.user.email ? '' : 'bg-warning'}`">
       <div class="card-header" style="cursor: pointer;">
         <div data-card-widget="collapse" ref="collapse-click">
           <div class="row">
@@ -32,7 +33,7 @@
               <div>Role: <strong>{{ RoleToDesc(row.user.role) }}</strong></div>
             </div>
             <div v-else class="d-none d-md-inline col-md-6 col-xl-4">
-              Link: <a :href="row.OR" target="_blank">{{ `https://fchhis.migfus20.com/register?or=${row.OR}` }}</a>
+              Link: <a :href="row.OR" target="_blank">{{ `https://fchhis.migfus20.com/register?or=${row.or}` }}</a>
               <div class="text-danger">Unregistered</div>
             </div>
             <div class="d-none d-xl-inline col-12 col-md-6 col-xl-4">
@@ -83,14 +84,17 @@
         </div>
         <div class="row">
           <div class="col-12">
-            <button @click="$user.Delete(row.id, idx)" class="btn btn-danger btn-sm float-right">
-              Remove
+            <!-- <button @click="$user.Delete(row.id, idx)" class="btn btn-danger float-right">
+              <i class="fas fa-times mr-1"></i>Remove
+            </button> -->
+            <button @click="$user.Update(row)" class="btn btn-warning float-right mr-1">
+              <i class="fas fa-user-edit mr-1"></i>Edit
             </button>
-            <button @click="$user.Update(row)" class="btn btn-warning btn-sm float-right mr-1">
-              Edit
+            <button class="btn btn-info float-right mr-1">
+              <i class="fas fa-info-circle mr-1"></i>Info
             </button>
-            <button class="btn btn-secondary btn-sm float-right mr-1">
-              Info
+            <button class="btn btn-secondary float-right mr-1">
+              <i class="fas fa-print mr-1"></i>Print
             </button>
           </div>
         </div>
@@ -113,3 +117,9 @@ import "@webzlodimir/vue-avatar/dist/style.css";
 
 const $user = useUsersStore();
 </script>
+
+<style scoped>
+.bg-warning {
+  background-color: #EFDFAE !important;
+}
+</style>

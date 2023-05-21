@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use App\Models\Transaction;
+use Carbon\Carbon;
+use App\Models\Phone;
 
 class UserController extends Controller
 {
@@ -260,7 +262,8 @@ class UserController extends Controller
       'end' => '',
       'print' => '',
       'limit' => 'required',
-      'filter' => 'required'
+      'filter' => 'required',
+      'role' => 'required'
     ]);
 
     if($val->fails()) {
@@ -290,11 +293,12 @@ class UserController extends Controller
         }
       }
 
+      $data->with(['plan', 'pay_type', 'agent', 'user', 'staff', 'phones']);
+
       switch($req->filter) {
         case 'plan':
-          $data->with(['plan', 'pay_type', 'agent', 'user', 'staff'])
-            ->whereHas('user', function($q) {
-              $q->where('role', 6);
+          $data->whereHas('user', function($q) use($req) {
+              $q->where('role', $req->role);
             })
             ->whereHas('plan', function($q) use($req) {
               $q->where('name', 'LIKE', '%'.$req->search.'%');
@@ -302,24 +306,21 @@ class UserController extends Controller
             ->withSum('client_transactions', 'amount');
           break;
         case 'address':
-          $data->with(['plan', 'pay_type', 'agent', 'user', 'staff'])
-            ->whereHas('user', function($q) {
-              $q->where('role', 6);
+          $data->whereHas('user', function($q) use($req) {
+              $q->where('role', $req->role);
             })
             ->withSum('client_transactions', 'amount')
             ->where('address', 'LIKE', '%'.$req->search.'%');
           break;
         case 'email':
-          $data->with(['plan', 'pay_type', 'agent', 'user', 'staff'])
-            ->whereHas('user', function($q) use($req) {
-              $q->where('role', 6)->where('name', 'LIKE', '%'.$req->search.'%');
+          $data->whereHas('user', function($q) use($req) {
+              $q->where('role', $req->role)->where('name', 'LIKE', '%'.$req->search.'%');
             })
             ->withSum('client_transactions', 'amount');
           break;
         default:
-          $data->with(['plan', 'pay_type', 'agent', 'user', 'staff'])
-            ->whereHas('user', function($q) {
-              $q->where('role', 6);
+          $data->whereHas('user', function($q) use($req) {
+              $q->where('role', $req->role);
             })
             ->withSum('client_transactions', 'amount')
             ->where('name', 'LIKE', '%'.$req->search.'%');
@@ -328,10 +329,253 @@ class UserController extends Controller
 
       return response()->json([
         ...$this->G_ReturnDefault($req),
-        'data' => $data->withSum('client_transactions', 'amount')->paginate($req->limit)
+        'data' => $data->withSum('client_transactions', 'amount')->orderBy('created_at', 'DESC')->paginate($req->limit)
       ]);
     }
   }
+
+  // SECTION STORE
+
+  public function store(Request $req) {
+    switch($req->user()->role) {
+      case 5:
+        return $this->StaffStore($req);
+      default:
+        return $this->G_UnauthorizedResponse();
+    }
+
+
+
+
+
+
+
+
+    if($req->user()->role == 2) {
+      if($req->or) {
+        if($req->or != '') {
+          return $this->ORStore($req);
+        }
+      }
+
+      $val = Validator::make($req->all(), [
+        'avatar'   => '',
+        'username' => 'required|unique:users',
+        'email'    => 'required|email|unique:users',
+        'password' => 'required|min:8',
+        'mobile'   => 'required',
+        'notifyMobile' => 'required',
+        'role'     => 'required',
+        'plan'     => 'required',
+
+        'lastName' => 'required',
+        'firstName'=> 'required',
+        'midName'  => '',
+        'extName'  => '',
+        'sex'      => 'required',
+        'bday'     => 'required',
+        'bplaceID' => 'required',
+        'addressID'=> 'required',
+        'address'  => 'required',
+        'pay_type_id' => 'required',
+        'agent'    => 'required',
+      ]);
+
+      if($val->fails()) {
+        return $this->G_ValidatorFailResponse($val);
+      }
+
+      $person = Person::create([
+        'created_by_user_id' => $req->user()->id,
+        'lastName'  => $req->lastName,
+        'firstName' => $req->firstName,
+        'midName'   => $req->midName,
+        'extName'   => $req->extName,
+        'bday'      => $req->bday,
+        'bplace_id' => $req->bplaceID,
+        'sex'       => $req->sex,
+        'address_id'=> $req->bplaceID,
+        'address'   => $req->address,
+        'mobile'    => $req->mobile,
+        'agent_id'  => $req->agent
+      ]);
+
+      $avatar = null;
+
+      if($req->avatar != '') {
+        $avatar = $this->G_AvatarUpload($req->avatar);
+      }
+
+      $user = User::create([
+        'person_id'=> $person->id,
+        'plan_id'  => $req->plan,
+        'username' => $req->username,
+        'email'    => $req->email,
+        'password' => Hash::make($req->password),
+        'avatar'   => $avatar,
+        'role'     => $req->role,
+        'notify_mobile' => $req->notifyMobile,
+        'pay_type_id' => $req->pay_type_id,
+      ]);
+
+      Transaction::create([
+        'agent_id'  => $req->agent,
+        'staff_id'  => $req->user()->id,
+        'client_id' => $person->id,
+        'pay_type_id' => $req->pay_type_id,
+        'amount'  =>  $req->transaction,
+        'plan_id' => $req->plan,
+      ]);
+
+      return response()->json([...$this->G_ReturnDefault($req)]);
+    }
+
+    if($req->user()->role == 5) {
+      if($req->or) {
+        if($req->or != '') {
+          return $this->ORStore($req);
+        }
+      }
+
+
+    }
+
+    return $this->G_UnauthorizedResponse();
+  }
+
+  private function StaffStore($req) {
+    if($req->or) {
+      $val = Validator::make($req->all(), [
+        'or'   => 'required',
+        'plan'     => 'required',
+        'pay_type_id' => 'required',
+        'transaction' => 'required',
+        'agent'  => 'required',
+        'name'      => 'required',
+      ]);
+
+      if($val->fails()) {
+        return $this->G_ValidatorFailResponse($val);
+      }
+
+      $person = Person::create([
+        'staff_id'   => $req->user()->person->id,
+        'or'         => $req->or,
+        'plan_id'    => $req->plan,
+        'pay_type_id'=> $req->pay_type_id,
+        'agent_id'   => $req->agent,
+        'name'       => $req->name,
+      ]);
+
+      $user = User::create([
+        'person_id'=> $person->id,
+        'role'     => 6, // NOTE client only,
+      ]);
+
+      Transaction::create([
+        'or' => $req->or,
+        'agent_id'  => $req->agent,
+        'staff_id'  => $req->user()->person->id,
+        'client_id' => $person->id,
+        'pay_type_id' => $req->pay_type_id,
+        'amount'  =>  $req->transaction,
+        'plan_id' => $req->plan,
+      ]);
+    }
+    else {
+      $val = Validator::make($req->all(), [
+        'avatar'   => '',
+        'username' => 'required|unique:users',
+        'email'    => 'required|email|unique:users',
+        'password' => 'required|min:8',
+        'mobile'   => 'required',
+        'role'     => 'required',
+        'plan'     => 'required',
+        'agent_id' => 'required',
+
+        'name'      => 'required',
+        'sex'       => 'required',
+        'bday'      => 'required',
+        'bplace_id' => 'required',
+        'address_id'=> 'required',
+        'address'   => 'required',
+        'pay_type_id' => 'required',
+        'transaction' => 'required',
+      ]);
+
+      if($val->fails()) {
+        return $this->G_ValidatorFailResponse($val);
+      }
+
+      $due = Carbon::now()->add('months', 1);
+      switch($req->pay_type_id) {
+        case 2:
+          $due = Carbon::now()->add('months', 3);
+          break;
+        case 3:
+          $due = Carbon::now()->add('months', 6);
+          break;
+        case 4:
+          $due = Carbon::now()->add('months', 12);
+          break;
+        case 5:
+          $due = null;
+        case 6:
+          $due = null;
+          break;
+      }
+
+      $person = Person::create([
+        'staff_id'  => $req->user()->person->id,
+        'name'      => $req->name,
+        'bday'      => $req->bday,
+        'bplace_id' => $req->bplace_id,
+        'sex'       => $req->sex,
+        'address_id'=> $req->bplace_id,
+        'address'   => $req->address,
+        'agent_id'  => $req->agent_id,
+        'plan_id'   => $req->plan,
+        'pay_type_id' => $req->pay_type_id,
+        'due_at'    => $due,
+      ]);
+
+      $avatar = null;
+
+      if($req->avatar != '') {
+        $avatar = $this->G_AvatarUpload($req->avatar);
+      }
+
+      $user = User::create([
+        'person_id'=> $person->id,
+        'username' => $req->username,
+        'email'    => $req->email,
+        'password' => Hash::make($req->password),
+        'avatar'   => $avatar,
+        'role'     => 6, // NOTE Client Only
+      ]);
+
+      Transaction::create([
+        'or' => rand(000000, 999999),
+        'agent_id'  => $req->agent_id,
+        'staff_id'  => $req->user()->person->id,
+        'client_id' => $person->id,
+        'pay_type_id' => $req->pay_type_id,
+        'amount'  =>  $req->transaction,
+        'plan_id' => $req->plan,
+      ]);
+
+      Phone::create([
+        'person_id' => $person->id,
+        'phone' => $req->mobile,
+      ]);
+    }
+
+
+
+    return response()->json([...$this->G_ReturnDefault($req)]);
+  }
+
+  // SECTION OTHERS
 
   private function getCount($req) {
     // SECTION ADMIN
@@ -461,168 +705,6 @@ class UserController extends Controller
     }
   }
 
-  public function store(Request $req) {
-    if($req->user()->role == 2) {
-      if($req->or) {
-        if($req->or != '') {
-          return $this->ORStore($req);
-        }
-      }
-
-      $val = Validator::make($req->all(), [
-        'avatar'   => '',
-        'username' => 'required|unique:users',
-        'email'    => 'required|email|unique:users',
-        'password' => 'required|min:8',
-        'mobile'   => 'required',
-        'notifyMobile' => 'required',
-        'role'     => 'required',
-        'plan'     => 'required',
-
-        'lastName' => 'required',
-        'firstName'=> 'required',
-        'midName'  => '',
-        'extName'  => '',
-        'sex'      => 'required',
-        'bday'     => 'required',
-        'bplaceID' => 'required',
-        'addressID'=> 'required',
-        'address'  => 'required',
-        'pay_type_id' => 'required',
-        'agent'    => 'required',
-      ]);
-
-      if($val->fails()) {
-        return $this->G_ValidatorFailResponse($val);
-      }
-
-      $person = Person::create([
-        'created_by_user_id' => $req->user()->id,
-        'lastName'  => $req->lastName,
-        'firstName' => $req->firstName,
-        'midName'   => $req->midName,
-        'extName'   => $req->extName,
-        'bday'      => $req->bday,
-        'bplace_id' => $req->bplaceID,
-        'sex'       => $req->sex,
-        'address_id'=> $req->bplaceID,
-        'address'   => $req->address,
-        'mobile'    => $req->mobile,
-        'agent_id'  => $req->agent
-      ]);
-
-      $avatar = null;
-
-      if($req->avatar != '') {
-        $avatar = $this->G_AvatarUpload($req->avatar);
-      }
-
-      $user = User::create([
-        'person_id'=> $person->id,
-        'plan_id'  => $req->plan,
-        'username' => $req->username,
-        'email'    => $req->email,
-        'password' => Hash::make($req->password),
-        'avatar'   => $avatar,
-        'role'     => $req->role,
-        'notify_mobile' => $req->notifyMobile,
-        'pay_type_id' => $req->pay_type_id,
-      ]);
-
-      Transaction::create([
-        'agent_id'  => $req->agent,
-        'staff_id'  => $req->user()->id,
-        'client_id' => $person->id,
-        'pay_type_id' => $req->pay_type_id,
-        'amount'  =>  $req->transaction,
-        'plan_id' => $req->plan,
-      ]);
-
-      return response()->json([...$this->G_ReturnDefault($req)]);
-    }
-
-    if($req->user()->role == 5) {
-      if($req->or) {
-        if($req->or != '') {
-          return $this->ORStore($req);
-        }
-      }
-
-      $val = Validator::make($req->all(), [
-        'avatar'   => '',
-        'username' => 'required|unique:users',
-        'email'    => 'required|email|unique:users',
-        'password' => 'required|min:8',
-        'mobile'   => 'required',
-        'notifyMobile' => 'required',
-        'role'     => 'required',
-        'plan'     => 'required',
-        'agent'    => 'required',
-
-        'lastName' => 'required',
-        'firstName'=> 'required',
-        'midName'  => '',
-        'extName'  => '',
-        'sex'      => 'required',
-        'bday'     => 'required',
-        'bplaceID' => 'required',
-        'addressID'=> 'required',
-        'address'  => 'required',
-        'pay_type' => 'required',
-        'transaction' => 'required',
-      ]);
-
-      if($val->fails()) {
-        return $this->G_ValidatorFailResponse($val);
-      }
-
-      $person = Person::create([
-        'created_by_user_id' => $req->user()->id,
-        'lastName'  => $req->lastName,
-        'firstName' => $req->firstName,
-        'midName'   => $req->midName,
-        'extName'   => $req->extName,
-        'bday'      => $req->bday,
-        'bplace_id' => $req->bplaceID,
-        'sex'       => $req->sex,
-        'address_id'=> $req->bplaceID,
-        'address'   => $req->address,
-        'mobile'    => $req->mobile,
-        'agent_id'  => $req->agent,
-      ]);
-
-      $avatar = null;
-
-      if($req->avatar != '') {
-        $avatar = $this->G_AvatarUpload($req->avatar);
-      }
-
-      $user = User::create([
-        'person_id'=> $person->id,
-        'plan_id'  => $req->plan,
-        'username' => $req->username,
-        'email'    => $req->email,
-        'password' => Hash::make($req->password),
-        'avatar'   => $avatar,
-        'role'     => 6, // NOTE Client Only
-        'notify_mobile' => $req->notifyMobile,
-        'pay_type_id' => $req->pay_type,
-      ]);
-
-      Transaction::create([
-        'agent_id'  => $req->agent,
-        'staff_id'  => $req->user()->id,
-        'client_id' => $person->id,
-        'pay_type_id' => $req->pay_type,
-        'amount'  =>  $req->transaction,
-        'plan_id' => $req->plan,
-      ]);
-
-      return response()->json([...$this->G_ReturnDefault($req)]);
-    }
-
-    return $this->G_UnauthorizedResponse();
-  }
 
   public function update(Request $req, string $id) {
     if($req->user()->role == 2) {

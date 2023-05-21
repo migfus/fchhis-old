@@ -60,7 +60,7 @@ import { Form, Field, ErrorMessage, configure } from 'vee-validate'
 import * as Yup from 'yup'
 import { onMounted } from 'vue'
 import { useRoute } from 'vue-router'
-import { useRegisterStore } from '@/store/auth/register'
+import { useRegisterStore } from '@/store/auth/RegisterStore'
 
 configure({
   validateOnInput: true,

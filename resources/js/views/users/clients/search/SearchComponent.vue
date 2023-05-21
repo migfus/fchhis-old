@@ -53,15 +53,15 @@
 
         <div class="row mt-2">
           <div class="col-12">
-            <button v-if="$user.config.form" @click="$user.config.form = ''" class="btn btn-danger float-right">
+            <button v-if="$user.config.form" @click="$user.ChangeForm('')" class="btn btn-danger float-right">
               <i class="fas fa-plus-square d-inline d-xl-none"></i>
               <span class="d-none d-xl-inline">Cancel</span>
             </button>
-            <button v-else @click="$user.config.form = 'add'" class="btn btn-success float-right">
+            <button v-else @click="$user.ChangeForm('add')" class="btn btn-success float-right">
               <span class=""><i class="fas fa-plus mr-1"></i>Add User</span>
             </button>
-            <button @click="$user.config.form = 'or'" class="btn btn-info float-right mr-1">
-              <span class=""><i class="fas fa-plus mr-1"></i>Self Register User</span>
+            <button @click="$user.ChangeForm('or')" class="btn btn-info float-right mr-1">
+              <span class=""><i class="fas fa-plus mr-1"></i>Self Register</span>
             </button>
 
             <!-- <button @click="$user.config.tableView = !$user.config.tableView" class="btn btn-info mr-1 float-right">
@@ -104,6 +104,9 @@ watch($user.query, throttle(() => {
 }, 1000))
 
 onMounted(() => {
+  $user.query.sort = 'DESC'
+  $user.query.limit = 10
+  $user.query.role = 6
   $user.GetAPI()
 });
 

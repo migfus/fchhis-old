@@ -20,13 +20,15 @@ return new class extends Migration
             $table->tinyInteger('plan_id')->unsinged()->nullable();
 
             $table->string('name');
-            $table->date('bday');
-            $table->integer('bplace_id');
+            $table->date('bday')->nullable();
+            $table->integer('bplace_id')->nullable();
             $table->boolean('sex')->default(0);
-            $table->integer('address_id')->comment('city ID, Province'); //city, province
-            $table->string('address')->comment('Specific Address');  //specific,
+            $table->integer('address_id')->comment('city ID, Province')->nullable(); //city, province
+            $table->string('address')->comment('Specific Address')->nullable();  //specific,
             $table->date('due_at')->nullable(); // NOTE due date
             $table->date('fulfilled_at')->nullable();
+            $table->string('or')->nullable();
+
             $table->timestamps();
         });
     }

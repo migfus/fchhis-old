@@ -14,7 +14,7 @@
                 <div class="users-list clearfix d-flex justify-content-center">
                   <li class="pt-0 w-100">
                     <img data-toggle="modal" data-target="#avatar-modal"
-                      :src="$user.input.avatar || 'https://fchhis.migfus20.com/images/logo.png'"
+                      :src="$user.params.avatar || 'https://fchhis.migfus20.com/images/logo.png'"
                       style="width: 162px; height: 162px" alt="User Image">
                     <button data-toggle="modal" data-target="#avatar-modal" class="btn btn-info ml-2">Upload
                       Avatar</button>
@@ -24,7 +24,7 @@
 
                 <div class="form-group">
                   <label for="username-input">Username</label>
-                  <Field v-model="$user.input.username" name="username" type="text" class="form-control"
+                  <Field v-model="$user.params.user.username" name="username" type="text" class="form-control"
                     id="username-input" placeholder="Enter Username" />
                   <div class="mb-2 text-danger">
                     <ErrorMessage name="username" />
@@ -34,7 +34,7 @@
 
                 <div class="form-group">
                   <label for="email-input">Email</label>
-                  <Field v-model="$user.input.email" name="email" type="email" class="form-control" id="email-input"
+                  <Field v-model="$user.params.user.email" name="email" type="email" class="form-control" id="email-input"
                     placeholder="Enter Email" />
                   <div class="mb-2 text-danger">
                     <ErrorMessage name="email" />
@@ -42,39 +42,28 @@
                 </div>
 
                 <label for="password-input">Password (Optional)</label>
-                <div class="input-group ">
-                  <Field v-model="$user.input.password" name="password" type="text" class="form-control"
+                <div class="form-group ">
+                  <Field v-model="$user.params.password" name="password" type="text" class="form-control"
                     placeholder="Leave it blank if there's no changes" />
-                  <div class="input-group-append">
-                    <span @click="GeneratePasword()" class="input-group-text" style="cursor: pointer">Generate</span>
+                  <div class="mb-3 text-danger">
+                    <ErrorMessage name="password" />
                   </div>
-                </div>
-                <div class="mb-3 text-danger">
-                  <ErrorMessage name="password" />
                 </div>
 
+
                 <label for="mobile-input">Mobile</label>
-                <div class="input-group">
-                  <Field v-model="$user.input.person.mobile" name="mobile" type="text" class="form-control"
+                <div class="form-group">
+                  <Field v-model="$user.params.phones[0].phone" name="mobile" type="text" class="form-control"
                     placeholder="Enter Mobile Number" />
-                  <div class="input-group-append">
-                    <span v-if="$user.input.notify_mobile" @click="$user.input.notify_mobile = !$user.input.notify_mobile"
-                      class="input-group-text bg-success" style="cursor: pointer">
-                      <i class="fas fa-bell"></i>
-                    </span>
-                    <span v-else @click="$user.input.notify_mobile = !$user.input.notify_mobile"
-                      class="input-group-text bg-danger" style="cursor: pointer">
-                      <i class="fas fa-bell-slash"></i>
-                    </span>
+                  <div class="mb-3 text-danger">
+                    <ErrorMessage name="mobile" />
                   </div>
                 </div>
-                <div class="mb-3 text-danger">
-                  <ErrorMessage name="mobile" />
-                </div>
+
 
                 <div class="form-group">
                   <label>Role</label>
-                  <select v-model="$user.input.role" class="form-control">
+                  <select v-model="$user.params.role" class="form-control">
                     <option :value="6">Client</option>
                     <option :value="5">Staff</option>
                     <option :value="4">Agent</option>
@@ -87,21 +76,21 @@
 
                 <div class="form-group">
                   <label>Plan</label>
-                  <select v-model="$user.input.plan_id" class="form-control">
+                  <select v-model="$user.params.plan_id" class="form-control">
                     <option v-for="row in $plan.content" :value="row.id">{{ row.name }}</option>
                   </select>
                 </div>
 
                 <div class="form-group">
                   <label>Payment Type</label>
-                  <select v-model="$user.input.pay_type_id" class="form-control">
+                  <select v-model="$user.params.pay_type_id" class="form-control">
                     <option v-for="row in $payType.content" :value="row.id">{{ row.name }}</option>
                   </select>
                 </div>
 
                 <div class="form-group">
                   <label>Agent</label>
-                  <Field name="agent" as='select' v-model="$user.input.person.agent_id" class="form-control">
+                  <Field name="agent" as='select' v-model="$user.params.agent_id" class="form-control">
                     <option v-for="row in $agent.content" :value="row.id">
                       {{ row.person.name }}
                     </option>
@@ -117,50 +106,16 @@
 
                 <div class="form-group">
                   <label for="last-input">Last Name</label>
-                  <Field v-model="$user.input.person.lastName" name="lastName" type="text" class="form-control"
-                    id="last-input" placeholder="Enter Last Name" />
+                  <Field v-model="$user.params.name" name="name" type="text" class="form-control" id="last-input"
+                    placeholder="Enter Name" />
                   <div class="mb-2 text-danger">
-                    <ErrorMessage name="lastName" />
+                    <ErrorMessage name="name" />
                   </div>
-                </div>
-
-                <div class="form-group">
-                  <label for="first-input">First Name</label>
-                  <Field v-model="$user.input.person.firstName" name="firstName" type="text" class="form-control"
-                    id="first-input" placeholder="Enter First Name" />
-                  <div class="mb-2 text-danger">
-                    <ErrorMessage name="firstName" />
-                  </div>
-                </div>
-
-                <div class="form-group">
-                  <label for="mid-input">Middle Name (Complete)</label>
-                  <Field v-model="$user.input.person.midName" name="midName" type="text" class="form-control"
-                    id="mid-input" placeholder="Enter Middle Name" />
-                </div>
-
-                <div class="form-group">
-                  <label>Extension Name</label>
-                  <select v-model="$user.input.person.extName" class="form-control">
-                    <option value="">N/A</option>
-                    <option value="Jr">Jr</option>
-                    <option value="Sr">Sr</option>
-                    <option value="I">I</option>
-                    <option value="II">II</option>
-                    <option value="III">III</option>
-                    <option value="IV">IV</option>
-                    <option value="V">V</option>
-                    <option value="VI">VI</option>
-                    <option value="VII">VII</option>
-                    <option value="VIII">VIII</option>
-                    <option value="IV">IV</option>
-                    <option value="X">X</option>
-                  </select>
                 </div>
 
                 <div class="form-group">
                   <label>Sex</label>
-                  <select v-model="$user.input.person.sex" class="form-control">
+                  <select v-model="$user.params.sex" class="form-control">
                     <option :value="1">Male</option>
                     <option :value="0">Female</option>
                   </select>
@@ -171,8 +126,8 @@
                   <div class="row">
                     <div class="col-6">
                       <label for="bday-input">Birth Day <span v-if="age">{{ `(${age} Years Old)` }}</span></label>
-                      <Field v-model="$user.input.person.bday" name="bday" type="date" class="form-control"
-                        id="bday-input" placeholder="Enter Birth Day" />
+                      <Field v-model="$user.params.bday" name="bday" type="date" class="form-control" id="bday-input"
+                        placeholder="Enter Birth Day" />
                     </div>
                     <div class="col-6">
                       <label>Birth Place (Province)</label>
@@ -183,7 +138,7 @@
                     </div>
                     <div class="col-12">
                       <label>Birth Place (City)</label>
-                      <Field as="select" name="bplace" v-model="$user.input.person.bplace_id" class="form-control">
+                      <Field as="select" name="bplace" v-model="$user.params.bplace_id" class="form-control">
                         <option v-if="!BDayProvinceID" value="1">Select Province</option>
                         <option v-else v-for="row in $address.content.find(item => item.id === BDayProvinceID).cities"
                           :key="row.id" :value="row.id">{{ row.name }}</option>
@@ -206,7 +161,7 @@
                     </div>
                     <div class="col-6">
                       <label>City</label>
-                      <Field v-model="$user.input.person.address_id" name="addressID" as="select" class="form-control">
+                      <Field v-model="$user.params.address_id" name="addressID" as="select" class="form-control">
                         <option v-if="!AddressProvinceID" value="1">Select Province</option>
 
                         <option v-else v-for="row in $address.content.find(item => item.id === AddressProvinceID).cities"
@@ -221,8 +176,8 @@
 
                 <div class="form-group">
                   <label for="mid-input">Address</label>
-                  <Field v-model="$user.input.person.address" name="address" type="text" class="form-control"
-                    id="mid-input" placeholder="(Ex: Purok 1, Poblacion)" />
+                  <Field v-model="$user.params.address" name="address" type="text" class="form-control" id="mid-input"
+                    placeholder="(Ex: Purok 1, Poblacion)" />
                   <div class="mb-2 text-danger">
                     <ErrorMessage name="address" />
                   </div>
@@ -239,35 +194,35 @@
         </div>
 
       </div>
-      <AvatarUpload />
+      <UploadAvatarModal v-model="$user.params.avatar" />
 
     </div>
   </Transition>
 </template>
 
 <script setup>
-import { useUserStore } from '@/store/users/users'
+import { useUsersStore } from '@/store/users/UsersStore'
 import { computed, ref, onMounted } from 'vue'
 import moment from 'moment'
-import { useAddressStore } from '@/store/system/address'
+import { useAddressStore } from '@/store/system/AddressStore'
 import { Form, Field, ErrorMessage, configure, } from 'vee-validate'
 import * as Yup from 'yup'
-import { usePlanStore } from '@/store/system/plan'
+import { usePlanStore } from '@/store/system/PlanStore'
 import { CityIDToProvinceID } from '@/helpers/converter'
 import { $DebugInfo, $Err, $Log } from '@/helpers/debug'
-import { useAgentStore } from '@/store/users/agent'
-import { usePayTypeStore } from '@/store/system/payTypes'
+import { useAgentStore } from '@/store/users/AgentStore'
+import { usePayTypeStore } from '@/store/system/PayTypeStore'
 
-import AvatarUpload from '../modals/AvatarUpload.vue'
+import UploadAvatarModal from '@/components/UploadAvatarModal.vue'
 
 const $address = useAddressStore();
-const $user = useUserStore();
+const $user = useUsersStore();
 const $plan = usePlanStore();
 const $agent = useAgentStore();
 const $payType = usePayTypeStore();
 
-const BDayProvinceID = ref(CityIDToProvinceID($user.input.person.bplace_id));
-const AddressProvinceID = ref(CityIDToProvinceID($user.input.person.address_id));
+const BDayProvinceID = ref(CityIDToProvinceID($user.params.bplace_id));
+const AddressProvinceID = ref(CityIDToProvinceID($user.params.address_id));
 
 $DebugInfo('EditFormVue')
 configure({
@@ -291,33 +246,12 @@ function getImage(event) {
 
 const age = computed(() => {
   try {
-    return moment().diff($user.input.bday, 'years')
+    return moment().diff($user.params.bday, 'years')
   }
   catch (e) {
     return '?'
   }
 })
-
-function GeneratePasword(length = 8) {
-  let result = '';
-  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  const charactersLength = characters.length;
-  let counter = 0;
-  while (counter < length) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    counter += 1;
-  }
-  if ($user.input.username) {
-    $user.input.password = `${$user.input.username}-${result.substring(0, 3)}`;
-  }
-  else {
-    $user.input.password = result;
-  }
-}
-
-function Submit() {
-  alert()
-}
 
 onMounted(() => {
   $plan.GetAPI()

@@ -45,7 +45,7 @@
 <script setup>
 import { useRoute } from 'vue-router';
 import { onMounted } from 'vue'
-import { useAddressStore } from '@/store/system/address'
+import { useAddressStore } from '@/store/system/AddressStore';
 import "vue-toastification/dist/index.css";
 
 import FooterTemplate from '@/template/footer/FooterTemplate.vue'

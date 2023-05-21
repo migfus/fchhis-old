@@ -1,8 +1,8 @@
 <template>
   <div class="row">
     <!-- NOTE ADD/EDIT -->
-    <!-- <EditForm v-if="$user.config.form == 'update'" />
-    <ORForm v-else-if="$user.config.form == 'or'" /> -->
+    <EditForm v-if="$user.config.form == 'update'" />
+    <ORForm v-if="$user.config.form == 'or'" />
     <AddForm v-if="$user.config.form == 'add'" />
 
     <!-- NOTE REPORT -->
@@ -20,27 +20,27 @@
     <MobileComponent />
 
     <!-- NOTE PAGINATION -->
-    <!-- <PaginationComponent /> -->
+    <PaginationComponent v-if="$user.content" />
 
   </div>
 </template>
 
 <script setup>
-// import { useUserStore } from '@/store/users/users'
+import { useUsersStore } from '@/store/users/UsersStore'
 // import { usePlanStore } from '@/store/system/plan'
 import { onMounted } from 'vue';
 
 // import UserSummary from './contents/UserSummary.vue'
 import AddForm from './forms/AddForm.vue'
-// import EditForm from './forms/EditForm.vue'
+import EditForm from './forms/EditForm.vue'
 import SearchComponent from './search/SearchComponent.vue'
 // import TableComponent from './contents/TableComponent.vue'
 import MobileComponent from './contents/MobileComponent.vue'
-// import PaginationComponent from './components/PaginationComponent.vue'
+import PaginationComponent from './components/PaginationComponent.vue'
 // import ReportForm from './forms/ReportForm.vue'
-// import ORForm from './forms/ORForm.vue'
+import ORForm from './forms/ORForm.vue'
 
-// const $user = useUserStore();
+const $user = useUsersStore();
 // const $plan = usePlanStore();
 
 onMounted(() => {

@@ -28,7 +28,7 @@ class User extends Authenticatable
       'notify_mobile',
       'role',
       'OR',
-      'pay_type_id'
+      'pay_type_id',
   ];
 
   /**

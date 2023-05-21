@@ -103,7 +103,7 @@ const router = createRouter({
       component: () => import("@/views/transaction/AllTransactionPage.vue"),
       meta: {
         title: "Transactions",
-        role: 5, //admin
+        // role: 5, //admin
         auth: true,
         sideBar: true,
       },

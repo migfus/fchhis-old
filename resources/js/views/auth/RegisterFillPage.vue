@@ -1,9 +1,9 @@
 <template>
   <Transition name="slide-fade">
-    <div class="col-12">
+    <div v-if="$register.params.id" class="col-12">
       <div class="card card-success">
         <div class="card-header">
-          <h3 class="card-title"><strong>Add User</strong></h3>
+          <h3 class="card-title"><strong>Register</strong></h3>
         </div>
         <div class="card-body">
           <Form v-slot="{ errors }" :validation-schema="schema" validate-on-mount @submit="$register.RegisterAPI">
@@ -24,8 +24,8 @@
 
                 <div class="form-group">
                   <label for="username-input">Username</label>
-                  <Field @input="GeneratePasword()" v-model="$register.params.username" name="username" type="text"
-                    class="form-control" id="username-input" placeholder="Enter Username" />
+                  <Field v-model="$register.params.username" name="username" type="text" class="form-control"
+                    id="username-input" placeholder="Enter Username" />
                   <div class="mb-2 text-danger">
                     <ErrorMessage name="username" />
                   </div>
@@ -42,84 +42,51 @@
                 </div>
 
                 <label for="password-input">Password</label>
-                <div class="input-group ">
-                  <Field v-model="$register.params.password" name="password" type="text" class="form-control"
-                    placeholder="Enter or Generate Password" />
-                  <div class="input-group-append">
-                    <span @click="GeneratePasword()" class="input-group-text" style="cursor: pointer">Generate</span>
+                <div class="form-group">
+                  <Field v-model="$register.params.password" name="password" type="password" class="form-control"
+                    placeholder="Enter Password" />
+                  <div class="mb-3 text-danger">
+                    <ErrorMessage name="password" />
                   </div>
-                </div>
-                <div class="mb-3 text-danger">
-                  <ErrorMessage name="password" />
                 </div>
 
-                <label for="mobile-input">Mobile</label>
-                <div class="input-group">
-                  <Field v-model="$register.params.person.mobile" name="mobile" type="text" class="form-control"
-                    placeholder="Enter Mobile Number" />
-                  <div class="input-group-append">
-                    <span v-if="$register.params.notify_mobile"
-                      @click="$register.params.notify_mobile = !$register.params.notify_mobile"
-                      class="input-group-text bg-success" style="cursor: pointer">
-                      <i class="fas fa-bell"></i>
-                    </span>
-                    <span v-else @click="$register.params.notify_mobile = !$register.params.notify_mobile"
-                      class="input-group-text bg-danger" style="cursor: pointer">
-                      <i class="fas fa-bell-slash"></i>
-                    </span>
+
+                <label for="password-input">Confirm Password</label>
+                <div class="form-group">
+                  <Field v-model="$register.params.confirmPassword" name="confirmPassword" type="password"
+                    class="form-control" placeholder="Enter Password" />
+                  <div class="mb-3 text-danger">
+                    <ErrorMessage name="confirmPassword" />
                   </div>
                 </div>
-                <div class="mb-3 text-danger">
-                  <ErrorMessage name="mobile" />
+
+
+                <label for="mobile-input">Mobile</label>
+                <div class="form-group">
+                  <Field v-model="$register.params.mobile" name="mobile" type="text" class="form-control"
+                    placeholder="Enter Mobile Number" />
+                  <div class="mb-3 text-danger">
+                    <ErrorMessage name="mobile" />
+                  </div>
                 </div>
+
 
               </div>
 
               <div class="col-12 col-md-6">
 
                 <div class="form-group">
-                  <label for="last-input">Last Name</label>
-                  <Field v-model="$register.params.person.lastName" name="lastName" type="text" class="form-control"
-                    id="last-input" placeholder="Enter Last Name" />
+                  <label for="last-input">Name</label>
+                  <Field v-model="$register.params.name" name="name" type="text" class="form-control" id="last-input"
+                    placeholder="Enter Name" />
                   <div class="mb-2 text-danger">
-                    <ErrorMessage name="lastName" />
+                    <ErrorMessage name="name" />
                   </div>
-                </div>
-
-                <div class="form-group">
-                  <label for="first-input">First Name</label>
-                  <Field v-model="$register.params.person.firstName" name="firstName" type="text" class="form-control"
-                    id="first-input" placeholder="Enter First Name" />
-                  <div class="mb-2 text-danger">
-                    <ErrorMessage name="firstName" />
-                  </div>
-                </div>
-
-                <div class="form-group">
-                  <label for="mid-input">Middle Name (Complete)</label>
-                  <Field v-model="$register.params.person.midName" name="midName" type="text" class="form-control"
-                    id="mid-input" placeholder="Enter Middle Name" />
-                </div>
-
-                <div class="form-group">
-                  <label>Extension Name</label>
-                  <select v-model="$register.params.person.extName" class="form-control">
-                    <option value="">N/A</option>
-                    <option value="jr">Jr</option>
-                    <option value="sr">Sr</option>
-                    <option value="i">I</option>
-                    <option value="ii">II</option>
-                    <option value="iii">III</option>
-                    <option value="iv">IV</option>
-                    <option value="v">V</option>
-                    <option value="vi">VI</option>
-                    <option value="vii">VII</option>
-                  </select>
                 </div>
 
                 <div class="form-group">
                   <label>Sex</label>
-                  <select v-model="$register.params.person.sex" class="form-control">
+                  <select v-model="$register.params.sex" class="form-control">
                     <option :value="true">Male</option>
                     <option :value="false">Female</option>
                   </select>
@@ -129,9 +96,9 @@
                 <div class="form-group">
                   <div class="row">
                     <div class="col-6">
-                      <label for="bday-input">Birth Day <span v-if="age">{{ `(${age} Years Old)` }}</span></label>
-                      <Field v-model="$register.params.person.bday" name="bday" type="date" class="form-control"
-                        id="bday-input" placeholder="Enter Birth Day" />
+                      <label for="bday-input">Birth Day </label>
+                      <Field v-model="$register.params.bday" name="bday" type="date" class="form-control" id="bday-input"
+                        placeholder="Enter Birth Day" />
                       <div class="mb-2 text-danger">
                         <ErrorMessage name="bday" />
                       </div>
@@ -141,13 +108,11 @@
                       <select v-model="BDayProvinceID" class="form-control">
                         <option v-for="row in $address.content" :key="row.id" :value="row.id">{{ row.name }}</option>
                       </select>
-
-
                     </div>
+
                     <div class="col-12">
                       <label>Birth Place (City)</label>
-                      <Field as="select" name="bplace" v-model="$register.params.person.bplace_id" class="form-control">
-                        <!-- <option v-if="BDayProvinceID" selected :value="0">Select Province</option> -->
+                      <Field as="select" name="bplace" v-model="$register.params.bplace_id" class="form-control">
                         <option v-for="row in $address.content.find(item => item.id === BDayProvinceID).cities"
                           :key="row.id" :value="row.id">{{ row.name }}</option>
                       </Field>
@@ -155,6 +120,7 @@
                         <ErrorMessage name="bplace" />
                       </div>
                     </div>
+
                   </div>
                 </div>
 
@@ -169,8 +135,7 @@
                     </div>
                     <div class="col-6">
                       <label>City</label>
-                      <Field v-model="$register.params.person.address_id" name="addressID" as="select"
-                        class="form-control">
+                      <Field v-model="$register.params.address_id" name="addressID" as="select" class="form-control">
                         <!-- <option v-if="!AddressProvinceID" selected :value="0">Select Province</option> -->
                         <option v-for="row in $address.content.find(item => item.id === AddressProvinceID).cities"
                           :key="row.id" :value="row.id">{{ row.name }}</option>
@@ -184,8 +149,8 @@
 
                 <div class="form-group">
                   <label for="mid-input">Address</label>
-                  <Field v-model="$register.params.person.address" name="address" type="text" class="form-control"
-                    id="mid-input" placeholder="(Ex: Purok 1, Poblacion)" />
+                  <Field v-model="$register.params.address" name="address" type="text" class="form-control" id="mid-input"
+                    placeholder="(Ex: Purok 1, Poblacion)" />
                   <div class="mb-2 text-danger">
                     <ErrorMessage name="address" />
                   </div>
@@ -209,10 +174,10 @@
 <script setup>
 import { computed, ref, onMounted } from 'vue'
 import moment from 'moment'
-import { useAddressStore } from '@/store/system/address'
+import { useAddressStore } from '@/store/system/AddressStore'
 import { Form, Field, ErrorMessage, configure, } from 'vee-validate'
 import * as Yup from 'yup'
-import { useRegisterStore } from '@/store/auth/register'
+import { useRegisterStore } from '@/store/auth/RegisterStore'
 import { useRouter } from 'vue-router'
 import { $DebugInfo, $Err, $Log } from '@/helpers/debug'
 
@@ -233,44 +198,19 @@ const schema = Yup.object({
   username: Yup.string().required('Username is Required'),
   email: Yup.string().required('Email is Required').email('Invalid Email'),
   password: Yup.string().required('Password is Required').min(8, 'Minimum of 8 Characters'),
+  confirmPassword: Yup.string().oneOf([Yup.ref('password'), null], 'Password must match to Password'),
   mobile: Yup.string().required('Mobile Number is Required').min(10, 'Minimum of 10 Number'),
-  lastName: Yup.string().required('Last Name is Required'),
-  firstName: Yup.string().required('First Name is Required'),
+  name: Yup.string().required('Name is Required'),
   bday: Yup.date('Invalid Date').required('Birth Day is Required'),
   bplace: Yup.string().required('Birth Place is Required'),
   addressID: Yup.string().required('City is Required'),
   address: Yup.string().required('Specific Address is Required'),
 })
 
-const age = computed(() => {
-  try {
-    return moment().diff($register.params.person.bday, 'years')
-  }
-  catch (e) {
-    return '?'
-  }
-})
-
-function GeneratePasword(length = 8) {
-  let result = '';
-  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  const charactersLength = characters.length;
-  let counter = 0;
-  while (counter < length) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    counter += 1;
-  }
-  if ($register.params.username) {
-    $register.params.password = `${$register.params.username}-${result.substring(0, 3)}`;
-  }
-  else {
-    $register.params.password = result;
-  }
-}
-
 onMounted(() => {
+  $address.GetAPI()
   $Log('onMounted', $register.content)
-  if (!$register.content) {
+  if (!$register.params.id) {
     $router.push({ name: 'register', query: { error: 'Invalid OR', or: '' } })
   }
 });

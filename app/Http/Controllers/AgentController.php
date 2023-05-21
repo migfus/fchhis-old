@@ -16,7 +16,7 @@ class AgentController extends Controller
         'data' => User::where('role', 4)
           ->with([
             'person' => function ($q) {
-              $q->orderBy('lastName', 'DESC');
+              $q->orderBy('name', 'DESC');
             }
           ])
           ->get()
