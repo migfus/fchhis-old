@@ -25,7 +25,7 @@ class Plan extends Model
       'monthly'
   ];
 
-  public function users() {
-    return $this->hasMany(User::class);
+  public function persons() {
+    return $this->hasMany(Person::class);
   }
 }

@@ -13,29 +13,25 @@
         <thead>
           <tr>
             <th>Name</th>
-            <th>Role</th>
-            <th>Created</th>
-            <th>More</th>
+            <th>Transactions</th>
+            <!-- <th>More</th> -->
           </tr>
         </thead>
         <tbody>
-          <tr v-for="row in $stat.content.newUsers" :key="row.username">
+          <tr v-for="row in $stat.content.topPerformer" :key="row.username">
             <td>
               <img :src="row.avatar || 'https://fchhis.migfus20.com/images/logo.png'" alt="Product 1"
                 class="img-circle img-size-32 mr-2">
               {{ row.name }}
             </td>
             <td>
-              {{ RoleToDesc(row.user.role) }}
+              +{{ NumberAddComma(row.total) }}
             </td>
-            <td>
-              {{ moment(row.created_at).format('MMM D, YYYY') }}
-            </td>
-            <td>
+            <!-- <td>
               <RouterLink :to="`/user/${row.id}`" class="text-muted">
                 <i class="fas fa-search"></i>
               </RouterLink>
-            </td>
+            </td> -->
           </tr>
         </tbody>
       </table>
@@ -45,7 +41,7 @@
 
 <script setup>
 import { useStatisticStore } from '@/store/dashboard/StatisticStore';
-import { RoleToDesc } from '@/helpers/converter'
+import { NumberAddComma } from '@/helpers/converter'
 import moment from 'moment'
 
 const $stat = useStatisticStore();

@@ -239,10 +239,10 @@ if ($auth.token == "" && to.name !== "login") {
   }
 
   if(to.meta.role) {
-    if($auth.content.role == 2) {
+    if($auth.content.auth.role == 2) {
 
     }
-    else if(to.meta.role != $auth.content.role && to.meta.name != 'error') {
+    else if(to.meta.role != $auth.content.auth.role && to.meta.name != 'error') {
       // return { name: 'error'}
       return false
     }

@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use App\Models\Transaction;
 use App\Models\User;
 use App\Models\Person;
+use Illuminate\Support\Facades\DB;
 
 class StatisticController extends Controller
 {
@@ -120,9 +121,8 @@ class StatisticController extends Controller
         'pastSemiAnnual' => $this->SemiAnnualIncome('past'),
 
         'topPerformer' => $this->TopPerformer(),
-
         'usersCount' => $userCount,
-        // 'transactionCount' => $monthlyIncome,
+        'transactionCount' => $monthlyIncome,
       ]
     ], 200);
   }
@@ -259,10 +259,26 @@ class StatisticController extends Controller
   }
 
   private function TopPerformer() {
-    return Person::with(['user'])
-      ->whereHas('user', function($q) {
-        $q->where('role', 4);
-      })
+
+
+    // return Person::with(['user'])
+    //   ->join('')
+    //   ->withSum('agent_transactions', 'amount')
+    //   ->whereHas('user', function($q) {
+    //     $q->where('role', 4);
+    //   })
+    //   ->get();
+
+
+    $data = Person::select(DB::raw('SUM(transactions.amount) AS total'))
+      ->join('transactions', 'transactions.agent_id', '=', 'people.id')
+      ->join('users', 'users.person_id', '=', 'people.id')
+      ->where('users.role', 4)
+      ->groupBy('name')
+      ->orderBy('total')
+      ->limit(4)
       ->get();
+
+    return $data;
   }
 }

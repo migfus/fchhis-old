@@ -11,7 +11,7 @@ class PlanController extends Controller
   private function PlanCount($req) {
     return response()->json([
       ...$this->G_ReturnDefault($req),
-      'data' => Plan::withCount(['users'])->orderBy('users_count', 'DESC')->get()
+      'data' => Plan::withCount(['persons'])->orderBy('persons_count', 'DESC')->get()
     ]);
   }
 

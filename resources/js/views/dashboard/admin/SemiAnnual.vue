@@ -73,8 +73,10 @@ const options = ref({
   bezierCurve: true,
 })
 
-$stat.content.currentSemiAnnual = $stat.content.currentSemiAnnual.slice().reverse()
-$stat.content.pastSemiAnnual = $stat.content.pastSemiAnnual.slice().reverse()
+if ($stat.content.currentSemiAnnual) {
+  $stat.content.currentSemiAnnual = $stat.content.currentSemiAnnual.slice().reverse()
+  $stat.content.pastSemiAnnual = $stat.content.pastSemiAnnual.slice().reverse()
+}
 
 const lineData = ref({
   labels: [...$stat.content.currentSemiAnnual.map(m => m.date.slice(0, 3))],

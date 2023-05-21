@@ -23,6 +23,14 @@
     <div class="col-12 col-md-4 p-0">
       <IncomeCard />
     </div>
+
+    <div class="col-12 col-md-4 p-0">
+      <UsersCard />
+    </div>
+
+    <div class="col-12">
+      <PlanRanking />
+    </div>
   </div>
 </template>
 
@@ -34,5 +42,8 @@ import SemiAnnual from './SemiAnnual.vue';
 import AnnualCard from './AnnualCard.vue'
 
 import IncomeCard from './IncomeCard.vue'
+import UsersCard from './UsersCard.vue'
 import TopAgentCard from './TopAgentCard.vue'
+
+import PlanRanking from './PlanRanking.vue'
 </script>

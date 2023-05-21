@@ -37,6 +37,10 @@ class Person extends Model
     return $this->belongsTo(Person::class, 'agent_id');
   }
 
+  public function agent_transactions() {
+    return $this->hasMany(Transaction::class, 'agent_id');
+  }
+
   public function staff() {
     return $this->belongsTo(Person::class, 'staff_id');
   }

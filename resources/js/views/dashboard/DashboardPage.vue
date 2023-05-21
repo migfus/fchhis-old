@@ -25,7 +25,7 @@
 </template>
 
 <script setup>
-import { onMounted, onUnmounted } from 'vue';
+import { onMounted } from 'vue';
 import { useStatisticStore } from '@/store/dashboard/StatisticStore'
 import { useAuthStore } from '@/store/auth/AuthStore'
 
@@ -39,9 +39,5 @@ const $auth = useAuthStore();
 
 onMounted(() => {
   $stat.GetAPI();
-});
-
-onUnmounted(() => {
-  $stat.content = []
 });
 </script>
