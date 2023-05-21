@@ -95,29 +95,34 @@ class StatisticController extends Controller
   }
 
   private function AdminIndex($req) {
-    $userCount = Person::whereNotNull('client_id')->count();
+    $userCount = Person::whereNull('client_id')->count();
 
     $monthlyIncome = Transaction::where('created_at', '>=', Carbon::now()->startOfMonth())
       ->where('created_at', '<=', Carbon::now())
       ->sum('amount');
 
-    $newUsers = Person::whereNotNull('client_id')
+    $newUsers = Person::with('user')
+      ->whereNull('client_id')
       ->where('created_at', '>=', Carbon::now()->startOfMonth())
-      ->where('created_at', '<=', Carbon::now())
-      ->count();
+      ->orderBy('created_at', 'DESC')
+      ->limit(5)
+      ->get();
 
     return response()->json([
       ...$this->G_ReturnDefault($req),
       'data' => [
-        'usersCount' => $userCount,
-        'transactionCount' => $monthlyIncome,
+        'userList' => $this->UserList(),
+
         'newUsers' => $newUsers,
-        'currentSemiAnnual' => $this->SemiAnnualIncome(),
-        'pastSemiAnnual' => $this->SemiAnnualIncome('past'),
         'semiAnnualTotalIncome' => $this->SemiAnnualTotalIncome(),
         'annualIncome' => $this->AnnualIncome(),
+        'currentSemiAnnual' => $this->SemiAnnualIncome(),
+        'pastSemiAnnual' => $this->SemiAnnualIncome('past'),
+
         'topPerformer' => $this->TopPerformer(),
-        'userList' => $this->UserList(),
+
+        'usersCount' => $userCount,
+        // 'transactionCount' => $monthlyIncome,
       ]
     ], 200);
   }

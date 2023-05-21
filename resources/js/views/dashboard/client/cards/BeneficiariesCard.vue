@@ -27,7 +27,7 @@
         <tbody>
           <tr v-for="row, idx in $users.content.data">
             <td>{{ row.name }}</td>
-            <td>{{ AgeConverter(row.bday) }}</td>>
+            <td>{{ AgeConverter(row.bday) }}</td>
           </tr>
         </tbody>
       </table>

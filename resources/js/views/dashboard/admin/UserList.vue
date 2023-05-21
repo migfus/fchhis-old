@@ -1,5 +1,5 @@
 <template>
-  <div v-if="$stat.config.loading" class="col-12">
+  <div v-if="$stat.config.loading">
     <Carousel v-bind="config.bind" :breakpoints="config.breakpoints">
 
       <Slide v-for="row in 10" :key="row" class="mb-2">
@@ -14,7 +14,7 @@
 
     </Carousel>
   </div>
-  <div v-else class="col-12">
+  <div v-else>
     <Carousel v-bind="config.bind" :breakpoints="config.breakpoints">
 
       <Slide v-for="(row, idx,) in $stat.content.userList" :key="row.name">
@@ -43,7 +43,6 @@
 import { Carousel, Navigation, Slide } from 'vue3-carousel'
 import 'vue3-carousel/dist/carousel.css'
 import { useStatisticStore } from '@/store/dashboard/StatisticStore'
-import { onMounted } from 'vue'
 
 const $stat = useStatisticStore()
 

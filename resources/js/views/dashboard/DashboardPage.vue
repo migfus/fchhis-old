@@ -1,24 +1,26 @@
 <template>
-  <!-- SECTION ADMIN -->
   <div v-if="Object.keys($auth.content).length != 0">
+
+    <!-- SECTION ADMIN -->
     <div v-if="$auth.content.auth.role == 2">
-      <UserList v-if="$stat.content" />
-      <UserSummaryAdmin v-if="$stat.content" />
-      <!-- <TopPerformerAdmin v-if="$dashboard.content" /> -->
-      <!-- <AdminSectionAdmin v-if="$dashboard.content" /> -->
+      <AdminPage v-if="$stat.content" />
     </div>
+
     <!-- SECTION AGENT -->
     <div v-else-if="$auth.content.auth.role == 4">
       <AgentCard v-if="$stat.content" />
     </div>
+
     <!-- SECTION STAFF -->
     <div v-else-if="$auth.content.auth.role == 5">
       <StaffCard v-if="$stat.content" />
     </div>
+
     <!-- SECTION CLIENT -->
     <div v-else>
       <ClientDashboard v-if="$stat.content" />
     </div>
+
   </div>
 </template>
 
@@ -27,14 +29,10 @@ import { onMounted, onUnmounted } from 'vue';
 import { useStatisticStore } from '@/store/dashboard/StatisticStore'
 import { useAuthStore } from '@/store/auth/AuthStore'
 
-// import AdminSectionAdmin from './admin/AdminSection.vue';
-import UserSummaryAdmin from './admin/UserSummary.vue';
-// import TopPerformerAdmin from './admin/TopPerformer.vue';
-import UserList from './admin/UserList.vue';
-
 import ClientDashboard from './client/ClientPage.vue';
 import AgentCard from './agent/AgentCard.vue';
 import StaffCard from './staff/StaffCard.vue';
+import AdminPage from './admin/AdminPage.vue';
 
 const $stat = useStatisticStore();
 const $auth = useAuthStore();
