@@ -32,7 +32,11 @@
               <i :class="`nav-icon fas ${row.icon}`"></i>
               <p>
                 {{ row.name }}
-                <span v-if="row.span" class="right badge badge-danger">{{ row.span.content }}</span>
+                <span v-if="row.span && $overdue.content.overdue" class="right badge badge-danger">{{
+                  $overdue.content.overdue }}</span>
+                <span v-if="row.span && $overdue.content.grace" class="right badge badge-warning">
+                  {{ Number($overdue.content.grace) - Number($overdue.content.overdue) }}
+                </span>
               </p>
             </RouterLink>
             <div v-else> {{ row.name }}</div>
@@ -49,9 +53,11 @@ import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import UserDropDown from './UserDropdown.vue';
 import { useAuthStore } from '@/store/auth/AuthStore';
+import { useOverdueStore } from '@/store/users/OverdueStore';
 
 const $route = useRoute();
 const $auth = useAuthStore();
+const $overdue = useOverdueStore()
 
 const hiddenMenu = ref()
 
@@ -117,7 +123,7 @@ const isStaff = computed(() => {
         {
           name: 'Overdue',
           icon: 'fa-exclamation-circle',
-          link: { name: 'overdue' },
+          link: { name: 'users-overdue' },
           span: { content: 1, color: 'danger' }
         },
         {
@@ -243,9 +249,11 @@ const pages = ref([
   // },
 ]);
 
+
 onMounted(() => {
   document.body.classList.remove('layout-top-nav');
   document.body.classList.add('sidebar-mini')
+  $overdue.GetAPI()
 });
 </script>
 
