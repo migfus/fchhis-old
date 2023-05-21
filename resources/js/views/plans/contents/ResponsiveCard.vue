@@ -1,7 +1,7 @@
 <template>
   <div v-for="row in $plan.content" :key="row.id" class="col-12">
-    <div :class="`card mb-2 collapsed-card`" data-card-widget="collapse" ref="collapse-click" style="cursor: pointer;">
-      <div class="card-header">
+    <div :class="`card mb-2 collapsed-card`">
+      <div class="card-header" data-card-widget="collapse" ref="collapse-click" style="cursor: pointer;">
         <div>
           <div class="row">
 
@@ -67,9 +67,9 @@
             <i class="fas fa-pen mr-2"></i>Edit
           </button>
 
-          <button class="btn btn-info float-right mr-1">
+          <!-- <button class="btn btn-info float-right mr-1">
             <i class="fas fa-print mr-2"></i>Print
-          </button>
+          </button> -->
         </div>
       </div>
 

@@ -121,7 +121,7 @@ class PlanController extends Controller
     }
 
 
-    if(Plan::where('id', $id)->avatar != $req->avatar) {
+    if(Plan::where('id', $id)->first()->avatar != $req->avatar) {
       Plan::where('id', $id)->update(['avatar' => $this->G_AvatarUpload($req->avatar)]);
     }
 

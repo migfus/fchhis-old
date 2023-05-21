@@ -6,7 +6,8 @@
           <h3 class="card-title"><strong>Edit Plan</strong></h3>
         </div>
         <div class="card-body">
-          <Form v-slot="{ errors }" :validation-schema="schema" validate-on-mount @submit="$plan.UpdateAPI()">
+          <Form v-slot="{ errors }" :validation-schema="schema" validate-on-mount
+            @submit="$plan.UpdateAPI($plan.params.id)">
             <div class="row">
 
               <div class="col-12 col-md-6">
@@ -139,7 +140,7 @@
 
             <button @click="$plan.ChangeForm('')" class="btn btn-danger float-right">Cancel</button>
             <button type="submit" class="btn btn-info float-right mr-1"
-              :disabled="Object.keys(errors).length != 0">Add</button>
+              :disabled="Object.keys(errors).length != 0">Update</button>
           </Form>
         </div>
 

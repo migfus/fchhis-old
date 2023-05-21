@@ -53,11 +53,12 @@ export const usePlanStore = defineStore('plan', ()=> {
     config.loadingCount = false
   }
 
-  async function UpdateAPI() {
+  async function UpdateAPI(id) {
     config.loading = true
     try {
-      let { data: { data } } = await axios.put('/api/plan', input.value)
+      let { data: { data } } = await axios.put('/api/plan/'+id, params.value)
       $Log('UpdateAPI', {data})
+      ChangeForm('')
       GetAPI()
     }
     catch(e) {
@@ -121,7 +122,7 @@ export const usePlanStore = defineStore('plan', ()=> {
   }
 
   function Update(row) {
-    input.value = row
+    params.value = row
     ChangeForm('update')
   }
 
