@@ -284,7 +284,7 @@ class TransactionController extends Controller
         }
       }
 
-      $data = Transaction::with(['plan', 'pay_type', 'client.user', 'staff', 'agent']);
+      $data = Transaction::with(['plan', 'pay_type', 'client.user', 'staff.user', 'agent.user']);
 
       switch($req->filter) {
         case 'or':

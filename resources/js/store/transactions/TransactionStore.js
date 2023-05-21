@@ -13,7 +13,7 @@ export const useTransactionStore = defineStore('TransactionStore', () => {
   const config = reactive({
     loading: false,
     viewAll:false,
-
+    form: '',
   })
   const query = reactive({
     search: '',
@@ -21,6 +21,9 @@ export const useTransactionStore = defineStore('TransactionStore', () => {
     start: '',
     end: '',
     filter: 'name'
+  })
+  const params = reactive({
+    ...InitParams(),
   })
 
   // SECTION API
@@ -56,14 +59,58 @@ export const useTransactionStore = defineStore('TransactionStore', () => {
     cancel()
   }
 
+  function ChangeForm(input) {
+    config.form = input
+
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: 'smooth'
+    });
+  }
+
+  function InitParams() {
+    return {
+      or: '',
+      payt_type_id: '',
+      amount: '',
+
+      plan: {
+        name: '',
+      },
+
+
+      client: {
+        user: {
+          avatar: '',
+        },
+        name: '',
+        id: '',
+      },
+
+      agent: {
+        user: {
+          avatar: '',
+        },
+        name: '',
+        id: '',
+      },
+
+    }
+  }
+
   return {
     content,
     config,
     query,
     print,
+    params,
 
     GetAPI,
     PrintAPI,
     CancelAPI,
+
+    ChangeForm,
+    InitParams,
   }
 })

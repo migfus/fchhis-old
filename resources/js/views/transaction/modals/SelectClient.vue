@@ -68,7 +68,7 @@ const $trans = useTransactionStore();
 
 function Select(row) {
   $trans.params.client = row
-  $trans.params.agent = row.person.referred
+  $trans.params.agent = row.person.agent
   $trans.params.plan = row.plan
   $trans.params.pay_type_id = row.pay_type_id
 

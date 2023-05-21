@@ -70,6 +70,7 @@ export const useUsersStore = defineStore('useUsersStore', () => {
       Object.assign(params, {... InitParams()})
       $toast.success('Successfully created');
       GetAPI(1)
+      ChangeForm('')
     }
     catch(e) {
       $Err('UsersTore SToreAPI Error', {e})

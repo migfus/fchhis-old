@@ -54,16 +54,16 @@
 
         <div class="row mt-2">
           <div class="col-12">
-            <button v-if="$trans.config.form" @click="$trans.Clear()" class="btn btn-danger float-right">
+            <button v-if="$trans.config.form" @click="$trans.ChangeForm('')" class="btn btn-danger float-right">
               <i class="fas fa-plus-square d-inline d-xl-none"></i>
               <span class="d-none d-xl-inline">Cancel</span>
             </button>
-            <button v-else @click="$trans.config.form = 'add'" class="btn btn-success float-right">
+            <button v-else @click="$trans.ChangeForm('add')" class="btn btn-success float-right">
               <i class="fas fa-plus-square mr-2"></i>
-              <span>Add Transact</span>
+              <span>Add Transaction</span>
             </button>
 
-            <button @click="$trans.config.tableView = !$trans.config.tableView" class="btn btn-info mr-1 float-right">
+            <!-- <button @click="$trans.config.tableView = !$trans.config.tableView" class="btn btn-info mr-1 float-right">
               <i :class="`fas mr-1 ${$trans.config.tableView ? 'fa-bars' : 'fa-table'}`"></i>
               Table View
             </button>
@@ -71,7 +71,7 @@
               class="btn btn-info mr-1 float-right">
               <i :class="`fas ${$trans.config.viewAll ? 'fa-window-minimize' : 'fa-window-maximize'}`"></i>
               <div class="d-none ml-2 d-sm-inline">Show All</div>
-            </button>
+            </button> -->
 
             <button v-if="$trans.config.loading" class="btn card-loader-content card-loader mr-1 float-right"
               style="width: 42px">
@@ -88,8 +88,7 @@
       </div>
     </div>
   </div>
-  <!-- <SelectClient /> -->
-  <!-- <SelectAgent /> -->
+  <SelectClient />
   <!-- <PrintModal /> -->
 </template>
 
@@ -102,8 +101,7 @@ import { useRoute } from 'vue-router'
 
 import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
-// import SelectClient from './../modals/SelectClient.vue'
-// import SelectAgent from './../modals/SelectAgent.vue'
+import SelectClient from './../modals/SelectClient.vue'
 // import PrintModal from '../modals/PrintModal.vue'
 
 const $trans = useTransactionStore();

@@ -13,10 +13,11 @@
 
                 <div class="form-group">
                   <label>Client</label>
-                  <div v-if="$trans.params.client.person.id" class="mb-2">
-                    <img :src="$trans.params.client.avatar" style="height: 3em;" class="img-circle float-left mr-3 my-2">
+                  <div class="mb-2">
+                    <img :src="$trans.params.client.user.avatar" style="height: 3em;"
+                      class="img-circle float-left mr-3 my-2">
                     <span class="">
-                      {{ $trans.params.client.person.name }}
+                      {{ $trans.params.client.name }}
                     </span>
                   </div>
                   <div>
@@ -25,7 +26,7 @@
                       <i class="fas fa-child mr-2"></i>Select Client
                     </button>
                   </div>
-                  <Field v-model="$trans.params.client.person.id" name="client_id" type="hidden" />
+                  <Field v-model="$trans.params.client.id" name="client_id" type="hidden" />
                   <div class="mb-2 text-danger">
                     <ErrorMessage name="client_id" />
                   </div>
@@ -33,16 +34,17 @@
 
                 <div class="form-group">
                   <label>Agent</label>
-                  <div v-if="$trans.params.agent.person.id" class="mb-2">
-                    <img :src="$trans.params.agent.avatar" style="height: 3em;" class="img-circle float-left mr-3 my-2">
-                    {{ $trans.params.agent.person.name }}
+                  <div v-if="$trans.params.agent.id" class="mb-2">
+                    <img :src="$trans.params.agent.user.avatar" style="height: 3em;"
+                      class="img-circle float-left mr-3 my-2">
+                    {{ $trans.params.agent.name }}
                   </div>
                   <div>
                     <button @click="SelectAgent()" class="btn btn-info" data-toggle="modal" data-target="#modal-agent">
                       <i class="fas fa-handshake mr-2"></i> Select Agent
                     </button>
                   </div>
-                  <Field v-model="$trans.params.agent.person.id" name="agent_id" type="hidden" />
+                  <Field v-model="$trans.params.agent.id" name="agent_id" type="hidden" />
                   <div class="mb-2 text-danger">
                     <ErrorMessage name="agent_id" />
                   </div>
@@ -55,7 +57,7 @@
                 <div class="form-group">
                   <label for="or-input">OR Number (Auto regenerate if empty)</label>
                   <Field v-model="$trans.params.or" name="or" type="text" class="form-control" id="or-input"
-                    placeholder="Optional" :disabled="$trans.params.agent.person.id == ''" />
+                    placeholder="Optional" :disabled="$trans.params.agent.id == ''" />
                   <div class="mb-2 text-danger">
                     <ErrorMessage name="or" />
                   </div>
@@ -65,7 +67,7 @@
                 <div class="form-group">
                   <label>Plan</label>
                   <select v-model="$trans.params.plan" @click="SelectPlan()" class="form-control"
-                    :disabled="$trans.params.agent.person.id == ''">
+                    :disabled="$trans.params.agent.id == ''">
                     <option v-for="row in $plan.content" :value="row">{{ row.name }}</option>
                   </select>
                 </div>
@@ -74,7 +76,7 @@
                 <div class="form-group">
                   <label>Payment Type</label>
                   <select v-model="$trans.params.pay_type_id" @click="SelectPlan()" class="form-control"
-                    :disabled="$trans.params.agent.person.id == ''">
+                    :disabled="$trans.params.agent.id == ''">
                     <option v-for="row in $payType.content" :value="row.id">{{ row.name }}</option>
                   </select>
                 </div>
@@ -83,7 +85,7 @@
                 <div class="form-group">
                   <label for="mid-input">Amount</label>
                   <Field v-model="$trans.params.amount" name="transaction" type="text" class="form-control" id="mid-input"
-                    placeholder="Optional" :disabled="$trans.params.agent.person.id == ''" />
+                    placeholder="Optional" :disabled="$trans.params.agent.id == ''" />
                 </div>
 
 
@@ -108,19 +110,19 @@
 import { onMounted } from 'vue'
 import { Form, Field, ErrorMessage, configure, } from 'vee-validate'
 import * as Yup from 'yup'
-import { usePlanStore } from '@/store/system/plan'
-import { usePayTypeStore } from '@/store/system/payTypes'
-import { useAgentStore } from '@/store/users/agent'
-import { useTransactionStore } from '@/store/transaction/transaction'
+import { usePlanStore } from '@/store/system/PlanStore'
+import { usePayTypeStore } from '@/store/system/PayTypeStore'
+import { useAgentStore } from '@/store/users/AgentStore'
+import { useTransactionStore } from '@/store/transactions/TransactionStore'
 import { PlanToAmount } from '@/helpers/converter'
-import { useUserStore } from '@/store/users/users'
+import { useUsersStore } from '@/store/users/UsersStore'
 
 
 const $plan = usePlanStore();
 const $payType = usePayTypeStore();
 const $agent = useAgentStore();
 const $trans = useTransactionStore();
-const $user = useUserStore();
+const $user = useUsersStore();
 
 configure({
   validateOnInput: true,
