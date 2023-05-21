@@ -6,7 +6,8 @@
           <h3 class="card-title"><strong>Update User</strong></h3>
         </div>
         <div class="card-body">
-          <Form v-slot="{ errors }" :validation-schema="schema" validate-on-mount @submit="$user.UpdateAPI">
+          <Form v-slot="{ errors }" :validation-schema="schema" validate-on-mount
+            @submit="$user.UpdateAPI($user.params.id)">
             <div class="row">
 
               <div class="col-12 col-md-6">
@@ -14,7 +15,7 @@
                 <div class="users-list clearfix d-flex justify-content-center">
                   <li class="pt-0 w-100">
                     <img data-toggle="modal" data-target="#avatar-modal"
-                      :src="$user.params.avatar || 'https://fchhis.migfus20.com/images/logo.png'"
+                      :src="$user.params.user.avatar || 'https://fchhis.migfus20.com/images/logo.png'"
                       style="width: 162px; height: 162px" alt="User Image">
                     <button data-toggle="modal" data-target="#avatar-modal" class="btn btn-info ml-2">Upload
                       Avatar</button>
@@ -51,14 +52,14 @@
                 </div>
 
 
-                <label for="mobile-input">Mobile</label>
+                <!-- <label for="mobile-input">Mobile</label>
                 <div class="form-group">
                   <Field v-model="$user.params.phones[0].phone" name="mobile" type="text" class="form-control"
                     placeholder="Enter Mobile Number" />
                   <div class="mb-3 text-danger">
                     <ErrorMessage name="mobile" />
                   </div>
-                </div>
+                </div> -->
 
 
                 <div class="form-group">
@@ -105,7 +106,7 @@
               <div class="col-12 col-md-6">
 
                 <div class="form-group">
-                  <label for="last-input">Last Name</label>
+                  <label for="last-input">Name</label>
                   <Field v-model="$user.params.name" name="name" type="text" class="form-control" id="last-input"
                     placeholder="Enter Name" />
                   <div class="mb-2 text-danger">
@@ -190,11 +191,13 @@
             <button @click="$user.ChangeForm('')" class="btn btn-danger float-right">Cancel</button>
             <button type="submit" class="btn btn-warning float-right mr-1"
               :disabled="Object.keys(errors).length != 0">Update</button>
+
+            {{ errors }}
           </Form>
         </div>
 
       </div>
-      <UploadAvatarModal v-model="$user.params.avatar" />
+      <UploadAvatarModal v-model="$user.params.user.avatar" />
 
     </div>
   </Transition>
@@ -231,9 +234,8 @@ configure({
 const schema = Yup.object({
   username: Yup.string().required('Username is Required'),
   email: Yup.string().required('Email is Required').email('Invalid Email'),
-  mobile: Yup.string().required('Mobile Number is Required').min(10, 'Minimum of 10 Number'),
-  lastName: Yup.string().required('Last Name is Required'),
-  firstName: Yup.string().required('First Name is Required'),
+  // mobile: Yup.string().required('Mobile Number is Required').min(10, 'Minimum of 10 Number'),
+  name: Yup.string().required('Name is Required'),
   bday: Yup.date('Invalid Date').required('Birth Day is Required'),
   bplace: Yup.string().required('Birth Place is Required'),
   addressID: Yup.string().required('City is Required'),

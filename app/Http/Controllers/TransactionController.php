@@ -10,165 +10,23 @@ use Carbon\Carbon;
 
 class TransactionController extends Controller
 {
-  private function Print($req) {
-    if($req->user()->role == 5) {
-      $trans = Transaction::select('*');
-
-      if((bool)strtotime($req->start) OR (bool)strtotime($req->end)) {
-        if((bool)strtotime($req->start)) {
-          $trans->where('created_at', '>=', $req->start);
-        }
-        if((bool)strtotime($req->end)) {
-          $trans->where('created_at', '<=', $req->end);
-        }
-      }
-
-      $trans->with([
-        'client.person',
-        'client' => function ($q) {
-          $q->withSum('client_transactions', 'amount');
-        },
-        'staff.person',
-        'agent.person',
-        'plan',
-        'pay_type'
-      ]);
-
-      $data = $trans->orderBy('created_at', 'DESC')->get();
-
-      return response()->json([
-        ...$this->G_ReturnDefault($req),
-        'data' => $data,
-      ]);
-    }
-
-    return $this->G_UnauthorizedResponse();
-  }
-
   // SECTION INDEX
   public function index(Request $req) {
     switch($req->user()->role) {
       case 4:
         return $this->AgentIndex($req);
       case 5:
+        if($req->id)
+          return $this->StaffIDIndex($req);
+        if($req->print)
+          return $this->StaffPrintIndex($req);
+
         return $this->StaffIndex($req);
       case 6:
         return $this->ClientIndex($req);
       default:
         return $this->G_UnauthorizedResponse();
     }
-
-
-
-
-
-
-
-
-    // SECTION VALIDATION
-    $val = Validator::make($req->all(), [
-      'limit' => 'required|numeric|min:1|max:10',
-      'search' => '',
-      'start' => '',
-      'end' => '',
-      'filter' => '',
-      'print' => '',
-    ]);
-
-    if($val->fails()) {
-      return $this->G_ValidatorFailResponse($val);
-    }
-
-    if($req->print == 'true') {
-      return $this->Print($req);
-    }
-
-    // SECTION ADMIN
-    if($req->user()->role == 2) {
-      return 'test';
-      return response()->json([
-        ...$this->G_ReturnDefault($req),
-        'data' => Transaction::with(['client.person', 'staff.person', 'agent.person', 'plan'])->paginate(10),
-      ]);
-    }
-
-    // SECTION AGENT
-    if($req->user()->role == 4) {
-
-      return response()->json([
-        ...$this->G_ReturnDefault($req),
-        'data' => Transaction::with(['client.person', 'staff.person', 'agent.person', 'plan', 'pay_type'])
-          ->where('created_at', '>=', $req->start)
-          ->where('created_at', '<=', $req->end)
-          ->where('agent_id', $req->user()->id)
-          ->whereHas('client.person', function($q) use($req) {
-            $q->where('lastName', 'LIKE', '%'.$req->search.'%');
-          })
-          ->orderBy('created_at', 'DESC')
-          ->paginate($req->limit),
-      ]);
-    }
-
-    // SECTION STAFF
-    if($req->user()->role == 5) {
-      $trans = Transaction::select('*');
-
-      if((bool)strtotime($req->start) OR (bool)strtotime($req->end)) {
-        if((bool)strtotime($req->start)) {
-          $trans->where('created_at', '>=', $req->start);
-        }
-        if((bool)strtotime($req->end)) {
-          $trans->where('created_at', '<=', $req->end);
-        }
-      }
-
-      $trans->with([
-        'client.person',
-        'client' => function ($q) {
-          $q->withSum('client_transactions', 'amount');
-        },
-        'staff.person',
-        'agent.person',
-        'plan',
-        'pay_type'
-      ]);
-
-      switch($req->filter) {
-        case 'or':
-          $trans->where('or', 'LIKE', '%'.$req->search.'%');
-          break;
-        case 'email':
-          $trans->whereHas('client', function($q) use($req) {
-            $q->where('email', 'LIKE', '%'.$req->search.'%');
-          });
-          break;
-        case 'address':
-          $trans->whereHas('client.person', function($q) use($req) {
-            $q->where('address', 'LIKE', '%'.$req->search.'%');
-          });
-          break;
-        case 'plans':
-          $trans->whereHas('plan', function($q) use($req) {
-            $q->where('name', 'LIKE', '%'.$req->search.'%');
-          });
-          break;
-        default:
-          $trans->whereHas('client.person', function($q) use($req) {
-            $q->where('lastName', 'LIKE', '%'.$req->search.'%')
-              ->orWhere('firstName', 'LIKE', '%'.$req->search.'%');
-          });
-      }
-
-      $data = $trans->orderBy('created_at', 'DESC')
-      ->paginate(10);
-
-      return response()->json([
-        ...$this->G_ReturnDefault($req),
-        'data' => $data,
-      ]);
-    }
-
-
   }
 
   private function ClientIndex($req) {
@@ -258,8 +116,101 @@ class TransactionController extends Controller
       return $this->G_ValidatorFailResponse($val);
     }
 
-    if($req->print) {
-      $data = Transaction::select('*');
+    $data = Transaction::select('*');
+
+    if((bool)strtotime($req->start) OR (bool)strtotime($req->end)) {
+      if((bool)strtotime($req->start)) {
+        $data->where('created_at', '>=', $req->start);
+      }
+      if((bool)strtotime($req->end)) {
+        $data->where('created_at', '<=', $req->end);
+      }
+    }
+
+    $data = Transaction::with([
+      'plan',
+      'pay_type',
+      'client.user',
+      'client' => function($q) {
+        $q->withSum('client_transactions','amount');
+      },
+      'staff.user',
+      'agent.user'
+    ]);
+
+    switch($req->filter) {
+      case 'or':
+        $data->where('or', 'LIKE', '%' . $req->search. '%');
+        break;
+      case 'email':
+        $data->whereHas('client.user', function($q) use($req) {
+          $q->where('email', 'LIKE', '%' . $req->search. '%');
+        });
+        break;
+      case 'address':
+        $data->whereHas('client', function($q) use($req) {
+          $q->where('address', 'LIKE', '%' . $req->search. '%');
+        });
+        break;
+      case 'plans':
+        $data->whereHas('plan', function($q) use($req) {
+          $q->where('name', 'LIKE', '%' . $req->search. '%');
+        });
+        break;
+      default:
+        $data->whereHas('client', function($q) use($req) {
+          $q->where('name', 'LIKE', '%' . $req->search. '%');
+        });
+
+
+
+      $sum = Transaction::where('agent_id', $req->user()->person->id)->sum('amount');
+
+      return response()->json([
+        ...$this->G_ReturnDefault($req),
+        'data' => $data->orderBy('created_at', 'DESC')->paginate($req->limit),
+        'sum'  => $sum,
+      ]);
+    }
+  }
+
+  private function StaffIDIndex($req) {
+    $val = Validator::make($req->all(), [
+      'search' => '',
+      'start' => '',
+      'end' => '',
+      'filter'
+    ]);
+
+    if($val->fails()) {
+      return $this->G_ValidatorFailResponse($val);
+    }
+
+    $data = Transaction::with([
+      'plan',
+      'pay_type',
+      'client.user',
+      'client' => function($q) {
+        $q->withSum('client_transactions','amount');
+      },
+      'staff.user',
+      'agent.user'
+    ])
+    ->where('client_id', $req->id)
+    ->whereHas('plan', function($q) use($req) {
+      $q->where('name', 'LIKE', '%' . $req->search. '%');
+    })
+    ->orderBy('created_at', 'DESC')
+    ->paginate($req->limit);
+
+    return response()->json([
+      ...$this->G_ReturnDefault($req),
+      'data' => $data,
+    ]);
+  }
+
+  private function StaffPrintIndex($req) {
+    $data = Transaction::select('*');
 
       if((bool)strtotime($req->start) OR (bool)strtotime($req->end)) {
         if((bool)strtotime($req->start)) {
@@ -288,64 +239,6 @@ class TransactionController extends Controller
         'data' => $data->orderBy('created_at', 'DESC')->get(),
         'sum'  => $sum,
       ]);
-    }
-    else {
-      $data = Transaction::select('*');
-
-      if((bool)strtotime($req->start) OR (bool)strtotime($req->end)) {
-        if((bool)strtotime($req->start)) {
-          $data->where('created_at', '>=', $req->start);
-        }
-        if((bool)strtotime($req->end)) {
-          $data->where('created_at', '<=', $req->end);
-        }
-      }
-
-      $data = Transaction::with([
-        'plan',
-        'pay_type',
-        'client.user',
-        'client' => function($q) {
-          $q->withSum('client_transactions','amount');
-        },
-        'staff.user',
-        'agent.user'
-      ]);
-
-      switch($req->filter) {
-        case 'or':
-          $data->where('or', 'LIKE', '%' . $req->search. '%');
-          break;
-        case 'email':
-          $data->whereHas('client.user', function($q) use($req) {
-            $q->where('email', 'LIKE', '%' . $req->search. '%');
-          });
-          break;
-        case 'address':
-          $data->whereHas('client', function($q) use($req) {
-            $q->where('address', 'LIKE', '%' . $req->search. '%');
-          });
-          break;
-        case 'plans':
-          $data->whereHas('plan', function($q) use($req) {
-            $q->where('name', 'LIKE', '%' . $req->search. '%');
-          });
-          break;
-        default:
-          $data->whereHas('client', function($q) use($req) {
-            $q->where('name', 'LIKE', '%' . $req->search. '%');
-          });
-      }
-
-
-      $sum = Transaction::where('agent_id', $req->user()->person->id)->sum('amount');
-
-      return response()->json([
-        ...$this->G_ReturnDefault($req),
-        'data' => $data->orderBy('created_at', 'DESC')->paginate($req->limit),
-        'sum'  => $sum,
-      ]);
-    }
   }
 
   // SECTION STORE
@@ -356,40 +249,6 @@ class TransactionController extends Controller
       default:
         return $this->G_UnauthorizedResponse();
     }
-
-
-
-    $val = Validator::make($req->all(), [
-      'agent.person.id' => 'required',
-      'client.person.id' => 'required',
-      'amount' => 'required',
-      'or' => 'required',
-      'pay_type_id' => 'required',
-      'plan.id' => 'required',
-      'or',
-    ]);
-
-    if($val->fails()) {
-      return $this->G_ValidatorFailResponse($val);
-    }
-
-    if($req->user()->role == 5) {
-      // return $req->client['person']['id'];
-
-      Transaction::create([
-        'or' => $req->or,
-        'agent_id' => $req->agent['person']['id'],
-        'staff_id' => $req->user()->id,
-        'client_id' => $req->client['person']['id'],
-        'pay_type_id' => $req->pay_type_id,
-        'plan_id' => $req->plan['id'],
-        'amount' => $req->amount,
-      ]);
-
-      return response()->json([...$this->G_ReturnDefault($req), 'data' => true]);
-    }
-
-    return $this->G_UnauthorizedResponse();
   }
 
   private function StaffStore($req) {
@@ -441,7 +300,6 @@ class TransactionController extends Controller
   }
 
   // SECTION UPDATE
-
   public function update(Request $req, string $id) {
     switch($req->user()->role) {
       case 5:
@@ -491,5 +349,40 @@ class TransactionController extends Controller
 
   public function destroy(string $id) {
       //
+  }
+
+  private function Print($req) {
+    if($req->user()->role == 5) {
+      $trans = Transaction::select('*');
+
+      if((bool)strtotime($req->start) OR (bool)strtotime($req->end)) {
+        if((bool)strtotime($req->start)) {
+          $trans->where('created_at', '>=', $req->start);
+        }
+        if((bool)strtotime($req->end)) {
+          $trans->where('created_at', '<=', $req->end);
+        }
+      }
+
+      $trans->with([
+        'client.person',
+        'client' => function ($q) {
+          $q->withSum('client_transactions', 'amount');
+        },
+        'staff.person',
+        'agent.person',
+        'plan',
+        'pay_type'
+      ]);
+
+      $data = $trans->orderBy('created_at', 'DESC')->get();
+
+      return response()->json([
+        ...$this->G_ReturnDefault($req),
+        'data' => $data,
+      ]);
+    }
+
+    return $this->G_UnauthorizedResponse();
   }
 }

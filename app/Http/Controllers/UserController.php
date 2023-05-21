@@ -592,6 +592,90 @@ class UserController extends Controller
     return response()->json([...$this->G_ReturnDefault($req)]);
   }
 
+  // SECTION SHOW
+
+  public function show(string $id, Request $req) {
+    switch($req->user()->role) {
+      case 5:
+        return $this->StaffShow($req, $id);
+      default:
+      return $this->G_UnauthorizedResponse();
+    }
+  }
+
+  private function StaffShow($req, $id) {
+    $data = Person::where('id', $id)
+      ->with(['user', 'client_transactions', 'plan', 'pay_type'])
+      ->withSum('client_transactions', 'amount')
+      ->first();
+
+    return response()->json([...$this->G_ReturnDefault($req), 'data' => $data], 200);
+  }
+
+  // SECTION UPDATE
+
+
+  public function update(Request $req, string $id) {
+    switch($req->user()->role) {
+      case 5:
+        return $this->StaffUpdate($req, $id);
+      default:
+        return $this->G_UnauthorizedResponse();
+    }
+  }
+
+  private function StaffUpdate($req, $id) {
+    $val = Validator::make($req->all(), [
+      'user.avatar'   => '',
+      'user.username' => ['required', Rule::unique('users', 'username')->ignore($req->user['id'])],
+      'user.email'    => ['required', 'email', Rule::unique('users', 'email')->ignore($req->user['id'])],
+      'user.password' => '',
+      // 'person.mobile' => 'required',
+      'plan_id'  => 'required',
+      'pay_type_id' => 'required',
+
+      'name'  => 'required',
+      'sex'       => 'required',
+      'bday'      => 'required',
+      'bplace_id' => 'required',
+      'address_id'=> 'required',
+      'address'   => 'required',
+      'agent_id'  => 'required',
+    ]);
+
+    if($val->fails()) {
+      return $this->G_ValidatorFailResponse($val);
+    }
+
+    $person = Person::where('id', $id)->update([
+      'name'      => $req->name,
+      'bday'      => $req->bday,
+      'bplace_id' => $req->bplace_id,
+      'sex'       => $req->sex,
+      'address_id'=> $req->address_id,
+      'address'   => $req->address,
+      // 'mobile'    => $req->person['mobile'],
+      'agent_id'  => $req->agent_id,
+      'plan_id'   => $req->plan_id,
+      'pay_type_id'=> $req->pay_type_id,
+    ]);
+
+    $user = User::where('id', $req->user['id'])->update([
+      'username' => $req->user['username'],
+      'email'    => $req->user['email'],
+    ]);
+
+    if($req->password) {
+      User::where('id', $req->user['id'])->update(['password' => Hash::make($req->password)]);
+    }
+
+    if(!User::where('id', $req->user['id'])->where('avatar', $req->user['avatar'])->first()) {
+      User::where('id', $req->user['id'])->update(['avatar' => $this->G_AvatarUpload($req->user['avatar'])]);
+    }
+
+    return response()->json([...$this->G_ReturnDefault($req),]);
+  }
+
   // SECTION OTHERS
 
   private function getCount($req) {
@@ -723,134 +807,6 @@ class UserController extends Controller
   }
 
 
-  public function update(Request $req, string $id) {
-    if($req->user()->role == 2) {
-
-      $val = Validator::make($req->all(), [
-        'avatar'   => '',
-        'username' => ['required', Rule::unique('users', 'username')->ignore($req->id)],
-        'email'    => ['required', 'email', Rule::unique('users', 'email')->ignore($req->id)],
-        'password' => '',
-        'person.mobile' => 'required',
-        'notify_mobile' => 'required',
-        'role'     => 'required',
-        'plan_id'  => 'required',
-        'pay_type_id' => 'required',
-
-        'person.lastName'  => 'required',
-        'person.firstName' => 'required',
-        'person.midName'   => '',
-        'person.extName'   => '',
-        'person.sex'       => 'required',
-        'person.bday'      => 'required',
-        'person.bplace_id' => 'required',
-        'person.address_id'=> 'required',
-        'person.address'   => 'required',
-        'person.agent_id'  => 'required',
-      ]);
-
-      if($val->fails()) {
-        return $this->G_ValidatorFailReponse($val);
-      }
-
-      $person = Person::where('id', $req->person_id)->update([
-        'lastName'  => $req->person['lastName'],
-        'firstName' => $req->person['firstName'],
-        'midName'   => $req->person['midName'],
-        'extName'   => $req->person['extName'],
-        'bday'      => $req->person['bday'],
-        'bplace_id' => $req->person['bplace_id'],
-        'sex'       => $req->person['sex'],
-        'address_id'=> $req->person['address_id'],
-        'address'   => $req->person['address'],
-        'mobile'    => $req->person['mobile'],
-        'agent_id'  => $req->person['agent_id'],
-      ]);
-
-      $user = User::where('id', $id)->update([
-        'plan_id'  => $req->plan_id,
-        'username' => $req->username,
-        'email'    => $req->email,
-        'role'     => $req->role,
-        'notify_mobile' => $req->notify_mobile,
-        'pay_type_id' => $req->pay_type_id,
-      ]);
-
-      if($req->password) {
-        User::where('id', $id)->update(['password' => Hash::make($req->password)]);
-      }
-
-      if(!User::where('id', $id)->where('avatar', $req->avatar)->first()) {
-        User::where('id', $id)->update(['avatar' => $this->G_AvatarUpload($req->avatar)]);
-      }
-
-      return response()->json([...$this->G_ReturnDefault($req),]);
-    }
-
-    // SECTION STAFF
-    if($req->user()->role == 5) {
-
-      $val = Validator::make($req->all(), [
-        'avatar'   => '',
-        'username' => ['required', Rule::unique('users', 'username')->ignore($req->id)],
-        'email'    => ['required', 'email', Rule::unique('users', 'email')->ignore($req->id)],
-        'password' => '',
-        'person.mobile' => 'required',
-        'notify_mobile' => 'required',
-        'plan_id'  => 'required',
-        'pay_type_id' => 'required',
-
-        'person.lastName'  => 'required',
-        'person.firstName' => 'required',
-        'person.midName'   => '',
-        'person.extName'   => '',
-        'person.sex'       => 'required',
-        'person.bday'      => 'required',
-        'person.bplace_id' => 'required',
-        'person.address_id'=> 'required',
-        'person.address'   => 'required',
-        'person.agent_id'  => 'required',
-      ]);
-
-      if($val->fails()) {
-        return $this->G_ValidatorFailReponse($val);
-      }
-
-      $person = Person::where('id', $req->person_id)->update([
-        'lastName'  => $req->person['lastName'],
-        'firstName' => $req->person['firstName'],
-        'midName'   => $req->person['midName'],
-        'extName'   => $req->person['extName'],
-        'bday'      => $req->person['bday'],
-        'bplace_id' => $req->person['bplace_id'],
-        'sex'       => $req->person['sex'],
-        'address_id'=> $req->person['address_id'],
-        'address'   => $req->person['address'],
-        'mobile'    => $req->person['mobile'],
-        'agent_id'  => $req->person['agent_id'],
-      ]);
-
-      $user = User::where('id', $id)->update([
-        'plan_id'  => $req->plan_id,
-        'username' => $req->username,
-        'email'    => $req->email,
-        'notify_mobile' => $req->notify_mobile,
-        'pay_type_id' => $req->pay_type_id,
-      ]);
-
-      if($req->password) {
-        User::where('id', $id)->update(['password' => Hash::make($req->password)]);
-      }
-
-      if(!User::where('id', $id)->where('avatar', $req->avatar)->first()) {
-        User::where('id', $id)->update(['avatar' => $this->G_AvatarUpload($req->avatar)]);
-      }
-
-      return response()->json([...$this->G_ReturnDefault($req),]);
-    }
-
-    return $this->G_UnauthorizedResponse();
-  }
 
   public function destroy(string $id, Request $req) {
     if($req->user()->role == 2) {
@@ -861,16 +817,5 @@ class UserController extends Controller
     return $this->G_UnauthorizedResponse();
   }
 
-  public function show(string $id, Request $req) {
-    if($req->user()->role == 5) {
-      $data = User::where('id', $id)
-        ->with(['person', 'client_transactions', 'plan', 'pay_type'])
-        ->withSum('client_transactions', 'amount')
-        ->first();
 
-      return response()->json([...$this->G_ReturnDefault($req), 'data' => $data], 200);
-    }
-
-    return $this->G_UnauthorizedResponse();
-  }
 }

@@ -1,5 +1,5 @@
 <template>
-  <div v-if="userContent" class="row" :style="`background-image: url(${dead})`">
+  <div v-if="$user.content.user" class="row" :style="`background-image: url(${dead})`">
     <div class="col-12 col-md-5">
 
       <div class="card card-widget widget-user">
@@ -7,12 +7,12 @@
         <div class="widget-user-header text-white"
           style="background: url('https://adminlte.io/themes/v3/dist/img/photo1.png') center center;">
           <h3 class="widget-user-username text-right">
-            {{ userContent.person.name }}
+            {{ $user.content.name }}
           </h3>
-          <h5 class="widget-user-desc text-right">{{ userContent.email }}</h5>
+          <h5 class="widget-user-desc text-right">{{ $user.content.user.email }}</h5>
         </div>
         <div class="widget-user-image">
-          <img class="img-circle" :src="userContent.avatar" alt="User Avatar">
+          <img class="img-circle" :src="$user.content.user.avatar" alt="User Avatar">
         </div>
         <div class="card-footer">
           <div class="row">
@@ -25,7 +25,7 @@
             </div>
             <div class="col-sm-3 border-right">
               <div class="description-block">
-                <h5 class="description-header">{{ userContent.plan.name }}</h5>
+                <h5 v-if="$user.content.plan" class="description-header">{{ $user.content.plan.name }}</h5>
                 <span class="description-text">Plan</span>
               </div>
 
@@ -33,8 +33,8 @@
 
             <div class="col-sm-3 border-right">
               <div class="description-block">
-                <h5 class="description-header text-success">{{
-                  NumberAddComma(userContent.client_transactions_sum_amount) }}
+                <h5 class="description-header text-success">
+                  {{ NumberAddComma($user.content.client_transactions_sum_amount) }}
                 </h5>
                 <span class="description-text">Payed</span>
               </div>
@@ -46,22 +46,17 @@
                 <h5 class="description-header text-danger">
                   {{
                     NumberAddComma(
-                      userContentclient_transactions_sum_amount -
-                      PlanToPay(userContent.pay_type, userContent.plan)
+                      $user.content.client_transactions_sum_amount -
+                      PlanToPay($user.content.pay_type, $user.content.plan)
                     )
                   }}
                 </h5>
                 <span class="description-text">Due Balance</span>
               </div>
-
             </div>
-
           </div>
-
         </div>
-
       </div>
-
       <BeneficiaryTable />
 
     </div>
@@ -73,35 +68,21 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue'
+import { onMounted, onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { NumberAddComma, PlanToPay } from '@/helpers/converter'
-import { ref, reactive } from 'vue'
-import axios from 'axios'
+import { useUserDetailsStore } from '@/store/user/UserDetailStore'
 
 import TransactionTable from './TransactionTable.vue'
 import BeneficiaryTable from './BeneficiaryTable.vue'
 
 const $route = useRoute();
-
-const userContent = ref(false)
-const config = reactive({
-  loading: false,
-})
-
-async function GetAPI(id) {
-  config.loading = true
-  try {
-    let { data: { data } } = await axios.get('/api/users/' + id)
-    userContent.value = data
-  }
-  catch (e) {
-    $Err('User Details GetAPI', { e })
-  }
-  config.loading = false
-}
+const $user = useUserDetailsStore();
 
 onMounted(() => {
-  GetAPI($route.params.id)
+  $user.GetAPI($route.params.id)
+});
+onUnmounted(() => {
+  $user.content = {}
 });
 </script>

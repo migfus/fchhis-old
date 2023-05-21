@@ -4,8 +4,8 @@ import { $DebugInfo, $Err} from '@/helpers/debug'
 import axios from 'axios'
 import { useToast } from 'vue-toastification'
 
-export const useUsersStore = defineStore('useUsersStore', () => {
-  $DebugInfo('useUsersStore')
+export const useUsersStore = defineStore('Beneficiary', () => {
+  $DebugInfo('Beneficiary')
   const $toast = useToast();
   const CancelToken = axios.CancelToken;
   let cancel;
@@ -77,19 +77,6 @@ export const useUsersStore = defineStore('useUsersStore', () => {
     }
   }
 
-  async function UpdateAPI(id) {
-    try {
-      let { data: { data }} = await axios.put('/api/users/'+id, params)
-      Object.assign(params, {... InitParams()})
-      $toast.success('Successfully created');
-      GetAPI(1)
-      ChangeForm('')
-    }
-    catch(e) {
-      $Err('UsersTore SToreAPI Error', {e})
-    }
-  }
-
   // SECTION FUNCTIONS
   function ChangeForm(input) {
     config.form = input
@@ -145,7 +132,6 @@ export const useUsersStore = defineStore('useUsersStore', () => {
     PrintAPI,
     CancelAPI,
     StoreAPI,
-    UpdateAPI,
 
     ChangeForm,
     Update,
