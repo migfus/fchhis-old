@@ -13,6 +13,8 @@ class TransactionController extends Controller
   // SECTION INDEX
   public function index(Request $req) {
     switch($req->user()->role) {
+      case 2:
+        return $this->AdminIndex($req);
       case 4:
         return $this->AgentIndex($req);
       case 5:
@@ -241,6 +243,10 @@ class TransactionController extends Controller
       ]);
   }
 
+  private function AdminIndex($req) {
+
+  }
+
   // SECTION STORE
   public function store(Request $req) {
     switch($req->user()->role) {
@@ -338,19 +344,16 @@ class TransactionController extends Controller
     return response()->json([...$this->G_ReturnDefault($req), 'data' => true]);
   }
 
+  // SECTION DESTROY
+  public function destroy(string $id) {
+    if($req->user()->role == 2) {
+      return 1;
+    }
 
+    return $this->G_UnauthorizedResponse();
+  }
 
   // SECTION OTHERS
-
-
-  public function show(string $id) {
-      //
-  }
-
-  public function destroy(string $id) {
-      //
-  }
-
   private function Print($req) {
     if($req->user()->role == 5) {
       $trans = Transaction::select('*');
