@@ -10,7 +10,7 @@
 </template>
 
 <script setup>
-import { usePlanStore } from '@/store/system/plan'
+import { usePlanStore } from '@/store/system/PlanStore'
 
 import ResponsiveCard from './contents/ResponsiveCard.vue'
 import PlanRanking from './contents/PlanRanking.vue'

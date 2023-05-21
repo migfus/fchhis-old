@@ -2,9 +2,11 @@ import { ref, reactive } from 'vue'
 import { defineStore } from 'pinia'
 import axios from 'axios'
 import { $DebugInfo, $Err, $Log } from '@/helpers/debug'
+import { useToast } from 'vue-toastification'
 
 export const usePlanStore = defineStore('plan', ()=> {
   $DebugInfo('PlanStore')
+  const $toast = useToast();
 
   const content = ref([])
   const count = ref([])
@@ -16,29 +18,21 @@ export const usePlanStore = defineStore('plan', ()=> {
     notify: sessionStorage.getItem('plan-notify') ? true : false,
     form: '',
   })
-  const params = reactive({
+  const query = reactive({
     search: '',
     filter: 'name',
-  })
-  const input = ref({
-    avatar: '',
-    desc: '',
-    name: '',
     start: '',
     end: '',
-    contract_price: '',
-    spot_payment: '',
-    spot_service:'',
-    annual: '',
-    semi_annual: '',
-    quarterly: '',
-    monthly: '',
+  })
+  const params = ref({
+    ...InitParams()
   })
 
+  // SECTION API
   async function GetAPI() {
     config.loading = true
     try {
-      let { data: {data}} = await axios.get('/api/plan', { params: params});
+      let { data: {data}} = await axios.get('/api/plan', { params: query});
       content.value = data
     }
     catch(e) {
@@ -59,6 +53,49 @@ export const usePlanStore = defineStore('plan', ()=> {
     config.loadingCount = false
   }
 
+  async function UpdateAPI() {
+    config.loading = true
+    try {
+      let { data: { data } } = await axios.put('/api/plan', input.value)
+      $Log('UpdateAPI', {data})
+      GetAPI()
+    }
+    catch(e) {
+      $Err('UpdateAPI Err', {e})
+    }
+    config.loading = false
+  }
+
+  async function AddAPI() {
+    config.loading = true
+    try {
+      let { data: { data } } = await axios.post('/api/plan', params.value)
+      $Log('AddAPI', {data})
+      ChangeForm('')
+      GetAPI()
+      $toast.success('Successfully added')
+    }
+    catch(e) {
+      $Err('AddAPI Err', {e})
+    }
+    config.loading = false
+  }
+
+  async function DeleteAPI(id, idx) {
+    content.value.splice(idx, 1)
+    try {
+      let { data: { data}} = await axios.delete('/api/plan/' + id)
+      $Log('DeleteAPI', {data})
+      $toast.success('Successfully deleted')
+      GetAPI()
+    }
+    catch(e) {
+      $Log('DeleteAPI Error', {e})
+    }
+  }
+
+
+  // SECTION FUNCTIONS
   function RemoveNotify() {
     config.notify = true
     sessionStorage.setItem('plan-notify', true);
@@ -70,31 +107,10 @@ export const usePlanStore = defineStore('plan', ()=> {
     }
   }
 
-  async function DeleteAPI(id, idx) {
-    content.value.splice(idx, 1)
-    try {
-      let { data: { data}} = await axios.delete('/api/plan/' + id)
-      $Log('DeleteAPI', {data})
-    }
-    catch(e) {
-      $Log('DeleteAPI Error', {e})
-    }
-  }
-
-  async function AddAPI() {
-    config.loading = true
-    try {
-      let { data: { data } } = await axios.post('/api/plan', input.value)
-      $Log('AddAPI', {data})
-      GetAPI()
-    }
-    catch(e) {
-      $Err('AddAPI Err', {e})
-    }
-    config.loading = false
-  }
-
   function ChangeForm(fo) {
+    if(fo == '') {
+      params.value = InitParams()
+    }
     config.form = fo
 
     window.scrollTo({
@@ -109,25 +125,29 @@ export const usePlanStore = defineStore('plan', ()=> {
     ChangeForm('update')
   }
 
-  async function UpdateAPI() {
-    config.loading = true
-    try {
-      let { data: { data } } = await axios.put('/api/plan', input.value)
-      $Log('UpdateAPI', {data})
-      GetAPI()
+  function InitParams() {
+    return {
+      avatar: '',
+      desc: '',
+      name: '',
+      start: '18',
+      end: '70',
+      contract_price: '',
+      spot_payment: '',
+      spot_service:'',
+      annual: '',
+      semi_annual: '',
+      quarterly: '',
+      monthly: '',
     }
-    catch(e) {
-      $Err('UpdateAPI Err', {e})
-    }
-    config.loading = false
   }
 
   return {
     content,
     count,
     config,
+    query,
     params,
-    input,
 
     GetAPI,
     GetCount,

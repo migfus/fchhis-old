@@ -36,7 +36,7 @@
 
 <script setup>
 import { useUsersStore } from '@/store/users/UsersStore'
-import { onMounted, onUnmounted } from 'vue'
+import { onMounted } from 'vue'
 import moment from 'moment'
 import { NumberAddComma } from '@/helpers/converter'
 
@@ -48,7 +48,7 @@ onMounted(() => {
   $users.GetAPI()
 })
 
-onUnmounted(() => {
-  $users.content = []
-});
+// onUnmounted(() => {
+//   $users.content = []
+// });
 </script>

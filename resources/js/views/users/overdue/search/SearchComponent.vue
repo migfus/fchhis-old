@@ -10,7 +10,7 @@
 </template>
 
 <script setup>
-import { onMounted, onUnmounted } from 'vue'
+import { onMounted } from 'vue'
 import { useUsersStore } from '@/store/users/UsersStore'
 
 const $user = useUsersStore();
@@ -22,8 +22,8 @@ onMounted(() => {
   $user.GetAPI()
 });
 
-onUnmounted(() => {
-  $user.content = []
-  $user.query.overdue = false
-});
+// onUnmounted(() => {
+//   $user.content = []
+//   $user.query.overdue = false
+// });
 </script>

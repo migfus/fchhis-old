@@ -39,7 +39,7 @@
 import { useUsersStore } from '@/store/users/UsersStore'
 import { onMounted } from 'vue'
 import { AgeConverter } from '@/helpers/converter'
-import { watch, onUnmounted } from 'vue'
+import { watch } from 'vue'
 import { throttle } from 'lodash'
 
 const $users = useUsersStore();
@@ -52,7 +52,7 @@ watch($users.query, throttle(() => {
   $users.GetAPI(1)
 }, 1000));
 
-onUnmounted(() => {
-  $users.content = []
-});
+// onUnmounted(() => {
+//   $users.content = []
+// });
 </script>

@@ -67,7 +67,7 @@
 </template>
 
 <script setup>
-import { onMounted, watch, onUnmounted } from 'vue';
+import { onMounted, watch } from 'vue';
 import { useTransactionStore } from '@/store/transactions/TransactionStore'
 import { throttle } from 'lodash'
 import { NumberAddComma } from '@/helpers/converter'
@@ -127,7 +127,7 @@ watch($trans.query, throttle(() => {
   console.log('agent transaction watch triggered')
 }, 1000));
 
-onUnmounted(() => {
-  $trans.content = []
-});
+// onUnmounted(() => {
+//   $trans.content = []
+// });
 </script>

@@ -32,7 +32,7 @@
 </template>
 
 <script setup>
-import { onMounted, onUnmounted } from 'vue'
+import { onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useBeneficiaryStore } from '@/store/users/BeneficiaryStore'
 import moment from 'moment'
@@ -46,7 +46,7 @@ onMounted(() => {
   $ben.GetAPI()
 });
 
-onUnmounted(() => {
-  $ben.content = []
-});
+// onUnmounted(() => {
+//   $ben.content = []
+// });
 </script>

@@ -92,7 +92,7 @@
 </template>
 
 <script setup>
-import { onMounted, onUnmounted } from 'vue'
+import { onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { NumberAddComma, PlanToPay } from '@/helpers/converter'
 import { useUserDetailsStore } from '@/store/user/UserDetailStore'
@@ -110,9 +110,9 @@ const $ben = useBeneficiaryStore();
 onMounted(() => {
   $user.GetAPI($route.params.id)
 });
-onUnmounted(() => {
-  $user.params.id = null
-});
+// onUnmounted(() => {
+//   $user.params.id = null
+// });
 </script>
 
 <style scoped>

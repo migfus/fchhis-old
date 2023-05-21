@@ -36,7 +36,7 @@
 
 <script setup>
 import { useTransactionStore } from '@/store/transactions/TransactionStore'
-import { onMounted, onUnmounted } from 'vue'
+import { onMounted } from 'vue'
 import moment from 'moment'
 import { NumberAddComma } from '@/helpers/converter'
 
@@ -49,7 +49,7 @@ onMounted(() => {
   $trans.GetAPI()
 })
 
-onUnmounted(() => {
-  $trans.content = []
-});
+// onUnmounted(() => {
+//   $trans.content = []
+// });
 </script>

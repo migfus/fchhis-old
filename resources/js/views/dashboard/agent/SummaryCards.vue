@@ -16,7 +16,7 @@
 </template>
 
 <script setup>
-import { onMounted, onUnmounted } from 'vue'
+import { onMounted, } from 'vue'
 import { useStatisticStore } from '@/store/dashboard/StatisticStore'
 
 const $stat = useStatisticStore();
@@ -26,7 +26,7 @@ onMounted(() => {
   console.log('summary cards onMOunted')
 });
 
-onUnmounted(() => {
-  $stat.content = []
-});
+// onUnmounted(() => {
+//   $stat.content = []
+// });
 </script>

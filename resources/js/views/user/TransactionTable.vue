@@ -28,7 +28,7 @@
 
 <script setup>
 import { useRoute } from 'vue-router'
-import { onMounted, onUnmounted } from 'vue'
+import { onMounted } from 'vue'
 import { useTransactionStore } from '@/store/transactions/TransactionStore';
 import moment from 'moment'
 
@@ -40,8 +40,8 @@ onMounted(() => {
   $trans.GetAPI()
 });
 
-onUnmounted(() => {
-  $trans.query.id = null
-  $trans.content = []
-});
+// onUnmounted(() => {
+//   $trans.query.id = null
+//   $trans.content = []
+// });
 </script>

@@ -23,7 +23,7 @@
           <span :class="`info-box-icon elevation-1`"><img :src="row.avatar" /></span>
           <div class="info-box-content">
             <span class="info-box-text text-bold">{{ row.name }}</span>
-            <span class="info-box-text text-bold">{{ row.users_count }}</span>
+            <span class="info-box-text text-bold">{{ row.persons_count }}</span>
             <!-- <span class="info-box-number card-loader-content" style="height: 1em">&nbsp;</span> -->
           </div>
 
@@ -55,7 +55,7 @@
 <script setup>
 import { Carousel, Navigation, Slide } from 'vue3-carousel'
 import 'vue3-carousel/dist/carousel.css'
-import { usePlanStore } from '@/store/system/plan'
+import { usePlanStore } from '@/store/system/PlanStore'
 import { onMounted } from 'vue'
 
 const $plan = usePlanStore()

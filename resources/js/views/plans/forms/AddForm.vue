@@ -14,7 +14,7 @@
                 <div class="users-list clearfix d-flex justify-content-center">
                   <li class="pt-0 w-100">
                     <img data-toggle="modal" data-target="#avatar-modal"
-                      :src="$plan.input.avatar || 'https://fchhis.migfus20.com/images/logo.png'"
+                      :src="$plan.params.avatar || 'https://fchhis.migfus20.com/images/logo.png'"
                       style="width: 162px; height: 162px" alt="User Image">
                     <button data-toggle="modal" data-target="#avatar-modal" class="btn btn-info ml-2">Upload
                       Image</button>
@@ -23,7 +23,7 @@
 
                 <div class="form-group">
                   <label for="name-input">Description</label>
-                  <QuillEditor v-model:content="$plan.input.desc" contentType="html" theme="snow" style="height: 300px"
+                  <QuillEditor v-model:content="$plan.params.desc" contentType="html" theme="snow" style="height: 300px"
                     placeholder="Place" />
                 </div>
               </div>
@@ -32,7 +32,7 @@
 
                 <div class="form-group">
                   <label for="name-input">Name</label>
-                  <Field v-model="$plan.input.name" name="name" type="text" class="form-control" id="name-input"
+                  <Field v-model="$plan.params.name" name="name" type="text" class="form-control" id="name-input"
                     placeholder="Enter Plan's Name" />
                   <div class="mb-2 text-danger">
                     <ErrorMessage name="name" />
@@ -44,7 +44,7 @@
                   <div class="row">
                     <div class="col-6">
                       <label for="start-input">Start Age</label>
-                      <Field v-model="$plan.input.start" name="start_age" type="text" class="form-control"
+                      <Field v-model="$plan.params.start" name="start_age" type="text" class="form-control"
                         id="start-input" placeholder="Enter Start Age" />
                       <div class="mb-2 text-danger">
                         <ErrorMessage name="start_age" />
@@ -52,7 +52,7 @@
                     </div>
                     <div class="col-6">
                       <label for="end-input">End Age</label>
-                      <Field v-model="$plan.input.end" name="end_age" type="text" class="form-control" id="end-input"
+                      <Field v-model="$plan.params.end" name="end_age" type="text" class="form-control" id="end-input"
                         placeholder="Enter End Age" />
                       <div class="mb-2 text-danger">
                         <ErrorMessage name="end_age" />
@@ -64,7 +64,7 @@
                 <div class="separator mb-2"><strong>PAYMENT</strong></div>
                 <div class="form-group">
                   <label for="contract-price">Contract Price</label>
-                  <Field v-model="$plan.input.contract_price" name="contract_price" type="text" class="form-control"
+                  <Field v-model="$plan.params.contract_price" name="contract_price" type="text" class="form-control"
                     id="contract-price" placeholder="Enter Contract Price" />
                   <div class="mb-2 text-danger">
                     <ErrorMessage name="contract_price" />
@@ -75,7 +75,7 @@
                   <div class="row">
                     <div class="col-6">
                       <label for="spot_payment">Spot Payment</label>
-                      <Field v-model="$plan.input.spot_payment" name="spot_payment" type="text" class="form-control"
+                      <Field v-model="$plan.params.spot_payment" name="spot_payment" type="text" class="form-control"
                         id="spot_payment" placeholder="Enter Spot Payment" />
                       <div class="mb-2 text-danger">
                         <ErrorMessage name="spot_payment" />
@@ -83,7 +83,7 @@
                     </div>
                     <div class="col-6">
                       <label for="spot_service">Spot Service</label>
-                      <Field v-model="$plan.input.spot_service" name="spot_service" type="text" class="form-control"
+                      <Field v-model="$plan.params.spot_service" name="spot_service" type="text" class="form-control"
                         id="spot_service" placeholder="Enter Spot Service" />
                       <div class="mb-2 text-danger">
                         <ErrorMessage name="spot_service" />
@@ -96,7 +96,7 @@
                   <div class="row">
                     <div class="col-6">
                       <label for="annually">Annual</label>
-                      <Field v-model="$plan.input.annual" name="annually" type="text" class="form-control" id="annually"
+                      <Field v-model="$plan.params.annual" name="annually" type="text" class="form-control" id="annually"
                         placeholder="Enter Annual" />
                       <div class="mb-2 text-danger">
                         <ErrorMessage name="annually" />
@@ -104,7 +104,7 @@
                     </div>
                     <div class="col-6">
                       <label for="semi_annually">Semi Annual</label>
-                      <Field v-model="$plan.input.semi_annual" name="semi_annually" type="text" class="form-control"
+                      <Field v-model="$plan.params.semi_annual" name="semi_annually" type="text" class="form-control"
                         id="semi_annually" placeholder="Enter Semi-Annual" />
                       <div class="mb-2 text-danger">
                         <ErrorMessage name="semi_annually" />
@@ -117,7 +117,7 @@
                   <div class="row">
                     <div class="col-6">
                       <label for="querterly">Quarterly</label>
-                      <Field v-model="$plan.input.quarterly" name="querterly" type="text" class="form-control"
+                      <Field v-model="$plan.params.quarterly" name="querterly" type="text" class="form-control"
                         id="querterly" placeholder="Enter Quarterly" />
                       <div class="mb-2 text-danger">
                         <ErrorMessage name="querterly" />
@@ -125,7 +125,7 @@
                     </div>
                     <div class="col-6">
                       <label for="monthly">Monthly</label>
-                      <Field v-model="$plan.input.monthly" name="monthly" type="text" class="form-control" id="monthly"
+                      <Field v-model="$plan.params.monthly" name="monthly" type="text" class="form-control" id="monthly"
                         placeholder="Enter Monthly" />
                       <div class="mb-2 text-danger">
                         <ErrorMessage name="monthly" />
@@ -144,7 +144,7 @@
         </div>
 
       </div>
-      <AvatarUpload />
+      <UploadAvatarModal v-model="$plan.params.avatar" />
 
     </div>
   </Transition>
@@ -155,9 +155,9 @@ import { Form, Field, ErrorMessage, configure, } from 'vee-validate'
 import * as Yup from 'yup'
 import { QuillEditor } from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css';
-import { usePlanStore } from '@/store/system/plan'
+import { usePlanStore } from '@/store/system/PlanStore'
 
-import AvatarUpload from '../modals/AvatarUpload.vue'
+import UploadAvatarModal from '@/components/UploadAvatarModal.vue'
 
 configure({
   validateOnInput: true,

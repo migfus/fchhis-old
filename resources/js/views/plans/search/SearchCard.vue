@@ -19,17 +19,16 @@
               <div class="input-group-prepend">
                 <span class="input-group-text"><i class="fas fa-filter"></i></span>
               </div>
-              <select v-model="$plan.params.filter" class="form-control">
+              <select v-model="$plan.query.filter" class="form-control">
                 <option value="name">Name</option>
                 <option value="desc">Description</option>
-                <option value="user">User</option>
               </select>
             </div>
           </div>
 
           <div class="col-12 col-md-6">
             <div class="input-group input-group float-right">
-              <input v-model="$plan.params.search" type="text" name="table_search" class="form-control float-right"
+              <input v-model="$plan.query.search" type="text" name="table_search" class="form-control float-right"
                 placeholder="Search">
               <div class="input-group-append">
                 <button type="submit" class="btn btn-default">
@@ -42,7 +41,7 @@
 
         <div class="row mt-2">
           <div class="col-12">
-            <button v-if="$plan.config.form" @click="$plan.ChangeForm('add')" class="btn btn-danger float-right">
+            <button v-if="$plan.config.form" @click="$plan.ChangeForm('')" class="btn btn-danger float-right">
               <i class="fas fa-plus-square d-inline d-xl-none"></i>
               <span class="d-none d-xl-inline">Cancel</span>
             </button>
@@ -78,11 +77,11 @@
 <script setup>
 import { watch, onMounted } from 'vue'
 import { throttle } from 'lodash'
-import { usePlanStore } from '@/store/system/plan'
+import { usePlanStore } from '@/store/system/PlanStore'
 
 const $plan = usePlanStore();
 
-watch($plan.params, throttle(() => {
+watch($plan.query, throttle(() => {
   $plan.GetAPI(1)
 }, 1000))
 

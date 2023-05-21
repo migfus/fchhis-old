@@ -89,7 +89,7 @@
 </template>
 
 <script setup>
-import { watch, onMounted, onUnmounted } from 'vue'
+import { watch, onMounted } from 'vue'
 import { useUsersStore } from '@/store/users/UsersStore'
 import moment from 'moment'
 import { throttle } from 'lodash'
@@ -110,7 +110,7 @@ onMounted(() => {
   $user.GetAPI()
 });
 
-onUnmounted(() => {
-  $user.content = []
-});
+// onUnmounted(() => {
+//   $user.content = []
+// });
 </script>

@@ -67,7 +67,7 @@
 </template>
 
 <script setup>
-import { onMounted, onUnmounted, watch } from 'vue';
+import { onMounted, watch } from 'vue';
 import { throttle } from 'lodash'
 import { NumberAddComma } from '@/helpers/converter'
 import moment from 'moment'
@@ -116,7 +116,7 @@ watch($users.query, throttle(() => {
   console.log('clients  watch triggered')
 }, 1000));
 
-onUnmounted(() => {
-  $users.content = []
-});
+// onUnmounted(() => {
+//   $users.content = []
+// });
 </script>

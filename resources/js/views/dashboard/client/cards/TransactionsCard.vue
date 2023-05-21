@@ -65,7 +65,7 @@
 
 
 <script setup>
-import { ref, onMounted, watch, onUnmounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import moment from 'moment'
 import { $DebugInfo, $Log } from '@/helpers/debug'
 import { useTransactionStore } from '@/store/transactions/TransactionStore'
@@ -105,7 +105,7 @@ watch($trans.query, throttle(() => {
   $trans.GetAPI(1)
 }, 1000));
 
-onUnmounted(() => {
-  $trans.content = []
-});
+// onUnmounted(() => {
+//   $trans.content = []
+// });
 </script>

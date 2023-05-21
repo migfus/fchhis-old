@@ -1,27 +1,34 @@
 <template>
-  <div v-for="row in $plan.content" :key="row.id" class="col-md-6 col-12">
-
-
-    <div :class="`card mb-2`">
+  <div v-for="row in $plan.content" :key="row.id" class="col-12">
+    <div :class="`card mb-2 collapsed-card`" data-card-widget="collapse" ref="collapse-click" style="cursor: pointer;">
       <div class="card-header">
         <div>
           <div class="row">
-            <div class="col-12">
-              <div class="card-tools float-right">
-                <button :disabled="!$plan.config.enableDelete" @click="$plan.DeleteAPI(row.id, idx)"
-                  class="btn btn-danger btn-sm float-right">
-                  Remove
-                </button>
-                <button @click="$plan.Update(row)" class="btn btn-secondary btn-sm float-right mr-1">
-                  Edit
-                </button>
-              </div>
 
+            <div class="col-12 col-md-6 col-xl-4">
               <img v-if="row.avatar" :src="row.avatar" style="height: 2.5em; width: 2.5em"
                 class="img-circle float-left mr-3">
+              <span class="float-right text-secondary d-md-none">
+                {{ moment(row.created_at).local().format('MMM D, YYYY') }}
+              </span>
               <div> <strong> {{ row.name }} </strong> </div>
 
-              <div>{{ moment(row.created_at).local().format('MMMD, YYYY') }}</div>
+            </div>
+
+            <div class="col-12 col-md-6 col-xl-4 d-none d-md-inline">
+              <div class="text-bold">Description:</div>
+              <span class="float-right text-secondary d-none d-md-inline d-xl-none">
+                {{ moment(row.created_at).local().format('MMM D, YYYY') }}
+              </span>
+              <div class="text-truncate" v-html="row.desc"></div>
+            </div>
+
+            <div class="col-12 col-xl-4 d-none d-xl-inline">
+              <span class="float-right text-secondary">
+                {{ moment(row.created_at).local().format('MMM D, YYYY') }}
+              </span>
+              <div class="text-bold">Requirements:</div>
+              <strong>{{ `${row.age_start} - ${row.age_end} Years Old` }}</strong>
             </div>
           </div>
         </div>
@@ -50,23 +57,39 @@
           </div>
 
         </div>
+
+        <div class="card-tools float-right">
+          <button :disabled="!$plan.config.enableDelete" @click="$plan.DeleteAPI(row.id, idx)"
+            class="btn btn-danger float-right">
+            <i class="fas fa-times mr-2"></i>Remove
+          </button>
+          <button @click="$plan.Update(row)" class="btn btn-warning float-right mr-1">
+            <i class="fas fa-pen mr-2"></i>Edit
+          </button>
+
+          <button class="btn btn-info float-right mr-1">
+            <i class="fas fa-print mr-2"></i>Print
+          </button>
+        </div>
       </div>
 
     </div>
+
+    <PrintModal />
   </div>
 </template>
 
 <script setup>
 import { onMounted } from 'vue'
-import { usePlanStore } from '@/store/system/plan';
+import { usePlanStore } from '@/store/system/PlanStore';
 import moment from 'moment';
 import { NumberAddComma } from '@/helpers/converter'
+
+import PrintModal from '../modals/PrintModal.vue'
 
 const $plan = usePlanStore();
 
 onMounted(() => {
   $plan.GetAPI()
 });
-
-
 </script>

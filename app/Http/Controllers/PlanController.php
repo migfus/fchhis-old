@@ -32,12 +32,10 @@ class PlanController extends Controller
     if($req->user()->role == 2 || $req->user()->role == 5) {
       switch($req->filter) {
         case 'desc':
-          $data = $plan->where('desc', 'LIKE', '%' . $req->search .'%')->get();
+          $data = $plan->where('desc', 'LIKE', '%' . $req->search .'%')->orderBy('created_at', 'DESC')->get();
           break;
-        case 'user':
-          $data = $plan->with('user')->whereRelation('username', 'LIKE', '%' . $req->search .'%')->get();
         default:
-          $data = $plan->where('name', 'LIKE', '%' . $req->search .'%')->get();
+          $data = $plan->where('name', 'LIKE', '%' . $req->search .'%')->orderBy('created_at', 'DESC')->get();
       }
       return response()->json([...$this->G_ReturnDefault($req), 'data' => $data]);
     }
