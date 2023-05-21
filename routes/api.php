@@ -36,6 +36,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/change-password', 'ChangePassword');
     Route::post('/avatar', 'ChangeAvatar');
     Route::get('/profile', 'Profile');
+    Route::get('/overdue', 'Overdue');
   });
 
   Route::apiResource('/users', UserController::class)->only(['index', 'destroy', 'store', 'update', 'show']);

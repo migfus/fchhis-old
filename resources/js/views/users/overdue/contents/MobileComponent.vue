@@ -2,8 +2,10 @@
   <div v-if="$user.content" class="col-12">
 
 
-    <div v-for="(row, idx,) in $user.content.data"
-      :class="`card mb-2 ${$user.config.viewAll ? '' : 'collapsed-card'} ${row.user.email ? '' : 'bg-warning'}`">
+    <div v-for="(row, idx,) in $user.content.data" :class="`card mb-2 ${$user.config.viewAll ? '' : 'collapsed-card'}
+              ${row.user.email ? '' : 'bg-warning'}
+              ${moment(row.due_at).diff(moment(), 'days') <= -60 ? 'bg-danger' : moment(row.due_at).diff(moment(), 'days') <= 0 ? 'bg-warning' : ''}`
+      ">
       <div class="card-header" style="cursor: pointer;">
         <div data-card-widget="collapse" ref="collapse-click">
           <div class="row">
@@ -26,21 +28,23 @@
               </div>
               <div><strong>{{ row.user.username }}</strong></div>
             </div>
-            <div v-if="row.user.email" class="d-none d-md-inline col-md-6 col-xl-4">
+            <div class="d-none d-md-inline col-md-6 col-xl-4">
               <span class="d-inline d-xl-none float-right text-secondary"> {{
                 moment(row.created_at).local().format('MMMD, YYYY') }} </span>
-              <div>Email: <strong>{{ row.user.email }}</strong></div>
-              <div>Role: <strong>{{ RoleToDesc(row.user.role) }}</strong></div>
-            </div>
-            <div v-else class="d-none d-md-inline col-md-6 col-xl-4">
-              Link: <a :href="row.OR" target="_blank">{{ `https://fchhis.migfus20.com/register?or=${row.or}` }}</a>
-              <div class="text-danger">Unregistered</div>
+              <div>Days: <strong>{{ moment(row.due_at).diff(moment(), 'days') }} Days Left</strong></div>
+              <div>Due At: <strong>{{ moment(row.due_at).format('MMM D, YYYY') }}</strong></div>
             </div>
             <div class="d-none d-xl-inline col-12 col-md-6 col-xl-4">
               <span class="float-right text-secondary"> {{ moment(row.created_at).local().format('MMM D, YYYY') }}
               </span>
               <div>Plan: <strong>{{ `${row.plan.name} (${row.pay_type.name})` }}</strong></div>
-              <div>Total: <strong>{{ NumberAddComma(row.plan.spot_pay) }}</strong></div>
+              <div v-if="moment(row.due_at).diff(moment(), 'days') <= -60">Status:
+                <strong class="text-danger">Passed Overdue</strong>
+              </div>
+              <div v-else-if="moment(row.due_at).diff(moment(), 'days') <= 0">Status:
+                <strong class="text-info">Grace Period</strong>
+              </div>
+              <div v-else>Status: <strong class="text-success">On-Time</strong></div>
             </div>
           </div>
         </div>
@@ -119,7 +123,13 @@ const $user = useUsersStore();
 </script>
 
 <style scoped>
+.bg-danger {
+  background-color: #F1AAA5 !important;
+  color: black !important;
+}
+
 .bg-warning {
-  background-color: #EFDFAE !important;
+  background-color: #EFE7C0 !important;
+  color: black !important;
 }
 </style>

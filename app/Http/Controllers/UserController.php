@@ -271,68 +271,84 @@ class UserController extends Controller
       return $this->G_ValidatorFailResponse($val);
     }
 
-    if($req->print) {
-      $data = Person::with(['plan', 'pay_type'])
-        ->withSum('client_transactions', 'amount')
-        ->where('agent_id', $req->user()->person->id)
-        ->where('created_at', '>=', $req->start)
-        ->where('created_at', '<=', $req->end)
-        ->orderBy('name', 'ASC')
-        ->get();
-
-      return response()->json([...$this->G_ReturnDefault($req), 'data' => $data]);
+    if($req->overdue) {
+      return $this->StaffOverdueIndex($req);
     }
-    else {
-      $data = Person::select('*');
 
-      if((bool)strtotime($req->start) OR (bool)strtotime($req->end)) {
-        if((bool)strtotime($req->start)) {
-          $data->where('created_at', '>=', $req->start);
-        }
-        if((bool)strtotime($req->end)) {
-          $data->where('created_at', '<=', $req->end);
-        }
+    if($req->print) {
+      return $this->StaffPrintIndex($req);
+    }
+
+    $data = Person::select('*');
+
+    if((bool)strtotime($req->start) OR (bool)strtotime($req->end)) {
+      if((bool)strtotime($req->start)) {
+        $data->where('created_at', '>=', $req->start);
       }
-
-      $data->with(['plan', 'pay_type', 'agent', 'user', 'staff', 'phones']);
-
-      switch($req->filter) {
-        case 'plan':
-          $data->whereHas('user', function($q) use($req) {
-              $q->where('role', $req->role);
-            })
-            ->whereHas('plan', function($q) use($req) {
-              $q->where('name', 'LIKE', '%'.$req->search.'%');
-            })
-            ->withSum('client_transactions', 'amount');
-          break;
-        case 'address':
-          $data->whereHas('user', function($q) use($req) {
-              $q->where('role', $req->role);
-            })
-            ->withSum('client_transactions', 'amount')
-            ->where('address', 'LIKE', '%'.$req->search.'%');
-          break;
-        case 'email':
-          $data->whereHas('user', function($q) use($req) {
-              $q->where('role', $req->role)->where('name', 'LIKE', '%'.$req->search.'%');
-            })
-            ->withSum('client_transactions', 'amount');
-          break;
-        default:
-          $data->whereHas('user', function($q) use($req) {
-              $q->where('role', $req->role);
-            })
-            ->withSum('client_transactions', 'amount')
-            ->where('name', 'LIKE', '%'.$req->search.'%');
+      if((bool)strtotime($req->end)) {
+        $data->where('created_at', '<=', $req->end);
       }
+    }
 
+    $data->with(['plan', 'pay_type', 'agent', 'user', 'staff', 'phones']);
+
+    switch($req->filter) {
+      case 'plan':
+        $data->whereHas('user', function($q) use($req) {
+            $q->where('role', $req->role);
+          })
+          ->whereHas('plan', function($q) use($req) {
+            $q->where('name', 'LIKE', '%'.$req->search.'%');
+          })
+          ->withSum('client_transactions', 'amount');
+        break;
+      case 'address':
+        $data->whereHas('user', function($q) use($req) {
+            $q->where('role', $req->role);
+          })
+          ->withSum('client_transactions', 'amount')
+          ->where('address', 'LIKE', '%'.$req->search.'%');
+        break;
+      case 'email':
+        $data->whereHas('user', function($q) use($req) {
+            $q->where('role', $req->role)->where('name', 'LIKE', '%'.$req->search.'%');
+          })
+          ->withSum('client_transactions', 'amount');
+        break;
+      default:
+        $data->whereHas('user', function($q) use($req) {
+            $q->where('role', $req->role);
+          })
+          ->withSum('client_transactions', 'amount')
+          ->where('name', 'LIKE', '%'.$req->search.'%');
 
       return response()->json([
         ...$this->G_ReturnDefault($req),
         'data' => $data->withSum('client_transactions', 'amount')->orderBy('created_at', 'DESC')->paginate($req->limit)
       ]);
     }
+  }
+
+  private function StaffPrintIndex($req) {
+    $data = Person::with(['plan', 'pay_type'])
+      ->withSum('client_transactions', 'amount')
+      ->where('agent_id', $req->user()->person->id)
+      ->where('created_at', '>=', $req->start)
+      ->where('created_at', '<=', $req->end)
+      ->orderBy('name', 'ASC')
+      ->get();
+
+    return response()->json([...$this->G_ReturnDefault($req), 'data' => $data]);
+  }
+
+  private function StaffOverdueIndex($req) {
+    $data = Person::with(['plan', 'pay_type', 'user', 'staff', 'agent'])
+      ->withSum('client_transactions', 'amount')
+      ->whereNotNull('due_at')
+      ->orderBy('due_at', 'ASC')
+      ->paginate($req->limit);
+
+    return response()->json([...$this->G_ReturnDefault($req), 'data' => $data]);
   }
 
   // SECTION STORE

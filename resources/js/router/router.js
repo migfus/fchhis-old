@@ -144,6 +144,17 @@ const router = createRouter({
       }
     },
     {
+      path: '/users/overdue',
+      name: 'users-overdue',
+      component: () => import("@/views/users/overdue/OverduePage.vue"),
+      meta: {
+        title: 'Overdue Management',
+        // role: 5,
+        auth: true,
+        sideBar: true,
+      }
+    },
+    {
       path: "/users/list",
       name: "users-list",
       component: () => import("@/views/users/users/UsersPage.vue"),
@@ -171,7 +182,7 @@ const router = createRouter({
       component: () => import("@/views/user/UserPage.vue"),
       meta: {
         title: "User Details",
-        role: 5,
+        // role: 5,
         auth: true,
         sideBar: true,
       }

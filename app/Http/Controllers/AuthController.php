@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\Person;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ForgotPasswordMailer;
+use Carbon\Carbon;
 
 class AuthController extends Controller
 {
@@ -192,5 +193,22 @@ class AuthController extends Controller
       ]);
 
     return response()->json(['data' => true]);
+  }
+
+  // SECTION OVERDUE
+  public function Overdue(Request $req) {
+    switch($req->user()->role) {
+      case 5:
+        return $this->StaffOverdue($req);
+      default:
+        return $this->G_UnauthorizedResponse();
+    }
+  }
+
+  private function StaffOverdue($req) {
+    $grace = Person::whereNotNull('due_at')->where('due_at', '<=', Carbon::now())->count();
+    $overdue = Person::whereNotNull('due_at')->where('due_at', '<=', Carbon::now()->subMonth(2))->count();
+
+    return response()->json([...$this->G_ReturnDefault($req), 'data' => ['grace' => $grace, 'overdue' => $overdue]]);
   }
 }
