@@ -1,7 +1,9 @@
 <template>
-  <div class="card">
+  <div v-if="$ben.content" class="card">
     <div class="card-header">
-      <h3 class="card-title">Beneficiaries</h3>
+      <h3 class="card-title text-bold">Beneficiaries</h3>
+      <button @click="$ben.ChangeForm('add')" class="btn btn-sm btn-success float-right"><i class="fas fa-plus"></i>
+        Add</button>
     </div>
 
     <div class="card-body p-0">
@@ -9,20 +11,18 @@
         <thead>
           <tr>
             <th>Name</th>
-            <th>Progress</th>
-            <th style="width: 40px">Label</th>
+            <th>BirthDay</th>
+            <th style="width: 110px">Action</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="row in content" :key="row.id">
-            <td>{{ row.person.name }}</td>
-            <td>Update software</td>
+          <tr v-for="row in $ben.content" :key="row.id">
+            <td>{{ row.name }}</td>
+            <td>{{ `${moment(row.bday).format('MMM D, YYYY')} (${AgeConverter(row.bday)})` }}</td>
             <td>
-              <div class="progress progress-xs">
-                <div class="progress-bar progress-bar-danger" style="width: 55%"></div>
-              </div>
+              <button class="btn btn-info btn-sm mr-2"><i class="fas fa-pen"></i></button>
+              <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
             </td>
-            <td><span class="badge bg-danger">55%</span></td>
           </tr>
         </tbody>
       </table>
@@ -32,55 +32,21 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from 'vue'
+import { onMounted, onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
-import { $DebugInfo, $Err } from '@/helpers/debug'
-import axios from 'axios'
+import { useBeneficiaryStore } from '@/store/users/BeneficiaryStore'
+import moment from 'moment'
+import { AgeConverter } from '@/helpers/converter'
 
-$DebugInfo('BeneficiaryVue')
 const $route = useRoute();
-
-const content = ref([
-  {
-    id: 1,
-    person: {
-      lastName: 'John',
-      firstName: 'Doe',
-      midName: 'John',
-      extName: 'Jr',
-    },
-    bday: '2022-02-02',
-    created_at: '2022-02-02'
-  },
-  {
-    id: 1,
-    person: {
-      lastName: 'John',
-      firstName: 'Doe',
-      midName: 'John',
-      extName: 'Jr',
-    },
-    bday: '2022-02-02',
-    created_at: '2022-02-02'
-  }
-]);
-const config = reactive({
-  loading: false,
-})
-
-async function GetAPI(id) {
-  config.loading = true;
-  try {
-    let { data: { data } } = await axios.get('/api/beneficiary', { params: { id: id } })
-    content.value = data
-  }
-  catch (e) {
-    $Err('BeneficiaryVue GetAPI', { e })
-  }
-  config.loading = false;
-}
+const $ben = useBeneficiaryStore();
 
 onMounted(() => {
-  GetAPI($route.params.id)
+  $ben.query.id = $route.params.id
+  $ben.GetAPI()
+});
+
+onUnmounted(() => {
+  $ben.content = []
 });
 </script>

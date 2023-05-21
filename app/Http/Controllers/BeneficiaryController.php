@@ -4,11 +4,22 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Person;
+use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 
 class BeneficiaryController extends Controller
 {
+  // SECTION INDEX
   public function index(Request $req) {
+    switch($req->user()->role) {
+      case 5:
+        return $this->StaffIndex($req);
+      default:
+        return $this->G_UnauthorizedResponse();
+    }
+
+
+
     $val = Validator::make($req->all(), [
       'search' => '',
       'id' => '',
@@ -38,7 +49,21 @@ class BeneficiaryController extends Controller
       return response()->json([...$this->G_ReturnDefault($req), 'data' => $data]);
     }
 
-    return $this->G_UnauthorizedResponse();
+  }
+
+  private function StaffIndex($req) {
+    $val = Validator::make($req->all(), [
+      'search' => '',
+      'id' => 'required'
+    ]);
+
+    if($val->fails()) {
+      return $this->G_ValidatorFailResponse($val);
+    }
+
+    $data = Person::with('user')->where('client_id', $req->id)->orderBy('name', 'ASC')->get();
+
+    return response()->json([...$this->G_ReturnDefault(), 'data' => $data]);
   }
 
   public function store(Request $req) {

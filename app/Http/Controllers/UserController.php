@@ -236,6 +236,7 @@ class UserController extends Controller
         ->where('agent_id', $req->user()->person->id)
         ->where('created_at', '>=', $req->start)
         ->where('created_at', '<=', $req->end)
+        ->whereNull('client_id')
         ->orderBy('name', 'ASC')
         ->get();
 

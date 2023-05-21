@@ -10,61 +10,7 @@ use App\Models\Beneficiary;
 
 class DashboardController extends Controller
 {
-  private function RolesData() {
-    $data = [
-      [
-        'id' => 6,
-        'icon' => 'fa-child',
-        'color' => 'success',
-        'name' => 'Client',
-        'count' => User::where('role', 6)->count(),
-      ],
-      [
-        'id' => 5,
-        'icon' => 'fa-user-edit',
-        'color' => 'info',
-        'name' => 'Staff',
-        'count' => User::where('role', 5)->count(),
-      ],
-      [
-        'id' => 4,
-        'icon' => 'fa-handshake',
-        'color' => 'purple',
-        'name' => 'Agent',
-        'count' => User::where('role', 4)->count(),
-      ],
-      [
-        'id' => 3,
-        'icon' => 'fa-tasks',
-        'color' => 'orange',
-        'name' => 'Manager',
-        'count' => User::where('role', 3)->count(),
-      ],
-      [
-        'id' => 2,
-        'icon' => 'fa-crown',
-        'color' => 'warning',
-        'name' => 'Admin',
-        'count' => User::where('role', 2)->count(),
-      ],
-      [
-        'id' => 1,
-        'icon' => 'fa-ban',
-        'color' => 'danger',
-        'name' => 'Banned',
-        'count' => User::where('role', 1)->count(),
-      ],
-      [
-        'id' => 0,
-        'icon' => 'fa-moon',
-        'color' => 'secondary',
-        'name' => 'Inactive',
-        'count' => User::where('role', 0)->count(),
-      ],
-    ];
 
-    return $data;
-  }
 
   private function MonthlyIncome() {
     return Transaction::where('created_at', '>=', Carbon::now()->startOfMonth())

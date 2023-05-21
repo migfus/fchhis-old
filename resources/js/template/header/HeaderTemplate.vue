@@ -253,7 +253,9 @@ const pages = ref([
 onMounted(() => {
   document.body.classList.remove('layout-top-nav');
   document.body.classList.add('sidebar-mini')
-  $overdue.GetAPI()
+
+  if ($auth.content.auth.role == 5 || $auth.content.auth.role == 2)
+    $overdue.GetAPI()
 });
 </script>
 

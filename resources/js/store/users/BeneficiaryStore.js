@@ -4,7 +4,7 @@ import { $DebugInfo, $Err} from '@/helpers/debug'
 import axios from 'axios'
 import { useToast } from 'vue-toastification'
 
-export const useUsersStore = defineStore('Beneficiary', () => {
+export const useBeneficiaryStore = defineStore('Beneficiary', () => {
   $DebugInfo('Beneficiary')
   const $toast = useToast();
   const CancelToken = axios.CancelToken;
@@ -14,14 +14,11 @@ export const useUsersStore = defineStore('Beneficiary', () => {
   const print = ref(null)
   const config = reactive({
     loading: false,
-    notify: true,
     form: '',
-    tableView: false,
-    viewAll: false,
   })
   const query = reactive({
     search: '',
-    sort: 'ASC',
+    sort: 'DESC',
     limit: 10,
     start: '',
     end: '',
@@ -35,7 +32,7 @@ export const useUsersStore = defineStore('Beneficiary', () => {
   async function GetAPI(page = 1) {
     config.loading = true
     try {
-      let { data: {data}} = await axios.get('/api/users', {
+      let { data: {data}} = await axios.get('/api/beneficiary', {
         cancelToken: new CancelToken(function executor(c) { cancel = c; }),
         params: { ...query, page: page}
       })

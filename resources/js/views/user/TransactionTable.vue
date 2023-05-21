@@ -1,7 +1,7 @@
 <template>
   <div class="card">
     <div class="card-header">
-      <h3 class="card-title">Transactions</h3>
+      <h3 class="card-title text-bold">Transactions</h3>
     </div>
 
     <div v-if="$trans.content" class="card-body p-0">

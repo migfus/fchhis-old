@@ -76,7 +76,7 @@
             </div>
 
 
-            <button @click="$trans.Clear()" class="btn btn-danger float-right">Cancel</button>
+            <button @click="$trans.ChangeForm('')" class="btn btn-danger float-right">Cancel</button>
             <button type="submit" class="btn btn-info float-right mr-1"
               :disabled="Object.keys(errors).length != 0">Add</button>
           </Form>

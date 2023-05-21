@@ -200,6 +200,8 @@ class AuthController extends Controller
     switch($req->user()->role) {
       case 5:
         return $this->StaffOverdue($req);
+      case 2:
+        return $this->StaffOverdue($req);
       default:
         return $this->G_UnauthorizedResponse();
     }

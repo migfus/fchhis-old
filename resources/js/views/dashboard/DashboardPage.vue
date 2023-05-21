@@ -2,7 +2,8 @@
   <!-- SECTION ADMIN -->
   <div v-if="Object.keys($auth.content).length != 0">
     <div v-if="$auth.content.auth.role == 2">
-      <!-- <UserSummaryAdmin v-if="$dashboard.content" /> -->
+      <UserList v-if="$stat.content" />
+      <UserSummaryAdmin v-if="$stat.content" />
       <!-- <TopPerformerAdmin v-if="$dashboard.content" /> -->
       <!-- <AdminSectionAdmin v-if="$dashboard.content" /> -->
     </div>
@@ -27,8 +28,9 @@ import { useStatisticStore } from '@/store/dashboard/StatisticStore'
 import { useAuthStore } from '@/store/auth/AuthStore'
 
 // import AdminSectionAdmin from './admin/AdminSection.vue';
-// import UserSummaryAdmin from './admin/UserSummary.vue';
+import UserSummaryAdmin from './admin/UserSummary.vue';
 // import TopPerformerAdmin from './admin/TopPerformer.vue';
+import UserList from './admin/UserList.vue';
 
 import ClientDashboard from './client/ClientPage.vue';
 import AgentCard from './agent/AgentCard.vue';

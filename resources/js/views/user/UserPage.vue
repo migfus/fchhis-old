@@ -4,7 +4,20 @@
 
       <div class="card card-widget widget-user">
 
-        <div class="widget-user-header text-white"
+        <div v-if="$user.content.fulfilled_at" class="ribbon-wrapper">
+          <div class="ribbon bg-secondary">
+            Claimed
+          </div>
+        </div>
+
+        <div v-if="$user.content.fulfilled_at" class="widget-user-header text-white bg-secondary"
+          style="background: #375459;">
+          <h3 class="widget-user-username text-right">
+            {{ $user.content.name }}
+          </h3>
+          <h5 class="widget-user-desc text-right">{{ $user.content.user.email }}</h5>
+        </div>
+        <div v-else class="widget-user-header text-white"
           style="background: url('https://adminlte.io/themes/v3/dist/img/photo1.png') center center;">
           <h3 class="widget-user-username text-right">
             {{ $user.content.name }}
@@ -55,8 +68,17 @@
               </div>
             </div>
           </div>
+
+          <div class="row">
+            <div class="col-12">
+              <button data-toggle="modal" data-target="#claim-modal" class="btn btn-secondary float-right">
+                {{ $user.content.fulfilled_at ? 'Claimed' : 'Claim' }}
+              </button>
+            </div>
+          </div>
         </div>
       </div>
+      <AddBeneficiary v-if="$ben.config.form == 'add'" />
       <BeneficiaryTable />
 
     </div>
@@ -64,6 +86,8 @@
     <div class="col-12 col-md-7">
       <TransactionTable />
     </div>
+
+    <ClaimModal />
   </div>
 </template>
 
@@ -72,17 +96,28 @@ import { onMounted, onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { NumberAddComma, PlanToPay } from '@/helpers/converter'
 import { useUserDetailsStore } from '@/store/user/UserDetailStore'
+import { useBeneficiaryStore } from '@/store/users/BeneficiaryStore'
 
+import ClaimModal from './ClaimModal.vue'
 import TransactionTable from './TransactionTable.vue'
 import BeneficiaryTable from './BeneficiaryTable.vue'
+import AddBeneficiary from './forms/AddBeneficiary.vue'
 
 const $route = useRoute();
 const $user = useUserDetailsStore();
+const $ben = useBeneficiaryStore();
 
 onMounted(() => {
   $user.GetAPI($route.params.id)
 });
 onUnmounted(() => {
-  $user.content = {}
+  $user.params.id = null
 });
 </script>
+
+<style scoped>
+.ribbon-wrapper {
+  left: 0 !important;
+  transform: rotate(270deg)
+}
+</style>

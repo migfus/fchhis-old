@@ -3,8 +3,13 @@
 
 
     <div v-for="(row, idx,) in $user.content.data"
-      :class="`card mb-2 ${$user.config.viewAll ? '' : 'collapsed-card'} ${row.user.email ? '' : 'bg-warning'}`">
+      :class="`card mb-2 ${$user.config.viewAll ? '' : 'collapsed-card'} ${row.user.email ? '' : 'bg-warning'} ${row.fulfilled_at ? 'bg-gray' : ''}`">
       <div class="card-header" style="cursor: pointer;">
+        <div v-if="row.fulfilled_at" class="ribbon-wrapper">
+          <div class="ribbon bg-secondary">
+            Claimed
+          </div>
+        </div>
         <div data-card-widget="collapse" ref="collapse-click">
           <div class="row">
             <div class="col-12 col-md-6 col-xl-4">
@@ -121,5 +126,15 @@ const $user = useUsersStore();
 <style scoped>
 .bg-warning {
   background-color: #EFDFAE !important;
+}
+
+.bg-gray {
+  background-color: #9CB9C5 !important;
+  color: black !important;
+}
+
+.ribbon-wrapper {
+  left: 0 !important;
+  transform: rotate(270deg)
 }
 </style>

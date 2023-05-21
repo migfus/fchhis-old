@@ -60,7 +60,8 @@ export const useTransactionStaff = defineStore('transaction-staff', () => {
           ],
           {
             width: 50,
-            image: 'dti',
+            // image: 'dti',
+            text: '',
           }
         ],
       },
