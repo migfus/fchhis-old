@@ -11,7 +11,7 @@
             <div class="row">
 
               <div class="col-12 col-md-4">
-                <RouterLink :to="{ name: 'clients-list' }">
+                <RouterLink :to="{ name: 'users-clients' }">
                   <div class="info-box mb-3 bg-info">
                     <span class="info-box-icon"><i class="fas fa-users"></i></span>
                     <div class="info-box-content">
@@ -22,7 +22,7 @@
               </div>
 
               <div class="col-12 col-md-4">
-                <RouterLink :to="{ name: 'clients-list', query: { form: 'add' } }">
+                <RouterLink :to="{ name: 'users-clients', query: { form: 'add' } }">
                   <div class="info-box mb-3 bg-success">
                     <span class="info-box-icon"><i class="fas fa-user-plus"></i></span>
                     <div class="info-box-content">
@@ -33,7 +33,7 @@
               </div>
 
               <div class="col-12 col-md-4">
-                <RouterLink :to="{ name: 'clients-list', query: { form: 'or' } }">
+                <RouterLink :to="{ name: 'users-clients', query: { form: 'or' } }">
                   <div class="info-box mb-3 bg-success">
                     <span class="info-box-icon"><i class="fas fa-receipt"></i></span>
                     <div class="info-box-content">

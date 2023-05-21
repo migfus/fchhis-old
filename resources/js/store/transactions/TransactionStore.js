@@ -11,13 +11,16 @@ export const useTransactionStore = defineStore('TransactionStore', () => {
   const content = ref(null)
   const print = ref(null)
   const config = reactive({
-    loading: false
+    loading: false,
+    viewAll:false,
+
   })
   const query = reactive({
     search: '',
     sort: 'ASC',
     start: '',
     end: '',
+    filter: 'name'
   })
 
   // SECTION API

@@ -247,8 +247,9 @@ class TransactionController extends Controller
   private function StaffIndex($req) {
     $val = Validator::make($req->all(), [
       'search' => '',
-      'start' => 'required',
-      'end' => 'required',
+      'start' => '',
+      'end' => '',
+      'filter'
     ]);
 
     if($val->fails()) {
@@ -272,20 +273,50 @@ class TransactionController extends Controller
       ]);
     }
     else {
-      $data = Transaction::with(['plan', 'pay_type', 'client', 'staff', 'agent'])
-        ->whereHas('client', function($q) use($req) {
-          $q->where('name', 'LIKE', '%' . $req->search. '%');
-        })
-        // ->where('created_at', '>=', $req->start)
-        // ->where('created_at', '<=', $req->end)
-        ->orderBy('created_at', 'DESC')
-        ->paginate($req->limit);
+      $data = Transaction::select('*');
+
+      if((bool)strtotime($req->start) OR (bool)strtotime($req->end)) {
+        if((bool)strtotime($req->start)) {
+          $data->where('created_at', '>=', $req->start);
+        }
+        if((bool)strtotime($req->end)) {
+          $data->where('created_at', '<=', $req->end);
+        }
+      }
+
+      $data = Transaction::with(['plan', 'pay_type', 'client.user', 'staff', 'agent']);
+
+      switch($req->filter) {
+        case 'or':
+          $data->where('or', 'LIKE', '%' . $req->search. '%');
+          break;
+        case 'email':
+          $data->whereHas('client.user', function($q) use($req) {
+            $q->where('email', 'LIKE', '%' . $req->search. '%');
+          });
+          break;
+        case 'address':
+          $data->whereHas('client', function($q) use($req) {
+            $q->where('address', 'LIKE', '%' . $req->search. '%');
+          });
+          break;
+        case 'plans':
+          $data->whereHas('plan', function($q) use($req) {
+            $q->where('name', 'LIKE', '%' . $req->search. '%');
+          });
+          break;
+        default:
+          $data->whereHas('client', function($q) use($req) {
+            $q->where('name', 'LIKE', '%' . $req->search. '%');
+          });
+      }
+
 
       $sum = Transaction::where('agent_id', $req->user()->person->id)->sum('amount');
 
       return response()->json([
         ...$this->G_ReturnDefault($req),
-        'data' => $data,
+        'data' => $data->orderBy('created_at', 'DESC')->paginate($req->limit),
         'sum'  => $sum,
       ]);
     }

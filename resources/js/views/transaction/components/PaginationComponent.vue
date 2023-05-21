@@ -11,7 +11,7 @@
 
 <script setup>
 import Bootstrap5Pagination from '@/components/Bootstrap5Pagination.vue';
-import { useTransactionStore } from '@/store/transaction/transaction'
+import { useTransactionStore } from '@/store/transactions/TransactionStore'
 
 const $trans = useTransactionStore();
 

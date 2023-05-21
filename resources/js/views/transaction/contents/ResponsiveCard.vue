@@ -1,5 +1,5 @@
 <template>
-  <div class="col-12">
+  <div v-if="$trans.content" class="col-12">
 
 
     <div v-for="(row, idx,) in $trans.content.data" :class="`card mb-2 ${$trans.config.viewAll ? '' : 'collapsed-card'}`">
@@ -11,16 +11,19 @@
                 {{ moment(row.created_at).format('MMM D YYYY') }}
               </span>
 
-              <img :src="row.client.avatar" style="height: 3em;" class="img-circle float-left mr-3 my-2">
+              <img v-if="row.client" :src="row.client.user.avatar" style="height: 3em;"
+                class="img-circle float-left mr-3 my-2">
+              <img v-else src="https://fchhis.migfus20.com/images/logo.png" style="height: 3em;"
+                class="img-circle float-left mr-3 my-2">
 
 
               <div class="text-bold h5 mb-1"><span class="text-success">+{{ NumberAddComma(row.amount) }}</span>
               </div>
-              <div>
-                {{ row.client.person.name }}
+              <div v-if="row.client">
+                {{ row.client.name }}
               </div>
               <div>Accumulated:
-                <strong class="text-info">
+                <strong v-if="row.client" class="text-info">
                   {{ NumberAddComma(row.client.client_transactions_sum_amount) }}
                 </strong>
               </div>
@@ -32,7 +35,7 @@
               <div>To Pay: <strong>{{ NumberAddComma(PlanToPay(row.pay_type, row.plan)) }}</strong>
               </div>
               <div>Est. Bal. Due:
-                <strong class="text-danger">
+                <strong v-if="row.client" class="text-danger">
                   {{ NumberAddComma(PlanToPay(row.pay_type, row.plan) - row.client.client_transactions_sum_amount) }}
                 </strong>
               </div>
@@ -45,8 +48,8 @@
               <div class="h5 mb-1">OR:
                 <strong class="text-info">{{ row.or }}</strong>
               </div>
-              <div>Staff: <strong>{{ row.staff.person.name }}</strong></div>
-              <div>Agent: <strong>{{ row.agent.person.name }}</strong></div>
+              <div v-if="row.staff">Staff: <strong>{{ row.staff.name }}</strong></div>
+              <div v-if="row.staff">Agent: <strong>{{ row.agent.name }}</strong></div>
             </div>
           </div>
         </div>
@@ -56,7 +59,8 @@
         <div class="row mb-2">
           <div class="col-12 col-md-6 col-lg-4 col-xl-3">
             <div>Payment: <strong class="text-success">+{{ NumberAddComma(row.amount) }}</strong></div>
-            <div>Accumulated: <strong class="text-success">{{ NumberAddComma(row.client.client_transactions_sum_amount)
+            <div>Accumulated: <strong v-if="row.client" class="text-success">{{
+              NumberAddComma(row.client.client_transactions_sum_amount)
             }}</strong></div>
             <div>To Pay: <strong class="text-danger">{{ NumberAddComma(PlanToPay(row.pay_type, row.plan)) }}
               </strong>
@@ -66,19 +70,19 @@
 
           </div>
           <div class="col-12 col-md-6 col-lg-4 col-xl-3">
-            <div>Payed By: <strong class="text-success">{{ row.client.person.name }}</strong></div>
-            <div>Username: <strong>{{ row.client.username }}</strong></div>
-            <div>Email: <strong>{{ row.client.email }}</strong></div>
+            <div>Payed By: <strong v-if="row.cient" class="text-success">{{ row.client.name }}</strong></div>
+            <div>Username: <strong v-if="row.cient">{{ row.client.user.username }}</strong></div>
+            <div>Email: <strong v-if="row.cient">{{ row.client.user.email }}</strong></div>
             <hr class="mt-1" />
 
 
           </div>
           <div class="col-12 col-md-6 col-lg-4 col-xl-3">
             <div>Staff:
-              <strong class="text-info"> {{ row.staff.person.name }} </strong>
+              <strong v-if="row.staff" class="text-info"> {{ row.staff.name }} </strong>
             </div>
             <div>Agent:
-              <strong class="text-warning"> {{ row.agent.person.name }} </strong>
+              <strong class="text-warning"> {{ row.agent.name }} </strong>
             </div>
             <div>Referal ID: <strong> {{ row.agent.id }} </strong> </div>
             <!-- <div>Birth Day: <strong>[bla]</strong></div>
@@ -96,20 +100,20 @@
         </div>
         <div class="row">
           <div class="col-12 col-md-6">
-            <div v-if="$auth.auth.id != row.staff_id" class="alert alert-light mb-0 p-1 px-2" role="alert">
+            <div v-if="$auth.content.auth.id != row.staff_id" class="alert alert-light mb-0 p-1 px-2" role="alert">
               Accessable only by:
-              <strong>
-                {{ row.staff.person.name }}
+              <strong v-if="row.staff">
+                {{ row.staff.name }}
               </strong>
             </div>
           </div>
           <div class="col-12 col-md-6">
-            <button v-if="$auth.auth.role == 2" @click="$trans.Delete(row.id, idx)"
+            <button v-if="$auth.content.auth.role == 2" @click="$trans.Delete(row.id, idx)"
               class="btn btn-danger btn-sm float-right">
               Remove
             </button>
 
-            <button v-if="$auth.auth.id == row.staff_id" @click="$trans.Update(row)"
+            <button v-if="$auth.content.auth.id == row.staff_id" @click="$trans.Update(row)"
               class="btn btn-warning float-right mr-1">
               <i class="fas fa-edit mr-1"></i> Edit
             </button>
@@ -119,7 +123,7 @@
             <!-- {{ `Trans Staff ID: ${row.staff_id}` }}
             {{ `Auth Staff ID: ${$auth.auth.id}` }} -->
 
-            <RouterLink :to="`/user/${row.client.id}`" class="btn btn-success float-right mr-1">
+            <RouterLink v-if="row.client" :to="`/user/${row.client.id}`" class="btn btn-success float-right mr-1">
               <i class="fas fa-info-circle mr-1"></i> Info
             </RouterLink>
 
@@ -141,10 +145,10 @@
 </template>
 
 <script setup>
-import { useTransactionStore } from '@/store/transaction/transaction'
+import { useTransactionStore } from '@/store/transactions/TransactionStore'
 import { NumberAddComma, PlanToPay } from '@/helpers/converter'
 import moment from 'moment'
-import { useAuthStore } from '@/store/auth/auth'
+import { useAuthStore } from '@/store/auth/AuthStore'
 import { useReceiptStore } from '@/store/print/receipt'
 
 const $trans = useTransactionStore();

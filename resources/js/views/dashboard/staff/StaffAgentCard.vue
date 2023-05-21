@@ -44,6 +44,7 @@ const $users = useUsersStore();
 
 onMounted(() => {
   $users.query.limit = 5;
+  $users.query.role = 6;
   $users.GetAPI()
 })
 

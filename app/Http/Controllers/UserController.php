@@ -248,6 +248,7 @@ class UserController extends Controller
         ->where('name', 'LIKE', '%'.$req->search.'%')
         ->where('created_at', '>=', $req->start)
         ->where('created_at', '<=', $req->end)
+        ->whereNull('client_id')
         ->paginate(10);
 
       return response()->json([...$this->G_ReturnDefault($req), 'data' => $data]);

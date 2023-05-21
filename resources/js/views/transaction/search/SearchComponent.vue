@@ -88,28 +88,30 @@
       </div>
     </div>
   </div>
-  <SelectClient />
-  <SelectAgent />
-  <PrintModal />
+  <!-- <SelectClient /> -->
+  <!-- <SelectAgent /> -->
+  <!-- <PrintModal /> -->
 </template>
 
 <script setup>
 import { watch, onMounted } from 'vue'
-import { useTransactionStore } from '@/store/transaction/transaction'
+import { useTransactionStore } from '@/store/transactions/TransactionStore'
 import moment from 'moment'
 import { throttle } from 'lodash'
 import { useRoute } from 'vue-router'
 
 import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
-import SelectClient from './../modals/SelectClient.vue'
-import SelectAgent from './../modals/SelectAgent.vue'
-import PrintModal from '../modals/PrintModal.vue'
+// import SelectClient from './../modals/SelectClient.vue'
+// import SelectAgent from './../modals/SelectAgent.vue'
+// import PrintModal from '../modals/PrintModal.vue'
 
 const $trans = useTransactionStore();
 const $route = useRoute();
 
 watch($trans.query, throttle(() => {
+  $trans.query.start = ''
+  $trans.query.end = ''
   $trans.GetAPI(1)
 }, 1000));
 
