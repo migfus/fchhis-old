@@ -17,6 +17,8 @@ class UserController extends Controller
   // SECTION INDEX
   public function index(Request $req) {
     switch($req->user()->role) {
+      case 2:
+        return $this->AdminIndex($req);
       case 4:
         return $this->AgentIndex($req);
       case 5:
@@ -26,8 +28,6 @@ class UserController extends Controller
       default:
         return $this->G_UnauthorizedResponse();
     }
-
-
 
 
 
@@ -57,15 +57,7 @@ class UserController extends Controller
       }
 
       // NOTE DATE RANGE FILTER
-      if((bool)strtotime($req->start) OR (bool)strtotime($req->end)) {
-        if((bool)strtotime($req->start)) {
-          $user->where('created_at', '>=', $req->start);
-        }
-        if((bool)strtotime($req->end)) {
-          $user->where('created_at', '<=', $req->end);
-        }
-        $user->with(['person.user', 'plan']);
-      }
+
       else {
         // NOTE SEARCH FILTER
         switch($req->filter) {
@@ -246,11 +238,19 @@ class UserController extends Controller
       $data = Person::with(['plan', 'pay_type'])
         ->withSum('client_transactions', 'amount')
         ->where('agent_id', $req->user()->person->id)
-        ->where('name', 'LIKE', '%'.$req->search.'%')
-        ->where('created_at', '>=', $req->start)
-        ->where('created_at', '<=', $req->end)
-        ->whereNull('client_id')
-        ->paginate(10);
+        ->where('name', 'LIKE', '%'.$req->search.'%');
+
+
+        if((bool)strtotime($req->start) OR (bool)strtotime($req->end)) {
+          if((bool)strtotime($req->start)) {
+            $data->where('created_at', '>=', $req->start);
+          }
+          if((bool)strtotime($req->end)) {
+            $data->where('created_at', '<=', $req->end);
+          }
+        }
+
+        $data->whereNull('client_id')->paginate(10);
 
       return response()->json([...$this->G_ReturnDefault($req), 'data' => $data]);
     }
@@ -352,10 +352,85 @@ class UserController extends Controller
     return response()->json([...$this->G_ReturnDefault($req), 'data' => $data]);
   }
 
-  // SECTION STORE
+  private function AdminIndex($req) {
+    $val = Validator::make($req->all(), [
+      'sort' => 'required',
+      'search' => '',
+      'start' => '',
+      'end' => '',
+      'print' => '',
+      'limit' => 'required',
+      'filter' => 'required',
+      'role' => 'required'
+    ]);
 
+    if($val->fails()) {
+      return $this->G_ValidatorFailResponse($val);
+    }
+
+    if($req->overdue) {
+      return $this->StaffOverdueIndex($req);
+    }
+
+    if($req->print) {
+      return $this->StaffPrintIndex($req);
+    }
+
+    $data = Person::select('*');
+
+    if((bool)strtotime($req->start) OR (bool)strtotime($req->end)) {
+      if((bool)strtotime($req->start)) {
+        $data->where('created_at', '>=', $req->start);
+      }
+      if((bool)strtotime($req->end)) {
+        $data->where('created_at', '<=', $req->end);
+      }
+    }
+
+    $data->with(['plan', 'pay_type', 'agent', 'user', 'staff', 'phones']);
+
+    switch($req->filter) {
+      case 'plan':
+        $data->whereHas('user', function($q) use($req) {
+            $q->where('role', $req->role);
+          })
+          ->whereHas('plan', function($q) use($req) {
+            $q->where('name', 'LIKE', '%'.$req->search.'%');
+          })
+          ->withSum('client_transactions', 'amount');
+        break;
+      case 'address':
+        $data->whereHas('user', function($q) use($req) {
+            $q->where('role', $req->role);
+          })
+          ->withSum('client_transactions', 'amount')
+          ->where('address', 'LIKE', '%'.$req->search.'%');
+        break;
+      case 'email':
+        $data->whereHas('user', function($q) use($req) {
+            $q->where('role', $req->role)->where('name', 'LIKE', '%'.$req->search.'%');
+          })
+          ->withSum('client_transactions', 'amount');
+        break;
+      default:
+        $data->whereHas('user', function($q) use($req) {
+            $q->where('role', $req->role);
+          })
+          ->withSum('client_transactions', 'amount')
+          ->where('name', 'LIKE', '%'.$req->search.'%');
+
+      return response()->json([
+        ...$this->G_ReturnDefault($req),
+        'data' => $data->withSum('client_transactions', 'amount')->orderBy('created_at', 'DESC')->paginate($req->limit)
+      ]);
+    }
+  }
+
+  // SECTION STORE
   public function store(Request $req) {
     switch($req->user()->role) {
+      case 2:
+        return $this->AdminStore($req);
       case 5:
         return $this->StaffStore($req);
       default:
@@ -593,10 +668,143 @@ class UserController extends Controller
     return response()->json([...$this->G_ReturnDefault($req)]);
   }
 
-  // SECTION SHOW
+  private function AdminStore($req) {
+    if($req->or) {
+      $val = Validator::make($req->all(), [
+        'or'   => 'required',
+        'plan'     => 'required',
+        'pay_type_id' => 'required',
+        'transaction' => 'required',
+        'agent'  => 'required',
+        'name'      => 'required',
+      ]);
 
+      if($val->fails()) {
+        return $this->G_ValidatorFailResponse($val);
+      }
+
+      $person = Person::create([
+        'staff_id'   => $req->user()->person->id,
+        'or'         => $req->or,
+        'plan_id'    => $req->plan,
+        'pay_type_id'=> $req->pay_type_id,
+        'agent_id'   => $req->agent,
+        'name'       => $req->name,
+      ]);
+
+      $user = User::create([
+        'person_id'=> $person->id,
+        'role'     => 6, // NOTE client only,
+      ]);
+
+      Transaction::create([
+        'or' => $req->or,
+        'agent_id'  => $req->agent,
+        'staff_id'  => $req->user()->person->id,
+        'client_id' => $person->id,
+        'pay_type_id' => $req->pay_type_id,
+        'amount'  =>  $req->transaction,
+        'plan_id' => $req->plan,
+      ]);
+    }
+    else {
+      $val = Validator::make($req->all(), [
+        'avatar'   => '',
+        'username' => 'required|unique:users',
+        'email'    => 'required|email|unique:users',
+        'password' => 'required|min:8',
+        'mobile'   => 'required',
+        'role'     => 'required',
+        'plan'     => 'required',
+        'agent_id' => 'required',
+
+        'name'      => 'required',
+        'sex'       => 'required',
+        'bday'      => 'required',
+        'bplace_id' => 'required',
+        'address_id'=> 'required',
+        'address'   => 'required',
+        'pay_type_id' => 'required',
+        'transaction' => 'required',
+      ]);
+
+      if($val->fails()) {
+        return $this->G_ValidatorFailResponse($val);
+      }
+
+      $due = Carbon::now()->add('months', 1);
+      switch($req->pay_type_id) {
+        case 2:
+          $due = Carbon::now()->add('months', 3);
+          break;
+        case 3:
+          $due = Carbon::now()->add('months', 6);
+          break;
+        case 4:
+          $due = Carbon::now()->add('months', 12);
+          break;
+        case 5:
+          $due = null;
+        case 6:
+          $due = null;
+          break;
+      }
+
+      $person = Person::create([
+        'staff_id'  => $req->user()->person->id,
+        'name'      => $req->name,
+        'bday'      => $req->bday,
+        'bplace_id' => $req->bplace_id,
+        'sex'       => $req->sex,
+        'address_id'=> $req->bplace_id,
+        'address'   => $req->address,
+        'agent_id'  => $req->agent_id,
+        'plan_id'   => $req->plan,
+        'pay_type_id' => $req->pay_type_id,
+        'due_at'    => $due,
+      ]);
+
+      $avatar = null;
+
+      if($req->avatar != '') {
+        $avatar = $this->G_AvatarUpload($req->avatar);
+      }
+
+      $user = User::create([
+        'person_id'=> $person->id,
+        'username' => $req->username,
+        'email'    => $req->email,
+        'password' => Hash::make($req->password),
+        'avatar'   => $avatar,
+        'role'     => 6, // NOTE Client Only
+      ]);
+
+      Transaction::create([
+        'or' => rand(000000, 999999),
+        'agent_id'  => $req->agent_id,
+        'staff_id'  => $req->user()->person->id,
+        'client_id' => $person->id,
+        'pay_type_id' => $req->pay_type_id,
+        'amount'  =>  $req->transaction,
+        'plan_id' => $req->plan,
+      ]);
+
+      Phone::create([
+        'person_id' => $person->id,
+        'phone' => $req->mobile,
+      ]);
+    }
+
+
+
+    return response()->json([...$this->G_ReturnDefault($req)]);
+  }
+
+  // SECTION SHOW
   public function show(string $id, Request $req) {
     switch($req->user()->role) {
+      case 2:
+        return $this->AdminShow($req, $id);
       case 5:
         return $this->StaffShow($req, $id);
       default:
@@ -613,11 +821,20 @@ class UserController extends Controller
     return response()->json([...$this->G_ReturnDefault($req), 'data' => $data], 200);
   }
 
+  private function AdminShow($req, $id) {
+    $data = Person::where('id', $id)
+      ->with(['user', 'client_transactions', 'plan', 'pay_type'])
+      ->withSum('client_transactions', 'amount')
+      ->first();
+
+    return response()->json([...$this->G_ReturnDefault($req), 'data' => $data], 200);
+  }
+
   // SECTION UPDATE
-
-
   public function update(Request $req, string $id) {
     switch($req->user()->role) {
+      case 2:
+        return $this->AdminUpdate($req, $id);
       case 5:
         return $this->StaffUpdate($req, $id);
       default:
@@ -675,6 +892,67 @@ class UserController extends Controller
     }
 
     return response()->json([...$this->G_ReturnDefault($req),]);
+  }
+
+  private function AdminUpdate($req, $id) {
+    $val = Validator::make($req->all(), [
+      'user.avatar'   => '',
+      'user.username' => ['required', Rule::unique('users', 'username')->ignore($req->user['id'])],
+      'user.email'    => ['required', 'email', Rule::unique('users', 'email')->ignore($req->user['id'])],
+      'user.password' => '',
+      // 'person.mobile' => 'required',
+      'plan_id'  => 'required',
+      'pay_type_id' => 'required',
+
+      'name'  => 'required',
+      'sex'       => 'required',
+      'bday'      => 'required',
+      'bplace_id' => 'required',
+      'address_id'=> 'required',
+      'address'   => 'required',
+      'agent_id'  => 'required',
+    ]);
+
+    if($val->fails()) {
+      return $this->G_ValidatorFailResponse($val);
+    }
+
+    $person = Person::where('id', $id)->update([
+      'name'      => $req->name,
+      'bday'      => $req->bday,
+      'bplace_id' => $req->bplace_id,
+      'sex'       => $req->sex,
+      'address_id'=> $req->address_id,
+      'address'   => $req->address,
+      // 'mobile'    => $req->person['mobile'],
+      'agent_id'  => $req->agent_id,
+      'plan_id'   => $req->plan_id,
+      'pay_type_id'=> $req->pay_type_id,
+    ]);
+
+    $user = User::where('id', $req->user['id'])->update([
+      'username' => $req->user['username'],
+      'email'    => $req->user['email'],
+    ]);
+
+    if($req->password) {
+      User::where('id', $req->user['id'])->update(['password' => Hash::make($req->password)]);
+    }
+
+    if(!User::where('id', $req->user['id'])->where('avatar', $req->user['avatar'])->first()) {
+      User::where('id', $req->user['id'])->update(['avatar' => $this->G_AvatarUpload($req->user['avatar'])]);
+    }
+
+    return response()->json([...$this->G_ReturnDefault($req),]);
+  }
+
+  // SECTION DELETE
+  public function destroy(string $id, Request $req) {
+    if($req->user()->role == 2) {
+      User::find($id)->delete();
+      return response()->json([...$this->G_ReturnDefault($req)], 200);
+    }
+    return $this->G_UnauthorizedResponse();
   }
 
   // SECTION OTHERS
@@ -808,15 +1086,6 @@ class UserController extends Controller
   }
 
 
-
-  public function destroy(string $id, Request $req) {
-    if($req->user()->role == 2) {
-      User::find($id)->delete();
-      return response()->json([...$this->G_ReturnDefault($req)], 200);
-    }
-
-    return $this->G_UnauthorizedResponse();
-  }
 
 
 }

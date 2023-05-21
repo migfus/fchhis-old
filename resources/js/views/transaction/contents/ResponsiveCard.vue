@@ -101,7 +101,7 @@
         </div>
         <div class="row">
           <div class="col-12 col-md-6">
-            <div v-if="$auth.content.auth.id != row.staff_id" class="alert alert-light mb-0 p-1 px-2" role="alert">
+            <div v-if="$auth.content.auth.id != row.staff_id" class="alert alert-light mb-2 p-1 px-2" role="alert">
               Accessable only by:
               <strong v-if="row.staff">
                 {{ row.staff.name }}
@@ -109,13 +109,13 @@
             </div>
           </div>
           <div class="col-12 col-md-6">
-            <button v-if="$auth.content.auth.role == 2" @click="$trans.Delete(row.id, idx)"
-              class="btn btn-danger btn-sm float-right">
-              Remove
+            <button v-if="$auth.content.auth.role == 2" @click="$trans.DestroyAPI(row.id, idx)"
+              class="btn btn-danger float-right">
+              <i class="fas fa-times mr-2"></i>Remove
             </button>
 
-            <button v-if="$auth.content.auth.person.id == row.staff_id" @click="$trans.Update(row)"
-              class="btn btn-warning float-right mr-1">
+            <button v-if="$auth.content.auth.person.id == row.staff_id || $auth.content.auth.role == 2"
+              @click="$trans.Update(row)" class="btn btn-warning float-right mr-1">
               <i class="fas fa-edit mr-1"></i> Edit
             </button>
             <button v-else class="btn btn-danger float-right mr-1" Disabled>

@@ -12,13 +12,13 @@ class BeneficiaryController extends Controller
   // SECTION INDEX
   public function index(Request $req) {
     switch($req->user()->role) {
+      case 2:
+        return $this->StaffIndex($req);
       case 5:
         return $this->StaffIndex($req);
       default:
         return $this->G_UnauthorizedResponse();
     }
-
-
 
     $val = Validator::make($req->all(), [
       'search' => '',

@@ -87,6 +87,19 @@ export const useTransactionStore = defineStore('TransactionStore', () => {
     }
   }
 
+  async function DestroyAPI(id, idx) {
+    try {
+      let { data: {data}} = await axios.delete('/api/transaction/'+id)
+      if(data) {
+        $toast.success('Successfully Deleted')
+        GetAPI()
+      }
+    }
+    catch(e) {
+      $Err('StatisticStore UpdateAPI Error', {e})
+    }
+  }
+
   // SECTION FUNCTIONS
 
 
@@ -161,6 +174,7 @@ export const useTransactionStore = defineStore('TransactionStore', () => {
     CancelAPI,
     StoreAPI,
     UpdateAPI,
+    DestroyAPI,
 
     ChangeForm,
     InitParams,

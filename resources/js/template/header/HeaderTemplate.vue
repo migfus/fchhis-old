@@ -73,19 +73,25 @@ const isAdmin = computed(() => {
           icon: 'fa-list-ol',
           link: { name: 'transactions-all' }
         },
-        {
-          name: 'Agent',
-          icon: 'fa-list-ol',
-          link: { name: 'transactions-all' }
-        },
-        {
-          name: 'Client',
-          icon: 'fa-list-ol',
-          link: { name: 'transactions-all' }
-        },
+        // {
+        //   name: 'Agent',
+        //   icon: 'fa-list-ol',
+        //   link: { name: 'transactions-all' }
+        // },
+        // {
+        //   name: 'Client',
+        //   icon: 'fa-list-ol',
+        //   link: { name: 'transactions-all' }
+        // },
 
         {
           name: 'USERS',
+        },
+        {
+          name: 'Overdue',
+          icon: 'fa-exclamation-circle',
+          link: { name: 'users-overdue' },
+          span: { content: 1, color: 'danger' }
         },
         {
           name: 'Users',

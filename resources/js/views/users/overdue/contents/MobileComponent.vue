@@ -3,8 +3,8 @@
 
 
     <div v-for="(row, idx,) in $user.content.data" :class="`card mb-2 ${$user.config.viewAll ? '' : 'collapsed-card'}
-              ${row.user.email ? '' : 'bg-warning'}
-              ${moment(row.due_at).diff(moment(), 'days') <= -60 ? 'bg-danger' : moment(row.due_at).diff(moment(), 'days') <= 0 ? 'bg-warning' : ''}`
+                          ${row.user.email ? '' : 'bg-warning'}
+                          ${moment(row.due_at).diff(moment(), 'days') <= -60 ? 'bg-danger' : moment(row.due_at).diff(moment(), 'days') <= 0 ? 'bg-warning' : ''}`
       ">
       <div class="card-header" style="cursor: pointer;">
         <div data-card-widget="collapse" ref="collapse-click">
@@ -91,15 +91,12 @@
             <!-- <button @click="$user.Delete(row.id, idx)" class="btn btn-danger float-right">
               <i class="fas fa-times mr-1"></i>Remove
             </button> -->
-            <button @click="$user.Update(row)" class="btn btn-warning float-right mr-1">
-              <i class="fas fa-user-edit mr-1"></i>Edit
-            </button>
+            <!-- <button @click="$user.Update(row)" class="btn btn-warning float-right mr-1">
+              <i class="fas fa-user-edit mr-1"></i>Extend Due
+            </button> -->
             <RouterLink :to="`/user/${row.id}`" class="btn btn-info float-right mr-1">
               <i class="fas fa-info-circle mr-1"></i>Info
             </RouterLink>
-            <button class="btn btn-secondary float-right mr-1">
-              <i class="fas fa-print mr-1"></i>Print
-            </button>
           </div>
         </div>
 
