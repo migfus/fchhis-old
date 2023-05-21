@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="modal fade" id="modal-client">
+    <div v-if="$user.content" class="modal fade" id="modal-client">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
@@ -13,11 +13,11 @@
 
             <div class="form-group">
               <label for="s-input">Search Name</label>
-              <input v-model="$user.params.search" type="text" class="form-control" id="s-input" placeholder="Search" />
+              <input v-model="$user.query.search" type="text" class="form-control" id="s-input" placeholder="Search" />
             </div>
 
             <div v-if="$user.config.loading" class="m-5">
-              <i class="h1 fas fa-spin fa-spinner"></i>
+              <i class="fas fa-circle-notch fa-spin" style="font-size: 3em"></i>
             </div>
             <table v-else class="table table-bordered">
               <thead>
@@ -29,9 +29,9 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="row in $user.list.data" :key="row.id">
+                <tr v-for="row in $user.content.data" :key="row.id">
                   <td>
-                    {{ row.person.name }}
+                    {{ row.name }}
                   </td>
                   <td>{{ row.plan.name }}</td>
                   <td>
@@ -58,29 +58,24 @@
 
 <script setup>
 import { onMounted, watch } from 'vue'
-import { useUserStore } from '@/store/users/users'
-import { debounce } from 'lodash'
-import { useTransactionStore } from '@/store/transaction/transaction'
+import { useUsersStore } from '@/store/users/UsersStore'
+import { throttle } from 'lodash'
+import { useTransactionStore } from '@/store/transactions/TransactionStore'
 import { PlanToAmount } from '@/helpers/converter'
 
-const $user = useUserStore();
+const $user = useUsersStore();
 const $trans = useTransactionStore();
 
 function Select(row) {
   $trans.params.client = row
-  $trans.params.agent = row.person.agent
+  $trans.params.agent = row.agent
   $trans.params.plan = row.plan
   $trans.params.pay_type_id = row.pay_type_id
 
   $trans.params.amount = PlanToAmount(row.pay_type_id, row.plan)
 }
 
-watch($user.params, debounce(() => {
+watch($user.query, throttle(() => {
   $user.GetAPI(1)
-  console.log('select client watch trigger')
-}, 1000))
-
-onMounted(() => {
-  $user.params.role = 6
-});
+}, 1000));
 </script>

@@ -115,7 +115,7 @@ export const PlanToAmount = (pay_type_id, plan) => {
     case 1:
       return plan.monthly
     case 2:
-      return plan.querterly
+      return plan.quarterly
     case 3:
       return plan.semi_annual
     case 4:

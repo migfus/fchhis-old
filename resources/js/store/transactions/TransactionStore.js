@@ -2,9 +2,11 @@ import { ref, reactive } from 'vue'
 import { defineStore } from 'pinia'
 import { $DebugInfo, $Err} from '@/helpers/debug'
 import axios from 'axios'
+import { useToast} from 'vue-toastification'
 
 export const useTransactionStore = defineStore('TransactionStore', () => {
   $DebugInfo('TransactionStore')
+  const $toast = useToast();
   const CancelToken = axios.CancelToken;
   let cancel;
 
@@ -55,6 +57,39 @@ export const useTransactionStore = defineStore('TransactionStore', () => {
     }
   }
 
+  async function StoreAPI() {
+    try {
+      let { data: {data}} = await axios.post('/api/transaction', params)
+      if(data) {
+        $toast.success('Successfully Added')
+        ChangeForm('')
+        Object.assign(params, { ...InitParams })
+        GetAPI()
+      }
+    }
+    catch(e) {
+      $Err('StatisticStore StoreAPI Error', {e})
+    }
+  }
+
+  async function UpdateAPI(id) {
+    try {
+      let { data: {data}} = await axios.put('/api/transaction/'+id, params)
+      if(data) {
+        $toast.success('Successfully Added')
+        ChangeForm('')
+        Object.assign(params, { ...InitParams })
+        GetAPI()
+      }
+    }
+    catch(e) {
+      $Err('StatisticStore UpdateAPI Error', {e})
+    }
+  }
+
+  // SECTION FUNCTIONS
+
+
   function CancelAPI() {
     cancel()
   }
@@ -69,10 +104,25 @@ export const useTransactionStore = defineStore('TransactionStore', () => {
     });
   }
 
+  function Update(row) {
+    Object.assign(params, row)
+
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: 'smooth'
+    });
+
+    ChangeForm('update')
+  }
+
   function InitParams() {
     return {
       or: '',
-      payt_type_id: '',
+      pay_type: {
+        name: 'Monthly'
+      },
+      pay_type_id: '',
       amount: '',
 
       plan: {
@@ -109,8 +159,11 @@ export const useTransactionStore = defineStore('TransactionStore', () => {
     GetAPI,
     PrintAPI,
     CancelAPI,
+    StoreAPI,
+    UpdateAPI,
 
     ChangeForm,
     InitParams,
+    Update,
   }
 })

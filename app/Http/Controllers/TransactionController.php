@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Transaction;
+use App\Models\Person;
 use Illuminate\Support\Facades\Validator;
+use Carbon\Carbon;
 
 class TransactionController extends Controller
 {
@@ -257,18 +259,33 @@ class TransactionController extends Controller
     }
 
     if($req->print) {
-      $data = Transaction::where('agent_id', $req->user()->person->id)
-        ->with(['plan', 'pay_type', 'client', 'staff'])
-        ->where('created_at', '>=', $req->start)
-        ->where('created_at', '<=', $req->end)
-        ->orderBy('created_at', 'DESC')
-        ->get();
+      $data = Transaction::select('*');
+
+      if((bool)strtotime($req->start) OR (bool)strtotime($req->end)) {
+        if((bool)strtotime($req->start)) {
+          $data->where('created_at', '>=', $req->start);
+        }
+        if((bool)strtotime($req->end)) {
+          $data->where('created_at', '<=', $req->end);
+        }
+      }
+
+      $data = Transaction::with([
+        'plan',
+        'pay_type',
+        'client.user',
+        'client' => function($q) {
+          $q->withSum('client_transactions','amount');
+        },
+        'staff.user',
+        'agent.user'
+      ]);
 
       $sum = Transaction::where('agent_id', $req->user()->person->id)->sum('amount');
 
       return response()->json([
         ...$this->G_ReturnDefault($req),
-        'data' => $data,
+        'data' => $data->orderBy('created_at', 'DESC')->get(),
         'sum'  => $sum,
       ]);
     }
@@ -284,7 +301,16 @@ class TransactionController extends Controller
         }
       }
 
-      $data = Transaction::with(['plan', 'pay_type', 'client.user', 'staff.user', 'agent.user']);
+      $data = Transaction::with([
+        'plan',
+        'pay_type',
+        'client.user',
+        'client' => function($q) {
+          $q->withSum('client_transactions','amount');
+        },
+        'staff.user',
+        'agent.user'
+      ]);
 
       switch($req->filter) {
         case 'or':
@@ -324,6 +350,15 @@ class TransactionController extends Controller
 
   // SECTION STORE
   public function store(Request $req) {
+    switch($req->user()->role) {
+      case 5:
+        return $this->StaffStore($req);
+      default:
+        return $this->G_UnauthorizedResponse();
+    }
+
+
+
     $val = Validator::make($req->all(), [
       'agent.person.id' => 'required',
       'client.person.id' => 'required',
@@ -357,10 +392,69 @@ class TransactionController extends Controller
     return $this->G_UnauthorizedResponse();
   }
 
-  public function update(Request $req, string $id) {
+  private function StaffStore($req) {
     $val = Validator::make($req->all(), [
-      'agent.person.id' => 'required',
-      'client.person.id' => 'required',
+      'agent.id' => 'required',
+      'client.id' => 'required',
+      'amount' => 'required',
+      'or' => 'required',
+      'pay_type_id' => 'required',
+      'plan.id' => 'required',
+      'or',
+    ]);
+
+    if($val->fails()) {
+      return $this->G_ValidatorFailResponse($val);
+    }
+
+    Transaction::create([
+      'or' => $req->or,
+      'agent_id' => $req->agent['id'],
+      'staff_id' => $req->user()->person->id,
+      'client_id' => $req->client['id'],
+      'pay_type_id' => $req->pay_type_id,
+      'plan_id' => $req->plan['id'],
+      'amount' => $req->amount,
+    ]);
+
+    $due = Person::where('id', $req->client['id'])->first()->due_at;
+
+    switch($req->pay_type_id) {
+      case 2:
+        $due = Carbon::create($due)->addMonth(3);
+      case 3:
+        $due = Carbon::create($due)->addMonth(6);
+      case 4:
+        $due = Carbon::create($due)->addMonth(12);
+      case 5:
+        $due = null;
+      case 6:
+        $due = null;
+      default:
+        $due = Carbon::create($due)->addMonth(1);
+    }
+
+    Person::where('id', $req->client['id'])->update(['due_at' => $due]);
+
+    return response()->json([...$this->G_ReturnDefault($req), 'data' => true]);
+
+  }
+
+  // SECTION UPDATE
+
+  public function update(Request $req, string $id) {
+    switch($req->user()->role) {
+      case 5:
+        return $this->StaffUpdate($req, $id);
+      default:
+        return $this->G_UnauthorizedResponse();
+    }
+  }
+
+  private function StaffUpdate($req, $id){
+    $val = Validator::make($req->all(), [
+      'agent.id' => 'required',
+      'client.id' => 'required',
       'amount' => 'required',
       'or' => 'required',
       'pay_type_id' => 'required',
@@ -372,26 +466,24 @@ class TransactionController extends Controller
       return $this->G_ValidatorFailResponse($val);
     }
 
+    Transaction::where('id', $id)
+      ->where('staff_id', $req->user()->person->id)
+      ->update([
+        'or' => $req->or,
+        'agent_id' => $req->agent['id'],
+        'client_id' => $req->client['id'],
+        'pay_type_id' => $req->pay_type_id,
+        'plan_id' => $req->plan['id'],
+        'amount' => $req->amount,
+    ]);
 
-    if($req->user()->role == 5) {
-      // return $req->client['person']['id'];
-
-      Transaction::where('id', $id)
-        ->where('staff_id', $req->user()->id)
-        ->update([
-          'or' => $req->or,
-          'agent_id' => $req->agent['person']['id'],
-          'client_id' => $req->client['person']['id'],
-          'pay_type_id' => $req->pay_type_id,
-          'plan_id' => $req->plan['id'],
-          'amount' => $req->amount,
-        ]);
-
-      return response()->json([...$this->G_ReturnDefault($req), 'data' => true]);
-    }
-
-    return $this->G_UnauthorizedResponse();
+    return response()->json([...$this->G_ReturnDefault($req), 'data' => true]);
   }
+
+
+
+  // SECTION OTHERS
+
 
   public function show(string $id) {
       //

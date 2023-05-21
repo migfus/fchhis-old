@@ -44,17 +44,17 @@
 </template>
 
 <script setup>
-import { useTransactionStore } from '@/store/transaction/transaction';
+import { useTransactionStore } from '@/store/transactions/TransactionStore';
 import moment from 'moment'
 import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
 import { computed } from 'vue'
 import { useTransactionStaff } from '@/store/print/transactionStaff'
-import { useProfileStore } from '@/store/auth/profile'
+import { useAuthStore } from '@/store/auth/AuthStore'
 
 const $trans = useTransactionStore();
 const $report = useTransactionStaff();
-const $profile = useProfileStore();
+const $auth = useAuthStore();
 
 const disabledPrint = computed(() => {
   if ($trans.query.start && $trans.query.end) {
@@ -66,17 +66,19 @@ const disabledPrint = computed(() => {
 async function Print() {
   $trans.query.print = true
   await $trans.PrintAPI()
-  await $profile.GetAPI()
 
-  $report.Print({
+  await $report.Print({
     header: {
-      name: $profile.content.person.name,
+      name: $auth.content.auth.person.name,
       start: moment($trans.query.start).format("MMM D, YYYY"),
       end: moment($trans.query.end).format("MMM D, YYYY"),
     },
-    body: $trans.printContent.map(m => { return { plan: m.plan.name, type: m.pay_type.name, amount: m.amount, date: moment(m.created_at).format('MM/DD/YYYY HH:MM A') } }),
+    body: $trans.print.map(m => { return { plan: m.plan.name, type: m.pay_type.name, amount: m.amount, date: moment(m.created_at).format('MM/DD/YYYY HH:MM A') } }),
   })
 
   $trans.query.print = false
+  $trans.query.start = ''
+  $trans.query.end = ''
+  await $trans.GetAPI()
 }
 </script>

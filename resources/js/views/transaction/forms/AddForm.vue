@@ -6,7 +6,7 @@
           <h3 class="card-title"><strong>Add Transaction</strong></h3>
         </div>
         <div class="card-body">
-          <Form v-slot="{ errors }" :validation-schema="schema" validate-on-mount @submit="$trans.AddAPI()">
+          <Form v-slot="{ errors }" :validation-schema="schema" validate-on-mount @submit="$trans.StoreAPI()">
             <div class="row">
 
               <div class="col-12 col-md-6">
@@ -32,42 +32,10 @@
                   </div>
                 </div>
 
-                <div class="form-group">
-                  <label>Agent</label>
-                  <div v-if="$trans.params.agent.id" class="mb-2">
-                    <img :src="$trans.params.agent.user.avatar" style="height: 3em;"
-                      class="img-circle float-left mr-3 my-2">
-                    {{ $trans.params.agent.name }}
-                  </div>
-                  <div>
-                    <button @click="SelectAgent()" class="btn btn-info" data-toggle="modal" data-target="#modal-agent">
-                      <i class="fas fa-handshake mr-2"></i> Select Agent
-                    </button>
-                  </div>
-                  <Field v-model="$trans.params.agent.id" name="agent_id" type="hidden" />
-                  <div class="mb-2 text-danger">
-                    <ErrorMessage name="agent_id" />
-                  </div>
-                </div>
-
-              </div>
-
-              <div class="col-12 col-md-6">
-
-                <div class="form-group">
-                  <label for="or-input">OR Number (Auto regenerate if empty)</label>
-                  <Field v-model="$trans.params.or" name="or" type="text" class="form-control" id="or-input"
-                    placeholder="Optional" :disabled="$trans.params.agent.id == ''" />
-                  <div class="mb-2 text-danger">
-                    <ErrorMessage name="or" />
-                  </div>
-                </div>
-
 
                 <div class="form-group">
                   <label>Plan</label>
-                  <select v-model="$trans.params.plan" @click="SelectPlan()" class="form-control"
-                    :disabled="$trans.params.agent.id == ''">
+                  <select v-model="$trans.params.plan" @click="SelectPlan()" class="form-control" disabled>
                     <option v-for="row in $plan.content" :value="row">{{ row.name }}</option>
                   </select>
                 </div>
@@ -80,6 +48,21 @@
                     <option v-for="row in $payType.content" :value="row.id">{{ row.name }}</option>
                   </select>
                 </div>
+
+              </div>
+
+              <div class="col-12 col-md-6">
+
+                <div class="form-group">
+                  <label for="or-input">OR Number</label>
+                  <Field v-model="$trans.params.or" name="or" type="text" class="form-control" id="or-input"
+                    placeholder="Optional" />
+                  <div class="mb-2 text-danger">
+                    <ErrorMessage name="or" />
+                  </div>
+                </div>
+
+
 
 
                 <div class="form-group">
@@ -107,7 +90,7 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue'
+import { onMounted, computed } from 'vue'
 import { Form, Field, ErrorMessage, configure, } from 'vee-validate'
 import * as Yup from 'yup'
 import { usePlanStore } from '@/store/system/PlanStore'
@@ -133,18 +116,12 @@ function SelectPlan() {
 }
 
 function SelectClient() {
-  $user.params.role = 6;
-  $user.GetAPI()
-}
-
-function SelectAgent() {
-  $user.params.role = 4;
+  $user.query.role = 6;
   $user.GetAPI()
 }
 
 const schema = Yup.object({
   client_id: Yup.string().required('Client is Needed'),
-  agent_id: Yup.string().required('Agent is Needed'),
   or: Yup.string().required('OR Number is required'),
 })
 

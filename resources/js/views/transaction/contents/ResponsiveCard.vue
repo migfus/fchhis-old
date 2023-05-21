@@ -32,7 +32,8 @@
               <span class="d-inline d-xl-none float-right text-secondary">{{ moment(row.created_at).format('MMM D YYYY')
               }}</span>
               <div class="h5 mb-1">Plan: <strong>{{ row.plan.name }}</strong></div>
-              <div>To Pay: <strong>{{ NumberAddComma(PlanToPay(row.pay_type, row.plan)) }}</strong>
+              <div>Due Date: <strong>{{ row.client.due_at ? moment(row.client.due_at).format('MMM D, YYYY') : 'N/A'
+              }}</strong>
               </div>
               <div>Est. Bal. Due:
                 <strong v-if="row.client" class="text-danger">
@@ -70,9 +71,9 @@
 
           </div>
           <div class="col-12 col-md-6 col-lg-4 col-xl-3">
-            <div>Payed By: <strong v-if="row.cient" class="text-success">{{ row.client.name }}</strong></div>
-            <div>Username: <strong v-if="row.cient">{{ row.client.user.username }}</strong></div>
-            <div>Email: <strong v-if="row.cient">{{ row.client.user.email }}</strong></div>
+            <div>Payed By: <strong v-if="row.client" class="text-success">{{ row.client.name }}</strong></div>
+            <div>Username: <strong v-if="row.client">{{ row.client.user.username }}</strong></div>
+            <div>Email: <strong v-if="row.client">{{ row.client.user.email }}</strong></div>
             <hr class="mt-1" />
 
 
@@ -91,7 +92,7 @@
 
           </div>
           <div class="col-12 col-md-6 col-lg-4 col-xl-3">
-            <div>Province: <strong>{{ NumberAddComma(row.plan.name) }}</strong></div>
+            <div>Address: <strong>{{ CityIDToFullAddress(row.client.address_id) }}</strong></div>
             <div>Spot Payment: <strong>{{ NumberAddComma(row.plan.spot_pay) }}</strong></div>
             <div>Spot Service: <strong>{{ NumberAddComma(row.plan.spot_service) }}</strong></div>
             <!-- <div>Contract Price: <strong>{{ NumberAddComma(row.plan.contract_price) }}</strong></div> -->
@@ -146,7 +147,7 @@
 
 <script setup>
 import { useTransactionStore } from '@/store/transactions/TransactionStore'
-import { NumberAddComma, PlanToPay } from '@/helpers/converter'
+import { NumberAddComma, PlanToPay, CityIDToFullAddress } from '@/helpers/converter'
 import moment from 'moment'
 import { useAuthStore } from '@/store/auth/AuthStore'
 import { useReceiptStore } from '@/store/print/receipt'
@@ -160,7 +161,7 @@ function Print(row) {
     header: {
       date: moment().format('MMM D, YYYY HH:mm A'),
       or: '[or]',
-      name: row.client.person.name
+      name: row.client.name
     },
     body: [
       {
@@ -171,7 +172,7 @@ function Print(row) {
     ],
     footer: {
       payType: 'Cash on Hand',
-      received: row.staff.person.name,
+      received: row.staff.name,
     }
   }
   )

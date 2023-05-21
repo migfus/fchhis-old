@@ -89,7 +89,7 @@
     </div>
   </div>
   <SelectClient />
-  <!-- <PrintModal /> -->
+  <PrintModal />
 </template>
 
 <script setup>
@@ -102,14 +102,12 @@ import { useRoute } from 'vue-router'
 import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
 import SelectClient from './../modals/SelectClient.vue'
-// import PrintModal from '../modals/PrintModal.vue'
+import PrintModal from '../modals/PrintModal.vue'
 
 const $trans = useTransactionStore();
 const $route = useRoute();
 
 watch($trans.query, throttle(() => {
-  $trans.query.start = ''
-  $trans.query.end = ''
   $trans.GetAPI(1)
 }, 1000));
 

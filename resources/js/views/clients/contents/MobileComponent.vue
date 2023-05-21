@@ -32,7 +32,7 @@
               <div>Total To Pay: <strong>{{ NumberAddComma(PlanToPay(row.pay_type, row.plan)) }}</strong></div>
               <div>Est. Bal. Due:
                 <strong class="text-danger">
-                  {{ NumberAddComma(PlanToPay(row.pay_type, row.plan) - row.client_transactions_sum_amount) }}
+                  {{ NumberAddComma(PlanToPay(row.pay_type, row.plan) - row.client.client_transactions_sum_amount) }}
                 </strong>
               </div>
             </div>
