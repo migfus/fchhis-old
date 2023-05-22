@@ -213,4 +213,18 @@ class AuthController extends Controller
 
     return response()->json([...$this->G_ReturnDefault($req), 'data' => ['grace' => $grace, 'overdue' => $overdue]]);
   }
+
+  public function Claim(Request $req, $id) {
+    if($req->user()->role == 2 || $req->user()->role == 5) {
+      if(Person::where('id', $id)->whereNull('fulfilled_at')->first()) {
+        Person::where('id', $id)->update([ 'fulfilled_at' => Carbon::now()]);
+      }
+      else {
+        Person::where('id', $id)->update([ 'fulfilled_at' => null]);
+      }
+
+      return response()->json([...$this->G_ReturnDefault($req), 'data' => true]);
+    }
+    return $this->G_UnauthorizedResponse();
+  }
 }

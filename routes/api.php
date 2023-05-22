@@ -37,6 +37,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/avatar', 'ChangeAvatar');
     Route::get('/profile', 'Profile');
     Route::get('/overdue', 'Overdue');
+    Route::post('/claim/{id}', 'Claim');
   });
 
   Route::apiResource('/users', UserController::class)->only(['index', 'destroy', 'store', 'update', 'show']);

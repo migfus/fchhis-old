@@ -16,9 +16,10 @@
           <div>
             Claim this Client?
           </div>
-          <button v-if="$user.content.fulfilled_at" type="button" class="btn btn-secondary float-right"
-            data-dismiss="modal">Unclaim</button>
-          <button v-else type="button" class="btn btn-secondary float-right" data-dismiss="modal">Claim</button>
+          <button v-if="$user.content.fulfilled_at" @click="Update($user.content.id)" type="button"
+            class="btn btn-secondary float-right" data-dismiss="modal">Unclaim</button>
+          <button v-else @click="Update($user.content.id)" type="button" class="btn btn-secondary float-right"
+            data-dismiss="modal">Claim</button>
         </div>
       </div>
     </div>
@@ -27,6 +28,19 @@
 
 <script setup>
 import { useUserDetailsStore } from '@/store/user/UserDetailStore'
+import axios from 'axios'
+import { useToast } from 'vue-toastification'
 
 const $user = useUserDetailsStore();
+const $toast = useToast();
+
+async function Update(id) {
+  try {
+    let { data: { data } } = await axios.post('/api/claim/' + id)
+    $toast.success('Updated')
+    $user.GetAPI(id)
+  }
+  catch (e) {
+  }
+}
 </script>
