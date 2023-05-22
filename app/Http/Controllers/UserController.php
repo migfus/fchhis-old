@@ -822,10 +822,23 @@ class UserController extends Controller
   }
 
   private function AdminShow($req, $id) {
-    $data = Person::where('id', $id)
-      ->with(['user', 'client_transactions', 'plan', 'pay_type'])
-      ->withSum('client_transactions', 'amount')
-      ->first();
+    $data;
+
+    if(Person::where('id', $id)->with('user')->whereHas('user', function($q) {$q->where('role', 4);})->first()) {
+      $data = Person::where('id', $id)
+        ->with(['user', 'agent_transactions.client', 'pay_type', 'plan', 'agent_clients.plan', 'agent_clients.pay_type', 'agent_clients' => function ($q) {
+          $q->withSum('client_transactions', 'amount');
+        }])
+        ->withSum('agent_transactions', 'amount')
+        ->withCount('agent')
+        ->first();
+    }
+    else {
+      $data = Person::where('id', $id)
+        ->with(['user', 'client_transactions', 'plan', 'pay_type'])
+        ->withSum('client_transactions', 'amount')
+        ->first();
+    }
 
     return response()->json([...$this->G_ReturnDefault($req), 'data' => $data], 200);
   }
