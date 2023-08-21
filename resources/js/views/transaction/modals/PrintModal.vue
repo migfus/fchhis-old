@@ -73,7 +73,7 @@ async function Print() {
       start: moment($trans.query.start).format("MMM D, YYYY"),
       end: moment($trans.query.end).format("MMM D, YYYY"),
     },
-    body: $trans.print.map(m => { return { plan: m.plan.name, type: m.pay_type.name, amount: m.amount, date: moment(m.created_at).format('MM/DD/YYYY HH:MM A') } }),
+    body: $trans.print.map(m => { return { name: m.client.name, plan: m.plan.name, type: m.pay_type.name, amount: m.amount, date: moment(m.created_at).format('MM/DD/YYYY') } }),
   })
 
   $trans.query.print = false

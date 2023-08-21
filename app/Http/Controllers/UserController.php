@@ -389,34 +389,38 @@ class UserController extends Controller
 
     $data->with(['plan', 'pay_type', 'agent', 'user', 'staff', 'phones']);
 
+    if($req->role > 0) {
+      $data->whereHas('user', function($q) use($req) {
+        $q->where('role', $req->role);
+      });
+    }
+    else if($req->role) {
+      $data->whereNotNull('client_id')->whereHas('user', function($q){
+
+      });
+    }
+    else {
+      $data->whereHas('user', function($q){
+
+      });
+    }
+
     switch($req->filter) {
       case 'plan':
-        $data->whereHas('user', function($q) use($req) {
-            $q->where('role', $req->role);
-          })
-          ->whereHas('plan', function($q) use($req) {
+        $data->whereHas('plan', function($q) use($req) {
             $q->where('name', 'LIKE', '%'.$req->search.'%');
           })
           ->withSum('client_transactions', 'amount');
         break;
       case 'address':
-        $data->whereHas('user', function($q) use($req) {
-            $q->where('role', $req->role);
-          })
-          ->withSum('client_transactions', 'amount')
+        $data->withSum('client_transactions', 'amount')
           ->where('address', 'LIKE', '%'.$req->search.'%');
         break;
       case 'email':
-        $data->whereHas('user', function($q) use($req) {
-            $q->where('role', $req->role)->where('name', 'LIKE', '%'.$req->search.'%');
-          })
-          ->withSum('client_transactions', 'amount');
+        $data->withSum('client_transactions', 'amount');
         break;
       default:
-        $data->whereHas('user', function($q) use($req) {
-            $q->where('role', $req->role);
-          })
-          ->withSum('client_transactions', 'amount')
+        $data->withSum('client_transactions', 'amount')
           ->where('name', 'LIKE', '%'.$req->search.'%');
 
       return response()->json([
@@ -694,7 +698,7 @@ class UserController extends Controller
 
       $user = User::create([
         'person_id'=> $person->id,
-        'role'     => 6, // NOTE client only,
+        'role'     => $req->role,
       ]);
 
       Transaction::create([
@@ -946,6 +950,7 @@ class UserController extends Controller
     $user = User::where('id', $req->user['id'])->update([
       'username' => $req->user['username'],
       'email'    => $req->user['email'],
+      'role'     => $req->user['role']
     ]);
 
     if($req->password) {
@@ -962,7 +967,8 @@ class UserController extends Controller
   // SECTION DELETE
   public function destroy(string $id, Request $req) {
     if($req->user()->role == 2) {
-      User::find($id)->delete();
+      User::where('person_id', Person::where('id', $id)->first()->id)->delete();
+      Person::where('id', $id)->delete();
       return response()->json([...$this->G_ReturnDefault($req)], 200);
     }
     return $this->G_UnauthorizedResponse();

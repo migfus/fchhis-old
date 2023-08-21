@@ -9,7 +9,7 @@ export const useAuthStore = defineStore("auth", () => {
 
   const $toast = useToast();
 
-  const token = ref(JSON.parse(localStorage.getItem('token')) || '')
+  const token = ref(JSON.parse(localStorage.getItem('token')))
   const content = ref(JSON.parse(localStorage.getItem('auth')) || {})
   const config = reactive({
     loading: false,

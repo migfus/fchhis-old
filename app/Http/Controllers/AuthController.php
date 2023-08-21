@@ -156,8 +156,8 @@ class AuthController extends Controller
       ]);
 
       $data = [
-        'link' => 'http://127.0.0.1:8000/forgot/fill?code='.$code,
-        // 'link' => 'https://fchhis.migfus20.com/forgot/fill?code='.$code,
+        // 'link' => 'http://127.0.0.1:8000/forgot/fill?code='.$code,
+        'link' => 'https://fchhis.migfus20.com/forgot/fill?code='.$code,
         'code' => $code
       ];
       Mail::to($req->email)->send(new ForgotPasswordMailer($data));

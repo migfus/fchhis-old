@@ -94,29 +94,33 @@ export const useTransactionStaff = defineStore('transaction-staff', () => {
       {
         margin: [0, 2, 0, 0],
         table: {
-          widths: [100, 110, 140, 120],
+          widths: [100,60,60,60, 100],
           body: [
             [
               { text: 'Transactions', bold: true, colSpan: 4, alignment: 'center'},
               {},
               {},
               {},
+              {},
             ],
             [
+              { text: 'Name', bold: true },
               { text: 'Plan', bold: true },
-              { text: 'Payment Type', bold: true },
+              { text: 'Payment', bold: true },
               { text: 'Amount', bold: true },
-              { text: 'Date & Time', bold: true },
+              { text: 'Date', bold: true },
             ],
             // LOOP
 
-            ...input.body.map(m => [`${m.plan}`, `${m.type}`, NumberAddComma(m.amount), m.date ])
+            ...input.body.map(m => [`${m.name}`, `${m.plan}`, `${m.type}`, `${m.amount}`, `${m.date}`])
 
             ,
             [
               {},
+              {},
               { text: 'Total: ', bold: true, alignment: 'right' },
               { text: NumberAddComma(_sum(input.body, 'amount')), bold: true },
+
               {},
             ]
           ]
@@ -128,8 +132,8 @@ export const useTransactionStaff = defineStore('transaction-staff', () => {
       pageMargins: [ 40, 20, 40, 60 ],
       pageSize: 'A4',
       images: {
-        // logo: 'https://fchhis.migfus20.com/images/logo.png',
-        logo: 'http://127.0.0.1:8000/images/logo.png',
+        logo: 'https://fchhis.migfus20.com/images/logo.png',
+        // logo: 'http://127.0.0.1:8000/images/logo.png',
         dti: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/DTI_PH_new_logo.svg/1200px-DTI_PH_new_logo.svg.png'
       },
       header: [],

@@ -26,6 +26,7 @@ export const useUsersStore = defineStore('useUsersStore', () => {
     start: '',
     end: '',
     filter: 'name',
+    role: 6
   })
   const params = reactive({
     ...InitParams(),
@@ -90,6 +91,17 @@ export const useUsersStore = defineStore('useUsersStore', () => {
     }
   }
 
+  async function DestroyAPI(id) {
+    try {
+      let { data: { data }} = await axios.delete('/api/users/'+id)
+      $toast.success('Successfully deleted');
+      GetAPI(1)
+    }
+    catch(e) {
+      $Err('UsersTore SToreAPI Error', {e})
+    }
+  }
+
   // SECTION FUNCTIONS
   function ChangeForm(input) {
     config.form = input
@@ -146,6 +158,7 @@ export const useUsersStore = defineStore('useUsersStore', () => {
     CancelAPI,
     StoreAPI,
     UpdateAPI,
+    DestroyAPI,
 
     ChangeForm,
     Update,

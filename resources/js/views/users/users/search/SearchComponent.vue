@@ -14,31 +14,38 @@
             </div>
           </div>
 
-          <div class="col-12 col-md-4 mb-2">
-
-            <div class="input-group">
-              <div class="input-group-prepend">
-                <span class="input-group-text"><i class="fas fa-user-check"></i></span>
-              </div>
-              <select v-model="$user.params.role" class="form-control">
-                <option :value="7">All (Role)</option>
-                <option :value="2">Admin</option>
-                <option :value="3">Manager</option>
-                <option :value="4">Agent</option>
-                <option :value="5">Staff</option>
-                <option :value="6">Client</option>
-                <option :value="0">Inactive</option>
-                <option :value="1">Banned</option>
-              </select>
-            </div>
+          <div class="col-12 col-md-2 mb-2">
+            <VueDatePicker v-model="$user.query.start" :enable-time-picker="false"
+              :start-date="moment().startOf('month').format('YYYY-MM-DD')" placeholder="Start Date" auto-apply />
+          </div>
+          <div class="col-12 col-md-2 mb-2">
+            <VueDatePicker v-model="$user.query.end" :enable-time-picker="false"
+              :start-date="moment().endOf('month').format('YYYY-MM-DD')" placeholder="End Date" auto-apply />
           </div>
 
-          <div class="col-12 col-md-4 mb-2">
+          <div class="col-12 col-md-2 mb-2">
             <div class="input-group">
               <div class="input-group-prepend">
                 <span class="input-group-text"><i class="fas fa-filter"></i></span>
               </div>
-              <select v-model="$user.params.filter" class="form-control">
+              <select v-model="$user.query.role" class="form-control">
+                <!-- <option value="">All (Filter)</option> -->
+                <option :value="Number(0)">All</option>
+                <option :value="Number(6)">Clients</option>
+                <option :value="Number(5)">Staff</option>
+                <option :value="Number(4)">Agent</option>
+                <option :value="Number(2)">Admin</option>
+                <!-- <option :value="Number(1)">Beneficiary</option> -->
+              </select>
+            </div>
+          </div>
+
+          <div class="col-12 col-md-2 mb-2">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text"><i class="fas fa-filter"></i></span>
+              </div>
+              <select v-model="$user.query.filter" class="form-control">
                 <!-- <option value="">All (Filter)</option> -->
                 <option value="name">Name</option>
                 <option value="email">Email</option>
@@ -50,7 +57,7 @@
 
           <div class="col-12 col-md-4">
             <div class="input-group input-group float-right">
-              <input v-model="$user.params.search" type="text" name="table_search" class="form-control float-right"
+              <input v-model="$user.query.search" type="text" name="table_search" class="form-control float-right"
                 placeholder="Search">
               <div class="input-group-append">
                 <button type="submit" class="btn btn-default">
@@ -62,43 +69,32 @@
         </div>
 
         <div class="row mt-2">
-          <div class="col-12 col-md-4 mb-2">
-            <VueDatePicker v-model="$user.params.start" :enable-time-picker="false"
-              :start-date="moment().startOf('month').format('YYYY-MM-DD')" placeholder="Start Date" auto-apply />
-          </div>
-          <div class="col-12 col-md-4 mb-2">
-            <VueDatePicker v-model="$user.params.end" :enable-time-picker="false"
-              :start-date="moment().endOf('month').format('YYYY-MM-DD')" placeholder="End Date" auto-apply />
-          </div>
-
-          <div class="col-12 col-md-4">
+          <div class="col-12">
             <button v-if="$user.config.form" @click="$user.ChangeForm('')" class="btn btn-danger float-right">
               <i class="fas fa-plus-square d-inline d-xl-none"></i>
               <span class="d-none d-xl-inline">Cancel</span>
             </button>
             <button v-else @click="$user.ChangeForm('add')" class="btn btn-success float-right">
-              <i class="fas fa-plus-square d-inline d-xl-none"></i>
-              <span class="d-none d-xl-inline">Add User</span>
+              <span class=""><i class="fas fa-plus mr-1"></i>Add User</span>
             </button>
             <button @click="$user.ChangeForm('or')" class="btn btn-info float-right mr-1">
-              <i class="fas fa-plus-square d-inline d-xl-none"></i>
-              <span class="d-none d-xl-inline">Add OR</span>
+              <span class=""><i class="fas fa-plus mr-1"></i>Self Register</span>
             </button>
 
-            <button @click="$user.config.tableView = !$user.config.tableView" class="btn btn-info mr-1 float-right">
+            <!-- <button @click="$user.config.tableView = !$user.config.tableView" class="btn btn-info mr-1 float-right">
               <i :class="`fas ${$user.config.tableView ? 'fa-bars' : 'fa-table'}`"></i>
             </button>
             <button @click="$user.config.viewAll = !$user.config.viewAll" :disabled="$user.config.tableView"
               class="btn btn-info mr-1 float-right">
               <i :class="`fas ${$user.config.viewAll ? 'fa-window-minimize' : 'fa-window-maximize'}`"></i>
-            </button>
+            </button> -->
 
             <button v-if="$user.config.loading" class="btn card-loader-content card-loader mr-1 float-right"
               style="width: 42px">
               &nbsp;
             </button>
             <button v-else class="btn btn-info mr-1 float-right">
-              <i class="fas fa-print"></i>
+              <i class="fas fa-print mr-1"></i>Print
             </button>
 
           </div>
@@ -110,21 +106,28 @@
 </template>
 
 <script setup>
-import { reactive, watch, onMounted } from 'vue'
-import { useUserStore } from '@/store/users/users'
+import { watch, onMounted } from 'vue'
+import { useUsersStore } from '@/store/users/UsersStore'
 import moment from 'moment'
 import { throttle } from 'lodash'
 
 import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
 
-const $user = useUserStore();
+const $user = useUsersStore();
 
-watch($user.params, throttle(() => {
+watch($user.query, throttle(() => {
   $user.GetAPI(1)
 }, 1000))
 
 onMounted(() => {
+  $user.query.sort = 'DESC'
+  $user.query.limit = 10
+  $user.query.role = 0
   $user.GetAPI()
 });
+
+// onUnmounted(() => {
+//   $user.content = []
+// });
 </script>

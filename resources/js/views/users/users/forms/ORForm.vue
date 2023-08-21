@@ -6,7 +6,7 @@
           <h3 class="card-title"><strong>Add OR</strong></h3>
         </div>
         <div class="card-body">
-          <Form v-slot="{ errors }" :validation-schema="schema" validate-on-mount @submit="$user.Add">
+          <Form v-slot="{ errors }" :validation-schema="schema" validate-on-mount @submit="$user.StoreAPI()">
             <div class="row">
 
               <div class="col-12">
@@ -21,61 +21,42 @@
               <div class="col-12 col-md-6">
 
                 <label for="or-input">OR</label>
-                <div class="input-group">
-                  <Field v-model="$user.input.or" name="or" type="text" class="form-control"
+                <div class="form-group">
+                  <Field v-model="$user.params.or" name="or" type="text" class="form-control"
                     placeholder="Enter OR Number" />
-                  <div class="input-group-append">
-                    <span @click="GeneratePasword()" class="input-group-text bg-info" style="cursor: pointer">
-                      Generate OR
-                    </span>
-                  </div>
                 </div>
                 <div class="mb-3 text-danger">
                   <ErrorMessage name="or" />
                 </div>
 
-                <label for="mobile-input">Mobile</label>
-                <div class="input-group">
-                  <Field v-model="$user.input.mobile" name="mobile" type="text" class="form-control"
-                    placeholder="Enter Mobile Number" />
-                  <div class="input-group-append">
-                    <span v-if="$user.input.notifyMobile" @click="$user.input.notifyMobile = !$user.input.notifyMobile"
-                      class="input-group-text bg-success" style="cursor: pointer">
-                      <i class="fas fa-bell"></i>
-                    </span>
-                    <span v-else @click="$user.input.notifyMobile = !$user.input.notifyMobile"
-                      class="input-group-text bg-danger" style="cursor: pointer">
-                      <i class="fas fa-bell-slash"></i>
-                    </span>
-                  </div>
-                </div>
-                <div class="mb-3 text-danger">
-                  <ErrorMessage name="mobile" />
-                </div>
-
                 <div class="form-group">
                   <label>Plan</label>
-                  <select v-model="$user.input.plan" class="form-control">
+                  <select v-model="$user.params.plan" class="form-control">
                     <option v-for="row in $plan.content" :value="row.id">{{ row.name }}</option>
                   </select>
                 </div>
 
                 <div class="form-group">
                   <label>Payment Type</label>
-                  <select v-model="$user.input.pay_type_id" class="form-control">
+                  <select v-model="$user.params.pay_type_id" class="form-control">
                     <option v-for="row in $payType.content" :value="row.id">{{ row.name }}</option>
                   </select>
                 </div>
 
                 <div class="form-group">
-                  <label for="mid-input">Initial Transaction</label>
-                  <Field v-model="$user.input.transaction" name="transaction" type="text" class="form-control"
+                  <label for="mid-params">Initial Transaction</label>
+                  <Field v-model="$user.params.transaction" name="transaction" type="text" class="form-control"
                     id="mid-input" placeholder="Optional" />
                 </div>
 
+
+                <label for="">URL Registratino for Client: <a :href="url" target="_blank">{{ url }}</a></label>
+              </div>
+
+              <div class="col-12 col-md-6">
                 <div class="form-group">
                   <label>Agent</label>
-                  <Field name="agent" as='select' v-model="$user.input.agent" class="form-control">
+                  <Field name="agent" as='select' v-model="$user.params.agent" class="form-control">
                     <option v-for="row in $agent.content" :value="row.id">
                       {{ row.person.name }}
                     </option>
@@ -85,51 +66,14 @@
                   </div>
                 </div>
 
-                <label for="">URL Registratino for Client: <a :href="url" target="_blank">{{ url }}</a></label>
-              </div>
-
-              <div class="col-12 col-md-6">
-
                 <div class="form-group">
-                  <label for="lastName-input">Last Name</label>
-                  <Field v-model="$user.input.lastName" name="lastName" type="text" class="form-control"
-                    id="lastName-input" placeholder="Enter Last Name" />
+                  <label for="lastName-input">Name</label>
+                  <Field v-model="$user.params.name" name="name" type="text" class="form-control" id="lastName-input"
+                    placeholder="Enter Name" />
                   <div class="mb-2 text-danger">
-                    <ErrorMessage name="lastName" />
+                    <ErrorMessage name="name" />
                   </div>
                 </div>
-
-                <div class="form-group">
-                  <label for="firstName-input">First Name</label>
-                  <Field v-model="$user.input.firstName" name="firstName" type="text" class="form-control"
-                    id="firstName-input" placeholder="Enter First Name" />
-                  <div class="mb-2 text-danger">
-                    <ErrorMessage name="firstName" />
-                  </div>
-                </div>
-
-                <div class="form-group">
-                  <label for="midName-input">Mid Name</label>
-                  <Field v-model="$user.input.midName" name="midName" type="text" class="form-control" id="midName-input"
-                    placeholder="Enter Middle Name" />
-                </div>
-
-                <div class="form-group">
-                  <label>Extension Name</label>
-                  <select v-model="$user.input.extName" class="form-control">
-                    <option value="">N/A</option>
-                    <option value="jr">Jr</option>
-                    <option value="sr">Sr</option>
-                    <option value="i">I</option>
-                    <option value="ii">II</option>
-                    <option value="iii">III</option>
-                    <option value="iv">IV</option>
-                    <option value="v">V</option>
-                    <option value="vi">VI</option>
-                    <option value="vii">VII</option>
-                  </select>
-                </div>
-
               </div>
             </div>
 
@@ -147,16 +91,16 @@
 </template>
 
 <script setup>
-import { useUserStore } from '@/store/users/users'
-import { usePlanStore } from '@/store/system/plan'
+import { useUsersStore } from '@/store/users/UsersStore'
+import { usePlanStore } from '@/store/system/PlanStore'
 import { Form, Field, ErrorMessage, configure, } from 'vee-validate'
 import * as Yup from 'yup'
 import moment from 'moment'
 import { computed, onMounted } from 'vue'
-import { usePayTypeStore } from '@/store/system/payTypes'
-import { useAgentStore } from '@/store/users/agent'
+import { usePayTypeStore } from '@/store/system/PayTypeStore'
+import { useAgentStore } from '@/store/users/AgentStore'
 
-const $user = useUserStore();
+const $user = useUsersStore();
 const $plan = usePlanStore();
 const $payType = usePayTypeStore();
 const $agent = useAgentStore();
@@ -166,33 +110,19 @@ configure({
 })
 const schema = Yup.object({
   or: Yup.string().required('OR is Required'),
-  mobile: Yup.string().required('Mobile is Required'),
-  lastName: Yup.string().required('Last Name is Required'),
-  firstName: Yup.string().required('First Name is Required'),
+  name: Yup.string().required('Name is Required'),
 })
 const url = computed(() => {
-  if ($user.input.or) {
-    return `https://fchhis.migfus20.com/register?or=${$user.input.or}`
+  if ($user.params.or) {
+    return `https://fchhis.migfus20.com/register?or=${$user.params.or}`
   }
   return ''
 })
 
-function GeneratePasword(length = 4) {
-  let result = '';
-  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  const charactersLength = characters.length;
-  let counter = 0;
-  while (counter < length) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    counter += 1;
-  }
-
-  $user.input.or = `${moment().format('YYYYMMDD')}-${result}`;
-}
-
 onMounted(() => {
   $payType.GetAPI()
   $agent.GetAPI()
+  $plan.GetAPI()
 });
 </script>
 

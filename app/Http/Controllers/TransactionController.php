@@ -16,6 +16,8 @@ class TransactionController extends Controller
       case 2:
         if($req->id)
           return $this->AdminIDIndex($req);
+        if($req->print)
+          return $this->AdminPrintIndex($req);
 
           return $this->AdminIndex($req);
       case 4:
@@ -349,6 +351,38 @@ class TransactionController extends Controller
       ...$this->G_ReturnDefault($req),
       'data' => $data,
     ]);
+  }
+
+  private function AdminPrintIndex($req) {
+    $data = Transaction::select('*');
+
+      if((bool)strtotime($req->start) OR (bool)strtotime($req->end)) {
+        if((bool)strtotime($req->start)) {
+          $data->where('created_at', '>=', $req->start);
+        }
+        if((bool)strtotime($req->end)) {
+          $data->where('created_at', '<=', $req->end);
+        }
+      }
+
+      $data = Transaction::with([
+        'plan',
+        'pay_type',
+        'client.user',
+        'client' => function($q) {
+          $q->withSum('client_transactions','amount');
+        },
+        'staff.user',
+        'agent.user'
+      ]);
+
+      $sum = Transaction::where('agent_id', $req->user()->person->id)->sum('amount');
+
+      return response()->json([
+        ...$this->G_ReturnDefault($req),
+        'data' => $data->orderBy('created_at', 'DESC')->get(),
+        'sum'  => $sum,
+      ]);
   }
 
   // SECTION STORE

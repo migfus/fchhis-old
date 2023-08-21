@@ -111,7 +111,7 @@ const router = createRouter({
     {
       path: "/overdue",
       name: "overdue",
-      component: () => import("@/views/overdue/OverduePage.vue"),
+      component: () => import("@/views/users/overdue/OverduePage.vue"),
       meta: {
         title: "Overdue",
         role: 5, //admin
@@ -188,17 +188,17 @@ const router = createRouter({
       }
     },
     // NOTE CLIENTS
-    {
-      path: "/clients",
-      name: "clients-list",
-      component: () => import("@/views/clients/ClientPage.vue"),
-      meta: {
-        title: "Users' Management",
-        role: 5, //client only
-        auth: true,
-        sideBar: true,
-      },
-    },
+    // {
+    //   path: "/clients",
+    //   name: "clients-list",
+    //   component: () => import("@/views/clients/ClientPage.vue"),
+    //   meta: {
+    //     title: "Users' Management",
+    //     role: 5, //client only
+    //     auth: true,
+    //     sideBar: true,
+    //   },
+    // },
     // NOTE ACCOUNT SETTINGS
     {
       path: "/account-settings",

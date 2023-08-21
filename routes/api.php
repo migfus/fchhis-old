@@ -33,22 +33,22 @@ Route::apiResource('/address', AddressController::class)->only(['index']);
 
 Route::middleware('auth:sanctum')->group(function () {
   Route::controller(AuthController::class)->group(function () {
-    Route::post('/change-password', 'ChangePassword');
-    Route::post('/avatar', 'ChangeAvatar');
     Route::get('/profile', 'Profile');
     Route::get('/overdue', 'Overdue');
+    Route::post('/change-password', 'ChangePassword');
+    Route::post('/avatar', 'ChangeAvatar');
     Route::post('/claim/{id}', 'Claim');
   });
 
-  Route::apiResource('/users', UserController::class)->only(['index', 'destroy', 'store', 'update', 'show']);
-  Route::apiResource('/dashboard', DashboardController::class)->only(['index']);
-  Route::apiResource('/plan', PlanController::class)->only(['index', 'destroy', 'store', 'update']);
-  Route::apiResource('/role', RoleController::class)->only(['index']);
+  Route::apiResource('/users',    UserController::class)->only(['index', 'destroy', 'store', 'update', 'show']);
+  Route::apiResource('/dashboard',DashboardController::class)->only(['index']);
+  Route::apiResource('/plan',     PlanController::class)->only(['index', 'destroy', 'store', 'update']);
+  Route::apiResource('/role',     RoleController::class)->only(['index']);
   Route::apiResource('/transaction', TransactionController::class)->only(['index', 'store', 'update', 'destroy']);
   Route::apiResource('/beneficiary', BeneficiaryController::class)->only(['index', 'destroy', 'store', 'update']);
   Route::apiResource('/downhead', DownHeadController::class)->only(['index']);
-  Route::apiResource('/client', ClientController::class)->only(['index']);
+  Route::apiResource('/client',   ClientController::class)->only(['index']);
   Route::apiResource('/pay-type', PayTypeController::class)->only(['index']);
-  Route::apiResource('/agent', AgentController::class)->only(['index']);
+  Route::apiResource('/agent',    AgentController::class)->only(['index']);
   Route::apiResource('/statictic', StatisticController::class)->only(['index']);
 });
