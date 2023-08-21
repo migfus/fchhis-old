@@ -51,7 +51,7 @@ class User extends Authenticatable
   ];
 
   public function person() {
-    return $this->belongsTo(Person::class, 'person_id', 'id');
+    return $this->hasOne(Person::class);
   }
 
   public function plan() {

@@ -16,6 +16,7 @@ class PersonSeeder extends Seeder
       $data = [
         [
           'id'        => 2,
+          'user_id'   => 2,
           'staff_id'  => 1,
           'agent_id'  => 1,
           'name'      => '[admin]',
@@ -27,6 +28,7 @@ class PersonSeeder extends Seeder
         ],
         [
           'id'        => 4,
+          'user_id'   => 4,
           'staff_id'  => 1,
           'agent_id'  => 1,
           'name'      => '[agent]',
@@ -38,6 +40,7 @@ class PersonSeeder extends Seeder
         ],
         [
           'id'        => 5,
+          'user_id'   => 5,
           'staff_id'  => 1,
           'agent_id'  => 1,
           'name'      => '[staff]',
@@ -49,6 +52,7 @@ class PersonSeeder extends Seeder
         ],
         [
           'id'        => 6,
+          'user_id'   => 6,
           'staff_id'  => 1,
           'agent_id'  => 1,
           'name'      => '[client]',
@@ -63,6 +67,7 @@ class PersonSeeder extends Seeder
 
         [
           'id'          => 1,
+          'user_id'     => 1,
           'staff_id'    => 5,
           'agent_id'    => 4,
           'client_id'   => 6,
@@ -76,6 +81,7 @@ class PersonSeeder extends Seeder
         ],
         [
           'id'        => 3,
+          'user_id'   => 3,
           'staff_id'  => 5,
           'agent_id'  => 4,
           'pay_type_id'=>1,
@@ -98,6 +104,7 @@ class PersonSeeder extends Seeder
       foreach(range(1,10) as $idx) {
         \App\Models\Person::create([
           'id' => $idx + 7,
+          'user_id'   => $idx + 7,
           'staff_id' => 5,
           'agent_id' => 4,
           'pay_type_id' => rand(1,6),

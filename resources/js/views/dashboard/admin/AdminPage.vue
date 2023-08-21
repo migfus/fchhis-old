@@ -1,9 +1,5 @@
 <template>
   <div class="row">
-    <div class="col-12">
-      <UserList />
-    </div>
-
     <div class="col-12 col-md-4">
       <NewUsersCard />
     </div>
@@ -29,8 +25,14 @@
     </div>
 
     <div class="col-12">
+      <UserList />
+    </div>
+
+    <div class="col-12">
       <PlanRanking />
     </div>
+
+
   </div>
 </template>
 

@@ -1,5 +1,5 @@
 import moment from 'moment'
-import { useAddressStore } from '@/store/system/AddressStore';
+import { useAddressStore } from '@/store/public/AddressStore';
 
 const $address = useAddressStore();
 
@@ -152,4 +152,13 @@ export const Sum = (items, prop) => {
   return items.reduce( function(a, b){
       return Number(a) + Number(b[prop]);
   }, 0);
+}
+
+export const Plural = (name, value) => {
+  if(value > 1) {
+    return `${name}s`
+  }
+  else {
+    return `${name}`
+  }
 }

@@ -87,7 +87,6 @@ class AuthController extends Controller
     }
     else {
       return response()->json(['data' => false], 401);
-
     }
   }
 
@@ -113,14 +112,7 @@ class AuthController extends Controller
     }
 
     if(Person::where('or', $req->or)->whereNull('bday')->first()) {
-      $person = Person::where('id', $req->id)->update([
-        'name'      => $req->name,
-        'bday'      => $req->bday,
-        'bplace_id' => $req->bplace_id,
-        'sex'       => $req->sex,
-        'address_id'=> $req->address_id,
-        'address'   => $req->address,
-      ]);
+
 
       $avatar = null;
 
@@ -128,11 +120,20 @@ class AuthController extends Controller
         $avatar = $this->G_AvatarUpload($req->avatar);
       }
 
-      $user = User::where('person_id', Person::where('id', $req->id)->first()->id)->update([
+      $user = User::where('id', $req->user()->id)->update([
         'username' => $req->username,
         'email'    => $req->email,
         'password' => Hash::make($req->password),
         'avatar'   => $avatar,
+      ]);
+
+      $person = Person::where('user_id', $user->id)->update([
+        'name'      => $req->name,
+        'bday'      => $req->bday,
+        'bplace_id' => $req->bplace_id,
+        'sex'       => $req->sex,
+        'address_id'=> $req->address_id,
+        'address'   => $req->address,
       ]);
 
       return response()->json([...$this->G_ReturnDefault(), 'data' => 'success']);

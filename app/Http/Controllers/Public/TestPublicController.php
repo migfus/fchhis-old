@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Public;
 
 use Illuminate\Http\Request;
 use App\Models\Person;
@@ -8,7 +8,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ForgotPasswordMailer;
 
-class TestController extends Controller
+class TestPublicController extends Controller
 {
   public function index() {
     $mail = 'migfus20@gmail.com';

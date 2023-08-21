@@ -13,7 +13,7 @@ class UserSeeder extends Seeder
     {
       $data = [
         [
-          'person_id'=> 2,
+          'id'=> 2,
           'username' => 'admin',
           'email'    => 'admin@gmail.com',
           'password' => Hash::make('12345678'),
@@ -21,7 +21,7 @@ class UserSeeder extends Seeder
           'role'     => 2,
         ],
         [
-          'person_id'=> 4,
+          'id'=> 4,
           'username' => 'agent',
           'email'    => 'agent@gmail.com',
           'password' => Hash::make('12345678'),
@@ -29,7 +29,7 @@ class UserSeeder extends Seeder
           'role'     => 4,
         ],
         [
-          'person_id'=> 5,
+          'id'=> 5,
           'username' => 'staff',
           'email'    => 'staff@gmail.com',
           'password' => Hash::make('12345678'),
@@ -37,7 +37,7 @@ class UserSeeder extends Seeder
           'role'     => 5,
         ],
         [
-          'person_id'=> 3,
+          'id'=> 3,
           'username' => 'client-expired',
           'email'    => 'client-expired@gmail.com',
           'password' => Hash::make('12345678'),
@@ -45,7 +45,7 @@ class UserSeeder extends Seeder
           'role'     => 6,
         ],
         [
-          'person_id'=> 6,
+          'id'=> 6,
           'username' => 'client',
           'email'    => 'client@gmail.com',
           'password' => Hash::make('12345678'),
@@ -62,7 +62,7 @@ class UserSeeder extends Seeder
       $faker->addProvider(new \Ottaviano\Faker\Gravatar($faker));
       foreach(range(1,10) as $idx) {
         \App\Models\User::create([
-          'person_id'=> $idx + 7,
+          'id'=> $idx + 7,
           'username' => $faker->username,
           'avatar'   => $faker->gravatarUrl(),
           'email'    => $faker->email,

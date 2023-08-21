@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('people', function (Blueprint $table) {
             $table->id();
+            $table->integer('user_id')->unsigned();
             $table->integer('staff_id')->unsigned();
             $table->integer('agent_id')->unsigned();
             $table->integer('client_id')->unsigned()->nullable(); // NOTE for Beneficiaries Option

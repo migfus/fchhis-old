@@ -30,7 +30,7 @@ class Person extends Model
     ];
 
   public function user() {
-    return $this->hasOne(User::class, 'person_id');
+    return $this->belongsTo(User::class);
   }
 
   public function agent() {

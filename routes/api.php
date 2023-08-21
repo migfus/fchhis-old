@@ -2,25 +2,18 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\AddressController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\PlanController;
-use App\Http\Controllers\RoleController;
-use App\Http\Controllers\TransactionController;
-use App\Http\Controllers\BeneficiaryController;
-use App\Http\Controllers\DownHeadController;
-use App\Http\Controllers\ClientController;
-use App\Http\Controllers\PayTypeController;
-use App\Http\Controllers\AgentController;
-use App\Http\Controllers\TestController;
-use App\Http\Controllers\StatisticController;
+
+// SECTION PUBLIC API
+Route::group(['prefix' => 'public', 'as' => 'public.'], function() {
+  // NOTE FOR BACKEND TESTING ONLY.
+  Route::apiResource('/test', \App\Http\Controllers\Public\TestPublicController::class)->only(['index']);
+  Route::apiResource('/address', \App\Http\Controllers\Public\AddressPublicController::class)->only(['index']);
+});
 
 
-Route::apiResource('/test', TestController::class)->only(['index']);
 
-Route::controller(AuthController::class)->group(function () {
+// SECTION AUTHENTICATION
+Route::controller(\App\Http\Controllers\AuthController::class)->group(function () {
   Route::post('/login', 'Login');
   Route::post('/or', 'ORCheck');
   Route::post('/register', 'Register');
@@ -28,11 +21,12 @@ Route::controller(AuthController::class)->group(function () {
   Route::post('/recovery-confirm', 'ConfirmRecovery');
   Route::post('/change-password-recovery', 'ChangePasswordRecovery');
 });
-Route::apiResource('/address', AddressController::class)->only(['index']);
 
 
+
+// SECTION USER API
 Route::middleware('auth:sanctum')->group(function () {
-  Route::controller(AuthController::class)->group(function () {
+  Route::controller(\App\Http\Controllers\AuthController::class)->group(function () {
     Route::get('/profile', 'Profile');
     Route::get('/overdue', 'Overdue');
     Route::post('/change-password', 'ChangePassword');
@@ -40,15 +34,15 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/claim/{id}', 'Claim');
   });
 
-  Route::apiResource('/users',    UserController::class)->only(['index', 'destroy', 'store', 'update', 'show']);
-  Route::apiResource('/dashboard',DashboardController::class)->only(['index']);
-  Route::apiResource('/plan',     PlanController::class)->only(['index', 'destroy', 'store', 'update']);
-  Route::apiResource('/role',     RoleController::class)->only(['index']);
-  Route::apiResource('/transaction', TransactionController::class)->only(['index', 'store', 'update', 'destroy']);
-  Route::apiResource('/beneficiary', BeneficiaryController::class)->only(['index', 'destroy', 'store', 'update']);
-  Route::apiResource('/downhead', DownHeadController::class)->only(['index']);
-  Route::apiResource('/client',   ClientController::class)->only(['index']);
-  Route::apiResource('/pay-type', PayTypeController::class)->only(['index']);
-  Route::apiResource('/agent',    AgentController::class)->only(['index']);
-  Route::apiResource('/statictic', StatisticController::class)->only(['index']);
+  Route::apiResource('/users',     \App\Http\Controllers\UserController::class)->only(['index', 'destroy', 'store', 'update', 'show']);
+  Route::apiResource('/dashboard', \App\Http\Controllers\DashboardController::class)->only(['index']);
+  Route::apiResource('/plan',      \App\Http\Controllers\PlanController::class)->only(['index', 'destroy', 'store', 'update']);
+  Route::apiResource('/role',      \App\Http\Controllers\RoleController::class)->only(['index']);
+  Route::apiResource('/transaction', \App\Http\Controllers\TransactionController::class)->only(['index', 'store', 'update', 'destroy']);
+  Route::apiResource('/beneficiary', \App\Http\Controllers\BeneficiaryController::class)->only(['index', 'destroy', 'store', 'update']);
+  Route::apiResource('/downhead',  \App\Http\Controllers\DownHeadController::class)->only(['index']);
+  Route::apiResource('/client',    \App\Http\Controllers\ClientController::class)->only(['index']);
+  Route::apiResource('/pay-type',  \App\Http\Controllers\PayTypeController::class)->only(['index']);
+  Route::apiResource('/agent',     \App\Http\Controllers\AgentController::class)->only(['index']);
+  Route::apiResource('/statictic', \App\Http\Controllers\StatisticController::class)->only(['index']);
 });

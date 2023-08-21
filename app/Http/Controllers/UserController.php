@@ -441,13 +441,6 @@ class UserController extends Controller
         return $this->G_UnauthorizedResponse();
     }
 
-
-
-
-
-
-
-
     if($req->user()->role == 2) {
       if($req->or) {
         if($req->or != '') {
@@ -482,8 +475,25 @@ class UserController extends Controller
         return $this->G_ValidatorFailResponse($val);
       }
 
+      $avatar = null;
+
+      if($req->avatar != '') {
+        $avatar = $this->G_AvatarUpload($req->avatar);
+      }
+
+      $user = User::create([
+        'plan_id'  => $req->plan,
+        'username' => $req->username,
+        'email'    => $req->email,
+        'password' => Hash::make($req->password),
+        'avatar'   => $avatar,
+        'role'     => $req->role,
+        'notify_mobile' => $req->notifyMobile,
+        'pay_type_id' => $req->pay_type_id,
+      ]);
+
       $person = Person::create([
-        'created_by_user_id' => $req->user()->id,
+        'user_id'   => $user->id,
         'lastName'  => $req->lastName,
         'firstName' => $req->firstName,
         'midName'   => $req->midName,
@@ -495,24 +505,6 @@ class UserController extends Controller
         'address'   => $req->address,
         'mobile'    => $req->mobile,
         'agent_id'  => $req->agent
-      ]);
-
-      $avatar = null;
-
-      if($req->avatar != '') {
-        $avatar = $this->G_AvatarUpload($req->avatar);
-      }
-
-      $user = User::create([
-        'person_id'=> $person->id,
-        'plan_id'  => $req->plan,
-        'username' => $req->username,
-        'email'    => $req->email,
-        'password' => Hash::make($req->password),
-        'avatar'   => $avatar,
-        'role'     => $req->role,
-        'notify_mobile' => $req->notifyMobile,
-        'pay_type_id' => $req->pay_type_id,
       ]);
 
       Transaction::create([
@@ -533,8 +525,6 @@ class UserController extends Controller
           return $this->ORStore($req);
         }
       }
-
-
     }
 
     return $this->G_UnauthorizedResponse();
@@ -555,18 +545,18 @@ class UserController extends Controller
         return $this->G_ValidatorFailResponse($val);
       }
 
+      $user = User::create([
+        'role'     => 6, // NOTE client only,
+      ]);
+
       $person = Person::create([
+        'user_id'    => $user->id,
         'staff_id'   => $req->user()->person->id,
         'or'         => $req->or,
         'plan_id'    => $req->plan,
         'pay_type_id'=> $req->pay_type_id,
         'agent_id'   => $req->agent,
         'name'       => $req->name,
-      ]);
-
-      $user = User::create([
-        'person_id'=> $person->id,
-        'role'     => 6, // NOTE client only,
       ]);
 
       Transaction::create([

@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Public;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class AddressController extends Controller
+class AddressPublicController extends Controller
 {
   public function index() {
     $provinces = DB::table('address_provinces')->orderBy('name')->get();
