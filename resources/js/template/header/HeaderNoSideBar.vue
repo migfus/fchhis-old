@@ -3,8 +3,7 @@
     <div class="container-xl">
 
       <RouterLink :to="{ name: 'home' }" class="navbar-brand">
-        <img src="https://fchhis.migfus20.com/images/logo.png" alt="AdminLTE Logo"
-          class="brand-image img-circle elevation-1" style="opacity: .8">
+        <img src="/images/logo.png" alt="FCHHIS Logo" class="brand-image img-circle elevation-1" style="opacity: .8">
         <span class="brand-text ml-1">FCHHIS</span>
       </RouterLink>
 
