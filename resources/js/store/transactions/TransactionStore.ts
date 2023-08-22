@@ -40,6 +40,9 @@ type paramsInt = {
     id: string
   }
 }
+type contentInt = {
+  transaction: any
+}
 
 export const useTransactionStore = defineStore('transactions/TransactionStore', () => {
   const $toast = useToast();
@@ -47,7 +50,7 @@ export const useTransactionStore = defineStore('transactions/TransactionStore', 
   let cancel;
 
   // DEBUG please add type 'content' & 'print'
-  const content = ref(null)
+  const content = ref<any>(null)
   const print = ref(null)
   const config = reactive<configInt>({
     loading: false,

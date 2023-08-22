@@ -66,20 +66,18 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onMounted, watch } from 'vue';
 import { throttle } from 'lodash'
 import { NumberAddComma } from '@/helpers/converter'
 import moment from 'moment'
 import { ref } from 'vue'
-import { $DebugInfo, $Err, $Log } from '@/helpers/debug'
 import { useUsersStore } from '@/store/users/UsersStore';
 import { useAuthStore } from '@/store/auth/AuthStore';
 import { useAgentClientStore } from '@/store/print/agentClient';
 
 import Bootstrap5Pagination from './../../../components/Bootstrap5Pagination.vue'
 
-$DebugInfo("ClientCard")
 const $users = useUsersStore();
 const $print = useAgentClientStore();
 const $auth = useAuthStore()
@@ -94,8 +92,14 @@ async function Print() {
       ip: $auth.content.ip,
       start: moment($users.query.start).format('MMM D, YYYY'),
       end: moment($users.query.end).format('MMM D, YYYY'),
+      date: '',
+      or: ''
     },
-    body: $users.print.map(m => { return { name: m.name, plan: m.plan.name, type: m.pay_type.name, amount: m.client_transactions_sum_amount } }),
+    body: $users.print.map(m => { return { name: m.name, plan: m.plan.name, type: m.pay_type.name, amount: m.client_transactions_sum_amount }; }),
+    footer: {
+      payType: '',
+      received: ''
+    }
   })
 }
 

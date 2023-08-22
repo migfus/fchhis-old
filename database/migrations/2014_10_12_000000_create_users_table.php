@@ -18,7 +18,7 @@ return new class extends Migration
         $table->timestamp('email_verified_at')->nullable();
         $table->string('password')->nullable();
         $table->string('avatar')->nullable();
-        $table->tinyInteger('role')->unsinged()->default(0)
+        $table->unsignedTinyInteger('role')->default(0)
           ->comment('[0-inactive][1-banned][2-admin][3-manager][4-agent][5-staff][6-client]');
 
         $table->rememberToken();

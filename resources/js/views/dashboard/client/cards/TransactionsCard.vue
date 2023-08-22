@@ -49,7 +49,7 @@
           {{ NumberAddComma($trans.content.sum) }}
         </strong>
 
-        <button data-toggle="modal" data-target="#receipt-modal" @click="Print($trans.content.transactions)"
+        <button data-toggle="modal" data-target="#receipt-modal" @click="Print()"
           class="btn btn-success btn-sm mr-1 float-right">Print</button>
       </div>
       <!-- <div>
@@ -64,10 +64,9 @@
 </template>
 
 
-<script setup>
+<script setup lang='ts'>
 import { ref, onMounted, watch } from 'vue'
 import moment from 'moment'
-import { $DebugInfo, $Log } from '@/helpers/debug'
 import { useTransactionStore } from '@/store/transactions/TransactionStore'
 import { NumberAddComma } from '@/helpers/converter'
 import { useTransactionReportStore } from '@/store/print/transactionReport'
@@ -83,17 +82,25 @@ const $auth = useAuthStore();
 const data = ref(false);
 
 function OpenReceipt(row) {
-  $DebugInfo('OpenReceipt')
-  $Log('OpenReceipt', { row })
+  console.log('OpenReceipt', { row })
   data.value = row
 }
 
 function Print() {
   $report.Print({
     header: {
-      name: $auth.content.auth.person.name
+      name: $auth.content.auth.person.name,
+      start: '',
+      end: '',
+      ip: '',
+      date: '',
+      or: ''
     },
     body: $trans.content.data.map(m => { return { plan: m.plan.name, type: m.pay_type.name, amount: m.amount, date: moment(m.created_at).format('MM/DD/YYYY HH:MM A') } }),
+    footer: {
+      payType: '',
+      received: ''
+    }
   })
 }
 

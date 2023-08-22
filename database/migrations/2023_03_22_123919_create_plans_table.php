@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('plans', function (Blueprint $table) {
           $table->id();
-          $table->integer('user_id');
+          $table->unsignedBigInteger('user_id')->index();
           $table->string('avatar')->nullable();
           $table->string('name');
           $table->tinyInteger('age_start');

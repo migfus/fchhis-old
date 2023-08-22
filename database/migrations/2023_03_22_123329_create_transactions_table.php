@@ -12,15 +12,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('transactions', function (Blueprint $table) {
-            $table->id();
-            $table->string('or')->unique();
-            $table->integer('agent_id'); // refered agent
-            $table->integer('staff_id'); // staff
-            $table->integer('client_id'); // user_id
-            $table->tinyInteger('pay_type_id')->unsigned();
-            $table->integer('plan_id');
-            $table->decimal('amount', 8, 2);
-            $table->timestamps();
+          $table->id();
+          $table->string('or')->unique();
+          $table->unsignedInteger('agent_id')->index(); // refered agent
+          $table->unsignedInteger('staff_id')->index(); // staff
+          $table->unsignedInteger('client_id')->index(); // user_id
+          $table->unsignedTinyInteger('pay_type_id')->index();
+          $table->unsignedInteger('plan_id')->index();
+          $table->decimal('amount', 8, 2);
+          $table->timestamps();
         });
     }
 

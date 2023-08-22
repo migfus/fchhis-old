@@ -68,6 +68,8 @@ const $props = defineProps({
 });
 
 function Print() {
+  console.log($props.data)
+  return 1
   $receipt.Print({
     header: {
       date: moment($props.data.created_at).format('MMM D, YYYY HH:mm A'),

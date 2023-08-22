@@ -36,7 +36,7 @@ class TransactionSeeder extends Seeder
       \App\Models\Transaction::create([
         'or'       => rand(1000, 100000),
         'agent_id' => $idx + 1,
-        'staff_id' => $idx + 3,
+        'staff_id' => 5,
         'client_id' => $idx + 2,
         'plan_id' => rand(1,4),
         'amount' => rand(700, 75000),
