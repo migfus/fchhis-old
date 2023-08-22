@@ -90,12 +90,11 @@
   </Transition>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useUsersStore } from '@/store/users/UsersStore'
 import { usePlanStore } from '@/store/system/PlanStore'
 import { Form, Field, ErrorMessage, configure, } from 'vee-validate'
 import * as Yup from 'yup'
-import moment from 'moment'
 import { computed, onMounted } from 'vue'
 import { usePayTypeStore } from '@/store/system/PayTypeStore'
 import { useAgentStore } from '@/store/users/AgentStore'

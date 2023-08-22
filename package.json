@@ -5,6 +5,8 @@
         "build": "vite build"
     },
     "devDependencies": {
+        "@vue/cli-plugin-typescript": "~5.0.0",
+        "@vue/tsconfig": "^0.4.0",
         "axios": "^1.3.4",
         "laravel-vite-plugin": "^0.7.2",
         "vite": "^4.0.0",
@@ -27,8 +29,9 @@
         "pinia": "^2.0.33",
         "quill-blot-formatter": "^1.0.5",
         "sheetjs": "^2.0.0",
+        "typescript": "^5.1.6",
         "vee-validate": "^4.8.4",
-        "vue": "^3.2.36",
+        "vue": "^3.3.4",
         "vue-chartjs": "^5.2.0",
         "vue-glide-js": "^1.3.14",
         "vue-picture-cropper": "^0.6.1",

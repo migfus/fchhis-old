@@ -1,17 +1,36 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
-import pdfMake from "pdfmake/build/pdfmake";
-import pdfFonts from "pdfmake/build/vfs_fonts";
-import { $DebugInfo, $Log } from '@/helpers/debug';
+import pdfFonts from 'pdfmake/build/vfs_fonts.js';
+import pdfMake from "pdfmake";
 import DeviceDetector from "device-detector-js";
 import { NumberAddComma } from '@/helpers/converter'
 import moment from 'moment'
 import { useAuthStore } from '@/store/auth/AuthStore'
 
-export const useAgentClientStore = defineStore('agent-client-report', () => {
-  $DebugInfo("TransactionReport")
+type InputInt = {
+  header: {
+    start: string
+    end: string
+    name: string
+    ip: string
+    date: string
+    or: string
+  }
+  footer: {
+    payType: string
+    received: string
+  }
+  body: Array<{
+    name: string
+    plan: string
+    type: string
+    amount: string
+    date: string
+  }>
+}
 
-  const $auth = useAuthStore();
+export const useTransactionStaff = defineStore('print/transactionStaff', () => {
+  const $auth = useAuthStore()
   const deviceDetector = new DeviceDetector();
   const device = deviceDetector.parse(navigator.userAgent)
   pdfMake.vfs = pdfFonts;
@@ -22,8 +41,7 @@ export const useAgentClientStore = defineStore('agent-client-report', () => {
     }, 0);
   };
 
-  function Print(input) {
-
+  function Print(input: InputInt) {
     const pdfContent = ref([
       {
         columns: [
@@ -52,7 +70,7 @@ export const useAgentClientStore = defineStore('agent-client-report', () => {
             },
             {
               text: `${input.header.start} - ${input.header.end}
-              Agent's Report`,
+              Payment Report`,
               fontSize: 15,
               alignment: 'center',
               margin: [0,10,0,0],
@@ -61,7 +79,8 @@ export const useAgentClientStore = defineStore('agent-client-report', () => {
           ],
           {
             width: 50,
-            text: ''
+            // image: 'dti',
+            text: '',
           }
         ],
       },
@@ -76,19 +95,43 @@ export const useAgentClientStore = defineStore('agent-client-report', () => {
         }
       },
       {
+        margin: [0, 20, 0,0],
+        table: {
+          widths: [200, 200],
+          body: [
+            [
+              { text: 'Summary', bold: true, colSpan: 2, alignment: 'center'},
+              {},
+            ],
+            [
+              { text: `Total: ${NumberAddComma(_sum(input.body, 'amount'))}`},
+              { text: `Transactions: ${input.body.length}`},
+            ]
+          ]
+        }
+      },
+      {
         margin: [0, 2, 0, 0],
         table: {
-          widths: [100, 110, 140, 120],
+          widths: [100,60,60,60, 100],
           body: [
+            [
+              { text: 'Transactions', bold: true, colSpan: 4, alignment: 'center'},
+              {},
+              {},
+              {},
+              {},
+            ],
             [
               { text: 'Name', bold: true },
               { text: 'Plan', bold: true },
-              { text: 'Payment Type', bold: true },
+              { text: 'Payment', bold: true },
               { text: 'Amount', bold: true },
+              { text: 'Date', bold: true },
             ],
             // LOOP
 
-            ...input.body.map(m => [`${m.name}`, `${m.plan}`, `${m.type}`, NumberAddComma(m.amount)])
+            ...input.body.map(m => [`${m.name}`, `${m.plan}`, `${m.type}`, `${m.amount}`, `${m.date}`])
 
             ,
             [
@@ -96,6 +139,8 @@ export const useAgentClientStore = defineStore('agent-client-report', () => {
               {},
               { text: 'Total: ', bold: true, alignment: 'right' },
               { text: NumberAddComma(_sum(input.body, 'amount')), bold: true },
+
+              {},
             ]
           ]
         }
@@ -124,7 +169,7 @@ export const useAgentClientStore = defineStore('agent-client-report', () => {
         columns: [
           [
             { text: window.location.href, alignment: 'left' },
-            { text: `Client IP: ${input.header.ip}`, alignment: 'left' },
+            { text: `Client IP: ${$auth.content.ip}`, alignment: 'left' },
           ],
           { text: `${device.client.name}, ${device.os.name} ${device.os.version}`, alignment: 'right' },
         ],
@@ -132,7 +177,7 @@ export const useAgentClientStore = defineStore('agent-client-report', () => {
     })
 
     pdfMake.createPdf(template.value).open();
-    $Log("Print", template.value)
+    console.log("Print", template.value)
   }
 
   return {

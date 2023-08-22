@@ -30,7 +30,7 @@
   </li>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useAuthStore } from '@/store/auth/AuthStore';
 import NotificationDropdown from './NotificationDropdown.vue';
 import { useRouter } from 'vue-router'
@@ -41,7 +41,7 @@ const $auth = useAuthStore();
 const $toast = useToast();
 
 function Logout() {
-  $auth.content = {}
+  $auth.content = null
   $auth.token = ''
 
   $toast.success('Logout successful')

@@ -9,7 +9,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import Bootstrap5Pagination from '@/components/Bootstrap5Pagination.vue';
 import { useUsersStore } from '@/store/users/UsersStore';
 

@@ -1,12 +1,11 @@
 import { ref, reactive } from 'vue'
 import axios from 'axios'
 import { defineStore } from 'pinia'
-import { $DebugInfo, $Log, $Err} from '@/helpers/debug'
 
-export const usePayTypeStore = defineStore('payType', () => {
-  $DebugInfo('PayTypeStore')
+export const usePayTypeStore = defineStore('system/PayTypeStore', () => {
+  // DEBUG add type of content
   const content = ref([])
-  const config = reactive({
+  const config = reactive<{loading: boolean}>({
     loading: false
   })
 
@@ -17,7 +16,7 @@ export const usePayTypeStore = defineStore('payType', () => {
       content.value = data
     }
     catch(e) {
-      $Err("GetAPI Err", {e})
+      console.log("GetAPI Err", {e})
     }
     config.loading = false
   }

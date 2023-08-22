@@ -1,13 +1,11 @@
 import axios from "axios";
 import { useAuthStore } from "@/store/auth/AuthStore";
-import { $DebugInfo, $Err, $Log} from '@/helpers/debug'
 import { useToast } from "vue-toastification";
 
 export default function jwtInterceptor() {
-  $DebugInfo('JWT Interceptor')
-  const $auth = useAuthStore();
-  const $toast = useToast();
-
+  console.log('JWT Interceptor')
+  const $auth = useAuthStore()
+  const $toast = useToast()
 
   axios.interceptors.request.use(config => {
     if ($auth.token) {
@@ -21,13 +19,13 @@ export default function jwtInterceptor() {
     (response) => {
       if (response.data.auth) {
         $auth.content = response.data.auth;
-        $Log("Role Updated", {response});
+        console.log("Role Updated", {response});
       }
       return response;
     },
     (error) => {
       if(axios.isCancel(error)) {
-        $Log('Interceptor','Cancelled')
+        console.log('Interceptor','Cancelled')
         return true;
       }
       else {
@@ -40,7 +38,7 @@ export default function jwtInterceptor() {
           $auth.Logout();
         }
         if(status === 401 && data.message == 'Invalid Input') {
-          $toast.error(m)
+          $toast.error('Invalid Input')
         }
         if(status === 429) {
           alert("Too Many Requests of Data!")

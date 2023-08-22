@@ -1,36 +1,98 @@
 import { ref, reactive } from 'vue'
 import { defineStore } from 'pinia'
-import { $DebugInfo, $Err} from '@/helpers/debug'
 import axios from 'axios'
 import { useToast } from 'vue-toastification'
 
-export const useUsersStore = defineStore('useUsersStore', () => {
-  $DebugInfo('useUsersStore')
+type configInt = {
+  loading: boolean
+  notify: boolean
+  form: string
+  tableView: boolean
+  viewAll: boolean
+  RemoveNotify: boolean
+}
+type queryInt = {
+  search: string
+  sort: 'ASC' | 'DESC'
+  limit: number
+  start: string
+  end: string
+  filter: string
+  role: number
+  overdue: boolean
+}
+type paramsInt = {
+  avatar: string
+  username: string
+  email: string
+  password: string
+  role: number
+  plan: number
+  pay_type_id: number
+  transaction: number,
+  agent_id: string
+  mobile: string
+  name: string
+  sex: boolean
+  bday: string
+  bplace_id: number
+  address: string
+  address_id: number
+  or: string
+  agent: number
+  plan_id: number
+  id: number
+  phones?: Array<{phone: string}>
+}
+type countsInt = Array<{
+  name: string
+  color: string
+  icon: string
+  count: string
+}>
+type listInt = {
+  data: Array<{
+    avatar: string
+    name: string
+    role: number
+    username: string
+    email: string
+    created_at: dateFns
+  }>
+}
+
+export const useUsersStore = defineStore('users/UsersStore', () => {
   const $toast = useToast();
   const CancelToken = axios.CancelToken;
   let cancel;
 
+  // DEBUG ADd type on 'content' & 'print'
   const content = ref(null)
   const print = ref(null)
-  const config = reactive({
+  const config = reactive<configInt>({
     loading: false,
     notify: true,
     form: '',
     tableView: false,
     viewAll: false,
+    RemoveNotify: false
   })
-  const query = reactive({
+  const query = reactive<queryInt>({
     search: '',
     sort: 'ASC',
     limit: 10,
     start: '',
     end: '',
     filter: 'name',
-    role: 6
+    role: 6,
+    overdue: false
   })
-  const params = reactive({
+  const params = reactive<paramsInt>({
     ...InitParams(),
+
   })
+  const counts = ref<countsInt>(null);
+  const list = ref<listInt>(null);
 
   // SECTION API
   async function GetAPI(page = 1) {
@@ -43,7 +105,7 @@ export const useUsersStore = defineStore('useUsersStore', () => {
       content.value = data
     }
     catch(e) {
-      $Err('UsersStore GetAPI Error', {e})
+      console.log('UsersStore GetAPI Error', {e})
     }
     config.loading = false
   }
@@ -57,7 +119,7 @@ export const useUsersStore = defineStore('useUsersStore', () => {
       print.value = data
     }
     catch(e) {
-      $Err('UsersStore PrintAPI Error', {e})
+      console.log('UsersStore PrintAPI Error', {e})
     }
   }
 
@@ -74,7 +136,7 @@ export const useUsersStore = defineStore('useUsersStore', () => {
       ChangeForm('')
     }
     catch(e) {
-      $Err('UsersTore SToreAPI Error', {e})
+      console.log('UsersTore SToreAPI Error', {e})
     }
   }
 
@@ -87,7 +149,7 @@ export const useUsersStore = defineStore('useUsersStore', () => {
       ChangeForm('')
     }
     catch(e) {
-      $Err('UsersTore SToreAPI Error', {e})
+      console.log('UsersTore SToreAPI Error', {e})
     }
   }
 
@@ -98,7 +160,7 @@ export const useUsersStore = defineStore('useUsersStore', () => {
       GetAPI(1)
     }
     catch(e) {
-      $Err('UsersTore SToreAPI Error', {e})
+      console.log('UsersTore SToreAPI Error', {e})
     }
   }
 
@@ -111,6 +173,8 @@ export const useUsersStore = defineStore('useUsersStore', () => {
       behavior: 'smooth',
     })
   }
+
+
 
   function InitParams() {
     return {
@@ -127,10 +191,14 @@ export const useUsersStore = defineStore('useUsersStore', () => {
       name: '',
       sex: true,
       bday: '',
-      bplace_id: '',
+      bplace_id: 0,
       address: '',
-      address_id: '',
+      address_id: 0,
       or: '',
+      phones: null,
+      agent: 0,
+      plan_id: 0,
+      id: 0
     }
   }
 
@@ -146,12 +214,18 @@ export const useUsersStore = defineStore('useUsersStore', () => {
     });
   }
 
+  // DEBUG IDK
+  function GetCount() {
+    return counts.value
+  }
+
   return {
     content,
     config,
     query,
     print,
     params,
+    counts,
 
     GetAPI,
     PrintAPI,
@@ -162,5 +236,6 @@ export const useUsersStore = defineStore('useUsersStore', () => {
 
     ChangeForm,
     Update,
+    GetCount,
   }
 })

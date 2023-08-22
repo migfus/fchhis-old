@@ -50,10 +50,10 @@
             <td width="100px">{{ RoleToDesc(row.role) }}</td>
             <td width="100px">{{ moment().from(row.created_at) }}</td>
             <td width="10px">
-              <button @click="Delete(row.id, idx)" class="btn btn-danger mr-1 btn-sm"
-                :disabled="row.id == $auth.auth.id"><i class="fas fa-times"></i></button>
-              <button @click="Info" class="btn btn-info btn-sm mr-1"><i class="fas fa-info-circle"></i></button>
-              <button @click="Update" class="btn btn-info btn-sm"><i class="fas fa-pen"></i></button>
+              <button @click="$user.DestroyAPI(row.id)" class="btn btn-danger mr-1 btn-sm"
+                :disabled="row.id == $auth.content.auth.id"><i class="fas fa-times"></i></button>
+              <!-- <button @click="Info" class="btn btn-info btn-sm mr-1"><i class="fas fa-info-circle"></i></button>
+              <button @click="Update" class="btn btn-info btn-sm"><i class="fas fa-pen"></i></button> -->
             </td>
           </tr>
         </tbody>
@@ -63,12 +63,12 @@
   </div>
 </template>
 
-<script setup>
-import { useUserStore } from '@/store/users/users'
+<script setup lang="ts">
+import { useUsersStore } from '@/store/users/UsersStore'
 import moment from 'moment'
 import { RoleToDesc } from '@/helpers/converter';
-import { useAuthStore } from '@/store/auth/auth'
+import { useAuthStore } from '@/store/auth/AuthStore'
 
 const $auth = useAuthStore();
-const $user = useUserStore();
+const $user = useUsersStore();
 </script>

@@ -25,7 +25,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useUsersStore } from '@/store/users/UsersStore'
 
 import AddForm from './forms/AddForm.vue'

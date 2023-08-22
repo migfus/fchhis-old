@@ -68,7 +68,12 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
+type inputInt = {
+  email: string
+  password: string
+}
+
 import { Form, Field, ErrorMessage, configure } from 'vee-validate'
 import * as Yup from 'yup'
 import { reactive, onMounted } from 'vue'
@@ -87,17 +92,17 @@ const schema = Yup.object({
   password: Yup.string().required('Password is Required')
 })
 
-const input = reactive({
+const input = reactive<inputInt>({
   email: '',
   password: '',
 });
 
 onMounted(() => {
   input.email = '',
-    input.password = ''
+  input.password = ''
 
   if ($route.query.email) {
-    input.email = $route.query.email
+    input.email = $route.query.email.toString()
   }
 });
 </script>

@@ -118,7 +118,7 @@
 
 <script setup>
 import moment from "moment"
-import { useUserStore } from '@/store/users/users'
+import { useUsersStore } from '@/store/users/UsersStore'
 import { RoleToDesc } from '@/helpers/converter'
 import BadgeComponent from '../components/BadgeComponent.vue'
 import {
@@ -128,26 +128,26 @@ import {
   NumberAddComma,
   PlanToPay,
 } from '@/helpers/converter'
-import VueAvatar from "@webzlodimir/vue-avatar";
-import "@webzlodimir/vue-avatar/dist/style.css";
-import { userDetailStore } from '@/store/print/userDetails'
+import VueAvatar from "@webzlodimir/vue-avatar"
+import "@webzlodimir/vue-avatar/dist/style.css"
+import { useUserPrint } from '@/store/print/userPrint'
 
-const $user = useUserStore();
-const $details = userDetailStore();
+const $user = useUsersStore();
+const $details = useUserPrint();
 
 function Print(row) {
   $details.Print({
-    header: {
-      title: 'Client Details',
-      name: row.person.name,
-      created_at: moment(row.created_at).format('MM/DD/YYYY'),
-      username: row.username,
-      bday: moment(row.person.bday).format('MM/DD/YYYY'),
-      bplace: CityIDToFullAddress(row.person.bplace_id),
-      sex: row.person.sex ? 'Male' : 'Female',
-      address: `${row.person.address}, ${CityIDToFullAddress(row.person.address_id)}`,
-      email: row.email,
-      mobile: row.person.mobile,
+      header: {
+        title: 'Client Details',
+        name: row.person.name,
+        created_at: moment(row.created_at).format('MM/DD/YYYY'),
+        username: row.username,
+        bday: moment(row.person.bday).format('MM/DD/YYYY'),
+        bplace: CityIDToFullAddress(row.person.bplace_id),
+        sex: row.person.sex ? 'Male' : 'Female',
+        address: `${row.person.address}, ${CityIDToFullAddress(row.person.address_id)}`,
+        email: row.email,
+        mobile: row.person.mobile,
     },
     body: row.client_transactions.map(m => {
       return {

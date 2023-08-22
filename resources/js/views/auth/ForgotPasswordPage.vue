@@ -60,7 +60,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang='ts'>
 import { Form, Field, ErrorMessage, configure } from 'vee-validate'
 import * as Yup from 'yup'
 import { reactive, onMounted } from 'vue'

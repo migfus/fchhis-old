@@ -1,17 +1,46 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
-import pdfFonts from 'pdfmake/build/vfs_fonts.js';
-import pdfMake from "pdfmake";
-import { $DebugInfo, $Log } from '@/helpers/debug';
+import pdfMake from "pdfmake/build/pdfmake";
+import pdfFonts from "pdfmake/build/vfs_fonts";
 import DeviceDetector from "device-detector-js";
 import { NumberAddComma } from '@/helpers/converter'
 import moment from 'moment'
 import { useAuthStore } from '@/store/auth/AuthStore'
 
-export const useTransactionReportStore = defineStore('transaction-report', () => {
-  $DebugInfo("TransactionReport")
+type InputInt = {
+  header: {
+    start: string
+    end: string
+    name: string
+    ip: string
+    date: string
+    or: string
 
-  const $auth = useAuthStore()
+    title: string
+    created_at: string
+    username: string
+    bday: string
+    bplace: string
+    sex: 'Male' | 'Female'
+    address: string
+    email: string
+    mobile: string
+  }
+  footer: {
+    payType: string
+    received: string
+  }
+  body: Array<{
+    name: string
+    plan: string
+    type: string
+    amount: string
+    date: string
+  }>
+}
+
+export const useUserPrint = defineStore('print/userPrint', () => {
+  const $auth = useAuthStore();
   const deviceDetector = new DeviceDetector();
   const device = deviceDetector.parse(navigator.userAgent)
   pdfMake.vfs = pdfFonts;
@@ -22,7 +51,7 @@ export const useTransactionReportStore = defineStore('transaction-report', () =>
     }, 0);
   };
 
-  function Print(input) {
+  function Print(input: InputInt) {
     const pdfContent = ref([
       {
         columns: [
@@ -50,7 +79,8 @@ export const useTransactionReportStore = defineStore('transaction-report', () =>
               alignment: 'center',
             },
             {
-              text: 'Payment Report',
+              text: `${input.header.start} - ${input.header.end}
+              Agent's Report`,
               fontSize: 15,
               alignment: 'center',
               margin: [0,10,0,0],
@@ -83,18 +113,17 @@ export const useTransactionReportStore = defineStore('transaction-report', () =>
               { text: 'Plan', bold: true },
               { text: 'Payment Type', bold: true },
               { text: 'Amount', bold: true },
-              { text: 'Date & Time', bold: true },
             ],
             // LOOP
 
-            ...input.body.map(m => [`${m.plan}`, `${m.type}`, NumberAddComma(m.amount), m.date ])
+            ...input.body.map(m => [`${m.name}`, `${m.plan}`, `${m.type}`, NumberAddComma(m.amount)])
 
             ,
             [
               {},
+              {},
               { text: 'Total: ', bold: true, alignment: 'right' },
               { text: NumberAddComma(_sum(input.body, 'amount')), bold: true },
-              {},
             ]
           ]
         }
@@ -123,7 +152,7 @@ export const useTransactionReportStore = defineStore('transaction-report', () =>
         columns: [
           [
             { text: window.location.href, alignment: 'left' },
-            { text: `Client IP: ${$auth.content.ip}`, alignment: 'left' },
+            { text: `Client IP: ${input.header.ip}`, alignment: 'left' },
           ],
           { text: `${device.client.name}, ${device.os.name} ${device.os.version}`, alignment: 'right' },
         ],
@@ -131,7 +160,7 @@ export const useTransactionReportStore = defineStore('transaction-report', () =>
     })
 
     pdfMake.createPdf(template.value).open();
-    $Log("Print", template.value)
+    console.log("Print", template.value)
   }
 
   return {

@@ -24,7 +24,7 @@
 
                 <div class="form-group">
                   <label for="username-input">Username</label>
-                  <Field v-model="$user.params.user.username" name="username" type="text" class="form-control"
+                  <Field v-model="$user.params.username" name="username" type="text" class="form-control"
                     id="username-input" placeholder="Enter Username" />
                   <div class="mb-2 text-danger">
                     <ErrorMessage name="username" />
@@ -34,7 +34,7 @@
 
                 <div class="form-group">
                   <label for="email-input">Email</label>
-                  <Field v-model="$user.params.user.email" name="email" type="email" class="form-control" id="email-input"
+                  <Field v-model="$user.params.email" name="email" type="email" class="form-control" id="email-input"
                     placeholder="Enter Email" />
                   <div class="mb-2 text-danger">
                     <ErrorMessage name="email" />
@@ -200,16 +200,15 @@
   </Transition>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useUsersStore } from '@/store/users/UsersStore'
 import { computed, ref, onMounted } from 'vue'
 import moment from 'moment'
-import { useAddressStore } from '@/store/system/AddressStore'
+import { useAddressStore } from '@/store/public/AddressStore'
 import { Form, Field, ErrorMessage, configure, } from 'vee-validate'
 import * as Yup from 'yup'
 import { usePlanStore } from '@/store/system/PlanStore'
 import { CityIDToProvinceID } from '@/helpers/converter'
-import { $DebugInfo, $Err, $Log } from '@/helpers/debug'
 import { useAgentStore } from '@/store/users/AgentStore'
 import { usePayTypeStore } from '@/store/system/PayTypeStore'
 
@@ -224,7 +223,6 @@ const $payType = usePayTypeStore();
 const BDayProvinceID = ref(CityIDToProvinceID($user.params.bplace_id));
 const AddressProvinceID = ref(CityIDToProvinceID($user.params.address_id));
 
-$DebugInfo('EditFormVue')
 configure({
   validateOnInput: true,
 })
@@ -234,15 +232,11 @@ const schema = Yup.object({
   mobile: Yup.string().required('Mobile Number is Required').min(10, 'Minimum of 10 Number'),
   lastName: Yup.string().required('Last Name is Required'),
   firstName: Yup.string().required('First Name is Required'),
-  bday: Yup.date('Invalid Date').required('Birth Day is Required'),
+  bday: Yup.date().required('Birth Day is Required'),
   bplace: Yup.string().required('Birth Place is Required'),
   addressID: Yup.string().required('City is Required'),
   address: Yup.string().required('Specific Address is Required'),
 })
-
-function getImage(event) {
-  $Log('getImage', { event })
-}
 
 const age = computed(() => {
   try {

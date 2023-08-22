@@ -2,7 +2,8 @@
   <div v-if="$user.content" class="col-12">
 
 
-    <div v-for="(row, idx,) in $user.content.data" :class="`card mb-2 ${$user.config.viewAll ? '' : 'collapsed-card'}
+    <div v-for="(row, idx,) in $user.content.data"
+      :class="`card mb-2 ${$user.config.viewAll ? '' : 'collapsed-card'}
                           ${row.user.email ? '' : 'bg-warning'}
                           ${moment(row.due_at).diff(moment(), 'days') <= -60 ? 'bg-danger' : moment(row.due_at).diff(moment(), 'days') <= 0 ? 'bg-warning' : ''}`
       ">
@@ -107,7 +108,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import moment from "moment"
 import { useUsersStore } from '@/store/users/UsersStore'
 import { RoleToDesc } from '@/helpers/converter'

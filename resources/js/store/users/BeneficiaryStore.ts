@@ -1,22 +1,53 @@
 import { ref, reactive } from 'vue'
 import { defineStore } from 'pinia'
-import { $DebugInfo, $Err} from '@/helpers/debug'
 import axios from 'axios'
 import { useToast } from 'vue-toastification'
 
-export const useBeneficiaryStore = defineStore('Beneficiary', () => {
-  $DebugInfo('Beneficiary')
+type configInt = {
+  loading: boolean
+  form: string
+}
+type queryInt = {
+  search: string
+  sort: 'ASC' | 'DESC'
+  limit: number
+  start: string
+  end: string
+  filter: string
+}
+type paramsInt = {
+  avatar: string
+  username: string
+  email: string
+  password: string
+  role: number
+  plan: number
+  pay_type_id: number
+  transaction: number
+  agent_id: string
+  mobile: string
+  name: string
+  sex: boolean
+  bday: string
+  bplace_id: string
+  address: string
+  address_id: string
+  or: string
+}
+
+export const useBeneficiaryStore = defineStore('users/BeneficiaryStore', () => {
   const $toast = useToast();
   const CancelToken = axios.CancelToken;
   let cancel;
 
+  // DEBUG ADD TYPE on 'content' & 'print'
   const content = ref(null)
   const print = ref(null)
-  const config = reactive({
+  const config = reactive<configInt>({
     loading: false,
     form: '',
   })
-  const query = reactive({
+  const query = reactive<queryInt>({
     search: '',
     sort: 'DESC',
     limit: 10,
@@ -24,7 +55,7 @@ export const useBeneficiaryStore = defineStore('Beneficiary', () => {
     end: '',
     filter: 'name',
   })
-  const params = reactive({
+  const params = reactive<paramsInt>({
     ...InitParams(),
   })
 
@@ -39,7 +70,7 @@ export const useBeneficiaryStore = defineStore('Beneficiary', () => {
       content.value = data
     }
     catch(e) {
-      $Err('UsersStore GetAPI Error', {e})
+      console.log('UsersStore GetAPI Error', {e})
     }
     config.loading = false
   }
@@ -53,7 +84,7 @@ export const useBeneficiaryStore = defineStore('Beneficiary', () => {
       print.value = data
     }
     catch(e) {
-      $Err('UsersStore PrintAPI Error', {e})
+      console.log('UsersStore PrintAPI Error', {e})
     }
   }
 
@@ -70,12 +101,12 @@ export const useBeneficiaryStore = defineStore('Beneficiary', () => {
       ChangeForm('')
     }
     catch(e) {
-      $Err('UsersTore SToreAPI Error', {e})
+      console.log('UsersTore SToreAPI Error', {e})
     }
   }
 
   // SECTION FUNCTIONS
-  function ChangeForm(input) {
+  function ChangeForm(input: string) {
     config.form = input
     window.scrollTo({
       top: 0,
@@ -106,7 +137,7 @@ export const useBeneficiaryStore = defineStore('Beneficiary', () => {
     }
   }
 
-  function Update(row) {
+  function Update(row: paramsInt) {
     Object.assign(params, row)
 
     config.form = 'update'

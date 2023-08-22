@@ -1,15 +1,14 @@
 import { ref, reactive } from 'vue'
 import { defineStore } from 'pinia'
-import { $DebugInfo, $Err} from '@/helpers/debug'
 import axios from 'axios'
 
-export const useStatisticStore = defineStore('statisticStore', () => {
-  $DebugInfo('useStatisticStore')
+export const useStatisticStore = defineStore('dashboard/statisticStore', () => {
   const CancelToken = axios.CancelToken;
   let cancel;
 
+  // DEBUG please fill type of 'content'
   const content = ref(null)
-  const config = reactive({
+  const config = reactive<{loading: boolean}>({
     loading: false
   })
 
@@ -23,7 +22,7 @@ export const useStatisticStore = defineStore('statisticStore', () => {
       content.value = data
     }
     catch(e) {
-      $Err('StatisticStore GetAPI Error', {e})
+      console.log('StatisticStore GetAPI Error', {e})
     }
     config.loading = false
   }

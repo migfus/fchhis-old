@@ -171,19 +171,16 @@
   </Transition>
 </template>
 
-<script setup>
-import { computed, ref, onMounted } from 'vue'
-import moment from 'moment'
-import { useAddressStore } from '@/store/system/AddressStore'
+<script setup lang="ts">
+import { ref, onMounted } from 'vue'
+import { useAddressStore } from '@/store/public/AddressStore'
 import { Form, Field, ErrorMessage, configure, } from 'vee-validate'
 import * as Yup from 'yup'
 import { useRegisterStore } from '@/store/auth/RegisterStore'
 import { useRouter } from 'vue-router'
-import { $DebugInfo, $Err, $Log } from '@/helpers/debug'
 
 import UploadAvatarModal from '@/components/UploadAvatarModal.vue'
 
-$DebugInfo('RegisterFillPage');
 const $address = useAddressStore();
 const $register = useRegisterStore();
 const $router = useRouter();
@@ -201,7 +198,7 @@ const schema = Yup.object({
   confirmPassword: Yup.string().oneOf([Yup.ref('password'), null], 'Password must match to Password'),
   mobile: Yup.string().required('Mobile Number is Required').min(10, 'Minimum of 10 Number'),
   name: Yup.string().required('Name is Required'),
-  bday: Yup.date('Invalid Date').required('Birth Day is Required'),
+  bday: Yup.date().required('Birth Day is Required'),
   bplace: Yup.string().required('Birth Place is Required'),
   addressID: Yup.string().required('City is Required'),
   address: Yup.string().required('Specific Address is Required'),
@@ -209,7 +206,6 @@ const schema = Yup.object({
 
 onMounted(() => {
   $address.GetAPI()
-  $Log('onMounted', $register.content)
   if (!$register.params.id) {
     $router.push({ name: 'register', query: { error: 'Invalid OR', or: '' } })
   }

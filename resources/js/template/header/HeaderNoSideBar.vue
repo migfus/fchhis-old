@@ -23,21 +23,20 @@
   </nav>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 
 import { useAuthStore } from '@/store/auth/AuthStore';
+// @ts-ignore
 import UserDropDown from './UserDropDown.vue';
 
 const $route = useRoute();
 const $auth = useAuthStore();
 
-const hiddenMenu = ref()
-
 const isAdmin = computed(() => {
   if (Object.keys($auth.content).length != 0) {
-    if ($auth.content.role == 2) {
+    if ($auth.content.auth.role == 2) {
       return [
         {
           name: 'TRANSACTIONS',

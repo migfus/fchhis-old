@@ -45,7 +45,7 @@
   <UploadAvatarModal v-model="$auth.content.auth.avatar" @update="PostAPI" />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useAuthStore } from '@/store/auth/AuthStore';
 import { RoleToDesc } from '@/helpers/converter'
 

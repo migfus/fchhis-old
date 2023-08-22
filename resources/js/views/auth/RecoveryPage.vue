@@ -76,7 +76,13 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
+type inputType = {
+  newPassword: string
+  confirmPassword: string
+  code: string
+}
+
 import { Form, Field, ErrorMessage, configure } from 'vee-validate'
 import * as Yup from 'yup'
 import { reactive, onMounted } from 'vue'
@@ -95,14 +101,14 @@ const schema = Yup.object({
   confirmPassword: Yup.string().oneOf([Yup.ref('newPassword'), null], 'Password must match to New Password')
 })
 
-const input = reactive({
+const input = reactive<inputType>({
   newPassword: '',
   confirmPassword: '',
-  code: $route.query.code
+  code: $route.query.code.toString()
 });
 
 onMounted(() => {
-  $auth.ConfirmRecoveryAPI({ code: $route.query.code })
+  $auth.ConfirmRecoveryAPI({ code: $route.query.code.toString() })
 });
 </script>
 

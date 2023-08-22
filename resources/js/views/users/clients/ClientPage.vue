@@ -25,7 +25,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useUsersStore } from '@/store/users/UsersStore'
 // import { usePlanStore } from '@/store/system/plan'
 import { onMounted } from 'vue';

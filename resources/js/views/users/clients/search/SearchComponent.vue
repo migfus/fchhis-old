@@ -8,7 +8,7 @@
             <div class="alert alert-warning alert-dismissible fade show" role="alert">
               <strong>Notify</strong> We don't recommend to delete some records, it will reflect everything that they
               transact.
-              <button @click="$user.RemoveNotify" type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <button @click="$user.config.RemoveNotify" type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
@@ -88,7 +88,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { watch, onMounted } from 'vue'
 import { useUsersStore } from '@/store/users/UsersStore'
 import moment from 'moment'

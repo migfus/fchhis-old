@@ -2,15 +2,33 @@ import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
-import { $DebugInfo, $Log } from '@/helpers/debug';
 import DeviceDetector from "device-detector-js";
 import { NumberAddComma } from '@/helpers/converter'
-import moment from 'moment'
 import { useAuthStore } from '@/store/auth/AuthStore'
 
-export const useUserPrint = defineStore('user-print', () => {
-  $DebugInfo("UserReport")
+type InputInt = {
+  header: {
+    start: string
+    end: string
+    name: string
+    ip: string
+    date: string
+    or: string
+  }
+  footer: {
+    payType: string
+    received: string
+  }
+  body: Array<{
+    name: string
+    plan: string
+    type: string
+    amount: string
+    date: string
+  }>
+}
 
+export const useReceiptStore = defineStore('print/receipt', () => {
   const $auth = useAuthStore();
   const deviceDetector = new DeviceDetector();
   const device = deviceDetector.parse(navigator.userAgent)
@@ -22,8 +40,7 @@ export const useUserPrint = defineStore('user-print', () => {
     }, 0);
   };
 
-  function Print(input) {
-
+  function Print(input: InputInt) {
     const pdfContent = ref([
       {
         columns: [
@@ -51,8 +68,7 @@ export const useUserPrint = defineStore('user-print', () => {
               alignment: 'center',
             },
             {
-              text: `${input.header.start} - ${input.header.end}
-              Agent's Report`,
+              text: 'Receipt',
               fontSize: 15,
               alignment: 'center',
               margin: [0,10,0,0],
@@ -68,46 +84,62 @@ export const useUserPrint = defineStore('user-print', () => {
       {
         margin: [0, 20, 0,0],
         table: {
-          widths: [500],
+          widths: [300, 200],
           body: [
-            [`Date & Time: ${moment().format('MMM D, YYYY HH:mm A')}`],
-            [`Name: ${input.header.name}`],
+            [
+              `Date & Time: ${input.header.date}`,
+              `OR Number: ${input.header.or}`
+            ],
+            [
+              {
+                text: `Payor: ${input.header.name}`,
+                colSpan: 2,
+              },
+              {}
+            ],
           ]
         }
       },
       {
         margin: [0, 2, 0, 0],
         table: {
-          widths: [100, 110, 140, 120],
+          widths: [300, 200],
           body: [
             [
-              { text: 'Name', bold: true },
-              { text: 'Plan', bold: true },
-              { text: 'Payment Type', bold: true },
+              { text: 'Nature of Collection', bold: true },
               { text: 'Amount', bold: true },
             ],
             // LOOP
 
-            ...input.body.map(m => [`${m.name}`, `${m.plan}`, `${m.type}`, NumberAddComma(m.amount)])
-
+              ...input.body.map(m => [`${m.plan} (${m.type})`, NumberAddComma(m.amount) ])
             ,
             [
-              {},
-              {},
               { text: 'Total: ', bold: true, alignment: 'right' },
               { text: NumberAddComma(_sum(input.body, 'amount')), bold: true },
             ]
           ]
         }
       },
+      {
+        margin: [0, 2, 0, 0],
+        table: {
+          widths: [200, 300],
+          body: [
+            [
+              { text: input.footer.payType, bold: true },
+              { text: `Received by: ${input.footer.received}`, bold: true },
+            ],
+          ]
+        }
+      }
     ])
 
     const template = ref({
       pageMargins: [ 40, 20, 40, 60 ],
       pageSize: 'A4',
       images: {
-        logo: 'https://fchhis.migfus20.com/images/logo.png',
         // logo: 'http://127.0.0.1:8000/images/logo.png',
+        logo: 'https://fchhis.migfus20.com/images/logo.png',
         dti: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/DTI_PH_new_logo.svg/1200px-DTI_PH_new_logo.svg.png'
       },
       header: [],
@@ -124,7 +156,7 @@ export const useUserPrint = defineStore('user-print', () => {
         columns: [
           [
             { text: window.location.href, alignment: 'left' },
-            { text: `Client IP: ${input.header.ip}`, alignment: 'left' },
+            { text: `Client IP: ${$auth.content.ip}`, alignment: 'left' },
           ],
           { text: `${device.client.name}, ${device.os.name} ${device.os.version}`, alignment: 'right' },
         ],
@@ -132,7 +164,7 @@ export const useUserPrint = defineStore('user-print', () => {
     })
 
     pdfMake.createPdf(template.value).open();
-    $Log("Print", template.value)
+    console.log("Print", template.value)
   }
 
   return {

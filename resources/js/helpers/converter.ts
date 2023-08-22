@@ -3,7 +3,7 @@ import { useAddressStore } from '@/store/public/AddressStore';
 
 const $address = useAddressStore();
 
-export const RoleToDesc = (id) => {
+export const RoleToDesc = (id: Number) => {
   switch (id) {
     case 0:
       return "Inactive";
@@ -24,7 +24,7 @@ export const RoleToDesc = (id) => {
   }
 };
 
-export const RoleToID = (id) => {
+export const RoleToID = (id: String) => {
   switch (id) {
     case "Inactive":
       return 0;
@@ -45,11 +45,11 @@ export const RoleToID = (id) => {
   }
 };
 
-export const AgeConverter = (bday) => {
+export const AgeConverter = (bday: Date) => {
   return moment().diff(bday, 'years');
 }
 
-export const NumberAddComma = (num)  => {
+export const NumberAddComma = (num: String)  => {
   if(num) {
     num = Number(num).toFixed(2);
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -58,7 +58,7 @@ export const NumberAddComma = (num)  => {
 }
 
 // SECTION ADDRESS
-export const CityIDToDesc = (id) => {
+export const CityIDToDesc = (id: Number) => {
   for (let i = 0; $address.content.length > i; i++) {
     const { cities } = $address.content[i];
     for (let f = 0; cities.length > f; f++) {
@@ -70,7 +70,7 @@ export const CityIDToDesc = (id) => {
   return null;
 };
 
-export const ProvinceIDToDesc = (id) => {
+export const ProvinceIDToDesc = (id: Number) => {
   for (let i = 0; $address.content.length > i; i++) {
     const province = $address.content[i];
     for (let f = 0; province.cities.length > f; f++) {
@@ -82,7 +82,7 @@ export const ProvinceIDToDesc = (id) => {
   return null;
 };
 
-export const CityIDToFullAddress = (id) => {
+export const CityIDToFullAddress = (id: Number) => {
   for (let i = 0; $address.content.length > i; i++) {
     const province = $address.content[i];
     for (let f = 0; province.cities.length > f; f++) {
@@ -94,7 +94,7 @@ export const CityIDToFullAddress = (id) => {
   return null;
 };
 
-export const CityIDToProvinceID = (id) => {
+export const CityIDToProvinceID = (id: Number) => {
   for (let i = 0; $address.content.length > i; i++) {
     const province = $address.content[i];
     for (let f = 0; province.cities.length > f; f++) {
@@ -106,11 +106,20 @@ export const CityIDToProvinceID = (id) => {
   return null;
 };
 
-export const GetPercentage = (num1, num2) => {
+export const GetPercentage = (num1: number, num2: number) => {
   return (((num1 - num2) / num1) * 100).toFixed(2);
 }
 
-export const PlanToAmount = (pay_type_id, plan) => {
+type PlanInt = {
+  monthly: number,
+  quarterly: number,
+  semi_annual: number,
+  annual: number,
+  spot_pay: number,
+  spot_service: number,
+}
+
+export const PlanToAmount = (pay_type_id: number, plan: PlanInt) => {
   switch (pay_type_id) {
     case 1:
       return plan.monthly
@@ -129,12 +138,12 @@ export const PlanToAmount = (pay_type_id, plan) => {
   }
 }
 
-export const PlanToPay = (pay_type, plan) => {
+export const PlanToPay = (pay_type: {name: string}, plan: PlanInt) => {
   switch (pay_type.name) {
     case 'Monthly':
       return plan.monthly * 60
     case 'Quarterly':
-      return plan.querterly * 24
+      return plan.quarterly * 24
     case 'Semi-Annual':
       return plan.semi_annual * 12
     case 'Annual':
@@ -148,13 +157,13 @@ export const PlanToPay = (pay_type, plan) => {
   }
 }
 
-export const Sum = (items, prop) => {
+export const Sum = (items, prop: number) => {
   return items.reduce( function(a, b){
       return Number(a) + Number(b[prop]);
   }, 0);
 }
 
-export const Plural = (name, value) => {
+export const Plural = (name: string, value: number) => {
   if(value > 1) {
     return `${name}s`
   }

@@ -48,12 +48,13 @@
   </aside>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import UserDropDown from './UserDropdown.vue';
 import { useAuthStore } from '@/store/auth/AuthStore';
 import { useOverdueStore } from '@/store/users/OverdueStore';
+import { string } from 'yup';
 
 const $route = useRoute();
 const $auth = useAuthStore();
@@ -152,7 +153,15 @@ const isStaff = computed(() => {
   return []
 })
 
-const menu = ref([
+type menuInt = Array<{
+  name: string
+  icon?: string
+  link?: { name: string}
+  span?: {content: number, color: string }
+}>
+
+
+const menu = ref<menuInt>([
   // NOTE DASHBOARD
   {
     name: 'DASHBOARD',

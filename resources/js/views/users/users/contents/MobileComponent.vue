@@ -112,7 +112,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import moment from "moment"
 import { useUsersStore } from '@/store/users/UsersStore'
 import { RoleToDesc } from '@/helpers/converter'

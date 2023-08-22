@@ -18,7 +18,7 @@
 
             <div class="input-group">
               <Field v-model="$register.params.or" name="or" type="text" class="form-control"
-                placeholder="YYYYMMDD-XXX" />
+                placeholder="YYYYMMDD-XXX" />ChangePasswordInputType
               <div class="input-group-append">
                 <div class="input-group-text">
                   <span class="fas fa-arrow-right"></span>
@@ -55,7 +55,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { Form, Field, ErrorMessage, configure } from 'vee-validate'
 import * as Yup from 'yup'
 import { onMounted } from 'vue'
@@ -74,7 +74,7 @@ const schema = Yup.object({
 })
 
 onMounted(() => {
-  $register.params.or = $route.query.or || ''
+  $register.params.or = $route.query.or.toString() || ''
 });
 </script>
 

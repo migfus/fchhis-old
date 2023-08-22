@@ -1,12 +1,19 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import axios from 'axios'
-import {$DebugInfo, $Err} from '@/helpers/debug'
 
-export const useAddressStore = defineStore('address', () => {
-  $DebugInfo('AddressStore')
+type contentInt = Array<{
+  id: number
+  name: string
+  cities: Array<{
+    id: number
+    name: string
+    zipcode: number
+  }>
+}>
 
-  const content = ref([])
+export const useAddressStore = defineStore('public/AddressStore', () => {
+  const content = ref<contentInt>([])
 
   async function GetAPI() {
     try {
@@ -14,7 +21,7 @@ export const useAddressStore = defineStore('address', () => {
       content.value = data
     }
     catch(e) {
-      $Err("Get API Error", {e})
+      console.log("Get API Error", {e})
     }
   }
 

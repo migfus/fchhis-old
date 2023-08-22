@@ -1,24 +1,22 @@
 import { ref, reactive } from 'vue'
 import { defineStore } from 'pinia'
 import axios from 'axios'
-import {$DebugInfo, $Err} from '@/helpers/debug'
 
-export const useUserDetailsStore = defineStore('useUserDetailsStore', () => {
-  $DebugInfo('useUserDetailsStore')
-
+export const useAgentStore = defineStore('users/AgentStore', () => {
+  // DEBUG Add type on 'content'
   const content = ref([])
-  const config = reactive({
+  const config = reactive<{loading: boolean}>({
     loading: false,
   })
 
-  async function GetAPI(id) {
+  async function GetAPI() {
     config.loading = true
     try {
-      let { data: {data}} = await axios.get('/api/users/'+ id)
+      let { data: {data}} = await axios.get('/api/agent')
       content.value = data
     }
     catch(e) {
-      $Err('Get API Error', {e})
+      console.log('Get API Error', {e})
     }
     config.loading = false
   }

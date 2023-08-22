@@ -4,7 +4,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import ResponsiveCard from './contents/ResponsiveCard.vue';
 import { onMounted } from 'vue';
 import { useRoleStore } from '@/store/users/RoleStore';

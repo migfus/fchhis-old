@@ -2,16 +2,34 @@ import { ref, reactive, computed} from 'vue'
 import { defineStore } from 'pinia'
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
-import { $DebugInfo, $Log, $Err} from '@/helpers/debug';
-import axios from 'axios'
 import DeviceDetector from "device-detector-js";
 import { NumberAddComma } from '@/helpers/converter'
 import moment from 'moment'
 import { useAuthStore } from '@/store/auth/AuthStore'
 
-export const useAgentTransactionStore = defineStore('agent=transaction-report', () => {
-  $DebugInfo("AgetnTransactionsss")
+type InputInt = {
+  header: {
+    start: string
+    end: string
+    name: string
+    ip: string
+    date: string
+    or: string
+  }
+  footer: {
+    payType: string
+    received: string
+  }
+  body: Array<{
+    name: string
+    plan: string
+    type: string
+    amount: string
+    date: string
+  }>
+}
 
+export const useAgentTransactionStore = defineStore('print/agentTransaction', () => {
   const $auth = useAuthStore();
   const deviceDetector = new DeviceDetector();
   const device = deviceDetector.parse(navigator.userAgent)
@@ -23,7 +41,7 @@ export const useAgentTransactionStore = defineStore('agent=transaction-report', 
     }, 0);
   };
 
-  function Print(input) {
+  function Print(input: InputInt) {
 
     const pdfContent = ref([
       {
@@ -129,7 +147,7 @@ export const useAgentTransactionStore = defineStore('agent=transaction-report', 
         columns: [
           [
             { text: window.location.href, alignment: 'left' },
-            { text: `Client IP: ${$auth.ip}`, alignment: 'left' },
+            { text: `Client IP: ${$auth.content.ip}`, alignment: 'left' },
           ],
           { text: `${device.client.name}, ${device.os.name} ${device.os.version}`, alignment: 'right' },
         ],
@@ -137,7 +155,7 @@ export const useAgentTransactionStore = defineStore('agent=transaction-report', 
     })
 
     pdfMake.createPdf(template.value).open();
-    $Log("Print", template.value)
+    console.log("Print", template.value)
   }
 
   return {

@@ -36,14 +36,14 @@
   </div>
 </template>
 
-<script setup>
-import { onMounted, ref } from 'vue'
+<script setup lang="ts">
+import { onMounted } from 'vue'
 import { Carousel, Navigation, Slide } from 'vue3-carousel'
 import 'vue3-carousel/dist/carousel.css'
-import { useUserStore } from '@/store/users/users'
+import { useUsersStore } from '@/store/users/UsersStore'
 
 
-const $user = useUserStore()
+const $user = useUsersStore()
 
 const config = {
   autoplay: 10 * 1000,

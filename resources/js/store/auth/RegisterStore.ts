@@ -1,17 +1,30 @@
 import { ref, reactive } from 'vue'
 import { defineStore } from 'pinia'
 import axios from 'axios'
-import { $DebugInfo, $Err, $Log} from '@/helpers/debug'
 import { useToast } from 'vue-toastification'
 
-export const useRegisterStore = defineStore('register', () => {
-  $DebugInfo("RegisterStore")
+type paramsInt = {
+  or: string
+  email: string
+  id: number
+  avatar: string
+  string: string
+  address_id: number
+  bplace_id: number
+  bday: string
+  sex: boolean
+  name: string
+  mobile: string
+  confirmPassword: string
+  password: string
+  username: string
+  address: string
+}
+
+export const useRegisterStore = defineStore('auth/RegisterStore', () => {
   const $toast = useToast();
 
-  const content = ref({})
-  const params = reactive({
-    or: '',
-  })
+  const params = reactive<paramsInt>(null)
   const config = reactive({
     loading: false,
   })
@@ -22,6 +35,7 @@ export const useRegisterStore = defineStore('register', () => {
     try {
       let { data: { data}} = await axios.post('/api/or', params)
       if (data) {
+        // @ts-ignore
         this.$router.push({ name: "register-fill" });
         Object.assign(params, {
           ...data
@@ -30,7 +44,7 @@ export const useRegisterStore = defineStore('register', () => {
     }
     catch(e) {
       $toast.error('Invalid OR Number')
-      $Err('OR API ERROR: ' + {e})
+      console.log('OR API ERROR: ' + {e})
     }
     config.loading = false
   }
@@ -39,18 +53,18 @@ export const useRegisterStore = defineStore('register', () => {
     config.loading = true
     try {
       let { data: { data}} = await axios.post('/api/register', params)
-      $Log('Register API', {data})
+      console.log('Register API', {data})
       $toast.success('Successfully registered')
+      // @ts-ignore
       this.$router.push({ name: 'login', query: {email: params.email}})
     }
     catch(e) {
-      $Err('Register API', {e})
+      console.log('Register API', {e})
     }
     config.loading = false
   }
 
   return {
-    content,
     params,
     config,
 

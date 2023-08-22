@@ -78,13 +78,20 @@
   </footer>
 </template>
 
-<script setup>
-const $props = defineProps({
+<script setup lang="ts">
+// const $props = defineProps({
+//   fluid: {
+//     type: Boolean,
+//     default: false,
+//   }
+// });
+
+const $props = defineProps<{
   fluid: {
-    type: Boolean,
-    default: false,
+    type: Boolean;
+    required: false;
   }
-});
+}>();
 
 const version = import.meta.env.VITE_VER;
 </script>

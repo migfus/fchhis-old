@@ -63,12 +63,12 @@
   </div>
 </template>
 
-<script setup>
-import { useUserStore } from '@/store/users/users'
+<script setup lang="ts">
+import { useUsersStore } from '@/store/users/UsersStore'
 import moment from 'moment'
 import { RoleToDesc } from '@/helpers/converter';
-import { useAuthStore } from '@/store/auth/auth'
+import { useAuthStore } from '@/store/auth/AuthStore'
 
 const $auth = useAuthStore();
-const $user = useUserStore();
+const $user = useUsersStore();
 </script>

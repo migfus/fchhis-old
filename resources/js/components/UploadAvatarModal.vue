@@ -45,12 +45,9 @@
   </div> <!-- SECTION MODAL-->
 </template>
 
-<script setup>
+<script setup lang="ts">
 import VuePictureCropper, { cropper } from 'vue-picture-cropper'
-import { ref } from 'vue';
-import { $DebugInfo } from '@/helpers/debug';
-
-$DebugInfo("Avatar Modal")
+import { ref } from 'vue'
 
 const $props = defineProps({
   modelValue: String
@@ -76,7 +73,8 @@ function updateValue(val) {
   emit('update:modelValue', val)
 }
 
-function SelectFile(event) {
+function SelectFile(event: Event) {
+  // @ts-ignore
   const { files } = event.target
   if (!files || !files.length) return
 
@@ -90,6 +88,7 @@ function SelectFile(event) {
   }
 }
 
+// @ts-ignore
 async function GetResult() {
   if (!cropper) return
   const base64 = cropper.getDataURL({
