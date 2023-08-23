@@ -17,7 +17,7 @@ export const useAddressStore = defineStore('public/AddressStore', () => {
 
   async function GetAPI() {
     try {
-      let { data } = await axios.get('/api/address')
+      let { data } = await axios.get('/api/public/address')
       content.value = data
     }
     catch(e) {

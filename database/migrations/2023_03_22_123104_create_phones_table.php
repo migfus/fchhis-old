@@ -14,7 +14,9 @@ return new class extends Migration
     Schema::create('phones', function (Blueprint $table) {
       $table->id();
       $table->unsignedInteger('person_id')->index();
+
       $table->decimal('phone', 10, 0);
+
       $table->timestamps();
     });
   }

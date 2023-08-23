@@ -45,9 +45,7 @@ export const RoleToID = (id: String) => {
   }
 };
 
-export const AgeConverter = (bday: Date) => {
-  return moment().diff(bday, 'years');
-}
+export const AgeConverter = (bday: Date) => bday == null ? null : moment().diff(bday, 'years');
 
 export const NumberAddComma = (num: String)  => {
   if(num) {
@@ -59,11 +57,13 @@ export const NumberAddComma = (num: String)  => {
 
 // SECTION ADDRESS
 export const CityIDToDesc = (id: Number) => {
-  for (let i = 0; $address.content.length > i; i++) {
-    const { cities } = $address.content[i];
-    for (let f = 0; cities.length > f; f++) {
-      if (cities[f].id == id) {
-        return cities[f].name;
+  if(id) {
+    for (let i = 0; $address.content.length > i; i++) {
+      const { cities } = $address.content[i];
+      for (let f = 0; cities.length > f; f++) {
+        if (cities[f].id == id) {
+          return cities[f].name;
+        }
       }
     }
   }
@@ -71,11 +71,13 @@ export const CityIDToDesc = (id: Number) => {
 };
 
 export const ProvinceIDToDesc = (id: Number) => {
-  for (let i = 0; $address.content.length > i; i++) {
-    const province = $address.content[i];
-    for (let f = 0; province.cities.length > f; f++) {
-      if (province.cities[f].id == id) {
-        return province.name;
+  if(id) {
+    for (let i = 0; $address.content.length > i; i++) {
+      const province = $address.content[i];
+      for (let f = 0; province.cities.length > f; f++) {
+        if (province.cities[f].id == id) {
+          return province.name;
+        }
       }
     }
   }
@@ -83,11 +85,13 @@ export const ProvinceIDToDesc = (id: Number) => {
 };
 
 export const CityIDToFullAddress = (id: Number) => {
-  for (let i = 0; $address.content.length > i; i++) {
-    const province = $address.content[i];
-    for (let f = 0; province.cities.length > f; f++) {
-      if (province.cities[f].id == id) {
-        return `${province.cities[f].name}, ${province.name}`;
+  if(id) {
+    for (let i = 0; $address.content.length > i; i++) {
+      const province = $address.content[i];
+      for (let f = 0; province.cities.length > f; f++) {
+        if (province.cities[f].id == id) {
+          return `${province.cities[f].name}, ${province.name}`;
+        }
       }
     }
   }
@@ -95,19 +99,24 @@ export const CityIDToFullAddress = (id: Number) => {
 };
 
 export const CityIDToProvinceID = (id: Number) => {
-  for (let i = 0; $address.content.length > i; i++) {
-    const province = $address.content[i];
-    for (let f = 0; province.cities.length > f; f++) {
-      if (province.cities[f].id == id) {
-        return province.id;
+  if(id) {
+    for (let i = 0; $address.content.length > i; i++) {
+      const province = $address.content[i];
+      for (let f = 0; province.cities.length > f; f++) {
+        if (province.cities[f].id == id) {
+          return province.id;
+        }
       }
     }
   }
-  return null;
+  return null
 };
 
 export const GetPercentage = (num1: number, num2: number) => {
-  return (((num1 - num2) / num1) * 100).toFixed(2);
+  if(num1 && num2) {
+    return (((num1 - num2) / num1) * 100).toFixed(2);
+  }
+  return null
 }
 
 type PlanInt = {
@@ -158,9 +167,12 @@ export const PlanToPay = (pay_type: {name: string}, plan: PlanInt) => {
 }
 
 export const Sum = (items, prop: number) => {
-  return items.reduce( function(a, b){
+  if(props && items) {
+    return items.reduce( function(a, b){
       return Number(a) + Number(b[prop]);
-  }, 0);
+    }, 0);
+  }
+  return null
 }
 
 export const Plural = (name: string, value: number) => {

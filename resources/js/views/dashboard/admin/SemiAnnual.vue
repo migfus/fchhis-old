@@ -79,7 +79,7 @@ if ($stat.content.currentSemiAnnual) {
 }
 
 const lineData = ref({
-  labels: [...$stat.content.currentSemiAnnual.map(m => m.date.slice(0, 3))],
+  labels: $stat.content.currentSemiAnnual ? [...$stat.content.currentSemiAnnual.map(m => m.date.slice(0, 3))] : [],
 
   datasets: [
     {

@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('plans', function (Blueprint $table) {
           $table->id();
           $table->unsignedBigInteger('user_id')->index();
+
           $table->string('avatar')->nullable();
           $table->string('name');
           $table->tinyInteger('age_start');
@@ -26,6 +27,7 @@ return new class extends Migration
           $table->decimal('semi_annual', 7, 2);
           $table->decimal('quarterly', 7, 2);
           $table->decimal('monthly', 7, 2);
+
           $table->timestamps();
         });
     }
