@@ -4,7 +4,7 @@
       <div class="login-logo">
         <RouterLink :to="{ name: 'home' }">
           <div>
-            <img src="https://fchhis.migfus20.com/images/logo.png" alt="logo" style="width: 150px;">
+            <img src="/images/logo.png" alt="logo" style="width: 150px;">
           </div>
           <div>Future Care & Helping Hands</div>
           <div>Insurance Service</div>
@@ -99,7 +99,7 @@ const input = reactive<inputInt>({
 
 onMounted(() => {
   input.email = '',
-  input.password = ''
+    input.password = ''
 
   if ($route.query.email) {
     input.email = $route.query.email.toString()

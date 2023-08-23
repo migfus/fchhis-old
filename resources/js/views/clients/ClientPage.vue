@@ -7,9 +7,7 @@
 
     <UserSummary />
 
-
     <SearchComponent />
-
 
     <MobileComponent />
 

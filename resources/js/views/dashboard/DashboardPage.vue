@@ -1,5 +1,5 @@
 <template>
-  <div v-if="Object.keys($auth.content).length != 0">
+  <div v-if="$auth.content">
 
     <!-- SECTION ADMIN -->
     <div v-if="$auth.content.auth.role == 2">

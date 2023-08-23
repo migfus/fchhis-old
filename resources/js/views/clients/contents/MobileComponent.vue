@@ -137,17 +137,17 @@ const $details = useUserPrint();
 
 function Print(row) {
   $details.Print({
-      header: {
-        title: 'Client Details',
-        name: row.person.name,
-        created_at: moment(row.created_at).format('MM/DD/YYYY'),
-        username: row.username,
-        bday: moment(row.person.bday).format('MM/DD/YYYY'),
-        bplace: CityIDToFullAddress(row.person.bplace_id),
-        sex: row.person.sex ? 'Male' : 'Female',
-        address: `${row.person.address}, ${CityIDToFullAddress(row.person.address_id)}`,
-        email: row.email,
-        mobile: row.person.mobile,
+    header: {
+      title: 'Client Details',
+      name: row.person.name,
+      created_at: moment(row.created_at).format('MM/DD/YYYY'),
+      username: row.username,
+      bday: moment(row.person.bday).format('MM/DD/YYYY'),
+      bplace: CityIDToFullAddress(row.person.bplace_id),
+      sex: row.person.sex ? 'Male' : 'Female',
+      address: `${row.person.address}, ${CityIDToFullAddress(row.person.address_id)}`,
+      email: row.email,
+      mobile: row.person.mobile,
     },
     body: row.client_transactions.map(m => {
       return {

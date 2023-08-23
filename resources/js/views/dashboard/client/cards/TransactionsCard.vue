@@ -72,6 +72,8 @@ import { NumberAddComma } from '@/helpers/converter'
 import { useTransactionReportStore } from '@/store/print/transactionReport'
 import { useAuthStore } from '@/store/auth/AuthStore'
 import { throttle } from 'lodash'
+import XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 
 import ReceiptModal from '../modals/ReceiptModal.vue'
 
@@ -86,22 +88,43 @@ function OpenReceipt(row) {
   data.value = row
 }
 
-function Print() {
-  $report.Print({
-    header: {
-      name: $auth.content.auth.person.name,
-      start: '',
-      end: '',
-      ip: '',
-      date: '',
-      or: ''
-    },
-    body: $trans.content.data.map(m => { return { plan: m.plan.name, type: m.pay_type.name, amount: m.amount, date: moment(m.created_at).format('MM/DD/YYYY HH:MM A') } }),
-    footer: {
-      payType: '',
-      received: ''
-    }
-  })
+function Print(): void {
+  const xlsxDataConstruct = [
+    ['Future Care and Helping Hands Insurance Services'],
+    ['Transaction Report', '', '', moment().format('MMM D, YYYY HH:mm A')],
+    [],
+    [$auth.content.auth.person.name],
+
+    ['Plan Name', 'Plan Type', 'Amount', 'Date'],
+
+    ...$trans.content.data.map(m => { return [m.plan.name, m.pay_type.name, m.amount, moment(m.created_at).format('MM/DD/YYYY HH:MM A')] }),
+
+    ['', '', 'Total: ', NumberAddComma($trans.content.data.reduce((a, b) => Number(a.amount) + Number(b.amount)))],
+  ]
+
+  const ws = XLSX.utils.aoa_to_sheet(xlsxDataConstruct);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+  const xlsxData = XLSX.write(wb, { bookType: 'xlsx', type: 'binary' });
+  const blob = new Blob([s2ab(xlsxData)], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+  saveExport(blob, 'report.xlsx');
+};
+
+// NOTE BLOB CONVERTER
+function s2ab(s): ArrayBuffer {
+  const buf = new ArrayBuffer(s.length);
+  const view = new Uint8Array(buf);
+  for (let i = 0; i < s.length; i++) {
+    view[i] = s.charCodeAt(i) & 0xFF;
+  }
+  return buf;
+};
+
+function saveExport(blob: Blob, filename): void {
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = filename;
+  link.click();
 }
 
 onMounted(() => {
@@ -111,8 +134,4 @@ onMounted(() => {
 watch($trans.query, throttle(() => {
   $trans.GetAPI(1)
 }, 1000));
-
-// onUnmounted(() => {
-//   $trans.content = []
-// });
 </script>

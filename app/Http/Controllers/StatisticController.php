@@ -272,7 +272,7 @@ class StatisticController extends Controller
 
     $data = Person::select(DB::raw('SUM(transactions.amount) AS total'))
       ->join('transactions', 'transactions.agent_id', '=', 'people.id')
-      ->join('users', 'users.person_id', '=', 'people.id')
+      ->join('users', 'users.id', '=', 'people.user_id')
       ->where('users.role', 4)
       ->groupBy('name')
       ->orderBy('total')

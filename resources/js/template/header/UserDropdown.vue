@@ -1,7 +1,7 @@
 <template>
   <!-- <NotificationDropdown v-if="$auth.token" /> -->
 
-  <li v-if="Object.keys($auth.content).length != 0" class="nav-item dropdown dropdown-menu-right">
+  <li v-if="$auth.content" class="nav-item dropdown dropdown-menu-right">
     <a id="dropdownSubMenu1" href="#" class="nav-link dropdown-toggle pt-0" data-toggle="dropdown" aria-haspopup="true"
       aria-expanded="false">
       <img :src="$auth.content.auth.avatar || 'https://fchhis.migfus20.com/images/logo.png'" alt="avatar"

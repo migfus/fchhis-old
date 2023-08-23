@@ -21,13 +21,16 @@
         "admin-lte": "^3.2.0",
         "chart.js": "^4.2.1",
         "device-detector-js": "^3.0.3",
+        "file-saver": "^2.0.5",
         "gitart-scroll-carousel": "^1.2.4",
         "laravel-vue-pagination": "^4.1.0",
         "lodash": "^4.17.21",
         "moment": "^2.29.4",
+        "papaparse": "^5.4.1",
         "pdfmake": "^0.2.7",
         "pinia": "^2.0.33",
         "quill-blot-formatter": "^1.0.5",
+        "real-style-xlsx": "^1.0.4",
         "sheetjs": "^2.0.0",
         "typescript": "^5.1.6",
         "vee-validate": "^4.8.4",
@@ -43,6 +46,7 @@
         "vue3-excel-editor": "^1.0.17",
         "vue3-pdfmake": "^2.0.0",
         "xlsx": "https://cdn.sheetjs.com/xlsx-0.19.2/xlsx-0.19.2.tgz",
+        "xlsx-style": "^0.8.13",
         "yup": "^1.0.2"
     }
 }

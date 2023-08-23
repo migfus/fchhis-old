@@ -35,7 +35,7 @@ const $route = useRoute();
 const $auth = useAuthStore();
 
 const isAdmin = computed(() => {
-  if (Object.keys($auth.content).length != 0) {
+  if ($auth.content) {
     if ($auth.content.auth.role == 2) {
       return [
         {

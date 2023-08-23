@@ -21,8 +21,7 @@
         <tbody>
           <tr v-for="row in $stat.content.newUsers" :key="row.username">
             <td>
-              <img :src="row.avatar || 'https://fchhis.migfus20.com/images/logo.png'" alt="Product 1"
-                class="img-circle img-size-32 mr-2">
+              <img :src="row.avatar || '/images/logo.png'" alt="Product 1" class="img-circle img-size-32 mr-2">
               {{ row.name }}
             </td>
             <td>
@@ -43,7 +42,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useStatisticStore } from '@/store/dashboard/StatisticStore';
 import { RoleToDesc } from '@/helpers/converter'
 import moment from 'moment'
