@@ -1,4 +1,4 @@
-import { ref, reactive } from 'vue'
+import { useStorage, StorageSerializers } from '@vueuse/core'
 import { defineStore } from 'pinia'
 import axios from 'axios'
 import { useToast } from 'vue-toastification'
@@ -61,23 +61,24 @@ type listInt = {
   }>
 }
 
-export const useUsersStore = defineStore('users/UsersStore', () => {
+const title = 'users/UsersStore'
+export const useUsersStore = defineStore(title, () => {
   const $toast = useToast();
   const CancelToken = axios.CancelToken;
   let cancel;
 
   // DEBUG ADd type on 'content' & 'print'
-  const content = ref(null)
-  const print = ref(null)
-  const config = reactive<configInt>({
+  const content = useStorage(`${title}/content`, null, localStorage)
+  const print = useStorage(`${title}/print`, null, localStorage)
+  const config = useStorage<configInt>(`${title}/config`, {
     loading: false,
     notify: true,
     form: '',
     tableView: false,
     viewAll: false,
     RemoveNotify: false
-  })
-  const query = reactive<queryInt>({
+  }, localStorage, { serializer: StorageSerializers.object })
+  const query = useStorage<queryInt>(`${title}/query`, {
     search: '',
     sort: 'ASC',
     limit: 10,
@@ -86,17 +87,17 @@ export const useUsersStore = defineStore('users/UsersStore', () => {
     filter: 'name',
     role: 6,
     overdue: false
-  })
-  const params = reactive<paramsInt>({
+  }, localStorage, { serializer: StorageSerializers.object })
+  const params = useStorage<paramsInt>(`${title}/params`, {
     ...InitParams(),
 
-  })
-  const counts = ref<countsInt>(null);
-  const list = ref<listInt>(null);
+  }, localStorage, { serializer: StorageSerializers.object })
+  const counts = useStorage<countsInt>(`${title}/counts`, null, localStorage);
+  const list = useStorage<listInt>(`${title}/list`, null, localStorage);
 
   // SECTION API
   async function GetAPI(page = 1) {
-    config.loading = true
+    config.value.loading = true
     try {
       let { data: {data}} = await axios.get('/api/users', {
         cancelToken: new CancelToken(function executor(c) { cancel = c; }),
@@ -107,7 +108,7 @@ export const useUsersStore = defineStore('users/UsersStore', () => {
     catch(e) {
       console.log('UsersStore GetAPI Error', {e})
     }
-    config.loading = false
+    config.value.loading = false
   }
 
   async function PrintAPI() {
@@ -166,7 +167,7 @@ export const useUsersStore = defineStore('users/UsersStore', () => {
 
   // SECTION FUNCTIONS
   function ChangeForm(input) {
-    config.form = input
+    config.value.form = input
     window.scrollTo({
       top: 0,
       left: 0,
@@ -205,7 +206,7 @@ export const useUsersStore = defineStore('users/UsersStore', () => {
   function Update(row) {
     Object.assign(params, row)
 
-    config.form = 'update'
+    config.value.form = 'update'
 
     window.scrollTo({
       top: 0,

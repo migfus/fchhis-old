@@ -1,10 +1,11 @@
-import { reactive, ref } from 'vue'
+import { useStorage } from '@vueuse/core'
 import { defineStore } from 'pinia'
 import axios from 'axios'
 
-export const useRoleStore = defineStore('users/RoleStore', () => {
+const title = 'users/RoleStore'
+export const useRoleStore = defineStore(title, () => {
   // DEBUG Add Type on 'content'
-  const content = ref([])
+  const content = useStorage(`${title}/content`, [], localStorage)
 
   async function GetAPI() {
     try {

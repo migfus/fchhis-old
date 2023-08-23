@@ -1,7 +1,7 @@
-import { ref, reactive } from 'vue'
 import { defineStore } from 'pinia'
 import axios from 'axios'
 import { useToast} from 'vue-toastification'
+import { useStorage, StorageSerializers } from '@vueuse/core'
 
 type configInt = {
   loading: boolean
@@ -44,33 +44,35 @@ type contentInt = {
   transaction: any
 }
 
-export const useTransactionStore = defineStore('transactions/TransactionStore', () => {
+const title = 'transactions/TransactionsStore'
+
+export const useTransactionStore = defineStore(title, () => {
   const $toast = useToast();
   const CancelToken = axios.CancelToken;
   let cancel;
 
   // DEBUG please add type 'content' & 'print'
-  const content = ref<any>(null)
-  const print = ref(null)
-  const config = reactive<configInt>({
+  const content = useStorage<any>(`${title}/content` , null, localStorage, { serializer: StorageSerializers.object })
+  const print = useStorage(`${title}/print`, null, localStorage)
+  const config = useStorage<configInt>(`${title}/config`, {
     loading: false,
     viewAll:false,
     form: '',
-  })
-  const query = reactive<queryInt>({
+  }, localStorage, {serializer:StorageSerializers.object })
+  const query = useStorage<queryInt>(`${title}/query`, {
     search: '',
     sort: 'ASC',
     start: '',
     end: '',
     filter: 'name'
   })
-  const params = reactive<paramsInt>({
+  const params = useStorage<paramsInt>(`${title}/params`,{
     ...InitParams(),
-  })
+  }, localStorage, {serializer: StorageSerializers.object })
 
   // SECTION API
   async function GetAPI(page = 1) {
-    config.loading = true
+    config.value.loading = true
     try {
       let { data: {data}} = await axios.get('/api/transaction', {
         cancelToken: new CancelToken(function executor(c) { cancel = c; }),
@@ -81,7 +83,7 @@ export const useTransactionStore = defineStore('transactions/TransactionStore', 
     catch(e) {
       console.log('StatisticStore GetAPI Error', {e})
     }
-    config.loading = false
+    config.value.loading = false
   }
 
   async function PrintAPI() {
@@ -148,7 +150,7 @@ export const useTransactionStore = defineStore('transactions/TransactionStore', 
   }
 
   function ChangeForm(input) {
-    config.form = input
+    config.value.form = input
 
     window.scrollTo({
       top: 0,

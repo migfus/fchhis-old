@@ -1,20 +1,20 @@
-import { ref, reactive } from 'vue'
 import { defineStore } from 'pinia'
 import axios from 'axios'
+import { useStorage, StorageSerializers } from '@vueuse/core'
 
-export const useStatisticStore = defineStore('dashboard/statisticStore', () => {
+const title = 'dashboard/StatisticStore'
+
+export const useStatisticStore = defineStore(title, () => {
   const CancelToken = axios.CancelToken;
   let cancel;
 
   // DEBUG please fill type of 'content'
-  const content = ref(null)
-  const config = reactive<{loading: boolean}>({
-    loading: false
-  })
+  const content = useStorage(`${title}/content`, null, localStorage)
+  const config = useStorage<{loading: boolean}>(`${title}/config`, { loading: false }, localStorage, { serializer: StorageSerializers.object })
 
   // SECTION API
   async function GetAPI() {
-    config.loading = true
+    config.value.loading = true
     try {
       let { data: {data}} = await axios.get('/api/statictic', {
         cancelToken: new CancelToken(function executor(c) { cancel = c; })
@@ -24,7 +24,7 @@ export const useStatisticStore = defineStore('dashboard/statisticStore', () => {
     catch(e) {
       console.log('StatisticStore GetAPI Error', {e})
     }
-    config.loading = false
+    config.value.loading = false
   }
 
   function CancelAPI() {

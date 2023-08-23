@@ -1,16 +1,18 @@
-import { ref, reactive } from 'vue'
 import { defineStore } from 'pinia'
 import axios from 'axios'
+import { useStorage, StorageSerializers } from '@vueuse/core'
 
-export const useAgentStore = defineStore('users/AgentStore', () => {
+const title = 'users/AgentStore'
+
+export const useAgentStore = defineStore(title, () => {
   // DEBUG Add type on 'content'
-  const content = ref([])
-  const config = reactive<{loading: boolean}>({
+  const content = useStorage(`${title}/content`, [], localStorage)
+  const config = useStorage<{loading: boolean}>(`${title}/config`, {
     loading: false,
-  })
+  }, localStorage, { serializer: StorageSerializers.object })
 
   async function GetAPI() {
-    config.loading = true
+    config.value.loading = true
     try {
       let { data: {data}} = await axios.get('/api/agent')
       content.value = data
@@ -18,7 +20,7 @@ export const useAgentStore = defineStore('users/AgentStore', () => {
     catch(e) {
       console.log('Get API Error', {e})
     }
-    config.loading = false
+    config.value.loading = false
   }
 
   return {

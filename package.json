@@ -17,6 +17,7 @@
         "@vitejs/plugin-vue": "^4.0.0",
         "@vuepic/vue-datepicker": "^4.3.0",
         "@vueup/vue-quill": "^1.1.1",
+        "@vueuse/core": "^10.3.0",
         "@webzlodimir/vue-avatar": "^0.0.8",
         "admin-lte": "^3.2.0",
         "chart.js": "^4.2.1",

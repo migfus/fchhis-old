@@ -1,7 +1,7 @@
-import { ref, reactive } from 'vue'
 import { defineStore } from 'pinia'
 import axios from 'axios'
 import { useToast } from 'vue-toastification'
+import { useStorage, StorageSerializers } from '@vueuse/core'
 
 type configInt = {
   loading: boolean
@@ -31,32 +31,33 @@ type paramsInt = {
   monthly: string
 }
 
-export const usePlanStore = defineStore('system/PlanStore', ()=> {
+const title = 'system/PlanStore'
+export const usePlanStore = defineStore(title, ()=> {
   const $toast = useToast();
 
   // DEBUG add type for this 'content'
-  const content = ref([])
-  const count = ref<number>(0)
-  const config = reactive<configInt>({
+  const content = useStorage(`${title}/content`, [], localStorage, { serializer: StorageSerializers.object })
+  const count = useStorage<number>(`${title}/count`, 0, localStorage)
+  const config = useStorage<configInt>(`${title}/config`, {
     loading: false,
     loadingCount: false,
     enableDelete: false,
     notify: sessionStorage.getItem('plan-notify') ? true : false,
     form: '',
-  })
-  const query = reactive<queryInt>({
+  }, localStorage, { serializer: StorageSerializers.object })
+  const query = useStorage<queryInt>(`${title}/query`, {
     search: '',
     filter: 'name',
     start: '',
     end: '',
-  })
-  const params = ref<paramsInt>({
+  }, localStorage, { serializer: StorageSerializers.object })
+  const params = useStorage<paramsInt>(`${title}/params`, {
     ...InitParams()
-  })
+  }, localStorage, {serializer: StorageSerializers.object})
 
   // SECTION API
   async function GetAPI() {
-    config.loading = true
+    config.value.loading = true
     try {
       let { data: {data}} = await axios.get('/api/plan', { params: query});
       content.value = data
@@ -64,11 +65,11 @@ export const usePlanStore = defineStore('system/PlanStore', ()=> {
     catch(e) {
       console.log('GetAPI', {e})
     }
-    config.loading = false
+    config.value.loading = false
   }
 
   async function GetCount() {
-    config.loadingCount = true
+    config.value.loadingCount = true
     try {
       let { data: {data}} = await axios.get('/api/plan', { params: { count: true}});
       count.value = data
@@ -76,11 +77,11 @@ export const usePlanStore = defineStore('system/PlanStore', ()=> {
     catch(e) {
       console.log('GetCount Err', {e})
     }
-    config.loadingCount = false
+    config.value.loadingCount = false
   }
 
   async function UpdateAPI(id: number) {
-    config.loading = true
+    config.value.loading = true
     try {
       let { data: { data } } = await axios.put('/api/plan/'+id, params.value)
       console.log('UpdateAPI', {data})
@@ -90,11 +91,11 @@ export const usePlanStore = defineStore('system/PlanStore', ()=> {
     catch(e) {
       console.log('UpdateAPI Err', {e})
     }
-    config.loading = false
+    config.value.loading = false
   }
 
   async function AddAPI() {
-    config.loading = true
+    config.value.loading = true
     try {
       let { data: { data } } = await axios.post('/api/plan', params.value)
       console.log('AddAPI', {data})
@@ -105,7 +106,7 @@ export const usePlanStore = defineStore('system/PlanStore', ()=> {
     catch(e) {
       console.log('AddAPI Err', {e})
     }
-    config.loading = false
+    config.value.loading = false
   }
 
   async function DeleteAPI(id: number, idx: number) {
@@ -124,13 +125,13 @@ export const usePlanStore = defineStore('system/PlanStore', ()=> {
 
   // SECTION FUNCTIONS
   function RemoveNotify() {
-    config.notify = true
+    config.value.notify = true
     sessionStorage.setItem('plan-notify', '1');
   }
 
   function ToggleEnableDelete() {
     if(confirm('Deleting plans is not recommended. Are you sure you want to delete?')) {
-      config.enableDelete = !config.enableDelete
+      config.value.enableDelete = !config.value.enableDelete
     }
   }
 
@@ -138,7 +139,7 @@ export const usePlanStore = defineStore('system/PlanStore', ()=> {
     if(fo == '') {
       params.value = InitParams()
     }
-    config.form = fo
+    config.value.form = fo
 
     window.scrollTo({
       top: 0,

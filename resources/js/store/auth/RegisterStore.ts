@@ -1,7 +1,7 @@
-import { ref, reactive } from 'vue'
 import { defineStore } from 'pinia'
 import axios from 'axios'
 import { useToast } from 'vue-toastification'
+import { useStorage, StorageSerializers } from '@vueuse/core'
 
 type paramsInt = {
   or: string
@@ -21,17 +21,17 @@ type paramsInt = {
   address: string
 }
 
-export const useRegisterStore = defineStore('auth/RegisterStore', () => {
+const title = 'auth/RegisterStore'
+
+export const useRegisterStore = defineStore(title, () => {
   const $toast = useToast();
 
-  const params = reactive<paramsInt>(null)
-  const config = reactive({
-    loading: false,
-  })
+  const params = useStorage<paramsInt>(`${title}/params`, null, localStorage, { serializer: StorageSerializers.object })
+  const config = useStorage<{ loading: boolean}>(`${title}/config`, {loading: false}, localStorage, {serializer: StorageSerializers.object })
 
   // SECTION API
   async function ORAPI() {
-    config.loading = true
+    config.value.loading = true
     try {
       let { data: { data}} = await axios.post('/api/or', params)
       if (data) {
@@ -46,11 +46,11 @@ export const useRegisterStore = defineStore('auth/RegisterStore', () => {
       $toast.error('Invalid OR Number')
       console.log('OR API ERROR: ' + {e})
     }
-    config.loading = false
+    config.value.loading = false
   }
 
   async function RegisterAPI() {
-    config.loading = true
+    config.value.loading = true
     try {
       let { data: { data}} = await axios.post('/api/register', params)
       console.log('Register API', {data})
@@ -61,7 +61,7 @@ export const useRegisterStore = defineStore('auth/RegisterStore', () => {
     catch(e) {
       console.log('Register API', {e})
     }
-    config.loading = false
+    config.value.loading = false
   }
 
   return {

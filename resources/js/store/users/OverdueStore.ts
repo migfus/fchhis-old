@@ -1,22 +1,24 @@
-import { ref, reactive } from 'vue'
 import { defineStore } from 'pinia'
 import axios from 'axios'
+import { useStorage, StorageSerializers } from '@vueuse/core'
 
 type contentInt = {
   overdue: string
   grace: string
 }
 
-export const useOverdueStore = defineStore('users/OverdueStore', () => {
+const title = 'users/OverdueStore'
+
+export const useOverdueStore = defineStore(title, () => {
   // DEBUG Add Type on 'content'
 
-  const content = ref<contentInt>([])
-  const config = reactive<{loading: boolean}>({
+  const content = useStorage<contentInt>(`${title}/content`, null, localStorage, { serializer: StorageSerializers.object })
+  const config = useStorage<{loading: boolean}>(`${title}/config`, {
     loading: false,
-  })
+  }, localStorage, { serializer: StorageSerializers.object })
 
   async function GetAPI() {
-    config.loading = true
+    config.value.loading = true
     try {
       let { data: {data}} = await axios.get('/api/overdue')
       content.value = data
@@ -24,7 +26,7 @@ export const useOverdueStore = defineStore('users/OverdueStore', () => {
     catch(e) {
       console.log('Get API Error', {e})
     }
-    config.loading = false
+    config.value.loading = false
   }
 
   return {

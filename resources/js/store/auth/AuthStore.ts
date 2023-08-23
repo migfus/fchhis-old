@@ -1,6 +1,7 @@
-import { ref, reactive } from "vue"
+import { ref, reactive, toRaw } from "vue"
 import { defineStore } from "pinia"
 import { useToast } from "vue-toastification"
+import { useStorage, StorageSerializers } from '@vueuse/core'
 import axios from "axios"
 
 type contentInt = {
@@ -42,26 +43,32 @@ type configInt = {
   confirm: boolean
 }
 
-export const useAuthStore = defineStore("auth/AuthStore", () => {
+const title = 'auth/AuthStore'
+
+export const useAuthStore = defineStore(title, () => {
   const $toast = useToast();
 
-  const token = ref<string>(JSON.parse(localStorage.getItem('token')))
-  const content = ref<null | contentInt>(JSON.parse(localStorage.getItem('auth')) || {})
-  const config = reactive<configInt>({
+  const _token = useStorage<string>(`${title}/token`, null, localStorage);
+  const _content = useStorage<contentInt>(`${title}/content`, null, localStorage, { serializer: StorageSerializers.object })
+
+  const token = ref(toRaw(_token))
+  const content = ref(toRaw(_content))
+  const config = useStorage<configInt>(`${title}/config`,{
     loading: false,
     status: '',
     confirm: false,
-  })
+  }, localStorage, {serializer: StorageSerializers.object })
 
   // SECTION API
   async function LoginAPI(input: { email: string, password: string}) {
-    config.loading = true
+    config.value.loading = true
     try{
       let { data: { data }} = await axios.post('/api/login', input)
       content.value = data
+      _content.value = data
       token.value = data.token
-      localStorage.setItem('auth', JSON.stringify(data))
-      localStorage.setItem('token', JSON.stringify(data.token))
+      _token.value = data.token
+
       $toast.success('Successfuly Login!')
       // @ts-ignore
       this.$router.push({ name: 'dashboard'})
@@ -69,25 +76,25 @@ export const useAuthStore = defineStore("auth/AuthStore", () => {
     catch(e) {
       console.log('Login Error', {e})
     }
-    config.loading = false
+    config.value.loading = false
   }
 
   async function RecoveryAPI(input: {email: string}) {
-    config.loading = true
+    config.value.loading = true
     try {
       let { data: { data }} = await axios.post('/api/recovery', input)
-      config.status = data
+      config.value.status = data
     }
     catch(e) {
       console.log('RecoveryAPI Error', {e})
     }
-    config.loading = false
+    config.value.loading = false
   }
 
   async function ConfirmRecoveryAPI(input: {code: string}) {
     try {
       let { data: { data }} = await axios.post('/api/recovery-confirm', input)
-      config.confirm = data
+      config.value.confirm = data
     }
     catch(e) {
       console.log('ConfirmRecoveryAPI Error', {e})
@@ -116,13 +123,15 @@ export const useAuthStore = defineStore("auth/AuthStore", () => {
   // SECTION FUNC
   function Logout() {
     content.value = null
-    localStorage.removeItem('auth')
+    _content.value = null
+    token.value = null
+    _token.value = null
     // @ts-ignore
     this.$router.push({ name: 'login'})
   }
 
   function UpdateLocalStorage() {
-    localStorage.setItem('auth', JSON.stringify(content.value))
+    _content.value = content.value
   }
 
   return {

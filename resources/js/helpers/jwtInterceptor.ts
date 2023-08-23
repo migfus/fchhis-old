@@ -3,7 +3,6 @@ import { useAuthStore } from "@/store/auth/AuthStore";
 import { useToast } from "vue-toastification";
 
 export default function jwtInterceptor() {
-  console.log('JWT Interceptor')
   const $auth = useAuthStore()
   const $toast = useToast()
 
