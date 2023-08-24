@@ -78,7 +78,9 @@ if ($stat.content.currentSemiAnnual) {
   $stat.content.pastSemiAnnual = $stat.content.pastSemiAnnual.slice().reverse()
 }
 
+console.log($stat.content)
 const lineData = ref({
+
   labels: $stat.content.currentSemiAnnual ? [...$stat.content.currentSemiAnnual.map(m => m.date.slice(0, 3))] : [],
 
   datasets: [

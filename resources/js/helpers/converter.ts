@@ -167,7 +167,7 @@ export const PlanToPay = (pay_type: {name: string}, plan: PlanInt) => {
 }
 
 export const Sum = (items, prop: number) => {
-  if(props && items) {
+  if(prop && items) {
     return items.reduce( function(a, b){
       return Number(a) + Number(b[prop]);
     }, 0);

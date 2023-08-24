@@ -12,6 +12,7 @@ export const useUserDetailsStore = defineStore(title, () => {
     loading: false,
   }, localStorage, { serializer: StorageSerializers.object })
 
+  // SECTION API
   async function GetAPI(id: bigint) {
     config.value.loading = true
     try {

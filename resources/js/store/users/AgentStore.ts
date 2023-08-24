@@ -11,6 +11,8 @@ export const useAgentStore = defineStore(title, () => {
     loading: false,
   }, localStorage, { serializer: StorageSerializers.object })
 
+
+  // SECTION API
   async function GetAPI() {
     config.value.loading = true
     try {

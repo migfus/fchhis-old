@@ -7,6 +7,8 @@ export const useRoleStore = defineStore(title, () => {
   // DEBUG Add Type on 'content'
   const content = useStorage(`${title}/content`, [], localStorage)
 
+
+  // SECTION API
   async function GetAPI() {
     try {
       let { data : {data}} = await axios.get('/api/role')

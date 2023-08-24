@@ -59,7 +59,7 @@ export const usePlanStore = defineStore(title, ()=> {
   async function GetAPI() {
     config.value.loading = true
     try {
-      let { data: {data}} = await axios.get('/api/plan', { params: query});
+      let { data: {data}} = await axios.get('/api/plan', { params: query.value });
       content.value = data
     }
     catch(e) {
@@ -71,7 +71,7 @@ export const usePlanStore = defineStore(title, ()=> {
   async function GetCount() {
     config.value.loadingCount = true
     try {
-      let { data: {data}} = await axios.get('/api/plan', { params: { count: true}});
+      let { data: {data}} = await axios.get('/api/plan', { params: { count: true }});
       count.value = data
     }
     catch(e) {

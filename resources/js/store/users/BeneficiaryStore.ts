@@ -59,13 +59,14 @@ export const useBeneficiaryStore = defineStore(title, () => {
   }, localStorage, { serializer: StorageSerializers.object })
   const params = useStorage<paramsInt>(`${title}/params`, InitParams(), localStorage, { serializer: StorageSerializers.object })
 
+
   // SECTION API
   async function GetAPI(page = 1) {
     config.value.loading = true
     try {
       let { data: {data}} = await axios.get('/api/beneficiary', {
         cancelToken: new CancelToken(function executor(c) { cancel = c; }),
-        params: { ...query, page: page}
+        params: { ...query.value, page: page}
       })
       content.value = data
     }
@@ -79,7 +80,7 @@ export const useBeneficiaryStore = defineStore(title, () => {
     try {
       let { data: {data}} = await axios.get('/api/users', {
         cancelToken: new CancelToken(function executor(c) { cancel = c; }),
-        params: { ...query, print: true}
+        params: { ...query.value, print: true}
       })
       print.value = data
     }
@@ -94,8 +95,8 @@ export const useBeneficiaryStore = defineStore(title, () => {
 
   async function StoreAPI() {
     try {
-      let { data: { data }} = await axios.post('/api/users', params)
-      Object.assign(params, {... InitParams()})
+      let { data: { data }} = await axios.post('/api/users', params.value)
+      Object.assign(params.value, {... InitParams()})
       $toast.success('Successfully created');
       GetAPI(1)
       ChangeForm('')
@@ -138,7 +139,7 @@ export const useBeneficiaryStore = defineStore(title, () => {
   }
 
   function Update(row: paramsInt) {
-    Object.assign(params, row)
+    Object.assign(params.value, row)
 
     config.value.form = 'update'
 

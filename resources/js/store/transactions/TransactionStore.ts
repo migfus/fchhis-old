@@ -70,13 +70,14 @@ export const useTransactionStore = defineStore(title, () => {
     ...InitParams(),
   }, localStorage, {serializer: StorageSerializers.object })
 
+
   // SECTION API
   async function GetAPI(page = 1) {
     config.value.loading = true
     try {
       let { data: {data}} = await axios.get('/api/transaction', {
         cancelToken: new CancelToken(function executor(c) { cancel = c; }),
-        params: { ...query, page: page}
+        params: { ...query.value, page: page}
       })
       content.value = data
     }
@@ -90,7 +91,7 @@ export const useTransactionStore = defineStore(title, () => {
     try {
       let { data: {data} } = await axios.get('/api/transaction', {
         cancelToken: new CancelToken(function executor(c) { cancel = c; }),
-        params: { ...query, print: true}
+        params: { ...query.value, print: true}
       })
       print.value = data
     }
@@ -101,11 +102,11 @@ export const useTransactionStore = defineStore(title, () => {
 
   async function StoreAPI() {
     try {
-      let { data: {data}} = await axios.post('/api/transaction', params)
+      let { data: {data}} = await axios.post('/api/transaction', params.value)
       if(data) {
         $toast.success('Successfully Added')
         ChangeForm('')
-        Object.assign(params, { ...InitParams })
+        Object.assign(params.value, { ...InitParams })
         GetAPI()
       }
     }
@@ -116,11 +117,11 @@ export const useTransactionStore = defineStore(title, () => {
 
   async function UpdateAPI(id: bigint) {
     try {
-      let { data: {data}} = await axios.put('/api/transaction/'+id, params)
+      let { data: {data}} = await axios.put('/api/transaction/' + id, params.value)
       if(data) {
         $toast.success('Successfully Added')
         ChangeForm('')
-        Object.assign(params, { ...InitParams })
+        Object.assign(params.value, { ...InitParams })
         GetAPI()
       }
     }
@@ -131,7 +132,7 @@ export const useTransactionStore = defineStore(title, () => {
 
   async function DestroyAPI(id: bigint, idx: bigint) {
     try {
-      let { data: {data}} = await axios.delete('/api/transaction/'+id)
+      let { data: {data}} = await axios.delete('/api/transaction/'+ id)
       if(data) {
         $toast.success('Successfully Deleted')
         GetAPI()

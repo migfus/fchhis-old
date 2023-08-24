@@ -62,13 +62,14 @@ type listInt = {
 }
 
 const title = 'users/UsersStore'
+
 export const useUsersStore = defineStore(title, () => {
   const $toast = useToast();
   const CancelToken = axios.CancelToken;
   let cancel;
 
   // DEBUG ADd type on 'content' & 'print'
-  const content = useStorage(`${title}/content`, null, localStorage)
+  const content = useStorage(`${title}/content`, null, localStorage, { serializer: StorageSerializers.object })
   const print = useStorage(`${title}/print`, null, localStorage)
   const config = useStorage<configInt>(`${title}/config`, {
     loading: false,
@@ -95,13 +96,14 @@ export const useUsersStore = defineStore(title, () => {
   const counts = useStorage<countsInt>(`${title}/counts`, null, localStorage);
   const list = useStorage<listInt>(`${title}/list`, null, localStorage);
 
+
   // SECTION API
   async function GetAPI(page = 1) {
     config.value.loading = true
     try {
       let { data: {data}} = await axios.get('/api/users', {
         cancelToken: new CancelToken(function executor(c) { cancel = c; }),
-        params: { ...query, page: page}
+        params: { ...query.value, page: page}
       })
       content.value = data
     }
@@ -115,7 +117,7 @@ export const useUsersStore = defineStore(title, () => {
     try {
       let { data: {data}} = await axios.get('/api/users', {
         cancelToken: new CancelToken(function executor(c) { cancel = c; }),
-        params: { ...query, print: true}
+        params: { ...query.value, print: true}
       })
       print.value = data
     }
@@ -130,8 +132,8 @@ export const useUsersStore = defineStore(title, () => {
 
   async function StoreAPI() {
     try {
-      let { data: { data }} = await axios.post('/api/users', params)
-      Object.assign(params, {... InitParams()})
+      let { data: { data }} = await axios.post('/api/users', params.value)
+      Object.assign(params.value, {... InitParams()})
       $toast.success('Successfully created');
       GetAPI(1)
       ChangeForm('')
@@ -143,8 +145,8 @@ export const useUsersStore = defineStore(title, () => {
 
   async function UpdateAPI(id) {
     try {
-      let { data: { data }} = await axios.put('/api/users/'+id, params)
-      Object.assign(params, {... InitParams()})
+      let { data: { data }} = await axios.put('/api/users/'+id, params.value)
+      Object.assign(params.value, {... InitParams()})
       $toast.success('Successfully created');
       GetAPI(1)
       ChangeForm('')
@@ -156,7 +158,7 @@ export const useUsersStore = defineStore(title, () => {
 
   async function DestroyAPI(id) {
     try {
-      let { data: { data }} = await axios.delete('/api/users/'+id)
+      let { data: { data }} = await axios.delete('/api/users/'+ id)
       $toast.success('Successfully deleted');
       GetAPI(1)
     }
@@ -204,7 +206,7 @@ export const useUsersStore = defineStore(title, () => {
   }
 
   function Update(row) {
-    Object.assign(params, row)
+    Object.assign(params.value, row)
 
     config.value.form = 'update'
 

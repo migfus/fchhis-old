@@ -9,7 +9,7 @@ export const useStatisticStore = defineStore(title, () => {
   let cancel;
 
   // DEBUG please fill type of 'content'
-  const content = useStorage(`${title}/content`, null, localStorage)
+  const content = useStorage(`${title}/content`, null, localStorage, { serializer: StorageSerializers.object })
   const config = useStorage<{loading: boolean}>(`${title}/config`, { loading: false }, localStorage, { serializer: StorageSerializers.object })
 
   // SECTION API

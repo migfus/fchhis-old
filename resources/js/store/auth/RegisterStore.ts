@@ -33,11 +33,11 @@ export const useRegisterStore = defineStore(title, () => {
   async function ORAPI() {
     config.value.loading = true
     try {
-      let { data: { data}} = await axios.post('/api/or', params)
+      let { data: { data}} = await axios.post('/api/or', params.value)
       if (data) {
         // @ts-ignore
         this.$router.push({ name: "register-fill" });
-        Object.assign(params, {
+        Object.assign(params.value, {
           ...data
         })
       }
@@ -52,11 +52,11 @@ export const useRegisterStore = defineStore(title, () => {
   async function RegisterAPI() {
     config.value.loading = true
     try {
-      let { data: { data}} = await axios.post('/api/register', params)
+      let { data: { data}} = await axios.post('/api/register', params.value)
       console.log('Register API', {data})
       $toast.success('Successfully registered')
       // @ts-ignore
-      this.$router.push({ name: 'login', query: {email: params.email}})
+      this.$router.push({ name: 'login', query: {email: params.value.email}})
     }
     catch(e) {
       console.log('Register API', {e})
