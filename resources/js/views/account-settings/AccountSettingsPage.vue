@@ -10,13 +10,14 @@
                     <h5 class="widget-user-desc text-right">{{ RoleToDesc($auth.content.auth.role) }}</h5>
                 </div>
                 <div class="widget-user-image">
-                    <img data-toggle="modal" data-target="#avatar-modal" style="cursor: pointer" class="img-circle"
-                        :src="$auth.content.auth.avatar" alt="User Avatar">
+                    <img data-toggle="modal" :data-target="[can('update', 'auth') ? '#avatar-modal' : '']"
+                        style="cursor: pointer" class="img-circle" :src="$auth.content.auth.avatar" alt="User Avatar">
                 </div>
                 <div class="card-footer pt-3">
                     <div class="row">
                         <div class="col-12">
-                            <button data-toggle="modal" data-target="#avatar-modal" class="btn btn-info float-right">Change
+                            <button data-toggle="modal" data-target="#avatar-modal" class="btn btn-info float-right"
+                                :disabled="!can('update', 'auth')">Change
                                 Avatar</button>
                         </div>
                     </div>
@@ -31,7 +32,8 @@
                     <ul class="nav nav-tabs" id="custom-tabs-four-tab" role="tablist">
                         <li class="nav-item">
                             <a class="nav-link active" id="password-tab" data-toggle="pill" href="#notification" role="tab"
-                                aria-controls="notification" aria-selected="true">Change Password</a>
+                                aria-controls="notification" aria-selected="true">Change
+                                Password</a>
                         </li>
                     </ul>
                 </div>
@@ -52,8 +54,10 @@ import { RoleToDesc } from '@/helpers/converter'
 import PasswordTab from './tabs/PasswordTab.vue';
 import UploadAvatarModal from '@/components/UploadAvatarModal.vue';
 import axios from 'axios';
+import { useAbility } from '@casl/vue'
 
 const $auth = useAuthStore();
+const { can } = useAbility();
 
 async function PostAPI() {
     try {

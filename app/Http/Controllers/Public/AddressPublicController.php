@@ -7,6 +7,10 @@ use Illuminate\Support\Facades\DB;
 
 class AddressPublicController extends Controller
 {
+    /** NOTE
+     * Provides Address
+     * [App.vue]
+     * **/
     public function index() {
         $provinces = DB::table('address_provinces')->orderBy('name')->get();
         $out = [];

@@ -32,12 +32,17 @@ class AuthController extends Controller
             ...$this->G_ReturnDefault(), 'data' => [
                 'auth' => $user,
                 'ip'   => $_SERVER['REMOTE_ADDR'],
-                'token' => $user->createToken('token idk')->plainTextToken
+                'token' => $user->createToken('token idk')->plainTextToken,
+                'permissions' => $user->getAllPermissions()->pluck('name'),
             ],
         ], 200);
     }
 
     public function ChangePassword(Request $req) {
+        if(!$req->user()->can('update auth')) {
+            return $this->G_UnauthorizedResponse();
+        }
+
         $val = Validator::make($req->all(), [
             'newPassword' => 'required|min:8',
             'currentPassword' => 'required|min:8'
@@ -58,6 +63,10 @@ class AuthController extends Controller
     }
 
     public function ChangeAvatar(Request $req) {
+        if(!$req->user()->can('update auth')) {
+            return $this->G_UnauthorizedResponse();
+        }
+
         $val = Validator::make($req->all(), [
             'file' => 'required'
         ]);

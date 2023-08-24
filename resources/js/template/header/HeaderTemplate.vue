@@ -26,7 +26,7 @@
             <nav class="mt-2">
                 <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
 
-                    <li v-for="row in menu" :key="row.name" :class="`${row.icon ? 'nav-item' : 'nav-header'}`">
+                    <!-- <li v-for="row in menu" :key="row.name" :class="`${row.icon ? 'nav-item' : 'nav-header'}`">
                         <RouterLink v-if="row.icon" :to="row.link"
                             :class="`${$route.name == row.link.name ? 'active' : ''} nav-link`">
                             <i :class="`nav-icon fas ${row.icon}`"></i>
@@ -40,6 +40,36 @@
                             </p>
                         </RouterLink>
                         <div v-else> {{ row.name }}</div>
+                    </li> -->
+
+                    <!-- SECTION DASHBOARD -->
+                    <li class="nav-header">
+                        <div>DASHBOARD</div>
+                    </li>
+
+                    <li v-if="can('index', 'auth')" class="nav-item">
+                        <RouterLink :to="{ name: 'dashboard' }"
+                            :class="`${$route.name == 'dashboard' ? 'active' : ''} nav-link`">
+                            <i class="nav-icon fas fa-table"></i>
+                            <p>
+                                Dashboard
+                            </p>
+                        </RouterLink>
+                    </li>
+
+                    <!-- SECTION AUTH -->
+                    <li class="nav-header">
+                        <div>MY ACCOUNT</div>
+                    </li>
+
+                    <li v-if="can('index', 'auth')" class="nav-item">
+                        <RouterLink :to="{ name: 'account-settings' }"
+                            :class="`${$route.name == 'account-settings' ? 'active' : ''} nav-link`">
+                            <i class="nav-icon fas fa-user-cog"></i>
+                            <p>
+                                Account Settings
+                            </p>
+                        </RouterLink>
                     </li>
 
                 </ul>
@@ -55,10 +85,12 @@ import UserDropDown from './UserDropdown.vue';
 import { useAuthStore } from '@/store/auth/AuthStore';
 import { useOverdueStore } from '@/store/users/OverdueStore';
 import { string } from 'yup';
+import { useAbility } from '@casl/vue'
 
 const $route = useRoute();
 const $auth = useAuthStore();
 const $overdue = useOverdueStore()
+const { can } = useAbility();
 
 const hiddenMenu = ref()
 
@@ -174,75 +206,6 @@ const menu = ref<menuInt>([
     // USERS
     ...isAdmin.value,
     ...isStaff.value,
-    // {
-    //   name: 'Manager',
-    //   icon: 'fa-user-friends',
-    //   link: '/users/manager'
-    // },
-    // {
-    //   name: 'Sales Agent',
-    //   icon: 'fa-user-secret',
-    //   link: '/users/agent'
-    // },
-    // {
-    //   name: 'Staff',
-    //   icon: 'fa-users',
-    //   link: '/users/staff'
-    // },
-    // {
-    //   name: 'Client',
-    //   icon: 'fa-people-arrows',
-    //   link: '/users/client'
-    // },
-    // ADMIN
-    // {
-    //   name: "ADMIN",
-    // },
-    // {
-    //   name: 'Plans',
-    //   icon: 'fa-clipboard-list',
-    //   link: '/admin/plans'
-    // },
-    // {
-    //   name: 'Transaction',
-    //   icon: 'fa-wallet',
-    //   link: '/admin/transactions'
-    // },
-    // {
-    //   name: 'Referals',
-    //   icon: 'fa-project-diagram',
-    //   link: '/admin/referals'
-    // },
-
-    // SETTINGS
-    {
-        name: 'MY ACCOUNT',
-    },
-    {
-        name: 'Account Settings',
-        icon: 'fa-user-cog',
-        link: { name: 'account-settings' },
-    },
-
-    // SETTINGS
-    // {
-    //   name: 'SETTINGS',
-    // },
-    // {
-    //   name: 'System Settings',
-    //   icon: 'fa-cog',
-    //   link: '/settings/system',
-    // },
-    // {
-    //   name: 'Backup',
-    //   icon: 'fa-database',
-    //   link: '/settings/backup',
-    // },
-    // {
-    //   name: 'Logs',
-    //   icon: 'fa-pen',
-    //   link: '/settings/logs'
-    // }
 ]);
 
 const pages = ref([
@@ -258,10 +221,6 @@ const pages = ref([
         name: 'Contact',
         link: "contact"
     },
-    // {
-    //   name: 'FAQs',
-    //   link: "faq"
-    // },
 ]);
 
 

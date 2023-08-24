@@ -7,7 +7,11 @@ use App\Models\User;
 
 class AgentController extends Controller
 {
-    public function index(Request $req){
+    /** NOTE
+     * Testing Purposes
+     * n/a
+     * **/
+    public function index(Request $req) {
         // SECTION AGENT & STAFF
         if($req->user()->role == 2 || $req->user()->role == 5) {
 
@@ -16,7 +20,7 @@ class AgentController extends Controller
             'data' => User::where('role', 4)
                 ->with([
                     'info' => function ($q) {
-                    $q->orderBy('name', 'DESC');
+                        $q->orderBy('name', 'DESC');
                     }
                 ])
                 ->get()

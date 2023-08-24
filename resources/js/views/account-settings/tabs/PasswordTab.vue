@@ -8,7 +8,7 @@
                 <div class="form-group">
                     <label for="current-password">Current Password</label>
                     <Field v-model="input.currentPassword" name="currentPassword" type="password" class="form-control"
-                        id="current-password" placeholder="Current Password" />
+                        id="current-password" placeholder="Current Password" :disabled="!can('update', 'auth')" />
                     <div class="mb-3 text-danger">
                         <ErrorMessage name="currentPassword" />
                     </div>
@@ -18,7 +18,7 @@
                 <div class="form-group">
                     <label for="new-password">New Password</label>
                     <Field v-model="input.newPassword" name="newPassword" type="password" class="form-control"
-                        id="new-password" placeholder="New Password" />
+                        id="new-password" placeholder="New Password" :disabled="!can('update', 'auth')" />
                     <div class="mb-3 text-danger">
                         <ErrorMessage name="newPassword" />
                     </div>
@@ -28,14 +28,18 @@
                 <div class="form-group">
                     <label for="confirm-password">Confirm Password</label>
                     <Field v-model="input.confirmPassword" name="confirmPassword" type="password" class="form-control"
-                        id="confirm-password" placeholder="Confirm Password" />
+                        id="confirm-password" placeholder="Confirm Password" :disabled="!can('update', 'auth')" />
                     <div class="mb-3 text-danger">
                         <ErrorMessage name="confirmPassword" />
                     </div>
                 </div>
 
-                <button class="btn btn-info float-right" :disabled="Object.keys(errors).length != 0">
+                <button v-if="can('update', 'auth')" class="btn btn-info float-right"
+                    :disabled="Object.keys(errors).length != 0">
                     Change
+                </button>
+                <button v-else class="btn btn-danger float-right" disabled>
+                    Disabled
                 </button>
 
             </Form>
@@ -51,6 +55,7 @@ import * as Yup from 'yup'
 import { Form, Field, ErrorMessage, configure, } from 'vee-validate'
 import axios from 'axios'
 import { useToast } from "vue-toastification"
+import { useAbility } from '@casl/vue'
 
 configure({
     validateOnInput: true,
@@ -70,6 +75,7 @@ const input = reactive({
 
 const $props = defineProps(['active', 'id']);
 const $toast = useToast();
+const { can } = useAbility();
 
 async function Update() {
     try {

@@ -9,6 +9,8 @@ import { createPinia } from "pinia"
 import { createApp, markRaw } from "vue"
 import router from "./Router"
 import Toast from "vue-toastification"
+import { abilitiesPlugin } from '@casl/vue';
+import ability from './Ability';
 
 import App from "./App.vue"
 
@@ -27,6 +29,9 @@ pinia.use(({ store }) => {
 app.use(pinia)
 app.use(Toast, { position: "bottom-right" })
 app.use(router)
+app.use(abilitiesPlugin, ability, {
+    useGlobalProperties: true,
+});
 
 import jwtInterceptor from "./helpers/jwtInterceptor"
 jwtInterceptor()

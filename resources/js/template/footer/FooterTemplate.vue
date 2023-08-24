@@ -79,12 +79,12 @@
 </template>
 
 <script setup lang="ts">
-const $props = defineProps<{
+const $props = defineProps({
     fluid: {
-        type: Boolean;
-        required: false;
+        type: Boolean,
+        default: false,
     }
-}>();
+});
 
 const version = import.meta.env.VITE_VER;
 </script>

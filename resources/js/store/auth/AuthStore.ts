@@ -3,6 +3,7 @@ import { defineStore } from "pinia"
 import { useToast } from "vue-toastification"
 import { useStorage, StorageSerializers } from '@vueuse/core'
 import axios from "axios"
+import ability from '@/Ability';
 
 type contentInt = {
     ip: string
@@ -15,7 +16,7 @@ type contentInt = {
         role: number
         updated_at: string
         username: string
-        person: {
+        info: {
             address: string
             address_id: number
             agent_id: number
@@ -35,7 +36,8 @@ type contentInt = {
             updated_at: string
             user_id: number
         }
-    }
+    },
+    permissions: Array<String>
 }
 type configInt = {
     loading: boolean
@@ -64,8 +66,7 @@ export const useAuthStore = defineStore(title, () => {
         config.value.loading = true
         try{
             let { data: { data }} = await axios.post('/api/login', input)
-            content.value = data
-            _content.value = data
+            UpdateData(data)
             token.value = data.token
             _token.value = data.token
 
@@ -134,6 +135,34 @@ export const useAuthStore = defineStore(title, () => {
         _content.value = content.value
     }
 
+    function UpdateData(authData: contentInt) {
+        content.value = authData
+        _content.value = authData
+
+        UpdateAbility()
+    }
+
+    function UpdateAbility() {
+        if(content.value) {
+            ability.update([
+                ...content.value.permissions.map((str) => {
+                    return {
+                        action: str.split(' ')[0],
+                        subject: str.split(' ')[1],
+                    }
+                })
+            ])
+        }
+        else {
+            ability.update([
+                {
+                    action: 'show',
+                    subject: 'login',
+                }
+            ])
+        }
+    }
+
     return {
         content,
         config,
@@ -145,5 +174,7 @@ export const useAuthStore = defineStore(title, () => {
         LoginAPI,
         RecoveryAPI,
         Logout,
+        UpdateData,
+        UpdateAbility
     }
 });

@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import { useAuthStore } from "@/store/auth/AuthStore";
+import ability from '@/Ability';
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.APP_URL),
@@ -211,6 +212,7 @@ const router = createRouter({
                 title: "Account Settings",
                 auth: true,
                 sideBar: true,
+                resource: 'auth',
             },
         },
         // NOTE OTHER
@@ -246,6 +248,19 @@ router.beforeEach(async (to, from) => {
         // return { name: 'error'}
             return false
         }
+    }
+
+    $auth.UpdateAbility()
+
+    const canNavigate = to.matched.some(row => {
+        if(row.meta.resource) {
+            // @ts-ignore
+            return ability.can(row.meta.action || 'index', row.meta.resource)
+        }
+        return true;
+    })
+    if(!canNavigate) {
+        alert('Route Disabled (no permission)')
     }
 
 });

@@ -10,6 +10,10 @@ use App\Mail\ForgotPasswordMailer;
 
 class TestPublicController extends Controller
 {
+    /** NOTE
+     * Testing Purposes
+     * n/a
+     * **/
     public function index() {
         $mail = 'migfus20@gmail.com';
         $data = [

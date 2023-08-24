@@ -30,9 +30,9 @@ class StatisticController extends Controller
         private function ClientIndex($req) {
             $start = Carbon::parse(
                 Transaction::where('client_id', $req->user()->info->id)
-                ->orderBy('created_at', 'ASC')
-                ->first()
-                ->created_at
+                    ->orderBy('created_at', 'ASC')
+                    ->first()
+                    ->created_at
             )->startOfYear()->format('Ym');
 
             $summaryTransaction = [];

@@ -17,7 +17,7 @@ export default function jwtInterceptor() {
     axios.interceptors.response.use(
         (response) => {
         if (response.data.auth) {
-            $auth.content = response.data.auth;
+            $auth.UpdateData(response.data.auth)
             console.log("Role Updated", {response});
         }
         return response;

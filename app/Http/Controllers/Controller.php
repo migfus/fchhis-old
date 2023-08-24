@@ -14,7 +14,7 @@ class Controller extends BaseController
 
     public function G_ReturnDefault($req = null) {
         if($req) {
-            $auth = User::where('id', $req->user()->id)->with('person')->first();
+            $auth = User::where('id', $req->user()->id)->with('info')->first();
 
             return [
                 'status' => true,
@@ -22,7 +22,8 @@ class Controller extends BaseController
                 'auth' => [
                     'ip' => $_SERVER['REMOTE_ADDR'],
                     'auth' => $auth,
-                ]
+                    'permissions' => $auth->getAllRoles(),
+                ],
             ];
         }
         else {

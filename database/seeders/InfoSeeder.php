@@ -6,7 +6,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Carbon\Carbon;
 
-class PersonSeeder extends Seeder
+class InfoSeeder extends Seeder
 {
     /**
      * Run the database seeds.
