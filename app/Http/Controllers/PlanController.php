@@ -8,146 +8,145 @@ use Illuminate\Support\Facades\Validator;
 
 class PlanController extends Controller
 {
-  private function PlanCount($req) {
-    return response()->json([
-      ...$this->G_ReturnDefault($req),
-      'data' => Plan::withCount(['infos'])->orderBy('infos_count', 'DESC')->get()
-    ]);
-  }
+        private function PlanCount($req) {
+            return response()->json([
+                ...$this->G_ReturnDefault($req),
+                'data' => Plan::withCount(['infos'])->orderBy('infos_count', 'DESC')->get()
+            ]);
+        }
 
-  public function index(Request $req, Plan $plan) {
-    if ($req->count)
-      return $this->PlanCount($req);
+    public function index(Request $req, Plan $plan) {
+        if ($req->count)
+            return $this->PlanCount($req);
 
-    $val = Validator::make($req->all(), [
-      'search' => '',
-      'filter' => 'required'
-    ]);
+        $val = Validator::make($req->all(), [
+            'search' => '',
+            'filter' => 'required'
+        ]);
 
-    if($val->fails()) {
-      return $this->G_ValidatorFailResponse($val);
+        if($val->fails()) {
+            return $this->G_ValidatorFailResponse($val);
+        }
+
+        $data;
+        if($req->user()->role == 2 || $req->user()->role == 5) {
+            switch($req->filter) {
+                case 'desc':
+                    $data = $plan->where('desc', 'LIKE', '%' . $req->search .'%')->orderBy('created_at', 'DESC')->get();
+                    break;
+                default:
+                    $data = $plan->where('name', 'LIKE', '%' . $req->search .'%')->orderBy('created_at', 'DESC')->get();
+            }
+            return response()->json([...$this->G_ReturnDefault($req), 'data' => $data]);
+        }
+
+        return $this->G_UnauthorizedResponse();
     }
 
-    $data;
-    if($req->user()->role == 2 || $req->user()->role == 5) {
-      switch($req->filter) {
-        case 'desc':
-          $data = $plan->where('desc', 'LIKE', '%' . $req->search .'%')->orderBy('created_at', 'DESC')->get();
-          break;
-        default:
-          $data = $plan->where('name', 'LIKE', '%' . $req->search .'%')->orderBy('created_at', 'DESC')->get();
-      }
-      return response()->json([...$this->G_ReturnDefault($req), 'data' => $data]);
+    public function store(Request $req) {
+        if($req->user()->role == 2) {
+            $val = Validator::make($req->all(), [
+                'avatar' => '',
+                'desc' => '',
+
+                'name' => 'required',
+                'start' => 'required',
+                'end' => 'required',
+
+                'contract_price' => 'required',
+                'spot_service' => 'required',
+                'spot_payment' => 'required',
+
+                'annual' => 'required',
+                'semi_annual' => 'required',
+                'quarterly' => 'required',
+                'monthly' => 'required',
+            ]);
+
+            if($val->fails()) {
+                return $this->G_ValidatorFailResponse($val);
+            }
+
+            $avatar = null;
+            if($req->avatar) {
+                $avatar = $this->G_AvatarUpload($req->avatar);
+            }
+
+            $plan = Plan::create([
+                'avatar' => $avatar,
+                'name' => $req->name,
+                'age_start' => $req->start,
+                'age_end' => $req->end,
+                'desc' => $req->desc,
+                'contract_price' => $req->contract_price,
+                'spot_pay' => $req->spot_payment,
+                'spot_service' => $req->spot_service,
+                'user_id' => $req->user()->id,
+                'annual' => $req->annual,
+                'semi_annual' => $req->semi_annual,
+                'quarterly' => $req->quarterly,
+                'monthly' => $req->monthly
+            ]);
+            return response()->json([...$this->G_ReturnDefault($req), 'data' => $plan]);
+        }
+
+        return $this->G_UnauthorizedResponse();
     }
 
-    return $this->G_UnauthorizedResponse();
-  }
-
-  public function store(Request $req) {
-    if($req->user()->role == 2) {
-      $val = Validator::make($req->all(), [
-        'avatar' => '',
-        'desc' => '',
-
-        'name' => 'required',
-        'start' => 'required',
-        'end' => 'required',
-
-        'contract_price' => 'required',
-        'spot_service' => 'required',
-        'spot_payment' => 'required',
-
-        'annual' => 'required',
-        'semi_annual' => 'required',
-        'quarterly' => 'required',
-        'monthly' => 'required',
-      ]);
-
-      if($val->fails()) {
-        return $this->G_ValidatorFailResponse($val);
-      }
-
-      $avatar = null;
-      if($req->avatar) {
-        $avatar = $this->G_AvatarUpload($req->avatar);
-      }
-
-      $plan = Plan::create([
-        'avatar' => $avatar,
-        'name' => $req->name,
-        'age_start' => $req->start,
-        'age_end' => $req->end,
-        'desc' => $req->desc,
-        'contract_price' => $req->contract_price,
-        'spot_pay' => $req->spot_payment,
-        'spot_service' => $req->spot_service,
-        'user_id' => $req->user()->id,
-        'annual' => $req->annual,
-        'semi_annual' => $req->semi_annual,
-        'quarterly' => $req->quarterly,
-        'monthly' => $req->monthly
-      ]);
-      return response()->json([...$this->G_ReturnDefault($req), 'data' => $plan]);
+    public function show(string $id) {
+        //
     }
 
-    return $this->G_UnauthorizedResponse();
-  }
+    public function update(Request $req, string $id) {
+        $val = Validator::make($req->all(), [
+            'avatar' => '',
+            'desc' => '',
 
-  public function show(string $id) {
-      //
-  }
+            'name' => 'required',
+            'age_start' => 'required',
+            'age_end' => 'required',
 
-  public function update(Request $req, string $id) {
-    $val = Validator::make($req->all(), [
-      'avatar' => '',
-      'desc' => '',
+            'contract_price' => 'required',
+            'spot_service' => 'required',
+            'spot_pay' => 'required',
 
-      'name' => 'required',
-      'age_start' => 'required',
-      'age_end' => 'required',
+            'annual' => 'required',
+            'semi_annual' => 'required',
+            'quarterly' => 'required',
+            'monthly' => 'required',
+        ]);
 
-      'contract_price' => 'required',
-      'spot_service' => 'required',
-      'spot_pay' => 'required',
+        if($val->fails()) {
+            return $this->G_ValidatorFailResponse($val);
+        }
 
-      'annual' => 'required',
-      'semi_annual' => 'required',
-      'quarterly' => 'required',
-      'monthly' => 'required',
-    ]);
 
-    if($val->fails()) {
-      return $this->G_ValidatorFailResponse($val);
+        if(Plan::where('id', $id)->first()->avatar != $req->avatar) {
+            Plan::where('id', $id)->update(['avatar' => $this->G_AvatarUpload($req->avatar)]);
+        }
+
+        $plan = Plan::where('id', $id)->update([
+            'name' => $req->name,
+            'age_start' => $req->age_start,
+            'age_end' => $req->age_end,
+            'desc' => $req->desc,
+            'contract_price' => $req->contract_price,
+            'spot_pay' => $req->spot_pay,
+            'spot_service' => $req->spot_service,
+            'annual' => $req->annual,
+            'semi_annual' => $req->semi_annual,
+            'quarterly' => $req->quarterly,
+            'monthly' => $req->monthly
+        ]);
+        return response()->json([...$this->G_ReturnDefault($req), 'data' => $plan]);
     }
 
+    public function destroy(Request $req, string $id) {
+        if($req->user()->role == 2) {
+            Plan::where('id', $id)->delete();
+            return response()->json([...$this->G_ReturnDefault($req), 'data' => 1]);
+        }
 
-    if(Plan::where('id', $id)->first()->avatar != $req->avatar) {
-      Plan::where('id', $id)->update(['avatar' => $this->G_AvatarUpload($req->avatar)]);
+        return $this->G_UnauthorizedResponse();
     }
-
-    $plan = Plan::where('id', $id)->update([
-      'name' => $req->name,
-      'age_start' => $req->age_start,
-      'age_end' => $req->age_end,
-      'desc' => $req->desc,
-      'contract_price' => $req->contract_price,
-      'spot_pay' => $req->spot_pay,
-      'spot_service' => $req->spot_service,
-      'annual' => $req->annual,
-      'semi_annual' => $req->semi_annual,
-      'quarterly' => $req->quarterly,
-      'monthly' => $req->monthly
-    ]);
-    return response()->json([...$this->G_ReturnDefault($req), 'data' => $plan]);
-  }
-
-  public function destroy(Request $req, string $id) {
-    if($req->user()->role == 2) {
-      Plan::where('id', $id)->delete();
-
-      return response()->json([...$this->G_ReturnDefault($req), 'data' => 1]);
-    }
-
-    return $this->G_UnauthorizedResponse();
-  }
 }

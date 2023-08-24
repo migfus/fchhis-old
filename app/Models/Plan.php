@@ -9,23 +9,23 @@ class Plan extends Model
 {
     use HasFactory;
 
-  protected $fillable = [
-      'name',
-      'avatar',
-      'age_start',
-      'age_end',
-      'desc',
-      'contract_price',
-      'spot_pay',
-      'spot_service',
-      'user_id',
-      'annual',
-      'semi_annual',
-      'quarterly',
-      'monthly'
-  ];
+    protected $fillable = [
+            'name',
+            'avatar',
+            'age_start',
+            'age_end',
+            'desc',
+            'contract_price',
+            'spot_pay',
+            'spot_service',
+            'user_id',
+            'annual',
+            'semi_annual',
+            'quarterly',
+            'monthly'
+    ];
 
-  public function infos() {
-    return $this->hasMany(Info::class);
-  }
+    public function infos() {
+        return $this->hasMany(Info::class);
+    }
 }

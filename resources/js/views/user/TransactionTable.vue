@@ -1,29 +1,29 @@
 <template>
-  <div class="card">
-    <div class="card-header">
-      <h3 class="card-title text-bold">Transactions</h3>
-    </div>
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title text-bold">Transactions</h3>
+        </div>
 
-    <div v-if="$trans.content" class="card-body p-0">
-      <table class="table table-striped">
-        <thead>
-          <tr>
-            <th>Plan</th>
-            <th>Amount</th>
-            <th>Date</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="row in $trans.content.data">
-            <td>{{ `${row.plan.name} (${row.pay_type.name})` }}</td>
-            <td>{{ row.amount }}</td>
-            <td>{{ moment(row.created_at).format('MMM D, YYYY') }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+        <div v-if="$trans.content" class="card-body p-0">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Plan</th>
+                        <th>Amount</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="row in $trans.content.data">
+                        <td>{{ `${row.plan.name} (${row.pay_type.name})` }}</td>
+                        <td>{{ row.amount }}</td>
+                        <td>{{ moment(row.created_at).format('MMM D, YYYY') }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
-  </div>
+    </div>
 </template>
 
 <script setup>
@@ -36,8 +36,8 @@ const $route = useRoute();
 const $trans = useTransactionStore();
 
 onMounted(() => {
-  $trans.query.id = $route.params.id
-  $trans.GetAPI()
+    $trans.query.id = $route.params.id
+    $trans.GetAPI()
 });
 
 // onUnmounted(() => {

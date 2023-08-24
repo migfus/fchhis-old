@@ -13,16 +13,16 @@ import Toast from "vue-toastification"
 import App from "./App.vue"
 
 declare module 'pinia' {
-  export interface PiniaCustomProperties {
-    router: Router;
-  }
+    export interface PiniaCustomProperties {
+        router: Router;
+    }
 }
 
 const app = createApp(App)
 const pinia = createPinia()
 
 pinia.use(({ store }) => {
-  store.$router = markRaw(router)
+    store.$router = markRaw(router)
 });
 app.use(pinia)
 app.use(Toast, { position: "bottom-right" })

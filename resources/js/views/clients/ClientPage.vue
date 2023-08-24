@@ -1,20 +1,20 @@
 <template>
-  <div class="row">
+    <div class="row">
 
-    <EditForm v-if="$user.config.form == 'update'" />
-    <ORForm v-else-if="$user.config.form == 'or'" />
-    <AddForm v-else-if="$user.config.form" />
+        <EditForm v-if="$user.config.form == 'update'" />
+        <ORForm v-else-if="$user.config.form == 'or'" />
+        <AddForm v-else-if="$user.config.form" />
 
-    <UserSummary />
+        <UserSummary />
 
-    <SearchComponent />
+        <SearchComponent />
 
-    <MobileComponent />
+        <MobileComponent />
 
-    <!-- NOTE PAGINATION -->
-    <PaginationComponent />
+        <!-- NOTE PAGINATION -->
+        <PaginationComponent />
 
-  </div>
+    </div>
 </template>
 
 <script setup>
@@ -40,11 +40,11 @@ const $agent = useAgentStore();
 const $route = useRoute();
 
 onMounted(() => {
-  $plan.GetAPI();
-  $payType.GetAPI();
-  $agent.GetAPI();
-  if ($route.query.form) {
-    $user.config.form = $route.query.form;
-  }
+    $plan.GetAPI();
+    $payType.GetAPI();
+    $agent.GetAPI();
+    if ($route.query.form) {
+        $user.config.form = $route.query.form;
+    }
 });
 </script>

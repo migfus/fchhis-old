@@ -1,45 +1,45 @@
 <template>
-  <div v-if="$route.meta.sideBar" class="wrapper">
-    <!-- NOTE HEADER -->
-    <HeaderTemplate />
+    <div v-if="$route.meta.sideBar" class="wrapper">
+        <!-- NOTE HEADER -->
+        <HeaderTemplate />
 
-    <div class="content-wrapper">
-      <!-- NOTE  BREADCRUMBS -->
-      <BreadCrumbTemplate :fluid="true" />
+        <div class="content-wrapper">
+            <!-- NOTE  BREADCRUMBS -->
+            <BreadCrumbTemplate :fluid="true" />
 
-      <!-- NOTE  PAGES -->
-      <section class="content">
-        <div class="container-fluid">
-          <RouterView></RouterView>
+            <!-- NOTE  PAGES -->
+            <section class="content">
+                <div class="container-fluid">
+                    <RouterView></RouterView>
+                </div>
+            </section>
+
         </div>
-      </section>
 
+        <!-- NOTE FOOTER -->
+        <FooterTemplate :fluid="true" />
     </div>
 
-    <!-- NOTE FOOTER -->
-    <FooterTemplate :fluid="true" />
-  </div>
+    <div v-else class="wrapper">
+        <!-- NOTE HEADER -->
+        <HeaderNoSideBar />
 
-  <div v-else class="wrapper">
-    <!-- NOTE HEADER -->
-    <HeaderNoSideBar />
+        <div class="content">
+            <!-- NOTE  BREADCRUMBS -->
+            <BreadCrumbTemplate :fluid="false" />
 
-    <div class="content">
-      <!-- NOTE  BREADCRUMBS -->
-      <BreadCrumbTemplate :fluid="false" />
+            <!-- NOTE  PAGES -->
+            <section class="content">
+                <div class="container">
+                    <RouterView></RouterView>
+                </div>
+            </section>
 
-      <!-- NOTE  PAGES -->
-      <section class="content">
-        <div class="container">
-          <RouterView></RouterView>
         </div>
-      </section>
 
+        <!-- NOTE FOOTER -->
+        <FooterTemplate :fluid="false" />
     </div>
-
-    <!-- NOTE FOOTER -->
-    <FooterTemplate :fluid="false" />
-  </div>
 </template>
 
 <script setup lang="ts">
@@ -57,6 +57,6 @@ const $route = useRoute();
 const $address = useAddressStore();
 
 onMounted(() => {
-  $address.GetAPI();
+    $address.GetAPI();
 });
 </script>

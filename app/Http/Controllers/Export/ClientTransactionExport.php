@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 
 class ClientTransactionExport extends Controller
 {
-  public function index(Request $req) {
-    return $req->user()->id;
-  }
+    public function index(Request $req) {
+        return $req->user()->id;
+    }
 }

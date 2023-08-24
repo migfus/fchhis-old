@@ -1,10 +1,10 @@
 <template>
-  <SummaryCards />
+    <SummaryCards />
 
-  <div class="row">
-    <ClientsCard />
-    <TransactionsCard />
-  </div>
+    <div class="row">
+        <ClientsCard />
+        <TransactionsCard />
+    </div>
 </template>
 
 <script setup>

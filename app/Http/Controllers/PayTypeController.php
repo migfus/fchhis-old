@@ -7,10 +7,10 @@ use App\Models\PayType;
 
 class PayTypeController extends Controller
 {
-  public function index(Request $req) {
-    return response()->json([
-      ...$this->G_ReturnDefault($req),
-      'data' => PayType::get()
-    ]);
-  }
+    public function index(Request $req) {
+        return response()->json([
+            ...$this->G_ReturnDefault($req),
+            'data' => PayType::get()
+        ]);
+    }
 }

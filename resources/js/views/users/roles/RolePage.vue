@@ -1,7 +1,7 @@
 <template>
-  <div class="row">
-    <ResponsiveCard v-if="$role.content" />
-  </div>
+    <div class="row">
+        <ResponsiveCard v-if="$role.content" />
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -12,7 +12,7 @@ import { useRoleStore } from '@/store/users/RoleStore';
 const $role = useRoleStore();
 
 onMounted(() => {
-  $role.GetAPI()
+    $role.GetAPI()
 });
 </script>
 

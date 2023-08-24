@@ -6,26 +6,26 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-  /**
-   * Run the migrations.
-   */
-  public function up(): void
-  {
-    Schema::create('phones', function (Blueprint $table) {
-      $table->id();
-      $table->unsignedInteger('person_id')->index();
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('phones', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedInteger('person_id')->index();
 
-      $table->decimal('phone', 10, 0);
+            $table->decimal('phone', 10, 0);
 
-      $table->timestamps();
-    });
-  }
+            $table->timestamps();
+        });
+    }
 
-  /**
-   * Reverse the migrations.
-   */
-  public function down(): void
-  {
-      Schema::dropIfExists('phones');
-  }
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('phones');
+    }
 };

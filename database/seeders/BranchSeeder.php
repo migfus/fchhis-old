@@ -12,14 +12,12 @@ class BranchSeeder extends Seeder
      */
     public function run(): void
     {
-      $data = [
-        [
-          'name' => 'Valencia City'
-        ]
-      ];
+        $data = [
+            ['name' => 'Valencia City']
+        ];
 
-      foreach($data as $row) {
-        \App\Models\Branch::create($row);
-      }
+        foreach($data as $row) {
+            \App\Models\Branch::create($row);
+        }
     }
 }

@@ -1,28 +1,28 @@
 <template>
-  <div class="row">
-    <!-- NOTE ADD/EDIT -->
-    <EditForm v-if="$user.config.form == 'update'" />
-    <ORForm v-if="$user.config.form == 'or'" />
-    <AddForm v-if="$user.config.form == 'add'" />
+    <div class="row">
+        <!-- NOTE ADD/EDIT -->
+        <EditForm v-if="$user.config.form == 'update'" />
+        <ORForm v-if="$user.config.form == 'or'" />
+        <AddForm v-if="$user.config.form == 'add'" />
 
-    <!-- NOTE REPORT -->
-    <!-- <ReportForm /> -->
+        <!-- NOTE REPORT -->
+        <!-- <ReportForm /> -->
 
-    <!-- <UserSummary /> -->
+        <!-- <UserSummary /> -->
 
-    <!-- NOTE SEARCH -->
-    <SearchComponent />
+        <!-- NOTE SEARCH -->
+        <SearchComponent />
 
-    <!-- NOTE TABLE -->
-    <!-- <TableComponent v-if="$user.config.tableView" /> -->
+        <!-- NOTE TABLE -->
+        <!-- <TableComponent v-if="$user.config.tableView" /> -->
 
-    <!-- NOTE MOBILE -->
-    <MobileComponent />
+        <!-- NOTE MOBILE -->
+        <MobileComponent />
 
-    <!-- NOTE PAGINATION -->
-    <PaginationComponent v-if="$user.content" />
+        <!-- NOTE PAGINATION -->
+        <PaginationComponent v-if="$user.content" />
 
-  </div>
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -44,6 +44,6 @@ const $user = useUsersStore();
 // const $plan = usePlanStore();
 
 onMounted(() => {
-  // $plan.GetAPI();
+    // $plan.GetAPI();
 });
 </script>

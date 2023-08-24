@@ -1,12 +1,12 @@
 <template>
-  <div class="row">
-    <AddForm v-if="$plan.config.form == 'add'" />
-    <EditForm v-if="$plan.config.form == 'update'" />
-    <PlanRanking />
-    <SearchCard />
+    <div class="row">
+        <AddForm v-if="$plan.config.form == 'add'" />
+        <EditForm v-if="$plan.config.form == 'update'" />
+        <PlanRanking />
+        <SearchCard />
 
-    <ResponsiveCard />
-  </div>
+        <ResponsiveCard />
+    </div>
 </template>
 
 <script setup>

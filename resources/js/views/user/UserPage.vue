@@ -1,18 +1,18 @@
 <template>
-  <div v-if="$user.content.user" class="row" :style="`background-image: url(${dead})`">
-    <div class="col-12 col-md-5">
-      <ProfileCard />
-      <TransactionAgentTable v-if="$user.content.user.role == 4" />
-      <BeneficiaryTable v-else />
-    </div>
+    <div v-if="$user.content.user" class="row" :style="`background-image: url(${dead})`">
+        <div class="col-12 col-md-5">
+            <ProfileCard />
+            <TransactionAgentTable v-if="$user.content.user.role == 4" />
+            <BeneficiaryTable v-else />
+        </div>
 
-    <div class="col-12 col-md-7">
-      <ClientTable v-if="$user.content.user.role == 4" />
-      <TransactionTable v-else />
-    </div>
+        <div class="col-12 col-md-7">
+            <ClientTable v-if="$user.content.user.role == 4" />
+            <TransactionTable v-else />
+        </div>
 
-    <ClaimModal />
-  </div>
+        <ClaimModal />
+    </div>
 </template>
 
 <script setup>
@@ -35,7 +35,7 @@ const $user = useUserDetailsStore();
 const $ben = useBeneficiaryStore();
 
 onMounted(() => {
-  $user.GetAPI($route.params.id)
+    $user.GetAPI($route.params.id)
 });
 // onUnmounted(() => {
 //   $user.params.id = null
@@ -44,7 +44,7 @@ onMounted(() => {
 
 <style scoped>
 .ribbon-wrapper {
-  left: 0 !important;
-  transform: rotate(270deg)
+    left: 0 !important;
+    transform: rotate(270deg)
 }
 </style>

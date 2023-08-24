@@ -10,12 +10,12 @@ use App\Mail\ForgotPasswordMailer;
 
 class TestPublicController extends Controller
 {
-  public function index() {
-    $mail = 'migfus20@gmail.com';
-    $data = [
-      'link' => 'https://google.com/account',
-      'code' => '123456'
-    ];
-    Mail::to($mail)->send(new ForgotPasswordMailer($data));
-  }
+    public function index() {
+        $mail = 'migfus20@gmail.com';
+        $data = [
+            'link' => 'https://google.com/account',
+            'code' => '123456'
+        ];
+        Mail::to($mail)->send(new ForgotPasswordMailer($data));
+    }
 }

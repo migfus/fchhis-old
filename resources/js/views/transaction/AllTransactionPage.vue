@@ -1,12 +1,12 @@
 <template>
-  <div class="row">
-    <AddForm v-if="$trans.config.form == 'add'" />
-    <UpdateForm v-if="$trans.config.form == 'update'" />
+    <div class="row">
+        <AddForm v-if="$trans.config.form == 'add'" />
+        <UpdateForm v-if="$trans.config.form == 'update'" />
 
-    <SearchComponent />
-    <ResponsiveCard />
-    <PaginationComponent v-if="$trans.content" />
-  </div>
+        <SearchComponent />
+        <ResponsiveCard />
+        <PaginationComponent v-if="$trans.content" />
+    </div>
 </template>
 
 <script setup>

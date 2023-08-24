@@ -1,39 +1,39 @@
 <template>
-  <div class="row">
-    <div class="col-12 col-md-4">
-      <NewUsersCard />
+    <div class="row">
+        <div class="col-12 col-md-4">
+            <NewUsersCard />
+        </div>
+
+        <div class="col-12 col-md-4">
+            <SemiAnnual />
+        </div>
+
+        <div class="col-12 col-md-4">
+            <AnnualCard />
+        </div>
+
+        <div class="col-12 col-md-4">
+            <TopAgentCard />
+        </div>
+
+        <div class="col-12 col-md-4 p-0">
+            <IncomeCard />
+        </div>
+
+        <div class="col-12 col-md-4 p-0">
+            <UsersCard />
+        </div>
+
+        <div class="col-12">
+            <UserList />
+        </div>
+
+        <div class="col-12">
+            <PlanRanking />
+        </div>
+
+
     </div>
-
-    <div class="col-12 col-md-4">
-      <SemiAnnual />
-    </div>
-
-    <div class="col-12 col-md-4">
-      <AnnualCard />
-    </div>
-
-    <div class="col-12 col-md-4">
-      <TopAgentCard />
-    </div>
-
-    <div class="col-12 col-md-4 p-0">
-      <IncomeCard />
-    </div>
-
-    <div class="col-12 col-md-4 p-0">
-      <UsersCard />
-    </div>
-
-    <div class="col-12">
-      <UserList />
-    </div>
-
-    <div class="col-12">
-      <PlanRanking />
-    </div>
-
-
-  </div>
 </template>
 
 <script setup>

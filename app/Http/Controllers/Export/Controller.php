@@ -10,5 +10,5 @@ use App\Models\User;
 
 class Controller extends BaseController
 {
-  use AuthorizesRequests, ValidatesRequests;
+    use AuthorizesRequests, ValidatesRequests;
 }

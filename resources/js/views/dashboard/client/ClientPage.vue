@@ -1,14 +1,14 @@
 <template>
-  <div class="row">
-    <div class="col-12 col-md-6">
-      <SummaryTransaction />
-      <BeneficiaryCard />
-    </div>
+    <div class="row">
+        <div class="col-12 col-md-6">
+            <SummaryTransaction />
+            <BeneficiaryCard />
+        </div>
 
-    <div class="col-12 col-md-6">
-      <TransactionsCard />
+        <div class="col-12 col-md-6">
+            <TransactionsCard />
+        </div>
     </div>
-  </div>
 </template>
 
 <script setup>

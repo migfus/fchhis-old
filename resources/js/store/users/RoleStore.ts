@@ -4,23 +4,23 @@ import axios from 'axios'
 
 const title = 'users/RoleStore'
 export const useRoleStore = defineStore(title, () => {
-  // DEBUG Add Type on 'content'
-  const content = useStorage(`${title}/content`, [], localStorage)
+    // DEBUG Add Type on 'content'
+    const content = useStorage(`${title}/content`, [], localStorage)
 
 
-  // SECTION API
-  async function GetAPI() {
-    try {
-      let { data : {data}} = await axios.get('/api/role')
-      content.value = data
+    // SECTION API
+    async function GetAPI() {
+        try {
+            let { data : {data}} = await axios.get('/api/role')
+            content.value = data
+        }
+        catch(e) {
+            console.log('RoleGetAPI Err', {e})
+        }
     }
-    catch(e) {
-      console.log('RoleGetAPI Err', {e})
-    }
-  }
 
-  return {
-    content,
-    GetAPI
-  }
+    return {
+        content,
+        GetAPI
+    }
 })

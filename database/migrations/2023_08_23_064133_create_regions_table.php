@@ -11,13 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-      Schema::create('regions', function (Blueprint $table) {
-        $table->id();
+        Schema::create('regions', function (Blueprint $table) {
+            $table->id();
 
-        $table->string('name')->unique();
+            $table->string('name')->unique();
 
-        $table->timestamps();
-      });
+            $table->timestamps();
+        });
     }
 
     /**
