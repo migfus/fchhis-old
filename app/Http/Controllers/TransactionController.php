@@ -15,18 +15,18 @@ class TransactionController extends Controller
         switch($req->user()->role) {
             case 2:
                 if($req->id)
-                return $this->AdminIDIndex($req);
+                    return $this->AdminIDIndex($req);
                 if($req->print)
-                return $this->AdminPrintIndex($req);
+                    return $this->AdminPrintIndex($req);
 
                 return $this->AdminIndex($req);
             case 4:
                 return $this->AgentIndex($req);
             case 5:
                 if($req->id)
-                return $this->StaffIDIndex($req);
+                    return $this->StaffIDIndex($req);
                 if($req->print)
-                return $this->StaffPrintIndex($req);
+                    return $this->StaffPrintIndex($req);
 
                 return $this->StaffIndex($req);
             case 6:

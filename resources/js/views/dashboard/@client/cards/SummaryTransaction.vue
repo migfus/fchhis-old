@@ -35,18 +35,18 @@
 </template>
 
 <script setup>
-import { useStatisticStore } from '@/store/dashboard/StatisticStore';
+import { useSummaryStore } from '@/store/@client/SummaryStore';
 import { NumberAddComma } from '@/helpers/converter'
-import { onMounted } from 'vue'
+import { onMounted, onUnmounted } from 'vue'
 
-const $stat = useStatisticStore();
+const $stat = useSummaryStore();
 
 onMounted(() => {
     $stat.GetAPI()
 });
 
-// onUnmounted(() => {
-//   $stat.content = []
-// });
+onUnmounted(() => {
+    $stat.CancelAPI()
+});
 </script>
 

@@ -10,7 +10,8 @@
                         placeholder="Search">
                     <div class="input-group-append">
                         <button type="submit" class="btn btn-default">
-                            <i class="fas fa-search"></i>
+                            <i v-if="$users.config.loading" class="fas fa-spinner fa-spin"></i>
+                            <i v-else class="fas fa-search"></i>
                         </button>
                     </div>
                 </div>
@@ -25,7 +26,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="row, idx in $users.content.data">
+                    <tr v-for="row in $users.content">
                         <td>{{ row.name }}</td>
                         <td>{{ AgeConverter(row.bday) }}</td>
                     </tr>
@@ -35,24 +36,22 @@
     </div>
 </template>
 
-<script setup>
-import { useUsersStore } from '@/store/users/UsersStore'
-import { onMounted } from 'vue'
+<script setup lang='ts'>
+import { useBeneficiariesStore } from '@/store/@client/BeneficiariesStore'
+import { onMounted, onUnmounted, watch } from 'vue'
 import { AgeConverter } from '@/helpers/converter'
-import { watch } from 'vue'
 import { throttle } from 'lodash'
 
-const $users = useUsersStore();
+const $users = useBeneficiariesStore();
 
 onMounted(() => {
-    $users.GetAPI(1)
-});
+    $users.GetAPI()
+})
+onUnmounted(() => {
+    $users.CancelAPI()
+})
 
 watch($users.query, throttle(() => {
-    $users.GetAPI(1)
-}, 1000));
-
-// onUnmounted(() => {
-//   $users.content = []
-// });
+    $users.GetAPI()
+}, 2000))
 </script>

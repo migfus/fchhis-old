@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Info;
+use App\Models\Beneficiary;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
@@ -193,7 +194,6 @@ class UserController extends Controller
 
         private function ClientIndex($req) {
             $val = Validator::make($req->all(), [
-                'sort' => 'required',
                 'search' => '',
             ]);
 
@@ -201,9 +201,9 @@ class UserController extends Controller
                 return $this->G_ValidatorFailResponse($val);
             }
 
-            $data = Info::where('client_id', $req->user()->info->id)
+            $data = Beneficiary::where('user_id', $req->user()->id)
                 ->where('name', 'LIKE', '%'.$req->search.'%')
-                ->paginate(10);
+                ->get();
 
             return response()->json([...$this->G_ReturnDefault($req), 'data' => $data]);
         }

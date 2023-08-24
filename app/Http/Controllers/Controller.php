@@ -22,7 +22,7 @@ class Controller extends BaseController
                 'auth' => [
                     'ip' => $_SERVER['REMOTE_ADDR'],
                     'auth' => $auth,
-                    'permissions' => $auth->getAllRoles(),
+                    'permissions' => $req->user()->getAllPermissions()->pluck('name'),
                 ],
             ];
         }

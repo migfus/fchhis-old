@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
 
             UserSeeder::class,
             InfoSeeder::class,
+            BeneficiarySeeder::class,
 
             PlanSeeder::class,
             TransactionSeeder::class,
