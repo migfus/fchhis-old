@@ -15,13 +15,13 @@ class DownHeadController extends Controller
       if($req->user()->role == 4) {
         $data = User::with([
             'plan',
-            'person',
+            'info',
             'pay_type',
           ])
           ->where('created_at', '>=', $req->start)
           ->where('created_at', '<=', $req->end)
           ->withSum('client_transactions', 'amount')
-          ->whereHas('person', function($q) use($req){
+          ->whereHas('info', function($q) use($req){
             $q->where('agent_id', $req->user()->id)
               ->where('lastName', 'LIKE', '%'.$req->search.'%');
           })

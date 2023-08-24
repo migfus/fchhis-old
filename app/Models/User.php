@@ -21,7 +21,6 @@ class User extends Authenticatable
       'name',
       'email',
       'password',
-      'person_id',
       'username',
       'avatar',
       'plan_id',
@@ -50,8 +49,8 @@ class User extends Authenticatable
       'email_verified_at' => 'datetime',
   ];
 
-  public function person() {
-    return $this->hasOne(Person::class);
+  public function info() {
+    return $this->hasOne(Info::class);
   }
 
   public function plan() {
@@ -59,7 +58,7 @@ class User extends Authenticatable
   }
 
   public function agent_users() {
-    return $this->hasMany(Person::class, 'agent_id');
+    return $this->hasMany(info::class, 'agent_id');
   }
 
   public function agent_transactions() {

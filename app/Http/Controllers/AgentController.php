@@ -15,7 +15,7 @@ class AgentController extends Controller
         ...$this->G_ReturnDefault(),
         'data' => User::where('role', 4)
           ->with([
-            'person' => function ($q) {
+            'info' => function ($q) {
               $q->orderBy('name', 'DESC');
             }
           ])

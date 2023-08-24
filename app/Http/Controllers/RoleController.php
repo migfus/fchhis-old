@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
-use App\Models\Person;
+use App\Models\Info;
 
 class RoleController extends Controller
 {
@@ -16,8 +16,8 @@ class RoleController extends Controller
           'icon' => 'fa-user-friends',
           'color' => 'success',
           'name' => 'Beneficiaries',
-          'count' => Person::with('user')->whereNotNull('client_id')->count(),
-          'top' => Person::with('user')
+          'count' => Info::with('user')->whereNotNull('client_id')->count(),
+          'top' => Info::with('user')
             ->whereNotNull('client_id')
             ->orderBy('created_at', 'DESC')
             ->limit(5)
@@ -28,12 +28,12 @@ class RoleController extends Controller
           'icon' => 'fa-child',
           'color' => 'success',
           'name' => 'Client',
-          'count' => Person::with('user')
+          'count' => Info::with('user')
             ->whereHas('user', function($q) {
               $q->where('role', 6);
             })
             ->count(),
-          'top' => Person::with('user')
+          'top' => Info::with('user')
             ->whereHas('user', function($q) {
               $q->where('role', 6);
             })
@@ -45,12 +45,12 @@ class RoleController extends Controller
           'icon' => 'fa-user-edit',
           'color' => 'info',
           'name' => 'Staff',
-          'count' => Person::with('user')
+          'count' => Info::with('user')
             ->whereHas('user', function($q) {
               $q->where('role', 5);
             })
             ->count(),
-          'top' => Person::with('user')
+          'top' => Info::with('user')
             ->whereHas('user', function($q) {
               $q->where('role', 5);
             })
@@ -62,12 +62,12 @@ class RoleController extends Controller
           'icon' => 'fa-handshake',
           'color' => 'purple',
           'name' => 'Agent',
-          'count' => Person::with('user')
+          'count' => Info::with('user')
             ->whereHas('user', function($q) {
               $q->where('role', 4);
             })
             ->count(),
-          'top' => Person::with('user')
+          'top' => Info::with('user')
             ->whereHas('user', function($q) {
               $q->where('role', 4);
             })
@@ -79,12 +79,12 @@ class RoleController extends Controller
           'icon' => 'fa-crown',
           'color' => 'warning',
           'name' => 'Admin',
-          'count' => Person::with('user')
+          'count' => Info::with('user')
             ->whereHas('user', function($q) {
               $q->where('role', 2);
             })
             ->count(),
-          'top' => Person::with('user')
+          'top' => Info::with('user')
             ->whereHas('user', function($q) {
               $q->where('role', 2);
             })

@@ -20,8 +20,8 @@ class ClientController extends Controller
     if($req->user()->role == 5) {
       $data = User::limit($req->limit)
         ->with([
-          'person.agent.person',
-          'person.staff.person',
+          'info.agent.info',
+          'info.staff.info',
           'plan',
         ])
         ->withSum('client_transactions', 'amount')

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Person;
+use App\Models\Info;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 
@@ -31,14 +31,14 @@ class BeneficiaryController extends Controller
 
     // NOTE ADMIN/AGENT
     if($req->user()->role == 6) {
-      $data = Person::whereNotNull('client_id')
+      $data = Info::whereNotNull('client_id')
         ->where('name', 'LIKE', '%'.$req->search.'%')
         ->get();
       return response()->json([...$this->G_ReturnDefault($req), 'data' => $data]);
     }
 
     if($req->user()->role == 5) {
-      $data = Beneficiary::where('person_id', User::where('id', $req->id)->first()->person->id)
+      $data = Beneficiary::where('info_id', User::where('id', $req->id)->first()->info->id)
         ->where(function($q) use($req) {
           $q->where('lastName', 'LIKE', '%'.$req->search.'%')
             ->orWhere('firstName', 'LIKE', '%'.$req->search.'%')
@@ -61,7 +61,7 @@ class BeneficiaryController extends Controller
       return $this->G_ValidatorFailResponse($val);
     }
 
-    $data = Person::with('user')->where('client_id', $req->id)->orderBy('name', 'ASC')->get();
+    $data = Info::with('user')->where('client_id', $req->id)->orderBy('name', 'ASC')->get();
 
     return response()->json([...$this->G_ReturnDefault(), 'data' => $data]);
   }
@@ -81,7 +81,7 @@ class BeneficiaryController extends Controller
 
     if($req->user()->role == 6 || $req->user()->role == 4) {
       $ben = Beneficiary::create([
-        'person_id' => User::where('id', $req->user()->id)->with('person')->first()->person->id,
+        'info_id' => User::where('id', $req->user()->id)->with('info')->first()->info->id,
         'lastName' => $req->lastName,
         'firstName' => $req->firstName,
         'midName' => $req->midName,
@@ -109,7 +109,7 @@ class BeneficiaryController extends Controller
     }
 
     if($req->user()->role == 6 || $req->user()->role == 4) {
-      if(Beneficiary::where('id', $id)->where('person_id', User::where('id', $req->user()->id)->with('person')->first()->person->id)) {
+      if(Beneficiary::where('id', $id)->where('info_id', User::where('id', $req->user()->id)->with('info')->first()->info->id)) {
         $ben = Beneficiary::where('id', $id)->update([
           'lastName' => $req->lastName,
           'firstName' => $req->firstName,
@@ -129,7 +129,7 @@ class BeneficiaryController extends Controller
 
   public function destroy($id, Request $req) {
     if($req->user()->role == 6 || $req->user()->role == 4) {
-      if(Beneficiary::where('id', $id)->where('person_id', User::where('id', $req->user()->id)->with('person')->first()->person->id)) {
+      if(Beneficiary::where('id', $id)->where('info_id', User::where('id', $req->user()->id)->with('info')->first()->info->id)) {
         $ben = Beneficiary::where('id', $id)->delete();
         return response()->json([...$this->G_ReturnDefault(), 'data' => $ben]);
       }

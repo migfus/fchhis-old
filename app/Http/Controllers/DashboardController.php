@@ -63,7 +63,7 @@ class DashboardController extends Controller
   }
 
   private function TopPerformer() {
-    return User::with(['person'])
+    return User::with(['info'])
       ->withSum('agent_transactions', 'amount')
       ->withCount('agent_transactions')
       ->orderBy('agent_transactions_sum_amount', 'DESC')
@@ -110,7 +110,7 @@ class DashboardController extends Controller
 
   public function Agent(Request $req) {
     $transactions = Transaction::where('client_id', $req->user()->id)
-      ->with(['client.person', 'staff.person', 'plan', 'pay_type'])
+      ->with(['client.info', 'staff.info', 'plan', 'pay_type'])
       ->orderBy('created_at', 'DESC')
       ->get();
 
@@ -131,14 +131,14 @@ class DashboardController extends Controller
 
 
     // NOTE AGENT PART
-    $clients = User::with('person')->paginate(10);
-    $tansCurrent = User::with('person')
-      ->whereHas('person', function($q) use($req) { $q->where('agent_id', $req->user()->id); } )
+    $clients = User::with('info')->paginate(10);
+    $tansCurrent = User::with('info')
+      ->whereHas('info', function($q) use($req) { $q->where('agent_id', $req->user()->id); } )
       ->where('created_at', '>=', Carbon::now()->startOfMonth())
       ->where('created_at', '<=', Carbon::now()->endOfMonth())
       ->count();
-    $transPast = User::with('person')
-    ->whereHas('person', function($q) use($req) { $q->where('agent_id', $req->user()->id); } )
+    $transPast = User::with('info')
+    ->whereHas('info', function($q) use($req) { $q->where('agent_id', $req->user()->id); } )
     ->where('created_at', '>=', Carbon::now()->subMonths(1)->startOfMonth())
     ->where('created_at', '<=', Carbon::now()->subMonths(1)->endOfMonth())
     ->count();
@@ -154,8 +154,8 @@ class DashboardController extends Controller
           'clients' => $clients,
         ],
         'counts' => [
-          'clients' => User::with(['person'])
-            ->whereHas('person', function($q) use($req) { $q->where('agent_id', $req->user()->id); })->count(),
+          'clients' => User::with(['info'])
+            ->whereHas('info', function($q) use($req) { $q->where('agent_id', $req->user()->id); })->count(),
           'transactions' => Transaction::where('agent_id', $req->user()->id)->count(),
           'inactive' => User::whereNotNull('OR')->whereNull('email')->count(),
           'current' => (($tansCurrent OR 1/ $transPast OR 1) * 100)
@@ -166,7 +166,7 @@ class DashboardController extends Controller
 
   public function Client(Request $req) {
     $transactions = Transaction::where('client_id', $req->user()->id)
-      ->with(['client.person', 'staff.person', 'plan', 'pay_type'])
+      ->with(['client.info', 'staff.info', 'plan', 'pay_type'])
       ->orderBy('created_at', 'DESC')
       ->get();
 
@@ -206,7 +206,7 @@ class DashboardController extends Controller
     $data = [
       'total' => User::where('role', 6)->count(),
       'clients' => User::where('role', 6)
-        ->whereHas('person', function($q) use($req){
+        ->whereHas('info', function($q) use($req){
           $q->where('staff_id', $req->user()->id);
         })
         ->count(),

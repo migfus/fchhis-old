@@ -21,15 +21,15 @@ class Transaction extends Model
   ];
 
   public function client() {
-    return $this->belongsTo(Person::class, 'client_id');
+    return $this->belongsTo(Info::class, 'client_id');
   }
 
   public function staff() {
-    return $this->belongsTo(Person::class, 'staff_id');
+    return $this->belongsTo(Info::class, 'staff_id');
   }
 
   public function agent() {
-    return $this->belongsTo(Person::class, 'agent_id');
+    return $this->belongsTo(Info::class, 'agent_id');
   }
 
   public function plan() {

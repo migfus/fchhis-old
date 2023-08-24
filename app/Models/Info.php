@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Person extends Model
+class Info extends Model
 {
     use HasFactory;
 
@@ -34,7 +34,7 @@ class Person extends Model
   }
 
   public function agent() {
-    return $this->belongsTo(Person::class, 'agent_id');
+    return $this->belongsTo(User::class, 'agent_id');
   }
 
   public function agent_transactions() {
@@ -42,11 +42,11 @@ class Person extends Model
   }
 
   public function agent_clients() {
-    return $this->hasMany(Person::class, 'agent_id');
+    return $this->hasMany(User::class, 'agent_id');
   }
 
   public function staff() {
-    return $this->belongsTo(Person::class, 'staff_id');
+    return $this->belongsTo(User::class, 'staff_id');
   }
 
   public function plan() {

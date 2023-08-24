@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
-use App\Models\Person;
+use App\Models\Info;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ForgotPasswordMailer;
 use Carbon\Carbon;
@@ -23,7 +23,7 @@ class AuthController extends Controller
       return $this->G_ValidatorFailResponse($val);
     }
 
-    $user = User::where('email', $req->email)->orWhere('username', $req->email)->with('person')->first();
+    $user = User::where('email', $req->email)->orWhere('username', $req->email)->with('info')->first();
     if(!$user || !Hash::check($req->password, $user->password)) {
       return response()->json(['status' => false, 'message' => 'Invalid Credential!'], 401);
     }
@@ -81,7 +81,7 @@ class AuthController extends Controller
       return $this->G_ValidatorFailResponse($val);
     }
 
-    $user = Person::where('or', $req->or)->whereNull('bday')->first();
+    $user = Info::where('or', $req->or)->whereNull('bday')->first();
     if($user) {
       return response()->json(['data' => $user]);
     }
@@ -111,7 +111,7 @@ class AuthController extends Controller
       return $this->G_ValidatorFailResponse($val);
     }
 
-    if(Person::where('or', $req->or)->whereNull('bday')->first()) {
+    if(Info::where('or', $req->or)->whereNull('bday')->first()) {
 
 
       $avatar = null;
@@ -127,7 +127,7 @@ class AuthController extends Controller
         'avatar'   => $avatar,
       ]);
 
-      $person = Person::where('user_id', $user->id)->update([
+      $info = Info::where('user_id', $user->id)->update([
         'name'      => $req->name,
         'bday'      => $req->bday,
         'bplace_id' => $req->bplace_id,
@@ -144,7 +144,7 @@ class AuthController extends Controller
 
   public function Profile(Request $req) {
     return response()->json([
-      'data' => User::where('id', $req->user()->id)->with('person')->first(),
+      'data' => User::where('id', $req->user()->id)->with('info')->first(),
     ], 200);
   }
 
@@ -209,19 +209,19 @@ class AuthController extends Controller
   }
 
   private function StaffOverdue($req) {
-    $grace = Person::whereNotNull('due_at')->where('due_at', '<=', Carbon::now())->count();
-    $overdue = Person::whereNotNull('due_at')->where('due_at', '<=', Carbon::now()->subMonth(2))->count();
+    $grace = Info::whereNotNull('due_at')->where('due_at', '<=', Carbon::now())->count();
+    $overdue = Info::whereNotNull('due_at')->where('due_at', '<=', Carbon::now()->subMonth(2))->count();
 
     return response()->json([...$this->G_ReturnDefault($req), 'data' => ['grace' => $grace, 'overdue' => $overdue]]);
   }
 
   public function Claim(Request $req, $id) {
     if($req->user()->role == 2 || $req->user()->role == 5) {
-      if(Person::where('id', $id)->whereNull('fulfilled_at')->first()) {
-        Person::where('id', $id)->update([ 'fulfilled_at' => Carbon::now()]);
+      if(Info::where('id', $id)->whereNull('fulfilled_at')->first()) {
+        Info::where('id', $id)->update([ 'fulfilled_at' => Carbon::now()]);
       }
       else {
-        Person::where('id', $id)->update([ 'fulfilled_at' => null]);
+        Info::where('id', $id)->update([ 'fulfilled_at' => null]);
       }
 
       return response()->json([...$this->G_ReturnDefault($req), 'data' => true]);

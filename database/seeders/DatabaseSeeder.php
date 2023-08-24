@@ -13,7 +13,7 @@ class DatabaseSeeder extends Seeder
         BranchSeeder::class,
 
         UserSeeder::class,
-        PersonSeeder::class,
+        InfoSeeder::class,
 
         PlanSeeder::class,
         TransactionSeeder::class,

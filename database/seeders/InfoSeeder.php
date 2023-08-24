@@ -97,12 +97,12 @@ class PersonSeeder extends Seeder
       ];
 
       foreach($data as $row) {
-        \App\Models\Person::create($row);
+        \App\Models\Info::create($row);
       }
 
       $faker = \Faker\Factory::create();
       foreach(range(1,10) as $idx) {
-        \App\Models\Person::create([
+        \App\Models\Info::create([
           'id' => $idx + 7,
           'user_id'   => $idx + 7,
           'staff_id' => 5,

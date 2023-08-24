@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-      Schema::create('people', function (Blueprint $table) {
+      Schema::create('infos', function (Blueprint $table) {
         $table->id();
         $table->unsignedBigInteger('user_id')->index();
         $table->unsignedBigInteger('staff_id')->index();
@@ -30,11 +30,7 @@ return new class extends Migration
         $table->date('fulfilled_at')->nullable();
         $table->string('or')->nullable();
 
-        // $table->foreign('user_id')->reference('id')->on('users')->onDelete('cascade');
-
-
         $table->timestamps();
-
       });
     }
 
@@ -43,6 +39,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('people');
+        Schema::dropIfExists('infos');
     }
 };

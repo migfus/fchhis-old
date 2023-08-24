@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Transaction;
-use App\Models\Person;
+use App\Models\Info;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
 
@@ -46,7 +46,7 @@ class TransactionController extends Controller
       return $this->G_ValidatorFailResponse($val);
     }
 
-    $data = Transaction::where('client_id', $req->user()->person->id)
+    $data = Transaction::where('client_id', $req->user()->info->id)
       ->with(['plan', 'pay_type', 'client', 'staff'])
       ->whereHas('plan', function($q) use($req) {
         $q->where('name', 'LIKE', '%' . $req->search. '%');
@@ -54,7 +54,7 @@ class TransactionController extends Controller
       ->orderBy('created_at', $req->sort)
       ->paginate(10);
 
-    $sum = Transaction::where('client_id', $req->user()->person->id)->sum('amount');
+    $sum = Transaction::where('client_id', $req->user()->info->id)->sum('amount');
 
     return response()->json([
       ...$this->G_ReturnDefault($req),
@@ -75,14 +75,14 @@ class TransactionController extends Controller
     }
 
     if($req->print) {
-      $data = Transaction::where('agent_id', $req->user()->person->id)
+      $data = Transaction::where('agent_id', $req->user()->info->id)
         ->with(['plan', 'pay_type', 'client', 'staff'])
         ->where('created_at', '>=', $req->start)
         ->where('created_at', '<=', $req->end)
         ->orderBy('created_at', 'DESC')
         ->get();
 
-      $sum = Transaction::where('agent_id', $req->user()->person->id)->sum('amount');
+      $sum = Transaction::where('agent_id', $req->user()->info->id)->sum('amount');
 
       return response()->json([
         ...$this->G_ReturnDefault($req),
@@ -91,7 +91,7 @@ class TransactionController extends Controller
       ]);
     }
     else {
-      $data = Transaction::where('agent_id', $req->user()->person->id)
+      $data = Transaction::where('agent_id', $req->user()->info->id)
         ->with(['plan', 'pay_type', 'client', 'staff'])
         ->whereHas('client', function($q) use($req) {
           $q->where('name', 'LIKE', '%' . $req->search. '%');
@@ -101,7 +101,7 @@ class TransactionController extends Controller
         ->orderBy('created_at', 'DESC')
         ->paginate(10);
 
-      $sum = Transaction::where('agent_id', $req->user()->person->id)->sum('amount');
+      $sum = Transaction::where('agent_id', $req->user()->peinforson->id)->sum('amount');
 
       return response()->json([
         ...$this->G_ReturnDefault($req),
@@ -171,7 +171,7 @@ class TransactionController extends Controller
 
 
 
-      $sum = Transaction::where('agent_id', $req->user()->person->id)->sum('amount');
+      $sum = Transaction::where('agent_id', $req->user()->info->id)->sum('amount');
 
       return response()->json([
         ...$this->G_ReturnDefault($req),
@@ -239,7 +239,7 @@ class TransactionController extends Controller
         'agent.user'
       ]);
 
-      $sum = Transaction::where('agent_id', $req->user()->person->id)->sum('amount');
+      $sum = Transaction::where('agent_id', $req->user()->info->id)->sum('amount');
 
       return response()->json([
         ...$this->G_ReturnDefault($req),
@@ -308,7 +308,7 @@ class TransactionController extends Controller
 
 
 
-      $sum = Transaction::where('agent_id', $req->user()->person->id)->sum('amount');
+      $sum = Transaction::where('agent_id', $req->user()->info->id)->sum('amount');
 
       return response()->json([
         ...$this->G_ReturnDefault($req),
@@ -376,7 +376,7 @@ class TransactionController extends Controller
         'agent.user'
       ]);
 
-      $sum = Transaction::where('agent_id', $req->user()->person->id)->sum('amount');
+      $sum = Transaction::where('agent_id', $req->user()->info->id)->sum('amount');
 
       return response()->json([
         ...$this->G_ReturnDefault($req),
@@ -415,14 +415,14 @@ class TransactionController extends Controller
     Transaction::create([
       'or' => $req->or,
       'agent_id' => $req->agent['id'],
-      'staff_id' => $req->user()->person->id,
+      'staff_id' => $req->user()->info->id,
       'client_id' => $req->client['id'],
       'pay_type_id' => $req->pay_type_id,
       'plan_id' => $req->plan['id'],
       'amount' => $req->amount,
     ]);
 
-    $due = Person::where('id', $req->client['id'])->first()->due_at;
+    $due = Info::where('id', $req->client['id'])->first()->due_at;
 
     switch($req->pay_type_id) {
       case 2:
@@ -439,7 +439,7 @@ class TransactionController extends Controller
         $due = Carbon::create($due)->addMonth(1);
     }
 
-    Person::where('id', $req->client['id'])->update(['due_at' => $due]);
+    Info::where('id', $req->client['id'])->update(['due_at' => $due]);
 
     return response()->json([...$this->G_ReturnDefault($req), 'data' => true]);
 
@@ -463,14 +463,14 @@ class TransactionController extends Controller
     Transaction::create([
       'or' => $req->or,
       'agent_id' => $req->agent['id'],
-      'staff_id' => $req->user()->person->id,
+      'staff_id' => $req->user()->info->id,
       'client_id' => $req->client['id'],
       'pay_type_id' => $req->pay_type_id,
       'plan_id' => $req->plan['id'],
       'amount' => $req->amount,
     ]);
 
-    $due = Person::where('id', $req->client['id'])->first()->due_at;
+    $due = Info::where('id', $req->client['id'])->first()->due_at;
 
     switch($req->pay_type_id) {
       case 2:
@@ -487,7 +487,7 @@ class TransactionController extends Controller
         $due = Carbon::create($due)->addMonth(1);
     }
 
-    Person::where('id', $req->client['id'])->update(['due_at' => $due]);
+    Info::where('id', $req->client['id'])->update(['due_at' => $due]);
 
     return response()->json([...$this->G_ReturnDefault($req), 'data' => true]);
 
@@ -521,7 +521,7 @@ class TransactionController extends Controller
     }
 
     Transaction::where('id', $id)
-      ->where('staff_id', $req->user()->person->id)
+      ->where('staff_id', $req->user()->info->id)
       ->update([
         'or' => $req->or,
         'agent_id' => $req->agent['id'],
@@ -550,7 +550,7 @@ class TransactionController extends Controller
     }
 
     Transaction::where('id', $id)
-      ->where('staff_id', $req->user()->person->id)
+      ->where('staff_id', $req->user()->info->id)
       ->update([
         'or' => $req->or,
         'agent_id' => $req->agent['id'],
@@ -587,12 +587,12 @@ class TransactionController extends Controller
       }
 
       $trans->with([
-        'client.person',
+        'client.info',
         'client' => function ($q) {
           $q->withSum('client_transactions', 'amount');
         },
-        'staff.person',
-        'agent.person',
+        'staff.info',
+        'agent.info',
         'plan',
         'pay_type'
       ]);
