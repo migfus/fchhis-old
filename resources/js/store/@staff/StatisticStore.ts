@@ -2,6 +2,33 @@ import { defineStore } from 'pinia'
 import axios from 'axios'
 import { useStorage, StorageSerializers } from '@vueuse/core'
 
+type contentIn = {
+    agent: {
+        current: number
+        total: number
+    }
+    beneficiaries: {
+        current: number
+        total: number
+    }
+    total: {
+        current: number
+        total: number
+    }
+    clients: {
+        current: number
+        total: number
+    }
+    transactions: {
+        current: number
+        total: number
+    }
+    deceased: {
+        current: number
+        total: number
+    }
+}
+
 const title = '@staff/StatisticStore'
 
 export const useStatisticStore = defineStore(title, () => {
@@ -9,7 +36,7 @@ export const useStatisticStore = defineStore(title, () => {
     let cancel;
 
     // DEBUG please fill type of 'content'
-    const content = useStorage(`${title}/content`, null, localStorage, { serializer: StorageSerializers.object })
+    const content = useStorage<contentIn>(`${title}/content`, null, localStorage, { serializer: StorageSerializers.object })
     const config = useStorage<{loading: boolean}>(`${title}/config`, { loading: false }, localStorage, { serializer: StorageSerializers.object })
 
   // SECTION API

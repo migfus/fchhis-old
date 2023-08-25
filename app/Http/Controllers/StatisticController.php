@@ -69,31 +69,32 @@ class StatisticController extends Controller
             return response()->json([
                 ...$this->G_ReturnDefault($req),
                 'data' => [
-                    'deceased' => User::role(['deceased', 'claimed'])->count(),
-                    'transactions' => Transaction::where('created_at', '>=', Carbon::now()->startOfMonth())
-                        ->where('created_at', '<=', Carbon::now()->endOfMonth())
-                        ->sum('amount'),
-                    'clients' => User::with(['info'])
-                        ->where('created_at', '>=', Carbon::now()->startOfMonth())
-                        ->where('created_at', '<=', Carbon::now()->endOfMonth())
-                        ->role('client')
-                        // ->whereHas('user', function($q) {
-                        //     $q->where('role', 6);
-                        // })
-                        ->count(),
-                    'total' => User::with(['info'])
-                        ->role('client')
-                        // ->whereHas('user', function($q) {
-                        //     $q->where('role', 6);
-                        // })
-                        ->count(),
-                    'agents' => User::with(['info'])
-                        ->role('agent')
-                        // ->whereHas('user', function($q) {
-                        //     $q->where('role', 4);
-                        // })
-                        ->count(),
-                    'beneficiaries' => Beneficiary::count(),
+                    'deceased' => [
+                        'current' => User::where('created_at', '>=', Carbon::now()->startOfMonth())
+                            ->where('created_at', '<=', Carbon::now()->endOfMonth())->role(['deceased', 'claimed'])->count(),
+                        'total'   => User::role(['deceased', 'claimed'])->count(),
+                    ],
+                    'transactions' => [
+                        'current' => Transaction::where('created_at', '>=', Carbon::now()->startOfMonth())->where('created_at', '<=', Carbon::now()->endOfMonth())->sum('amount'),
+                        'total'   => Transaction::sum('amount')
+                    ],
+                    'clients' => [
+                        'current' => User::with('info')->where('created_at', '>=', Carbon::now()->startOfMonth())->where('created_at', '<=', Carbon::now()->endOfMonth())->role('client')->count(),
+                        'total'   => User::with('info')->role('client')->count(),
+                    ],
+                    'total' => [
+                        'current' => User::with('info')->where('created_at', '>=', Carbon::now()->startOfMonth())->where('created_at', '<=', Carbon::now()->endOfMonth())->role('client')->role('client')->count(),
+                        'total'   => User::with('info')->role('client')->count(),
+                    ],
+                    'agents' => [
+                        'current' => User::with('info')->where('created_at', '>=', Carbon::now()->startOfMonth())->where('created_at', '<=', Carbon::now()->endOfMonth())->role('agent')->count(),
+                        'total'   => User::with('info')->role('agent')->count(),
+                    ],
+                    'beneficiaries' => [
+                        'current' => Beneficiary::where('created_at', '>=', Carbon::now()->startOfMonth())->where('created_at', '<=', Carbon::now()->endOfMonth())->count(),
+                        'total'  => Beneficiary::count(),
+                    ]
+
                 ]
             ]);
         }
