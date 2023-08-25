@@ -13,7 +13,7 @@
 
         <!-- SECTION STAFF -->
         <div v-else-if="$auth.content.auth.role == 5">
-            <!-- <StaffCard v-if="$stat.content" /> -->
+            <StaffCard />
         </div>
 
         <!-- SECTION CLIENT -->
@@ -30,8 +30,9 @@ import { onMounted } from 'vue';
 import { useAuthStore } from '@/store/auth/AuthStore'
 
 import ClientDashboard from './@client/ClientPage.vue';
+import StaffCard from './@staff/StaffCard.vue';
+
 import AgentCard from './agent/AgentCard.vue';
-import StaffCard from './staff/StaffCard.vue';
 import AdminPage from './admin/AdminPage.vue';
 
 // const $stat = useStatisticStore();

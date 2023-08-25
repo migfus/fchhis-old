@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use App\Models\Transaction;
 use App\Models\User;
 use App\Models\Info;
+use App\Models\Beneficiary;
 use Illuminate\Support\Facades\DB;
 
 class StatisticController extends Controller
@@ -26,7 +27,7 @@ class StatisticController extends Controller
             return $this->G_UnauthorizedResponse();
         }
     }
-
+        // NOTE DONE
         private function ClientIndex($req) {
             $start = Carbon::parse(
                 Transaction::where('client_id', $req->user()->info->id)
@@ -62,35 +63,37 @@ class StatisticController extends Controller
             ]);
         }
 
+        // NOTE PROGRESS
         private function StaffIndex($req) {
 
             return response()->json([
                 ...$this->G_ReturnDefault($req),
                 'data' => [
-                    'deceased' => Info::whereNotNull('fulfilled_at')->count(),
+                    'deceased' => User::role(['deceased', 'claimed'])->count(),
                     'transactions' => Transaction::where('created_at', '>=', Carbon::now()->startOfMonth())
                         ->where('created_at', '<=', Carbon::now()->endOfMonth())
                         ->sum('amount'),
-                    'clients' => Info::with(['user'])
+                    'clients' => User::with(['info'])
                         ->where('created_at', '>=', Carbon::now()->startOfMonth())
                         ->where('created_at', '<=', Carbon::now()->endOfMonth())
-                        ->whereHas('user', function($q) {
-                            $q->where('role', 6);
-                        })
-                        >count(),
-                    'total' => Info::with(['user'])
-                        ->whereHas('user', function($q) {
-                            $q->where('role', 6);
-                        })
+                        ->role('client')
+                        // ->whereHas('user', function($q) {
+                        //     $q->where('role', 6);
+                        // })
                         ->count(),
-                    'agents' => Info::with(['user'])
-                        ->whereHas('user', function($q) {
-                            $q->where('role', 4);
-                        })
+                    'total' => User::with(['info'])
+                        ->role('client')
+                        // ->whereHas('user', function($q) {
+                        //     $q->where('role', 6);
+                        // })
                         ->count(),
-                    'beneficiaries' => Info::with(['user'])
-                        ->whereNotNull('client_id')
+                    'agents' => User::with(['info'])
+                        ->role('agent')
+                        // ->whereHas('user', function($q) {
+                        //     $q->where('role', 4);
+                        // })
                         ->count(),
+                    'beneficiaries' => Beneficiary::count(),
                 ]
             ]);
         }

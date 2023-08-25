@@ -21,36 +21,53 @@ class RoleAndPermissionSeeder extends Seeder
             // NOTE ABLE TO UPDATE PROFILE
             Permission::create(['name' => 'update auth']);
 
+            // SECTION USERS
+            Permission::create(['name' => 'index client']);
+
 
 
         // SECTION ADMIN
         $role = Role::create(['name' => 'admin']);
             $role->givePermissionTo([
-                'index auth', 'update auth'
+                'index auth', 'update auth',
+                'index client'
             ]);
 
         // SECTION MANAGER
         $role = Role::create(['name' => 'manager']);
             $role->givePermissionTo([
-                'index auth', 'update auth'
+                'index auth', 'update auth',
             ]);
 
         // SECTION STAFF
         $role = Role::create(['name' => 'staff']);
             $role->givePermissionTo([
-                'index auth', 'update auth'
+                'index auth', 'update auth',
+                'index client'
             ]);
 
         // SECTION AGENT
         $role = Role::create(['name' => 'agent']);
             $role->givePermissionTo([
-                'index auth', 'update auth'
+                'index auth', 'update auth',
             ]);
 
         // SECTION CLIENT
         $role = Role::create(['name' => 'client']);
             $role->givePermissionTo([
-                'index auth', 'update auth'
+                'index auth', 'update auth',
+            ]);
+
+        // SECTION DECEASED
+        $role = Role::create(['name' => 'deceased']);
+            $role->givePermissionTo([
+                'index auth', 'update auth',
+            ]);
+
+        // SECTION CLAIMED
+        $role = Role::create(['name' => 'claimed']);
+            $role->givePermissionTo([
+                'index auth', 'update auth',
             ]);
     }
 }

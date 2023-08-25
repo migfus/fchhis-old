@@ -57,7 +57,7 @@
                 <div class="info-box">
                     <span class="info-box-icon bg-secondary"><i class="fas fa-book-medical"></i></span>
                     <div class="info-box-content">
-                        <span class="info-box-text">Deceased Clients</span>
+                        <span class="info-box-text">Deceased/Claimed</span>
                         <span class="info-box-number">{{ $stat.content.deceased }}</span>
                     </div>
                 </div>
@@ -65,15 +65,23 @@
 
         </div>
 
-        <ClientsCard />
+        <!-- <ClientsCard /> -->
     </div>
 </template>
 
-<script setup>
-import { useStatisticStore } from '@/store/dashboard/StatisticStore'
+<script setup lang="ts">
+import { useStatisticStore } from '@/store/@staff/StatisticStore'
 import { NumberAddComma } from '@/helpers/converter'
+import { onMounted, onUnmounted } from 'vue'
 
-import ClientsCard from './ClientsCard.vue';
+// import ClientsCard from './ClientsCard.vue';
 
 const $stat = useStatisticStore();
+
+onMounted(() => {
+    $stat.GetAPI()
+})
+onUnmounted(() => {
+    $stat.CancelAPI()
+})
 </script>

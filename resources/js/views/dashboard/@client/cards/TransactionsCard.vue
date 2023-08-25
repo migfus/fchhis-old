@@ -66,7 +66,7 @@
 
 
 <script setup lang='ts'>
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, watch, onUnmounted } from 'vue'
 import moment from 'moment'
 import { useTransactionStore } from '@/store/@client/TransactionStore'
 import { NumberAddComma } from '@/helpers/converter'

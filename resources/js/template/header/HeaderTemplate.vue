@@ -57,6 +57,20 @@
                         </RouterLink>
                     </li>
 
+                    <li class="nav-header">
+                        <div>USERS</div>
+                    </li>
+
+                    <li v-if="can('index', 'client')" class="nav-item">
+                        <RouterLink :to="{ name: 'users-clients' }"
+                            :class="`${$route.name == 'users-clients' ? 'active' : ''} nav-link`">
+                            <i class="nav-icon fas fa-users"></i>
+                            <p>
+                                Clients
+                            </p>
+                        </RouterLink>
+                    </li>
+
                     <!-- SECTION AUTH -->
                     <li class="nav-header">
                         <div>MY ACCOUNT</div>
@@ -164,11 +178,6 @@ const isStaff = computed(() => {
                     icon: 'fa-exclamation-circle',
                     link: { name: 'users-overdue' },
                     span: { content: 1, color: 'danger' }
-                },
-                {
-                    name: 'Clients',
-                    icon: 'fa-users',
-                    link: { name: 'users-clients' }
                 },
 
                 {

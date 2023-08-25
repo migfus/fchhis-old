@@ -98,8 +98,8 @@ const input = reactive<inputInt>({
 });
 
 onMounted(() => {
-    input.email = '',
-        input.password = ''
+    input.email = 'staff@gmail.com'
+    input.password = '12345678'
 
     if ($route.query.email) {
         input.email = $route.query.email.toString()
