@@ -17,7 +17,7 @@ class ClientController extends Controller
             return $this->G_ValidatorFailResponse($val);
         }
 
-        if($req->user()->role == 5) {
+        if($req->user()->hasRole('staff')) {
             $data = User::limit($req->limit)
                 ->with([
                     'info.agent.info',

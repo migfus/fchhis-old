@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('infos', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id')->index();
+
             $table->unsignedBigInteger('staff_id')->index();
             $table->unsignedBigInteger('agent_id')->index();
-            $table->unsignedBigInteger('client_id')->index()->nullable(); // NOTE for Beneficiaries Option
             $table->unsignedTinyInteger('pay_type_id')->nullable();
             $table->unsignedTinyInteger('plan_id')->nullable();
 

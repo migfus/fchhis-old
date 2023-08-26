@@ -206,14 +206,11 @@ class AuthController extends Controller
 
     // SECTION OVERDUE
     public function Overdue(Request $req) {
-        switch($req->user()->role) {
-            case 5:
-                return $this->StaffOverdue($req);
-            case 2:
-                return $this->StaffOverdue($req);
-            default:
-                return $this->G_UnauthorizedResponse();
+        if($req->user()->hasRole('admin') || $req->user()->hasRole('staff')) {
+            return $this->StaffOverdue($req);
         }
+
+        return $this->G_UnauthorizedResponse();
     }
 
         private function StaffOverdue($req) {
@@ -224,7 +221,7 @@ class AuthController extends Controller
         }
 
     public function Claim(Request $req, $id) {
-        if($req->user()->role == 2 || $req->user()->role == 5) {
+        if($req->user()->hasRole('admin') || $req->user()->hasRole('staff')) {
             if(Info::where('id', $id)->whereNull('fulfilled_at')->first()) {
                 Info::where('id', $id)->update([ 'fulfilled_at' => Carbon::now()]);
             }

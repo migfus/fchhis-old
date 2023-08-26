@@ -21,7 +21,6 @@ class UserSeeder extends Seeder
             'email'    => 'admin@gmail.com',
             'password' => Hash::make('12345678'),
             'avatar'   => 'https://cdn1.iconfinder.com/data/icons/user-pictures/100/female1-512.png',
-            'role'     => 2,
         ])->assignRole('admin');
 
         // NOTE MANAGER
@@ -36,7 +35,6 @@ class UserSeeder extends Seeder
             'email'    => 'agent@gmail.com',
             'password' => Hash::make('12345678'),
             'avatar'   => 'https://cdn1.iconfinder.com/data/icons/user-pictures/100/female1-512.png',
-            'role'     => 4,
         ])->assignRole('agent');
 
         // NOTE STAFF
@@ -48,7 +46,6 @@ class UserSeeder extends Seeder
             'email'    => 'staff@gmail.com',
             'password' => Hash::make('12345678'),
             'avatar'   => 'https://cdn1.iconfinder.com/data/icons/user-pictures/100/female1-512.png',
-            'role'     => 5,
         ])->assignRole('staff');
 
         // NOTE CLIENT
@@ -60,7 +57,6 @@ class UserSeeder extends Seeder
             'email'    => 'client@gmail.com',
             'password' => Hash::make('12345678'),
             'avatar'   => 'https://cdn1.iconfinder.com/data/icons/user-pictures/100/female1-512.png',
-            'role'     => 6,
         ])->assignRole('client');
 
         // NOTE CLIENTS DUMMY
@@ -75,7 +71,6 @@ class UserSeeder extends Seeder
                 'avatar'   => $faker->gravatarUrl(),
                 'email'    => $faker->email,
                 'password' => Hash::make('12345678'),
-                'role'     => 6,
             ])->assignRole('client');
         }
     }

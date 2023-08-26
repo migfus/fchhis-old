@@ -13,7 +13,7 @@ class AgentController extends Controller
      * **/
     public function index(Request $req) {
         // SECTION AGENT & STAFF
-        if($req->user()->role == 2 || $req->user()->role == 5) {
+        if($req->user()->hasRole('admin') || $req->user()->hasRole('agent')) {
 
         return response()->json([
             ...$this->G_ReturnDefault(),

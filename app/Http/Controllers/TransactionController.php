@@ -12,28 +12,30 @@ class TransactionController extends Controller
 {
     // SECTION INDEX
     public function index(Request $req) {
-        switch($req->user()->role) {
-            case 2:
-                if($req->id)
-                    return $this->AdminIDIndex($req);
-                if($req->print)
-                    return $this->AdminPrintIndex($req);
+        if($req->user()->hasRole('admin')) {
+            if($req->id)
+                return $this->AdminIDIndex($req);
+            if($req->print)
+                return $this->AdminPrintIndex($req);
 
                 return $this->AdminIndex($req);
-            case 4:
-                return $this->AgentIndex($req);
-            case 5:
-                if($req->id)
-                    return $this->StaffIDIndex($req);
-                if($req->print)
-                    return $this->StaffPrintIndex($req);
+        }
+        else if($req->user()->hasRole('agent')) {
+            return $this->AgentIndex($req);
+        }
+        else if($req->user()->hasRole('staff')) {
+            if($req->id)
+                return $this->StaffIDIndex($req);
+            if($req->print)
+                return $this->StaffPrintIndex($req);
 
                 return $this->StaffIndex($req);
-            case 6:
-                return $this->ClientIndex($req);
-            default:
-                return $this->G_UnauthorizedResponse();
         }
+        else if($req->user()->hasRole('client')) {
+            return $this->ClientIndex($req);
+        }
+
+        return $this->G_UnauthorizedResponse();
     }
 
         private function ClientIndex($req) {
@@ -385,14 +387,14 @@ class TransactionController extends Controller
 
     // SECTION STORE
     public function store(Request $req) {
-        switch($req->user()->role) {
-            case 2:
-                return $this->AdminStore($req);
-            case 5:
-                return $this->StaffStore($req);
-            default:
-                return $this->G_UnauthorizedResponse();
+        if($req->user()->hasRole('admin')) {
+            return $this->AdminStore($req);
         }
+        else if($req->user()->hasRole('staff')) {
+            return $this->StaffStore($req);
+        }
+
+        return $this->G_UnauthorizedResponse();
     }
 
         private function StaffStore($req) {
@@ -491,116 +493,120 @@ class TransactionController extends Controller
 
     // SECTION UPDATE
     public function update(Request $req, string $id) {
-        switch($req->user()->role) {
-            case 2:
-                return $this->AdminUpdate($req, $id);
-            case 5:
-                return $this->StaffUpdate($req, $id);
-            default:
-                return $this->G_UnauthorizedResponse();
+        if($req->user()->hasRole('admin')) {
+            return $this->AdminUpdate($req, $id);
         }
-    }
-
-    private function StaffUpdate($req, $id){
-        $val = Validator::make($req->all(), [
-            'agent.id' => 'required',
-            'client.id' => 'required',
-            'amount' => 'required',
-            'or' => 'required',
-            'pay_type_id' => 'required',
-            'plan.id' => 'required',
-            'or'
-        ]);
-
-        if($val->fails()) {
-            return $this->G_ValidatorFailResponse($val);
+        else if($req->user()->hasRole('staff')) {
+            return $this->StaffUpdate($req, $id);
         }
 
-        Transaction::where('id', $id)
-            ->where('staff_id', $req->user()->info->id)
-            ->update([
-                'or' => $req->or,
-                'agent_id' => $req->agent['id'],
-                'client_id' => $req->client['id'],
-                'pay_type_id' => $req->pay_type_id,
-                'plan_id' => $req->plan['id'],
-                'amount' => $req->amount,
-            ]);
-
-        return response()->json([...$this->G_ReturnDefault($req), 'data' => true]);
-    }
-
-    private function AdminUpdate($req, $id){
-        $val = Validator::make($req->all(), [
-            'agent.id' => 'required',
-            'client.id' => 'required',
-            'amount' => 'required',
-            'or' => 'required',
-            'pay_type_id' => 'required',
-            'plan.id' => 'required',
-            'or'
-        ]);
-
-        if($val->fails()) {
-            return $this->G_ValidatorFailResponse($val);
-        }
-
-        Transaction::where('id', $id)
-            ->where('staff_id', $req->user()->info->id)
-            ->update([
-                'or' => $req->or,
-                'agent_id' => $req->agent['id'],
-                'client_id' => $req->client['id'],
-                'pay_type_id' => $req->pay_type_id,
-                'plan_id' => $req->plan['id'],
-                'amount' => $req->amount,
-            ]);
-
-        return response()->json([...$this->G_ReturnDefault($req), 'data' => true]);
-    }
-
-    // SECTION DESTROY
-    public function destroy(string $id, Request $req) {
-        if($req->user()->role == 2) {
-            Transaction::where('id', $id)->delete();
-            return response()->json([...$this->G_ReturnDefault($req), 'data' => true]);
-        }
         return $this->G_UnauthorizedResponse();
     }
 
-        // SECTION OTHERS
-        private function Print($req) {
-            if($req->user()->role == 5) {
-                $trans = Transaction::select('*');
+        private function StaffUpdate($req, $id){
+            $val = Validator::make($req->all(), [
+                'agent.id' => 'required',
+                'client.id' => 'required',
+                'amount' => 'required',
+                'or' => 'required',
+                'pay_type_id' => 'required',
+                'plan.id' => 'required',
+                'or'
+            ]);
 
-                if((bool)strtotime($req->start) OR (bool)strtotime($req->end)) {
-                    if((bool)strtotime($req->start)) {
-                        $trans->where('created_at', '>=', $req->start);
-                    }
-                    if((bool)strtotime($req->end)) {
-                        $trans->where('created_at', '<=', $req->end);
-                    }
-                }
-
-                $trans->with([
-                    'client.info',
-                    'client' => function ($q) {
-                        $q->withSum('client_transactions', 'amount');
-                    },
-                    'staff.info',
-                    'agent.info',
-                    'plan',
-                    'pay_type'
-                ]);
-
-                $data = $trans->orderBy('created_at', 'DESC')->get();
-
-                return response()->json([
-                    ...$this->G_ReturnDefault($req),
-                    'data' => $data,
-                ]);
+            if($val->fails()) {
+                return $this->G_ValidatorFailResponse($val);
             }
 
-            return $this->G_UnauthorizedResponse();
+            Transaction::where('id', $id)
+                ->where('staff_id', $req->user()->info->id)
+                ->update([
+                    'or' => $req->or,
+                    'agent_id' => $req->agent['id'],
+                    'client_id' => $req->client['id'],
+                    'pay_type_id' => $req->pay_type_id,
+                    'plan_id' => $req->plan['id'],
+                    'amount' => $req->amount,
+                ]);
+
+            return response()->json([...$this->G_ReturnDefault($req), 'data' => true]);
         }
+
+        private function AdminUpdate($req, $id){
+            $val = Validator::make($req->all(), [
+                'agent.id' => 'required',
+                'client.id' => 'required',
+                'amount' => 'required',
+                'or' => 'required',
+                'pay_type_id' => 'required',
+                'plan.id' => 'required',
+                'or'
+            ]);
+
+            if($val->fails()) {
+                return $this->G_ValidatorFailResponse($val);
+            }
+
+            Transaction::where('id', $id)
+                ->where('staff_id', $req->user()->info->id)
+                ->update([
+                    'or' => $req->or,
+                    'agent_id' => $req->agent['id'],
+                    'client_id' => $req->client['id'],
+                    'pay_type_id' => $req->pay_type_id,
+                    'plan_id' => $req->plan['id'],
+                    'amount' => $req->amount,
+                ]);
+
+            return response()->json([...$this->G_ReturnDefault($req), 'data' => true]);
+        }
+
+    // SECTION DESTROY
+    public function destroy(string $id, Request $req) {
+        if($req->user()->hasRole('admin')) {
+            return AdminDestroy($req, $id);
+        }
+
+        return $this->G_UnauthorizedResponse();
+    }
+        private function AdminDestroy($req, $id) {
+            Transaction::where('id', $id)->delete();
+            return response()->json([...$this->G_ReturnDefault($req), 'data' => true]);
+        }
+
+    // SECTION OTHERS
+    private function Print($req) {
+        if($req->user()->role == 5) {
+            $trans = Transaction::select('*');
+
+            if((bool)strtotime($req->start) OR (bool)strtotime($req->end)) {
+                if((bool)strtotime($req->start)) {
+                    $trans->where('created_at', '>=', $req->start);
+                }
+                if((bool)strtotime($req->end)) {
+                    $trans->where('created_at', '<=', $req->end);
+                }
+            }
+
+            $trans->with([
+                'client.info',
+                'client' => function ($q) {
+                    $q->withSum('client_transactions', 'amount');
+                },
+                'staff.info',
+                'agent.info',
+                'plan',
+                'pay_type'
+            ]);
+
+            $data = $trans->orderBy('created_at', 'DESC')->get();
+
+            return response()->json([
+                ...$this->G_ReturnDefault($req),
+                'data' => $data,
+            ]);
+        }
+
+        return $this->G_UnauthorizedResponse();
+    }
 }

@@ -27,7 +27,7 @@ class StatisticController extends Controller
             return $this->G_UnauthorizedResponse();
         }
     }
-        // NOTE DONE
+        // DONE
         private function ClientIndex($req) {
             $start = Carbon::parse(
                 Transaction::where('client_id', $req->user()->info->id)
@@ -63,9 +63,8 @@ class StatisticController extends Controller
             ]);
         }
 
-        // NOTE PROGRESS
+        // DONE
         private function StaffIndex($req) {
-
             return response()->json([
                 ...$this->G_ReturnDefault($req),
                 'data' => [

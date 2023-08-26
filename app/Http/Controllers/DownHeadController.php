@@ -12,7 +12,7 @@ class DownHeadController extends Controller
      */
     public function index(Request $req) {
         // SECTION AGENT
-        if($req->user()->role == 4) {
+        if($req->user()->hasRole('agent')) {
             $data = User::with([
                 'plan',
                 'info',

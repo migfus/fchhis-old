@@ -3,7 +3,7 @@ import axios from 'axios'
 import { useStorage, StorageSerializers } from '@vueuse/core'
 
 type contentIn = {
-    agent: {
+    agents: {
         current: number
         total: number
     }

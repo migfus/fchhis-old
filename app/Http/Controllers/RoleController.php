@@ -5,20 +5,20 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Info;
+use App\Models\Beneficiary;
 
 class RoleController extends Controller
 {
     public function index(Request $req) {
-        if($req->user()->role == 2) {
+        if($req->user()->hasRole('admin')) {
             $data = [
                 [
                     'id' => 7,
                     'icon' => 'fa-user-friends',
                     'color' => 'success',
                     'name' => 'Beneficiaries',
-                    'count' => Info::with('user')->whereNotNull('client_id')->count(),
-                    'top' => Info::with('user')
-                        ->whereNotNull('client_id')
+                    'count' => Beneficiary::whereNotNull('client_id')->count(),
+                    'top' => Beneficiary::whereNotNull('client_id')
                         ->orderBy('created_at', 'DESC')
                         ->limit(5)
                         ->get(),
@@ -28,68 +28,32 @@ class RoleController extends Controller
                     'icon' => 'fa-child',
                     'color' => 'success',
                     'name' => 'Client',
-                    'count' => Info::with('user')
-                        ->whereHas('user', function($q) {
-                        $q->where('role', 6);
-                        })
-                        ->count(),
-                    'top' => Info::with('user')
-                        ->whereHas('user', function($q) {
-                        $q->where('role', 6);
-                        })
-                        ->orderBy('created_at', 'DESC')
-                        ->get(),
+                    'count' => User::hasRole('client')->count(),
+                    'top' => User::hasRole('client')->orderBy('created_at', 'DESC')->get(),
                 ],
                 [
                     'id' => 5,
                     'icon' => 'fa-user-edit',
                     'color' => 'info',
                     'name' => 'Staff',
-                    'count' => Info::with('user')
-                        ->whereHas('user', function($q) {
-                        $q->where('role', 5);
-                        })
-                        ->count(),
-                    'top' => Info::with('user')
-                        ->whereHas('user', function($q) {
-                        $q->where('role', 5);
-                        })
-                        ->orderBy('created_at', 'DESC')
-                        ->get(),
+                    'count' => User::hasRole('staff')->count(),
+                    'top' => User::hasRole('staff')->orderBy('created_at', 'DESC')->get(),
                 ],
                 [
                     'id' => 4,
                     'icon' => 'fa-handshake',
                     'color' => 'purple',
                     'name' => 'Agent',
-                    'count' => Info::with('user')
-                        ->whereHas('user', function($q) {
-                        $q->where('role', 4);
-                        })
-                        ->count(),
-                    'top' => Info::with('user')
-                        ->whereHas('user', function($q) {
-                        $q->where('role', 4);
-                        })
-                        ->orderBy('created_at', 'DESC')
-                        ->get(),
+                    'count' => User::hasRole('agent')->count(),
+                    'top' => User::hasRole('agent')->orderBy('created_at', 'DESC')->get(),
                 ],
                 [
                     'id' => 2,
                     'icon' => 'fa-crown',
                     'color' => 'warning',
                     'name' => 'Admin',
-                    'count' => Info::with('user')
-                        ->whereHas('user', function($q) {
-                        $q->where('role', 2);
-                        })
-                        ->count(),
-                    'top' => Info::with('user')
-                        ->whereHas('user', function($q) {
-                        $q->where('role', 2);
-                        })
-                        ->orderBy('created_at', 'DESC')
-                        ->get(),
+                    'count' => User::hasRole('admin')->count(),
+                    'top' => User::hasRole('admin')->orderBy('created_at', 'DESC')->get(),
                 ],
             ];
 

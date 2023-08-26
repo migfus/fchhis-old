@@ -1,97 +1,50 @@
 <template>
-    <div>
-        <div class="row">
-            <div class="col-12 col-md-6">
-                <div class="card">
-                    <div class="card-header">
-                        <h5>Shortcuts</h5>
-                    </div>
-                    <div class="card-body">
-
-                        <div class="row">
-
-                            <div class="col-12 col-md-4">
-                                <RouterLink :to="{ name: 'users-clients' }">
-                                    <div class="info-box mb-3 bg-info">
-                                        <span class="info-box-icon"><i class="fas fa-users"></i></span>
-                                        <div class="info-box-content">
-                                            <span class="info-box-text">Clients List</span>
-                                        </div>
-                                    </div>
-                                </RouterLink>
-                            </div>
-
-                            <div class="col-12 col-md-4">
-                                <RouterLink :to="{ name: 'users-clients', query: { form: 'add' } }">
-                                    <div class="info-box mb-3 bg-success">
-                                        <span class="info-box-icon"><i class="fas fa-user-plus"></i></span>
-                                        <div class="info-box-content">
-                                            <span class="info-box-text">Add Client</span>
-                                        </div>
-                                    </div>
-                                </RouterLink>
-                            </div>
-
-                            <div class="col-12 col-md-4">
-                                <RouterLink :to="{ name: 'users-clients', query: { form: 'or' } }">
-                                    <div class="info-box mb-3 bg-success">
-                                        <span class="info-box-icon"><i class="fas fa-receipt"></i></span>
-                                        <div class="info-box-content">
-                                            <span class="info-box-text">Add OR</span>
-                                        </div>
-                                    </div>
-                                </RouterLink>
-                            </div>
-
-                            <div class="col-12 col-md-6">
-                                <RouterLink :to="{ name: 'transactions-all', }">
-                                    <div class="info-box mb-3 bg-warning">
-                                        <span class="info-box-icon"><i class="fas fa-receipt"></i></span>
-                                        <div class="info-box-content">
-                                            <span class="info-box-text">Transactions List</span>
-                                        </div>
-                                    </div>
-                                </RouterLink>
-                            </div>
-
-                            <div class="col-12 col-md-6">
-                                <RouterLink :to="{ name: 'transactions-all', query: { form: 'add' } }">
-                                    <div class="info-box mb-3 bg-secondary">
-                                        <span class="info-box-icon"><i class="fas fa-file-medical"></i></span>
-                                        <div class="info-box-content">
-                                            <span class="info-box-text">Add Transactions</span>
-                                        </div>
-                                    </div>
-                                </RouterLink>
-                            </div>
-
-                        </div>
-
-
-                    </div>
-
-                </div>
-
-                <StaffAgentCard />
-            </div>
-
-            <div class="col-12 col-md-6">
-                <StaffTransactionsCard />
-            </div>
-
-
+    <div v-if="$clients.content" class="card">
+        <div class="card-header">
+            <h3 class="card-title text-bold">New Clients</h3>
         </div>
+
+        <div class="card-body p-0">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Accumulated</th>
+                        <th>Agent</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="row in $clients.content">
+                        <td>{{ row.name }}</td>
+                        <td>
+                            <strong class="text-success">
+                                +{{ NumberAddComma(row.client_transactions_sum_amount) }}
+                            </strong>
+                        </td>
+                        <td>
+                            <strong class="text-success">
+                                {{ row.agent.name }}
+                            </strong>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
     </div>
 </template>
 
 <script setup>
-import StaffAgentCard from './StaffAgentCard.vue'
-import StaffTransactionsCard from './StaffTransactionsCard.vue';
+import { useClientsDashboardStore } from '@/store/@staff/ClientsDashboardStore'
+import { onMounted, onUnmounted } from 'vue'
+import { NumberAddComma } from '@/helpers/converter'
+
+const $clients = useClientsDashboardStore();
+
+onMounted(() => {
+    $clients.GetAPI()
+})
+onUnmounted(() => {
+    $clients.CancelAPI()
+});
 </script>
-
-<style scoped>
-a {
-    color: black;
-}
-</style>
-

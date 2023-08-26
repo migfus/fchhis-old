@@ -15,18 +15,6 @@ class InfoSeeder extends Seeder
     {
         $data = [
             [
-                'id'        => 2,
-                'user_id'   => 2,
-                'staff_id'  => 1,
-                'agent_id'  => 1,
-                'name'      => '[admin]',
-                'bday'      => Carbon::today()->subDays(rand(0, 365)),
-                'bplace_id' => 1,
-                'sex'       => false,
-                'address_id'=> 1,
-                'address'   => 'admin address'
-            ],
-            [
                 'id'        => 4,
                 'user_id'   => 4,
                 'staff_id'  => 1,
@@ -37,18 +25,6 @@ class InfoSeeder extends Seeder
                 'sex'       => false,
                 'address_id'=> 1,
                 'address'   => 'agent address'
-            ],
-            [
-                'id'        => 5,
-                'user_id'   => 5,
-                'staff_id'  => 1,
-                'agent_id'  => 1,
-                'name'      => '[staff]',
-                'bday'      => Carbon::today()->subDays(rand(0, 365)),
-                'bplace_id' => 1,
-                'sex'       => false,
-                'address_id'=> 1,
-                'address'   => 'staff address'
             ],
             [
                 'id'        => 6,
@@ -63,21 +39,6 @@ class InfoSeeder extends Seeder
                 'address'   => 'client address',
                 'pay_type_id'=> 1,
                 'plan_id'    => 1,
-            ],
-
-            [
-                'id'          => 1,
-                'user_id'     => 1,
-                'staff_id'    => 5,
-                'agent_id'    => 4,
-                'client_id'   => 6,
-                'name'        => '[beneficiary dead]',
-                'bday'        => Carbon::today()->subDays(rand(0, 365)),
-                'bplace_id'   => 1,
-                'sex'         => false,
-                'address_id'  => 1,
-                'address'   => 'beneficiary address',
-                'fulfilled_at'=> Carbon::now(),
             ],
             [
                 'id'        => 3,

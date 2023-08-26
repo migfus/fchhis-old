@@ -17,179 +17,20 @@ class UserController extends Controller
 {
     // SECTION INDEX
     public function index(Request $req) {
-        switch($req->user()->role) {
-            case 2:
-                return $this->AdminIndex($req);
-            case 4:
-                return $this->AgentIndex($req);
-            case 5:
-                return $this->StaffIndex($req);
-            case 6:
-                return $this->ClientIndex($req);
-            default:
-                return $this->G_UnauthorizedResponse();
+        if($req->user()->hasRole('admin')) {
+            return $this->AdminIndex($req);
+        }
+        else if($req->user()->hasRole('agent')) {
+            return $this->AgentIndex($req);
+        }
+        else if($req->user()->hasRole('staff')) {
+            return $this->StaffIndex($req);
+        }
+        else if($req->user()->hasRole('client')) {
+            return $this->ClientIndex($req);
         }
 
-
-
-        if($req->count)
-            return $this->getCount($req);
-        if($req->print)
-            return $this->Print($req);
-
-        $val = Validator::make($req->all(), [
-            'role' => 'required|numeric',
-            'search' => '',
-            'start' => '',
-            'end' => '',
-        ]);
-
-        if($val->fails()) {
-            return $this->G_ValidatorFailResponse($val);
-        }
-
-        // SECTION ADMIN
-        if($req->user()->role == 2) {
-            $user = User::select('*');
-
-            // NOTE ROLE FITLER
-            if($req->role < 7) {
-                $user->where('role', $req->role);
-            }
-
-            // NOTE DATE RANGE FILTER
-
-            else {
-                // NOTE SEARCH FILTER
-                switch($req->filter) {
-                    case 'email':
-                        $user->where('email', 'LIKE', '%'.$req->search.'%')->with(['info.user', 'plan', 'pay_type', 'info.referred'])
-                            ->withSum('client_transactions', 'amount'); // OK No whereRelation
-                        break;
-                    case 'address':
-                        $user->with(['info.user', 'plan', 'pay_type', 'info.referred'])
-                            ->withSum('client_transactions', 'amount')
-                            ->whereHas('info.user', function($q) use ($req) {
-                                $q->where('address', 'LIKE', '%'.$req->search.'%');
-                            });
-                        break;
-                    case 'plans':
-                        $user->with(['info.user', 'plan', 'pay_type', 'info.referred'])
-                            ->withSum('client_transactions', 'amount')
-                            ->whereHas('plan', function($q) use ($req) {
-                                $q->where('name', 'LIKE', '%'.$req->search.'%');
-                            });
-                        break;
-                    default:
-                        $user->with(['info.user', 'plan', 'pay_type', 'info.referred.info'])
-                            ->withSum('client_transactions', 'amount')
-                            ->whereHas('info.user', function($q) use ($req) {
-                                $q->where('lastName', 'LIKE', '%'.$req->search.'%')
-                                ->orWhere('firstName', 'LIKE', '%'.$req->search.'%')
-                                ->orWhere('midName', 'LIKE', '%'.$req->search.'%');
-                            });
-                }
-            }
-
-            $data = $user->orderBy('created_at', 'desc')->paginate(10);
-
-            return response()->json([...$this->G_ReturnDefault($req), 'data' => $data], 200);
-        }
-
-        // SECTION STAFF
-        if($req->user()->role == 5) {
-            $user = User::select('*');
-            // NOTE ROLE FITLER
-            if($req->role == 4) {
-                $user->where('role', 4);
-            }
-            else {
-                $user->where('role', 6);
-            }
-
-            // NOTE DATE RANGE FILTER
-            if((bool)strtotime($req->start) OR (bool)strtotime($req->end)) {
-                if((bool)strtotime($req->start)) {
-                    $user->where('created_at', '>=', $req->start);
-                }
-                if((bool)strtotime($req->end)) {
-                    $user->where('created_at', '<=', $req->end);
-                }
-                    $user->with(['info.user', 'plan']);
-            }
-            else {
-                // NOTE SEARCH FILTER
-                switch($req->filter) {
-                    case 'email':
-                        $user->where('email', 'LIKE', '%'.$req->search.'%')
-                            ->with([
-                                'info.user',
-                                'plan',
-                                'pay_type',
-                                'info.referred',
-                                'client_transactions.plan',
-                                'client_transactions.pay_type',
-                                'info.agent.info',
-                                'info.staff.info',
-                            ])
-                            ->withSum('client_transactions', 'amount'); // OK No whereRelation
-                        break;
-                    case 'address':
-                        $user->with([
-                            'info.user',
-                            'plan',
-                            'pay_type',
-                            'info.referred',
-                            'client_transactions.plan',
-                            'client_transactions.pay_type',
-                            'info.agent.info',
-                            'info.staff.info',
-                        ])
-                            ->withSum('client_transactions', 'amount')
-                            ->whereHas('info.user', function($q) use ($req) {
-                                $q->where('address', 'LIKE', '%'.$req->search.'%');
-                            });
-                        break;
-                    case 'plans':
-                        $user->with([
-                            'info.user',
-                            'plan',
-                            'pay_type',
-                            'info.referred',
-                            'client_transactions.plan',
-                            'client_transactions.pay_type',
-                            'info.agent.info',
-                            'info.staff.info',
-                        ])
-                            ->withSum('client_transactions', 'amount')
-                            ->whereHas('plan', function($q) use ($req) {
-                                $q->where('name', 'LIKE', '%'.$req->search.'%');
-                            });
-                        break;
-                    default:
-                        $user->with([
-                                'info.user',
-                                'plan',
-                                'pay_type',
-                                'info.referred.info',
-                                'client_transactions.plan',
-                                'client_transactions.pay_type',
-                                'info.agent.info',
-                                'info.staff.info',
-                            ])
-                            ->withSum('client_transactions', 'amount')
-                            ->whereHas('info.user', function($q) use ($req) {
-                                $q->where('lastName', 'LIKE', '%'.$req->search.'%')
-                                ->orWhere('firstName', 'LIKE', '%'.$req->search.'%')
-                                ->orWhere('midName', 'LIKE', '%'.$req->search.'%');
-                            });
-                }
-            }
-
-            $data = $user->orderBy('created_at', 'desc')->paginate(0);
-
-            return response()->json([...$this->G_ReturnDefault($req), 'data' => $data], 200);
-        }
+        return $this->G_UnauthorizedResponse();
     }
 
         private function ClientIndex($req) {
@@ -428,99 +269,11 @@ class UserController extends Controller
 
     // SECTION STORE
     public function store(Request $req) {
-        switch($req->user()->role) {
-            case 2:
-                return $this->AdminStore($req);
-            case 5:
-                return $this->StaffStore($req);
-            default:
-                return $this->G_UnauthorizedResponse();
+        if($req->user()->hasRole('admin')) {
+            return $this->AdminIndex($req);
         }
-
-        if($req->user()->role == 2) {
-            if($req->or) {
-                if($req->or != '') {
-                return $this->ORStore($req);
-                }
-            }
-
-            $val = Validator::make($req->all(), [
-                'avatar'   => '',
-                'username' => 'required|unique:users',
-                'email'    => 'required|email|unique:users',
-                'password' => 'required|min:8',
-                'mobile'   => 'required',
-                'notifyMobile' => 'required',
-                'role'     => 'required',
-                'plan'     => 'required',
-
-                'lastName' => 'required',
-                'firstName'=> 'required',
-                'midName'  => '',
-                'extName'  => '',
-                'sex'      => 'required',
-                'bday'     => 'required',
-                'bplaceID' => 'required',
-                'addressID'=> 'required',
-                'address'  => 'required',
-                'pay_type_id' => 'required',
-                'agent'    => 'required',
-            ]);
-
-            if($val->fails()) {
-                return $this->G_ValidatorFailResponse($val);
-            }
-
-            $avatar = null;
-
-            if($req->avatar != '') {
-                $avatar = $this->G_AvatarUpload($req->avatar);
-            }
-
-            $user = User::create([
-                'plan_id'  => $req->plan,
-                'username' => $req->username,
-                'email'    => $req->email,
-                'password' => Hash::make($req->password),
-                'avatar'   => $avatar,
-                'role'     => $req->role,
-                'notify_mobile' => $req->notifyMobile,
-                'pay_type_id' => $req->pay_type_id,
-            ]);
-
-            $info = Info::create([
-                'user_id'   => $user->id,
-                'lastName'  => $req->lastName,
-                'firstName' => $req->firstName,
-                'midName'   => $req->midName,
-                'extName'   => $req->extName,
-                'bday'      => $req->bday,
-                'bplace_id' => $req->bplaceID,
-                'sex'       => $req->sex,
-                'address_id'=> $req->bplaceID,
-                'address'   => $req->address,
-                'mobile'    => $req->mobile,
-                'agent_id'  => $req->agent
-            ]);
-
-            Transaction::create([
-                'agent_id'  => $req->agent,
-                'staff_id'  => $req->user()->id,
-                'client_id' => $info->id,
-                'pay_type_id' => $req->pay_type_id,
-                'amount'  =>  $req->transaction,
-                'plan_id' => $req->plan,
-            ]);
-
-            return response()->json([...$this->G_ReturnDefault($req)]);
-        }
-
-        if($req->user()->role == 5) {
-            if($req->or) {
-                if($req->or != '') {
-                    return $this->ORStore($req);
-                }
-            }
+        else if($req->user()->hasRole('staff')) {
+            return $this->StaffStore($req);
         }
 
         return $this->G_UnauthorizedResponse();
@@ -789,14 +542,14 @@ class UserController extends Controller
 
     // SECTION SHOW
     public function show(string $id, Request $req) {
-        switch($req->user()->role) {
-            case 2:
-                return $this->AdminShow($req, $id);
-            case 5:
-                return $this->StaffShow($req, $id);
-            default:
-            return $this->G_UnauthorizedResponse();
+        if($req->user()->hasRole('admin')) {
+            return $this->AdminShow($req, $id);
         }
+        else if($req->user()->hasRole('staff')) {
+            return $this->StaffShow($req, $id);
+        }
+
+        return $this->G_UnauthorizedResponse();
     }
 
         private function StaffShow($req, $id) {
@@ -832,14 +585,14 @@ class UserController extends Controller
 
     // SECTION UPDATE
     public function update(Request $req, string $id) {
-        switch($req->user()->role) {
-            case 2:
-                return $this->AdminUpdate($req, $id);
-            case 5:
-                return $this->StaffUpdate($req, $id);
-            default:
-                return $this->G_UnauthorizedResponse();
+        if($req->user()->hasRole('admin')) {
+            return $this->AdminUpdate($req, $id);
         }
+        else if($req->user()->hasRole('staff')) {
+            return $this->StaffUpdate($req, $id);
+        }
+
+        return $this->G_UnauthorizedResponse();
     }
 
         private function StaffUpdate($req, $id) {
@@ -949,11 +702,12 @@ class UserController extends Controller
 
     // SECTION DELETE
     public function destroy(string $id, Request $req) {
-        if($req->user()->role == 2) {
+        if($req->user()->hasRole('admin')) {
             User::where('info_id', Info::where('id', $id)->first()->id)->delete();
             Info::where('id', $id)->delete();
             return response()->json([...$this->G_ReturnDefault($req)], 200);
         }
+
         return $this->G_UnauthorizedResponse();
     }
 
@@ -1085,4 +839,26 @@ class UserController extends Controller
                 return response()->json([...$this->G_ReturnDefault($req), 'data' => $data], 200);
             }
         }
+
+    // SECTION SPECIAL
+    public function dashboard(Request $req) {
+        if($req->user()->hasRole('admin')) {
+            $this->AdminDashboard($req);
+        }
+        else if($req->user()->hasRole('staff')) {
+            $this->StaffDashboard($req);
+        }
+
+        return $this->G_UnauthorizedResponse();
+    }
+
+        private function AdminDashboard($req) {
+
+        }
+
+        private function StaffDashboard($req) {
+            return 1;
+        }
 }
+
+

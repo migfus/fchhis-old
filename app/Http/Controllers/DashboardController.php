@@ -8,6 +8,7 @@ use App\Models\Transaction;
 use Carbon\Carbon;
 use App\Models\Beneficiary;
 
+// DEBUG REORGANIZE BY ROLE for CONSISTENCY FOR OTHER CONTROLLERS
 class DashboardController extends Controller
 {
         private function MonthlyIncome() {
