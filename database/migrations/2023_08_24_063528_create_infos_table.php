@@ -20,7 +20,6 @@ return new class extends Migration
             $table->unsignedTinyInteger('pay_type_id')->nullable();
             $table->unsignedTinyInteger('plan_id')->nullable();
 
-            $table->string('name');
             $table->date('bday')->nullable();
             $table->unsignedInteger('bplace_id')->nullable();
             $table->boolean('sex')->default(0);

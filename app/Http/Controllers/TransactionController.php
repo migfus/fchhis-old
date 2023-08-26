@@ -593,7 +593,7 @@ class TransactionController extends Controller
                 'client' => function ($q) {
                     $q->withSum('client_transactions', 'amount');
                 },
-                'staff.info',
+                'staff',
                 'agent.info',
                 'plan',
                 'pay_type'

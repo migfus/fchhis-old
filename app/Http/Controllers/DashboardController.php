@@ -109,7 +109,7 @@ class DashboardController extends Controller
 
     public function Agent(Request $req) {
         $transactions = Transaction::where('client_id', $req->user()->id)
-            ->with(['client.info', 'staff.info', 'plan', 'pay_type'])
+            ->with(['client.info', 'staff', 'plan', 'pay_type'])
             ->orderBy('created_at', 'DESC')
             ->get();
 
@@ -165,7 +165,7 @@ class DashboardController extends Controller
 
     public function Client(Request $req) {
         $transactions = Transaction::where('client_id', $req->user()->id)
-            ->with(['client.info', 'staff.info', 'plan', 'pay_type'])
+            ->with(['client.info', 'staff', 'plan', 'pay_type'])
             ->orderBy('created_at', 'DESC')
             ->get();
 

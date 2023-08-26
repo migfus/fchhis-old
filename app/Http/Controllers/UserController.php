@@ -830,7 +830,7 @@ class UserController extends Controller
                     }
                     $user->with(['info.user', 'plan', 'pay_type', 'info.referred.info'])->withSum('client_transactions', 'amount');
                 }
-                else {
+            else {
                     $user->with(['info.user', 'plan', 'pay_type', 'info.referred.info'])->withSum('client_transactions', 'amount');
                 }
 

@@ -16,7 +16,8 @@ type contentInt = {
         role: number
         updated_at: string
         username: string
-        info: {
+        // NOTE FOR CLIENTS & AGENTS ONLY
+        info?: {
             address: string
             address_id: number
             agent_id: number
