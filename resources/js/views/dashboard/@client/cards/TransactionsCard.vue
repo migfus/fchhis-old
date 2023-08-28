@@ -9,7 +9,8 @@
                         placeholder="Search">
                     <div class="input-group-append">
                         <button type="submit" class="btn btn-default">
-                            <i class="fas fa-search"></i>
+                            <i v-if="$trans.config.loading" class="fas fa-circle-notch fa-spin"></i>
+                            <i v-else class="fas fa-search"></i>
                         </button>
                         <button class="btn btn-sm btn-info">
                             <i v-if="$trans.query.sort == 'ASC'" @click="$trans.query.sort = 'DESC'"
@@ -93,7 +94,7 @@ function Print(): void {
         ['Future Care and Helping Hands Insurance Services'],
         ['Transaction Report', '', '', moment().format('MMM D, YYYY HH:mm A')],
         [],
-        [$auth.content.auth.info.name],
+        [$auth.content.auth.name],
 
         ['Plan Name', 'Plan Type', 'Amount', 'Date'],
 

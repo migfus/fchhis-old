@@ -14,7 +14,7 @@ class TestPublicController extends Controller
      * Testing Purposes
      * n/a
      * **/
-    public function index() {
+    public function index() : void {
         $mail = 'migfus20@gmail.com';
         $data = [
             'link' => 'https://google.com/account',

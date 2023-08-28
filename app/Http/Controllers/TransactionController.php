@@ -7,11 +7,12 @@ use App\Models\Transaction;
 use App\Models\Info;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
 
 class TransactionController extends Controller
 {
     // SECTION INDEX
-    public function index(Request $req) {
+    public function index(Request $req) : JsonResponse {
         if($req->user()->hasRole('admin')) {
             if($req->id)
                 return $this->AdminIDIndex($req);
@@ -38,7 +39,7 @@ class TransactionController extends Controller
         return $this->G_UnauthorizedResponse();
     }
 
-        private function ClientIndex($req) {
+        private function ClientIndex($req) : JsonResponse {
             $val = Validator::make($req->all(), [
                 'search' => '',
                 'sort' => 'required'
@@ -65,7 +66,7 @@ class TransactionController extends Controller
             ]);
         }
 
-        private function AgentIndex($req) {
+        private function AgentIndex($req) : JsonResponse {
             $val = Validator::make($req->all(), [
                 'search' => '',
                 'start' => 'required',
@@ -113,7 +114,7 @@ class TransactionController extends Controller
             }
         }
 
-        private function StaffIndex($req) {
+        private function StaffIndex($req) : JsonResponse {
             $val = Validator::make($req->all(), [
                 'search' => '',
                 'start' => '',
@@ -181,7 +182,7 @@ class TransactionController extends Controller
             }
         }
 
-        private function StaffIDIndex($req) {
+        private function StaffIDIndex($req) : JsonResponse {
             $val = Validator::make($req->all(), [
                 'search' => '',
                 'start' => '',
@@ -216,7 +217,7 @@ class TransactionController extends Controller
             ]);
         }
 
-        private function StaffPrintIndex($req) {
+        private function StaffPrintIndex($req) : JsonResponse {
             $data = Transaction::select('*');
 
             if((bool)strtotime($req->start) OR (bool)strtotime($req->end)) {
@@ -248,7 +249,7 @@ class TransactionController extends Controller
             ]);
         }
 
-        private function AdminIndex($req) {
+        private function AdminIndex($req) : JsonResponse {
             $val = Validator::make($req->all(), [
                 'search' => '',
                 'start' => '',
@@ -318,7 +319,7 @@ class TransactionController extends Controller
             }
         }
 
-        private function AdminIDIndex($req) {
+        private function AdminIDIndex($req) : JsonResponse {
             $val = Validator::make($req->all(), [
                 'search' => '',
                 'start' => '',
@@ -353,7 +354,7 @@ class TransactionController extends Controller
                 ]);
         }
 
-        private function AdminPrintIndex($req) {
+        private function AdminPrintIndex($req) : JsonResponse {
             $data = Transaction::select('*');
 
             if((bool)strtotime($req->start) OR (bool)strtotime($req->end)) {
@@ -386,7 +387,7 @@ class TransactionController extends Controller
         }
 
     // SECTION STORE
-    public function store(Request $req) {
+    public function store(Request $req) : JsonResponse {
         if($req->user()->hasRole('admin')) {
             return $this->AdminStore($req);
         }
@@ -397,7 +398,7 @@ class TransactionController extends Controller
         return $this->G_UnauthorizedResponse();
     }
 
-        private function StaffStore($req) {
+        private function StaffStore($req) : JsonResponse {
             $val = Validator::make($req->all(), [
                 'agent.id' => 'required',
                 'client.id' => 'required',
@@ -444,7 +445,7 @@ class TransactionController extends Controller
             return response()->json([...$this->G_ReturnDefault($req), 'data' => true]);
         }
 
-        private function AdminStore($req) {
+        private function AdminStore($req) : JsonResponse {
             $val = Validator::make($req->all(), [
                 'agent.id' => 'required',
                 'client.id' => 'required',
@@ -492,7 +493,7 @@ class TransactionController extends Controller
         }
 
     // SECTION UPDATE
-    public function update(Request $req, string $id) {
+    public function update(Request $req, string $id) : JsonResponse {
         if($req->user()->hasRole('admin')) {
             return $this->AdminUpdate($req, $id);
         }
@@ -503,7 +504,7 @@ class TransactionController extends Controller
         return $this->G_UnauthorizedResponse();
     }
 
-        private function StaffUpdate($req, $id){
+        private function StaffUpdate($req, $id) : JsonResponse {
             $val = Validator::make($req->all(), [
                 'agent.id' => 'required',
                 'client.id' => 'required',
@@ -532,7 +533,7 @@ class TransactionController extends Controller
             return response()->json([...$this->G_ReturnDefault($req), 'data' => true]);
         }
 
-        private function AdminUpdate($req, $id){
+        private function AdminUpdate($req, $id) : JsonResponse {
             $val = Validator::make($req->all(), [
                 'agent.id' => 'required',
                 'client.id' => 'required',
@@ -562,20 +563,20 @@ class TransactionController extends Controller
         }
 
     // SECTION DESTROY
-    public function destroy(string $id, Request $req) {
+    public function destroy(string $id, Request $req) : JsonResponse {
         if($req->user()->hasRole('admin')) {
             return AdminDestroy($req, $id);
         }
 
         return $this->G_UnauthorizedResponse();
     }
-        private function AdminDestroy($req, $id) {
+        private function AdminDestroy($req, $id) : JsonResponse {
             Transaction::where('id', $id)->delete();
             return response()->json([...$this->G_ReturnDefault($req), 'data' => true]);
         }
 
     // SECTION OTHERS
-    private function Print($req) {
+    private function Print($req) : JsonResponse {
         if($req->user()->role == 5) {
             $trans = Transaction::select('*');
 

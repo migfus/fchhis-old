@@ -5,10 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\JsonResponse;
 
 class ClientController extends Controller
 {
-    public function index(Request $req) {
+    public function index(Request $req) : JsonResponse {
         $val = Validator::make($req->all(), [
             'limit' => 'required|numeric|min:1|max:10',
         ]);

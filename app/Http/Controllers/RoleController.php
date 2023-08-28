@@ -6,10 +6,11 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Info;
 use App\Models\Beneficiary;
+use Illuminate\Http\JsonResponse;
 
 class RoleController extends Controller
 {
-    public function index(Request $req) {
+    public function index(Request $req) : JsonResponse {
         if($req->user()->hasRole('admin')) {
             $data = [
                 [

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 
 class AgentController extends Controller
 {
@@ -11,7 +12,7 @@ class AgentController extends Controller
      * Testing Purposes
      * n/a
      * **/
-    public function index(Request $req) {
+    public function index(Request $req) : JsonResponse {
         // SECTION AGENT & STAFF
         if($req->user()->hasRole('admin') || $req->user()->hasRole('agent')) {
 

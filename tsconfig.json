@@ -1,21 +1,21 @@
 {
-  "extends": "@vue/tsconfig/tsconfig.dom.json",
-  "compilerOptions": {
-    "strict": false,
-    "allowJs": true,
-    "noImplicitAny": false,
-    "types": ["vite/client"],
-    "paths": {
-        "@/*": ["resources/js/*"]
+    "extends": "@vue/tsconfig/tsconfig.dom.json",
+    "compilerOptions": {
+        "strict": false,
+        "allowJs": true,
+        "noImplicitAny": false,
+        "types": ["vite/client"],
+        "paths": {
+            "@/*": ["resources/js/*"],
+        },
+        "baseUrl": ".",
+        "target": "esnext",
+        "module": "esnext",
+        "moduleResolution": "node"
     },
-    "baseUrl": ".",
-    "target": "esnext",
-    "module": "esnext",
-    "moduleResolution": "node"
-  },
-  "include": [
-    "resources/**/*.ts",
-    "resources/**/*.d.ts",
-    "resources/**/*.vue"
-  ]
+    "include": [
+        "resources/**/*.ts",
+        "resources/**/*.d.ts",
+        "resources/**/*.vue"
+    ]
 }

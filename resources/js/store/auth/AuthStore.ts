@@ -16,6 +16,7 @@ type contentInt = {
         role: number
         updated_at: string
         username: string
+        name: string
         // NOTE FOR CLIENTS & AGENTS ONLY
         info?: {
             address: string
@@ -28,7 +29,6 @@ type contentInt = {
             due_at: string
             fulfilled_at: string
             id: number
-            name: string
             or: string
             pay_type_id: number
             plan_id: number

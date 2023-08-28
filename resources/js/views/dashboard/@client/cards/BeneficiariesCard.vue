@@ -10,7 +10,7 @@
                         placeholder="Search">
                     <div class="input-group-append">
                         <button type="submit" class="btn btn-default">
-                            <i v-if="$users.config.loading" class="fas fa-spinner fa-spin"></i>
+                            <i v-if="$users.config.loading" class="fas fa-circle-notch fa-spin"></i>
                             <i v-else class="fas fa-search"></i>
                         </button>
                     </div>

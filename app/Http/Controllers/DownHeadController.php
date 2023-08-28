@@ -4,13 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 
 class DownHeadController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $req) {
+    public function index(Request $req) : JsonResponse {
         // SECTION AGENT
         if($req->user()->hasRole('agent')) {
             $data = User::with([

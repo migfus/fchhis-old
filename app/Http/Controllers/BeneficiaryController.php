@@ -6,11 +6,12 @@ use Illuminate\Http\Request;
 use App\Models\Info;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\JsonResponse;
 
 class BeneficiaryController extends Controller
 {
     // SECTION INDEX
-    public function index(Request $req) {
+    public function index(Request $req) : JsonResponse {
         if($req->user()->hasRole('staff') || $req->user()->hasRole('admin')) {
             return $this->StaffIndex($req);
         }
@@ -18,7 +19,7 @@ class BeneficiaryController extends Controller
         return $this->G_UnauthorizedResponse();
     }
 
-        private function StaffIndex($req) {
+        private function StaffIndex($req) : JsonResponse {
             $val = Validator::make($req->all(), [
                 'search' => '',
                 'id' => 'required'
@@ -33,13 +34,13 @@ class BeneficiaryController extends Controller
             return response()->json([...$this->G_ReturnDefault(), 'data' => $data]);
         }
 
-    public function store(Request $req) {
+    public function store(Request $req) : JsonResponse {
         if($req->user()->hasRole('admin') || $req->user()->hasRole('staff')) {
             return $this->StaffStore($req);
         }
     }
 
-        private function StaffStore($req) {
+        private function StaffStore($req) : JsonResponse {
             $val = Validator::make($req->all(), [
                 'lastName' => 'required',
                 'firstName' => 'required',
@@ -68,7 +69,7 @@ class BeneficiaryController extends Controller
             return $this->G_UnauthorizedResponse();
         }
 
-    public function update(Request $req, $id) {
+    public function update(Request $req, $id) : JsonResponse {
         $val = Validator::make($req->all(), [
             'lastName' => 'required',
             'firstName' => 'required',
@@ -99,7 +100,7 @@ class BeneficiaryController extends Controller
     }
 
 
-    public function destroy($id, Request $req) {
+    public function destroy($id, Request $req) : JsonResponse {
         if($req->user()->hasRole('client') || $req->user()->hasRole('staff')) {
             if(Beneficiary::where('id', $id)->where('info_id', User::where('id', $req->user()->id)->with('info')->first()->info->id)) {
                 $ben = Beneficiary::where('id', $id)->delete();

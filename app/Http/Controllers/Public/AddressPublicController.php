@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Public;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\JsonResponse;
 
 class AddressPublicController extends Controller
 {
@@ -11,7 +12,7 @@ class AddressPublicController extends Controller
      * Provides Address
      * [App.vue]
      * **/
-    public function index() {
+    public function index() : JsonResponse {
         $provinces = DB::table('address_provinces')->orderBy('name')->get();
         $out = [];
         $index = 0;

@@ -10,10 +10,11 @@ use App\Models\Info;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ForgotPasswordMailer;
 use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
 
 class AuthController extends Controller
 {
-    public function Login(Request $req) {
+    public function Login(Request $req) : JsonResponse {
         $val = Validator::make($req->all(), [
             'email' => 'required',
             'password' => 'required|min:8',
@@ -34,11 +35,12 @@ class AuthController extends Controller
                 'ip'   => $_SERVER['REMOTE_ADDR'],
                 'token' => $user->createToken('token idk')->plainTextToken,
                 'permissions' => $user->getAllPermissions()->pluck('name'),
+                'role' => $user->roles
             ],
         ], 200);
     }
 
-    public function ChangePassword(Request $req) {
+    public function ChangePassword(Request $req) : JsonResponse {
         if(!$req->user()->can('update auth')) {
             return $this->G_UnauthorizedResponse();
         }
@@ -62,7 +64,7 @@ class AuthController extends Controller
         return response()->json([...$this->G_ReturnDefault($req), 'data' => $user]);
     }
 
-    public function ChangeAvatar(Request $req) {
+    public function ChangeAvatar(Request $req) : JsonResponse {
         if(!$req->user()->can('update auth')) {
             return $this->G_UnauthorizedResponse();
         }
@@ -82,7 +84,7 @@ class AuthController extends Controller
         return response()->json([...$this->G_ReturnDefault($req), 'file' => $user->avatar]);
     }
 
-    public function ORCheck(Request $req) {
+    public function ORCheck(Request $req) : JsonResponse {
         $val = Validator::make($req->all(), [
             'or' => 'required',
         ]);
@@ -100,7 +102,7 @@ class AuthController extends Controller
         }
     }
 
-    public function Register(Request $req) {
+    public function Register(Request $req) : JsonResponse {
         $val = Validator::make($req->all(), [
             'or' => 'required',
             'avatar' => '',
@@ -151,13 +153,13 @@ class AuthController extends Controller
         return $this->G_UnauthorizedResponse();
     }
 
-    public function Profile(Request $req) {
+    public function Profile(Request $req) : JsonResponse {
         return response()->json([
             'data' => User::where('id', $req->user()->id)->with('info')->first(),
         ], 200);
     }
 
-    public function Recovery(Request $req) {
+    public function Recovery(Request $req) : JsonResponse {
         if(User::where('email', $req->email)->first()) {
             $code = rand(00000,99999);
 
@@ -177,7 +179,7 @@ class AuthController extends Controller
         return response()->json(['data' => 'error']);
     }
 
-    public function ConfirmRecovery(Request $req) {
+    public function ConfirmRecovery(Request $req) : JsonResponse {
         if(User::where('remember_token', $req->code)->first()) {
             return response()->json(['data' => true]);
         }
@@ -185,7 +187,7 @@ class AuthController extends Controller
         return response()->json(['data' => false]);
     }
 
-    public function ChangePasswordRecovery(Request $req) {
+    public function ChangePasswordRecovery(Request $req) : JsonResponse {
         $val = Validator::make($req->all(), [
             'newPassword' => 'required',
             'code' => 'required',
@@ -205,7 +207,7 @@ class AuthController extends Controller
     }
 
     // SECTION OVERDUE
-    public function Overdue(Request $req) {
+    public function Overdue(Request $req) : JsonResponse {
         if($req->user()->hasRole('admin') || $req->user()->hasRole('staff')) {
             return $this->StaffOverdue($req);
         }
@@ -213,14 +215,14 @@ class AuthController extends Controller
         return $this->G_UnauthorizedResponse();
     }
 
-        private function StaffOverdue($req) {
+        private function StaffOverdue($req) : JsonResponse {
             $grace = Info::whereNotNull('due_at')->where('due_at', '<=', Carbon::now())->count();
             $overdue = Info::whereNotNull('due_at')->where('due_at', '<=', Carbon::now()->subMonth(2))->count();
 
             return response()->json([...$this->G_ReturnDefault($req), 'data' => ['grace' => $grace, 'overdue' => $overdue]]);
         }
 
-    public function Claim(Request $req, $id) {
+    public function Claim(Request $req, $id) : JsonResponse {
         if($req->user()->hasRole('admin') || $req->user()->hasRole('staff')) {
             if(Info::where('id', $id)->whereNull('fulfilled_at')->first()) {
                 Info::where('id', $id)->update([ 'fulfilled_at' => Carbon::now()]);
