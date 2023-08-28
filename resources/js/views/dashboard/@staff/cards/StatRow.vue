@@ -89,12 +89,11 @@
 
 <script setup lang="ts">
 import { onMounted, onUnmounted } from 'vue'
-import { useStatisticStore } from '../../../store/@staff/StatisticStore'
+import { useStatisticStore } from '@/store/@staff/StatisticStore'
 import { Carousel, Navigation, Slide } from 'vue3-carousel'
 import 'vue3-carousel/dist/carousel.css'
 
-import NumberComponent from './NumberComponent.vue'
-
+import NumberComponent from '../components/NumberComponent.vue'
 
 const config = {
     autoplay: 10 * 1000,

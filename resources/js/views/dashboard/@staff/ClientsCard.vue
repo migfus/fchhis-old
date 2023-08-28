@@ -23,7 +23,7 @@
                         </td>
                         <td>
                             <strong class="text-success">
-                                {{ row.agent.name }}
+                                {{ row.info.agent.name }}
                             </strong>
                         </td>
                     </tr>

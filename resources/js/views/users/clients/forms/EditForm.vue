@@ -215,12 +215,10 @@
 import { useUsersStore } from '@/store/users/UsersStore'
 import { computed, ref, onMounted } from 'vue'
 import moment from 'moment'
-import { useAddressStore } from '@/store/system/AddressStore'
+import { useAddressStore } from '@/store/public/AddressStore'
 import { Form, Field, ErrorMessage, configure, } from 'vee-validate'
 import * as Yup from 'yup'
 import { usePlanStore } from '@/store/system/PlanStore'
-import { CityIDToProvinceID } from '@/helpers/converter'
-import { $DebugInfo, $Err, $Log } from '@/helpers/debug'
 import { useAgentStore } from '@/store/users/AgentStore'
 import { usePayTypeStore } from '@/store/system/PayTypeStore'
 
@@ -232,8 +230,8 @@ const $plan = usePlanStore();
 const $agent = useAgentStore();
 const $payType = usePayTypeStore();
 
-const BDayProvinceID = ref(CityIDToProvinceID($user.params.bplace_id));
-const AddressProvinceID = ref(CityIDToProvinceID($user.params.address_id));
+const BDayProvinceID = ref($address.CityIDToProvinceID($user.params.bplace_id));
+const AddressProvinceID = ref($address.CityIDToProvinceID($user.params.address_id));
 
 $DebugInfo('EditFormVue')
 configure({
@@ -249,10 +247,6 @@ const schema = Yup.object({
     addressID: Yup.string().required('City is Required'),
     address: Yup.string().required('Specific Address is Required'),
 })
-
-function getImage(event) {
-    $Log('getImage', { event })
-}
 
 const age = computed(() => {
     try {
@@ -305,4 +299,5 @@ onMounted(() => {
 
 .separator:not(:empty)::after {
     margin-left: .25em;
-}</style>
+}
+</style>

@@ -2,7 +2,7 @@
     <div class="row">
 
         <EditForm v-if="$user.config.form == 'update'" />
-        <ORForm v-else-if="$user.config.form == 'or'" />
+        <!-- <ORForm v-else-if="$user.config.form == 'or'" /> -->
         <AddForm v-else-if="$user.config.form" />
 
         <UserSummary />
@@ -31,7 +31,7 @@ import SearchComponent from './search/SearchComponent.vue'
 import PaginationComponent from './components/PaginationComponent.vue'
 import AddForm from './forms/AddForm.vue'
 import EditForm from './forms/EditForm.vue'
-import ORForm from './forms/ORForm.vue'
+// import ORForm from './forms/ORForm.vue'
 
 const $plan = usePlanStore();
 const $user = useUserStore();

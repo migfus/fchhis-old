@@ -216,7 +216,7 @@
 import { useUsersStore } from '@/store/users/UsersStore'
 import { computed, ref, onMounted } from 'vue'
 import moment from 'moment'
-import { useAddressStore } from '@/store/system/AddressStore'
+import { useAddressStore } from '@/store/public/AddressStore'
 import { Form, Field, ErrorMessage, configure, } from 'vee-validate'
 import * as Yup from 'yup'
 import { usePlanStore } from '@/store/system/PlanStore'
@@ -317,4 +317,5 @@ onMounted(() => {
 
 .separator:not(:empty)::after {
     margin-left: .25em;
-}</style>
+}
+</style>

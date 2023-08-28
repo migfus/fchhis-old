@@ -22,7 +22,7 @@
 
 <script setup lang="ts">
 // import ClientsCard from './ClientsCard.vue'
-import StatRow from './StatRow.vue'
-import ShortcutCard from './ShortcutCard.vue'
+import StatRow from './cards/StatRow.vue'
+import ShortcutCard from './cards/ShortcutCard.vue'
 import ClientsCard from './ClientsCard.vue'
 </script>

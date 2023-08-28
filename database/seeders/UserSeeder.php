@@ -6,7 +6,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
-
+use Carbon\Carbon;
 
 class UserSeeder extends Seeder
 {
@@ -87,7 +87,7 @@ class UserSeeder extends Seeder
         $faker = \Faker\Factory::create();
         $faker->addProvider(new \Ottaviano\Faker\Gravatar($faker));
         foreach(range(1,10) as $idx) {
-            \App\Models\User::create([
+            $user = \App\Models\User::create([
                 // 'id'=> $idx + 10,
                 'region_id'=> env('SEEDER_REGION_X_ID', null),
                 'branch_id'=> env('SEEDER_BRANCH_VALENCIA_ID', null),
@@ -97,6 +97,19 @@ class UserSeeder extends Seeder
                 'email'    => $faker->email,
                 'password' => Hash::make('12345678'),
             ])->assignRole('client');
+
+            \App\Models\Info::create([
+                    'user_id'   => $user->id,
+                    'staff_id'  => env('SEEDER_USER_STAFF_ID', null),
+                    'agent_id'  => env('SEEDER_USER_AGENT_ID', null),
+                    'bday'      => Carbon::today()->subDays(rand(0, 365)),
+                    'bplace_id' => 1,
+                    'sex'       => false,
+                    'address_id'=> 1,
+                    'address'   => 'client address',
+                    'pay_type_id'=> env("SEEDER_PAY_TYPE_MONTHLY_ID", null),
+                    'plan_id'    => env('SEEDER_PLAN_ID', null),
+                ]);
         }
     }
 }

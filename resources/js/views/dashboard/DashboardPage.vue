@@ -12,13 +12,13 @@
         </div>
 
         <!-- SECTION STAFF -->
-        <div v-else-if="$auth.content.auth.role == 5">
-            <StaffCard />
+        <div v-else-if="RoleToDesc($auth.content.role) == 'Staff'">
+            <StaffPage />
         </div>
 
         <!-- SECTION CLIENT -->
         <div v-else>
-            <ClientDashboard />
+            <ClientPage />
         </div>
 
     </div>
@@ -28,9 +28,10 @@
 import { onMounted } from 'vue';
 // import { useStatisticStore } from '@/store/dashboard/StatisticStore'
 import { useAuthStore } from '@/store/auth/AuthStore'
+import { RoleToDesc } from '@/helpers/converter'
 
-import ClientDashboard from './@client/ClientPage.vue';
-import StaffCard from './@staff/StaffCard.vue';
+import ClientPage from './@client/ClientPage.vue';
+import StaffPage from './@staff/StaffPage.vue';
 
 import AgentCard from './agent/AgentCard.vue';
 import AdminPage from './admin/AdminPage.vue';

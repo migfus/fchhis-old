@@ -13,8 +13,9 @@
                 <div data-card-widget="collapse" ref="collapse-click">
                     <div class="row">
                         <div class="col-12 col-md-6 col-xl-4">
-                            <span class="d-inline d-md-none float-right text-secondary"> {{
-                                moment(row.created_at).local().format('MMMD, YYYY') }} </span>
+                            <span class="d-inline d-md-none float-right text-secondary">
+                                {{ moment(row.created_at).local().format('MMMD, YYYY') }}
+                            </span>
 
                             <img v-if="row.user.avatar" :src="row.user.avatar" style="height: 2em;"
                                 class="img-circle float-left mr-3">
@@ -45,8 +46,8 @@
                             <div class="text-danger">Unregistered</div>
                         </div>
                         <div class="d-none d-xl-inline col-12 col-md-6 col-xl-4">
-                            <span class="float-right text-secondary"> {{ moment(row.created_at).local().format('MMM D,
-                                                            YYYY') }}
+                            <span class="float-right text-secondary">
+                                {{ moment(row.created_at).local().format('MMM D, YYYY') }}
                             </span>
                             <div>Plan: <strong>{{ `${row.plan.name} (${row.pay_type.name})` }}</strong></div>
                             <div>Total: <strong>{{ NumberAddComma(row.plan.spot_pay) }}</strong></div>
@@ -72,7 +73,7 @@
                         <div>Email: <strong>{{ row.user.email }}</strong></div>
                         <div>Name: <strong> {{ row.name }} </strong> </div>
                         <div>Birth Day: <strong>{{ moment(row.bday).local().format('MMM D, YYYY') }}</strong></div>
-                        <div>Birth Place: <strong>{{ CityIDToFullAddress(row.bplace_id) }}</strong></div>
+                        <div>Birth Place: <strong>{{ $address.CityIDToFullAddress(row.bplace_id) }}</strong></div>
                         <hr class="mt-1" />
                     </div>
                     <div class="col-12 col-md-6 col-lg-4 col-xl-3">
@@ -85,8 +86,8 @@
                         <hr class="mt-1" />
                     </div>
                     <div class="col-12 col-md-6 col-lg-4 col-xl-3">
-                        <div>Province: <strong>{{ ProvinceIDToDesc(row.address_id) }}</strong></div>
-                        <div>City: <strong>{{ CityIDToDesc(row.address_id) }}</strong></div>
+                        <div>Province: <strong>{{ $address.ProvinceIDToDesc(row.address_id) }}</strong></div>
+                        <div>City: <strong>{{ $address.CityIDToDesc(row.address_id) }}</strong></div>
                         <div>Address: <strong>{{ row.address }}</strong></div>
                         <div>Sex: <strong>{{ row.sex ? 'Male' : 'Female' }}</strong></div>
                         <hr class="mt-1" />
@@ -121,11 +122,13 @@ import moment from "moment"
 import { useUsersStore } from '@/store/users/UsersStore'
 import { RoleToDesc } from '@/helpers/converter'
 import BadgeComponent from '../components/BadgeComponent.vue'
-import { CityIDToFullAddress, ProvinceIDToDesc, CityIDToDesc, NumberAddComma } from '@/helpers/converter'
-import VueAvatar from "@webzlodimir/vue-avatar";
-import "@webzlodimir/vue-avatar/dist/style.css";
+import { NumberAddComma } from '@/helpers/converter'
+import { useAddressStore } from "@/store/public/AddressStore"
+import VueAvatar from "@webzlodimir/vue-avatar"
+import "@webzlodimir/vue-avatar/dist/style.css"
 
 const $user = useUsersStore();
+const $address = useAddressStore();
 </script>
 
 <style scoped>
@@ -141,4 +144,5 @@ const $user = useUsersStore();
 .ribbon-wrapper {
     left: 0 !important;
     transform: rotate(270deg)
-}</style>
+}
+</style>

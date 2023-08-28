@@ -134,39 +134,39 @@ class UserController extends Controller
             $data->with(['plan', 'pay_type', 'agent', 'user', 'staff', 'phones']);
 
             switch($req->filter) {
-            case 'plan':
-                $data->whereHas('user', function($q) use($req) {
-                    $q->where('role', $req->role);
-                })
-                ->whereHas('plan', function($q) use($req) {
-                    $q->where('name', 'LIKE', '%'.$req->search.'%');
-                })
-                ->withSum('client_transactions', 'amount');
-                break;
-            case 'address':
-                $data->whereHas('user', function($q) use($req) {
-                    $q->where('role', $req->role);
-                })
-                ->withSum('client_transactions', 'amount')
-                ->where('address', 'LIKE', '%'.$req->search.'%');
-                break;
-            case 'email':
-                $data->whereHas('user', function($q) use($req) {
-                    $q->where('role', $req->role)->where('name', 'LIKE', '%'.$req->search.'%');
-                })
-                ->withSum('client_transactions', 'amount');
-                break;
-            default:
-                $data->whereHas('user', function($q) use($req) {
-                    $q->where('role', $req->role);
-                })
-                ->withSum('client_transactions', 'amount')
-                ->where('name', 'LIKE', '%'.$req->search.'%');
+                case 'plan':
+                    $data->whereHas('user', function($q) use($req) {
+                        $q->where('role', $req->role);
+                    })
+                    ->whereHas('plan', function($q) use($req) {
+                        $q->where('name', 'LIKE', '%'.$req->search.'%');
+                    })
+                    ->withSum('client_transactions', 'amount');
+                    break;
+                case 'address':
+                    $data->whereHas('user', function($q) use($req) {
+                        $q->where('role', $req->role);
+                    })
+                    ->withSum('client_transactions', 'amount')
+                    ->where('address', 'LIKE', '%'.$req->search.'%');
+                    break;
+                case 'email':
+                    $data->whereHas('user', function($q) use($req) {
+                        $q->where('role', $req->role)->where('name', 'LIKE', '%'.$req->search.'%');
+                    })
+                    ->withSum('client_transactions', 'amount');
+                    break;
+                default:
+                    $data->whereHas('user', function($q) use($req) {
+                        $q->where('role', $req->role);
+                    })
+                    ->withSum('client_transactions', 'amount')
+                    ->where('name', 'LIKE', '%'.$req->search.'%');
 
-            return response()->json([
-                ...$this->G_ReturnDefault($req),
-                'data' => $data->withSum('client_transactions', 'amount')->orderBy('created_at', 'DESC')->paginate($req->limit)
-            ]);
+                return response()->json([
+                    ...$this->G_ReturnDefault($req),
+                    'data' => $data->withSum('client_transactions', 'amount')->orderBy('created_at', 'DESC')->paginate($req->limit)
+                ]);
             }
         }
 
@@ -541,7 +541,7 @@ class UserController extends Controller
         }
 
     // SECTION SHOW
-    public function show(int $id, Request $req) : JsonResponse {
+    public function show(string $id, Request $req) : JsonResponse {
         if($req->user()->hasRole('admin')) {
             return $this->AdminShow($req, $id);
         }
@@ -552,7 +552,7 @@ class UserController extends Controller
         return $this->G_UnauthorizedResponse();
     }
 
-        private function StaffShow(Request $req, int $id) : JsonResponse {
+        private function StaffShow(Request $req, string $id) : JsonResponse {
             $data = Info::where('id', $id)
                 ->with(['user', 'client_transactions', 'plan', 'pay_type'])
                 ->withSum('client_transactions', 'amount')
@@ -561,7 +561,7 @@ class UserController extends Controller
             return response()->json([...$this->G_ReturnDefault($req), 'data' => $data], 200);
         }
 
-        private function AdminShow(Request $req, int $id) : JsonResponse {
+        private function AdminShow(Request $req, string $id) : JsonResponse {
             $data;
 
             if(Info::where('id', $id)->with('user')->whereHas('user', function($q) {$q->where('role', 4);})->first()) {
@@ -584,7 +584,7 @@ class UserController extends Controller
         }
 
     // SECTION UPDATE
-    public function update(Request $req, int $id) : JsonResponse {
+    public function update(Request $req, string $id) : JsonResponse {
         if($req->user()->hasRole('admin')) {
             return $this->AdminUpdate($req, $id);
         }
@@ -595,7 +595,7 @@ class UserController extends Controller
         return $this->G_UnauthorizedResponse();
     }
 
-        private function StaffUpdate(Request $req, int $id) : JsonResponse {
+        private function StaffUpdate(Request $req, string $id) : JsonResponse {
             $val = Validator::make($req->all(), [
                 'user.avatar'   => '',
                 'user.username' => ['required', Rule::unique('users', 'username')->ignore($req->user['id'])],
@@ -647,7 +647,7 @@ class UserController extends Controller
             return response()->json([...$this->G_ReturnDefault($req),]);
         }
 
-        private function AdminUpdate(Request $req, int $id) : JsonResponse {
+        private function AdminUpdate(Request $req, string $id) : JsonResponse {
             $val = Validator::make($req->all(), [
                 'user.avatar'   => '',
                 'user.username' => ['required', Rule::unique('users', 'username')->ignore($req->user['id'])],
@@ -842,10 +842,10 @@ class UserController extends Controller
     // SECTION SPECIAL
     public function dashboard(Request $req) : JsonResponse {
         if($req->user()->hasRole('admin')) {
-            $this->AdminDashboard($req);
+            return $this->AdminDashboard($req);
         }
         else if($req->user()->hasRole('staff')) {
-            $this->StaffDashboard($req);
+            return $this->StaffDashboard($req);
         }
 
         return $this->G_UnauthorizedResponse();
@@ -855,8 +855,14 @@ class UserController extends Controller
             return '2sdfsdf2';
         }
 
-        private function StaffDashboard(Request $req) : int {
-            return 1;
+        private function StaffDashboard(Request $req) : JsonResponse {
+            $user = User::with(['info.agent'])->role('client')->limit(5)->orderBy('created_at', 'DESC')->get();
+
+            return response()->json([
+                ...$this->G_ReturnDefault($req),
+                'data' => $user
+            ]);
+
         }
 }
 

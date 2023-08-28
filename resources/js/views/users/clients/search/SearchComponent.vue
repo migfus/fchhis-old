@@ -110,7 +110,7 @@ onMounted(() => {
     $user.query.sort = 'DESC'
     $user.query.limit = 10
     $user.query.role = 6
-    $user.GetAPI()
+    // $user.GetAPI()
 });
 
 // onUnmounted(() => {
