@@ -99,17 +99,17 @@ class UserSeeder extends Seeder
             ])->assignRole('client');
 
             \App\Models\Info::create([
-                    'user_id'   => $user->id,
-                    'staff_id'  => env('SEEDER_USER_STAFF_ID', null),
-                    'agent_id'  => env('SEEDER_USER_AGENT_ID', null),
-                    'bday'      => Carbon::today()->subDays(rand(0, 365)),
-                    'bplace_id' => 1,
-                    'sex'       => false,
-                    'address_id'=> 1,
-                    'address'   => 'client address',
-                    'pay_type_id'=> env("SEEDER_PAY_TYPE_MONTHLY_ID", null),
-                    'plan_id'    => env('SEEDER_PLAN_ID', null),
-                ]);
+                'user_id'   => $user->id,
+                'staff_id'  => env('SEEDER_USER_STAFF_ID', null),
+                'agent_id'  => env('SEEDER_USER_AGENT_ID', null),
+                'bday'      => Carbon::today()->subDays(rand(0, 365)),
+                'bplace_id' => 1,
+                'sex'       => false,
+                'address_id'=> 1,
+                'address'   => 'client address',
+                'pay_type_id'=> env("SEEDER_PAY_TYPE_MONTHLY_ID", null),
+                'plan_id'    => env('SEEDER_PLAN_ID', null),
+            ]);
         }
     }
 }

@@ -9,22 +9,32 @@
                 <thead>
                     <tr>
                         <th>Name</th>
-                        <th>Accumulated</th>
+                        <th>Amount</th>
                         <th>Agent</th>
+                        <th>Created</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="row in $trans.content.data">
-                        <td>{{ row.client.name }}</td>
+                    <tr v-for="row in $trans.content">
+                        <td>
+                            <img :src="row.client.avatar" class="mr-2" style="height: 30px; width: 30px" />
+                            {{ row.client.name }}
+                        </td>
                         <td>
                             <strong class="text-success">
                                 +{{ NumberAddComma(row.amount) }}
                             </strong>
                         </td>
                         <td>
+                            <img :src="row.agent.avatar" class="mr-2" style="height: 30px; width: 30px" />
                             <strong class="text-success">
                                 {{ row.agent.name }}
                             </strong>
+                        </td>
+                        <td>
+                            <div>
+                                {{ moment(row.created_at).fromNow(true) }}
+                            </div>
                         </td>
                     </tr>
                 </tbody>
@@ -35,17 +45,14 @@
 </template>
 
 <script setup>
-import { useTransactionStore } from '@/store/transactions/TransactionStore'
+import { useTransactionDashboardStore } from '@/store/@staff/TransactionDashboardStore'
 import { onMounted } from 'vue'
 import moment from 'moment'
 import { NumberAddComma } from '@/helpers/converter'
 
-const $trans = useTransactionStore();
+const $trans = useTransactionDashboardStore();
 
 onMounted(() => {
-    $trans.query.limit = 11;
-    $trans.query.start = moment().startOf('month')
-    $trans.query.end = moment().endOf('month')
     $trans.GetAPI()
 })
 

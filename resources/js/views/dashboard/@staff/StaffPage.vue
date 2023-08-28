@@ -7,7 +7,7 @@
                 <ShortcutCard />
             </div>
             <div class="col-12 col-md-6">
-
+                <TransactionCard />
             </div>
         </div>
         <div class="row">
@@ -16,7 +16,6 @@
             </div>
         </div>
 
-        <!-- <ClientsCard /> -->
     </div>
 </template>
 
@@ -24,5 +23,6 @@
 // import ClientsCard from './ClientsCard.vue'
 import StatRow from './cards/StatRow.vue'
 import ShortcutCard from './cards/ShortcutCard.vue'
-import ClientsCard from './ClientsCard.vue'
+import ClientsCard from './cards/ClientsCard.vue'
+import TransactionCard from './cards/StaffTransactionsCard.vue'
 </script>

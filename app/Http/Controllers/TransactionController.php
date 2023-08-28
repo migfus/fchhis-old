@@ -610,4 +610,18 @@ class TransactionController extends Controller
 
         return $this->G_UnauthorizedResponse();
     }
+
+    public function dashboard(Request $req): JsonResponse {
+        if($req->user()->hasRole('staff')) {
+            return $this->StaffDashboard($req);
+        }
+    }
+        private function StaffDashboard(Request $req) : JsonResponse {
+            $data = Transaction::with(['client', 'agent'])->orderBy('created_at', 'DESC')->limit(10)->get();
+
+            return response()->json([
+                ...$this->G_ReturnDefault($req),
+                'data' => $data,
+            ]);
+        }
 }

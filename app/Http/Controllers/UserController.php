@@ -856,7 +856,9 @@ class UserController extends Controller
         }
 
         private function StaffDashboard(Request $req) : JsonResponse {
-            $user = User::with(['info.agent'])->role('client')->limit(5)->orderBy('created_at', 'DESC')->get();
+            $user = User::with(['info.agent'])
+                ->withSum('client_transactions', 'amount')
+                ->role('client')->limit(5)->orderBy('created_at', 'DESC')->get();
 
             return response()->json([
                 ...$this->G_ReturnDefault($req),

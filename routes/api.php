@@ -34,7 +34,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/claim/{id}', 'Claim');
     });
 
-        Route::get('/users/dashboard', [\App\Http\Controllers\UserController::class, 'dashboard']);
+    Route::get('/users/dashboard', [\App\Http\Controllers\UserController::class, 'dashboard']);
+    Route::get('/transaction/dashboard', [\App\Http\Controllers\TransactionController::class, 'dashboard']);
+
     Route::apiResource('/users',     \App\Http\Controllers\UserController::class)->only(['index', 'destroy', 'store', 'update', 'show']);
     Route::apiResource('/dashboard', \App\Http\Controllers\DashboardController::class)->only(['index']);
     Route::apiResource('/plan',      \App\Http\Controllers\PlanController::class)->only(['index', 'destroy', 'store', 'update']);
