@@ -14,8 +14,8 @@ class PlanSeeder extends Seeder
     {
         $data = [
             [
-                'id'   => 1,
-                'user_id' => 1,
+                'id'   => env('SEEDER_PLAN_BERYL_ID', null),
+                'user_id' => env('SEEDER_USER_ADMIN_ID', null),
                 'avatar' => 'https://media.karousell.com/media/photos/products/2021/9/2/red_jasper_stone_raw_1630563781_5fe20000.jpg',
                 'name' => 'Jasper',
                 'age_start'=> 18,
@@ -30,8 +30,8 @@ class PlanSeeder extends Seeder
                 'monthly' => 450,
             ],
             [
-                'id'   => 2,
-                'user_id' => 1,
+                'id'   => env('SEEDER_PLAN_JADE_ID', null),
+                'user_id' => env('SEEDER_USER_ADMIN_ID', null),
                 'avatar' => 'https://cdn.shopify.com/s/files/1/0273/4214/3566/files/Untitled_design_-_2020-09-03T160021.639.jpg?v=1599145227',
                 'name' => 'Jade',
                 'age_start'=> 18,
@@ -46,8 +46,8 @@ class PlanSeeder extends Seeder
                 'monthly' => 495,
             ],
             [
-                'id'   => 3,
-                'user_id' => 1,
+                'id'   => env('SEEDER_PLAN_BERYL_ID', null),
+                'user_id' => env('SEEDER_USER_ADMIN_ID', null),
                 'avatar' => 'https://gem-a.com/media/k2/items/cache/9139b86f02108abdcc0129521eca5e85_L.jpg',
                 'name' => 'Beryl',
                 'age_start'=> 18,
@@ -62,8 +62,8 @@ class PlanSeeder extends Seeder
                 'monthly' => 650,
             ],
             [
-                'id'   => 4,
-                'user_id' => 1,
+                'id'   => env('SEEDER_PLAN_ONYX_ID', null),
+                'user_id' => env('SEEDER_USER_ADMIN_ID', null),
                 'avatar' => 'https://cdn.shopify.com/s/files/1/0273/4214/3566/files/Untitled_design.jpg?v=1626279061',
                 'name' => 'Onyx',
                 'age_start'=> 18,

@@ -15,6 +15,7 @@ class RegionSeeder extends Seeder
         //
         $data = [
         [
+            'id' => env('SEEDER_REGION_X_ID', 569914152489794),
             'name' => 'Region X',
         ]
         ];

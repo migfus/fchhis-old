@@ -13,7 +13,10 @@ class BranchSeeder extends Seeder
     public function run(): void
     {
         $data = [
-            ['name' => 'Valencia City']
+            [
+                'id' => env('SEEDER_BRANCH_VALENCIA_ID', 569913442237459),
+                'name' => 'Valencia City'
+            ]
         ];
 
         foreach($data as $row) {

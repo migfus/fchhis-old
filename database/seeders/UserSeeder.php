@@ -14,7 +14,7 @@ class UserSeeder extends Seeder
     {
         // NOTE ADMIN
         User::create([
-            'id'=> 2,
+            'id'=> env('SEEDER_USER_ADMIN_ID', 569914608193917),
             'region_id'=> null,
             'branch_id'=> null,
             'username' => 'admin',
@@ -26,8 +26,8 @@ class UserSeeder extends Seeder
 
         // NOTE MANAGER
         User::create([
-            'id'=> 7,
-            'region_id'=> 1,
+            'id'=> env('SEEDER_USER_REGIONAL_MANAGER_ID', 569914608521972),
+            'region_id'=> env('SEEDER_REGION_X_ID', null),
             'branch_id'=> null,
             'username' => 'regionalmanager',
             'name'     => 'admin name',
@@ -37,9 +37,9 @@ class UserSeeder extends Seeder
         ])->assignRole('regional_manager');
 
         User::create([
-            'id'=> 8,
-            'region_id'=> 1,
-            'branch_id'=> 1,
+            'id'=> env('SEEDER_USER_BRANCH_MANAGER_ID', 569914608859162),
+            'region_id'=> env('SEEDER_REGION_X_ID', null),
+            'branch_id'=> env('SEEDER_BRANCH_VALENCIA_ID', null),
             'username' => 'branchmanager',
             'name'     => 'branch manager',
             'email'    => 'branchmanager@gmail.com',
@@ -47,23 +47,11 @@ class UserSeeder extends Seeder
             'avatar'   => 'https://cdn1.iconfinder.com/data/icons/user-pictures/100/female1-512.png',
         ])->assignRole('branch_manager');
 
-        // NOTE AGENT
-        User::create([
-            'id'=> 4,
-            'region_id'=> 1,
-            'branch_id'=> 1,
-            'username' => 'agent',
-            'name'     => 'agent name',
-            'email'    => 'agent@gmail.com',
-            'password' => Hash::make('12345678'),
-            'avatar'   => 'https://cdn1.iconfinder.com/data/icons/user-pictures/100/female1-512.png',
-        ])->assignRole('agent');
-
         // NOTE STAFF
         User::create([
-            'id'=> 5,
-            'region_id'=> 1,
-            'branch_id'=> 1,
+            'id'=> env('SEEDER_USER_STAFF_ID', 569914609518872),
+            'region_id'=> env('SEEDER_REGION_X_ID', null),
+            'branch_id'=> env('SEEDER_BRANCH_VALENCIA_ID', null),
             'username' => 'staff',
             'name'     => 'staff name',
             'email'    => 'staff@gmail.com',
@@ -71,11 +59,23 @@ class UserSeeder extends Seeder
             'avatar'   => 'https://cdn1.iconfinder.com/data/icons/user-pictures/100/female1-512.png',
         ])->assignRole('staff');
 
+        // NOTE AGENT
+        User::create([
+            'id'=> env('SEEDER_USER_AGENT_ID', 569914609196675),
+            'region_id'=> env('SEEDER_REGION_X_ID', null),
+            'branch_id'=> env('SEEDER_BRANCH_VALENCIA_ID', null),
+            'username' => 'agent',
+            'name'     => 'agent name',
+            'email'    => 'agent@gmail.com',
+            'password' => Hash::make('12345678'),
+            'avatar'   => 'https://cdn1.iconfinder.com/data/icons/user-pictures/100/female1-512.png',
+        ])->assignRole('agent');
+
         // NOTE CLIENT
         User::create([
-            'id'=> 6,
-            'region_id'=> 1,
-            'branch_id'=> 1,
+            'id'=> env('SEEDER_USER_CLIENT_ID', 569914609832999),
+            'region_id'=> env('SEEDER_REGION_X_ID', null),
+            'branch_id'=> env('SEEDER_BRANCH_VALENCIA_ID', null),
             'username' => 'client',
             'name'     => 'client name',
             'email'    => 'client@gmail.com',
@@ -88,9 +88,9 @@ class UserSeeder extends Seeder
         $faker->addProvider(new \Ottaviano\Faker\Gravatar($faker));
         foreach(range(1,10) as $idx) {
             \App\Models\User::create([
-                'id'=> $idx + 10,
-                'region_id'=> 1,
-                'branch_id'=> 1,
+                // 'id'=> $idx + 10,
+                'region_id'=> env('SEEDER_REGION_X_ID', null),
+                'branch_id'=> env('SEEDER_BRANCH_VALENCIA_ID', null),
                 'username' => $faker->username,
                 'name'     => $faker->name,
                 'avatar'   => $faker->gravatarUrl(),

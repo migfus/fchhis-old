@@ -14,27 +14,27 @@ class PayTypeSeeder extends Seeder
     {
         $data = [
             [
-                'id' => 1,
+                'id' => env('SEEDER_PAY_TYPE_MONTHLY_ID', null),
                 'name' => 'Monthly',
             ],
             [
-                'id' => 2,
+                'id' => env('SEEDER_PAY_TYPE_QUARTERLY_ID', null),
                 'name' => 'Quarterly',
             ],
             [
-                'id' => 3,
+                'id' => env('SEEDER_PAY_TYPE_SEMI_ANNUAL_ID', null),
                 'name' => 'Semi-Annual',
             ],
             [
-                'id' => 4,
+                'id' => env('SEEDER_PAY_TYPE_ANNUAL_ID', null),
                 'name' => 'Annual',
             ],
             [
-                'id' => 5,
+                'id' => env('SEEDER_PAY_TYPE_SPOT_PAYMENT_ID', null),
                 'name' => 'Spot Payment',
             ],
             [
-                'id' => 6,
+                'id' => env('SEEDER_PAY_TYPE_SPOT_SERVICE_ID', null),
                 'name' => 'Spot Service',
             ],
         ];
