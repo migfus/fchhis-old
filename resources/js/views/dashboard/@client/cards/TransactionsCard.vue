@@ -99,8 +99,8 @@ function Print(): void {
         ['Plan Name', 'Plan Type', 'Amount', 'Date'],
 
         ...$trans.content.data.map(m => { return [m.plan.name, m.pay_type.name, m.amount, moment(m.created_at).format('MM/DD/YYYY HH:MM A')] }),
-
-        ['', '', 'Total: ', NumberAddComma($trans.content.data.reduce((a, b) => Number(a.amount) + Number(b.amount)))],
+        // @ts-ignore
+        ['', '', 'Total: ', NumberAddComma(Number($trans.content.data.reduce((a, b) => Number(a.amount) + Number(b.amount))))],
     ]
 
     const ws = XLSX.utils.aoa_to_sheet(xlsxDataConstruct);

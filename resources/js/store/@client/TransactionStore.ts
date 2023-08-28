@@ -10,7 +10,17 @@ type IQuery = {
     search: string
     sort: 'ASC' | 'DESC'
 }
-type IContent = Array<String>
+type IContent = {
+    data: Array<{
+        id: number
+        amount: number
+        plan: { name: string}
+        pay_type: { name: string}
+        created_at: string
+    }>
+    sumTransactions: number
+    sum: number
+}
 
 const title = '@client/TransactionsStore'
 

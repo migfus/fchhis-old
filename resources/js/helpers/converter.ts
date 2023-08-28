@@ -47,10 +47,10 @@ export const RoleToID = (id: String) => {
 
 export const AgeConverter = (bday: Date) => bday == null ? null : moment().diff(bday, 'years');
 
-export const NumberAddComma = (num: String)  => {
+export const NumberAddComma = (num: number)  => {
     if(num) {
-        num = Number(num).toFixed(2);
-        return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        let _num = Number(num).toFixed(2);
+        return _num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
     return '0.00'
 }

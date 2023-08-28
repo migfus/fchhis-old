@@ -17,7 +17,7 @@ export const useSummaryStore = defineStore(title, () => {
     async function GetAPI() {
         config.loading = true
         try {
-            let { data: {data}} = await axios.get('/api/statictic', {
+            let { data: {data}} = await axios.get('/api/statistic', {
                 cancelToken: new CancelToken(function executor(c) { cancel = c; })
             })
             content.value = data
