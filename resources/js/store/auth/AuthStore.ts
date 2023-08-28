@@ -1,11 +1,11 @@
-import { ref, toRaw } from "vue"
+import { ref, toRaw, reactive } from "vue"
 import { defineStore } from "pinia"
 import { useToast } from "vue-toastification"
 import { useStorage, StorageSerializers } from '@vueuse/core'
 import axios from "axios"
 import ability from '@/Ability';
 
-type contentInt = {
+type IContent = {
     ip: string
     token: string
     auth: {
@@ -40,10 +40,15 @@ type contentInt = {
     },
     permissions: Array<String>
 }
-type configInt = {
+type IConfig = {
     loading: boolean
     status: string
     confirm: boolean
+}
+type IChangePasswordInput = {
+    newPassword: string
+    confirmPassword: string
+    code: string
 }
 
 const title = 'auth/AuthStore'
@@ -52,19 +57,19 @@ export const useAuthStore = defineStore(title, () => {
     const $toast = useToast();
 
     const _token = useStorage<string>(`${title}/token`, null, localStorage);
-    const _content = useStorage<contentInt>(`${title}/content`, null, localStorage, { serializer: StorageSerializers.object })
+    const _content = useStorage<IContent>(`${title}/content`, null, localStorage, { serializer: StorageSerializers.object })
 
     const token = ref(toRaw(_token))
     const content = ref(toRaw(_content))
-    const config = useStorage<configInt>(`${title}/config`,{
+    const config = reactive<IConfig>({
         loading: false,
         status: '',
         confirm: false,
-    }, localStorage, {serializer: StorageSerializers.object })
+    })
 
     // SECTION API
     async function LoginAPI(input: { email: string, password: string}) {
-        config.value.loading = true
+        config.loading = true
         try{
             let { data: { data }} = await axios.post('/api/login', input)
             UpdateData(data)
@@ -78,37 +83,32 @@ export const useAuthStore = defineStore(title, () => {
         catch(e) {
             console.log('Login Error', {e})
         }
-        config.value.loading = false
+        config.loading = false
     }
 
     async function RecoveryAPI(input: {email: string}) {
-        config.value.loading = true
+        config.loading = true
         try {
             let { data: { data }} = await axios.post('/api/recovery', input)
-            config.value.status = data
+            config.status = data
         }
         catch(e) {
             console.log('RecoveryAPI Error', {e})
         }
-        config.value.loading = false
+        config.loading = false
     }
 
     async function ConfirmRecoveryAPI(input: {code: string}) {
         try {
             let { data: { data }} = await axios.post('/api/recovery-confirm', input)
-            config.value.confirm = data
+            config.confirm = data
         }
         catch(e) {
             console.log('ConfirmRecoveryAPI Error', {e})
         }
     }
 
-    type ChangePasswordInputType = {
-        newPassword: string
-        confirmPassword: string
-        code: string
-    }
-    async function ChangePasswordAPI(input: ChangePasswordInputType) {
+    async function ChangePasswordAPI(input: IChangePasswordInput) {
         try {
             let { data: { data }} = await axios.post('/api/change-password-recovery', input)
             if(data) {
@@ -136,7 +136,7 @@ export const useAuthStore = defineStore(title, () => {
         _content.value = content.value
     }
 
-    function UpdateData(authData: contentInt) {
+    function UpdateData(authData: IContent) {
         content.value = authData
         _content.value = authData
 

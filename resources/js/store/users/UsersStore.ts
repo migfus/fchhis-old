@@ -2,8 +2,9 @@ import { useStorage, StorageSerializers } from '@vueuse/core'
 import { defineStore } from 'pinia'
 import axios from 'axios'
 import { useToast } from 'vue-toastification'
+import { reactive } from 'vue'
 
-type configInt = {
+type IConfig = {
     loading: boolean
     notify: boolean
     form: string
@@ -11,7 +12,7 @@ type configInt = {
     viewAll: boolean
     RemoveNotify: boolean
 }
-type queryInt = {
+type IQuery = {
     search: string
     sort: 'ASC' | 'DESC'
     limit: number
@@ -21,7 +22,7 @@ type queryInt = {
     role: number
     overdue: boolean
 }
-type paramsInt = {
+type IParams = {
     avatar: string
     username: string
     email: string
@@ -44,13 +45,13 @@ type paramsInt = {
     id: number
     phones?: Array<{phone: string}>
 }
-type countsInt = Array<{
+type ICounts = Array<{
     name: string
     color: string
     icon: string
     count: string
 }>
-type listInt = {
+type IList = {
     data: Array<{
         avatar: string
         name: string
@@ -71,15 +72,15 @@ export const useUsersStore = defineStore(title, () => {
     // DEBUG ADd type on 'content' & 'print'
     const content = useStorage(`${title}/content`, null, localStorage, { serializer: StorageSerializers.object })
     const print = useStorage(`${title}/print`, null, localStorage)
-    const config = useStorage<configInt>(`${title}/config`, {
+    const config = reactive<IConfig>({
         loading: false,
         notify: true,
         form: '',
         tableView: false,
         viewAll: false,
         RemoveNotify: false
-    }, localStorage, { serializer: StorageSerializers.object })
-    const query = useStorage<queryInt>(`${title}/query`, {
+    })
+    const query = reactive<IQuery>({
         search: '',
         sort: 'ASC',
         limit: 10,
@@ -88,36 +89,36 @@ export const useUsersStore = defineStore(title, () => {
         filter: 'name',
         role: 6,
         overdue: false
-    }, localStorage, { serializer: StorageSerializers.object })
-    const params = useStorage<paramsInt>(`${title}/params`, {
+    })
+    const params = useStorage<IParams>(`${title}/params`, {
         ...InitParams(),
 
     }, localStorage, { serializer: StorageSerializers.object })
-    const counts = useStorage<countsInt>(`${title}/counts`, null, localStorage);
-    const list = useStorage<listInt>(`${title}/list`, null, localStorage);
+    const counts = useStorage<ICounts>(`${title}/counts`, null, localStorage);
+    const list = useStorage<IList>(`${title}/list`, null, localStorage);
 
 
     // SECTION API
     async function GetAPI(page = 1) {
-        config.value.loading = true
+        config.loading = true
         try {
             let { data: {data}} = await axios.get('/api/users', {
                 cancelToken: new CancelToken(function executor(c) { cancel = c; }),
-                params: { ...query.value, page: page}
+                params: { ...query, page: page}
             })
             content.value = data
         }
         catch(e) {
             console.log('UsersStore GetAPI Error', {e})
         }
-        config.value.loading = false
+        config.loading = false
     }
 
     async function PrintAPI() {
         try {
             let { data: {data}} = await axios.get('/api/users', {
                 cancelToken: new CancelToken(function executor(c) { cancel = c; }),
-                params: { ...query.value, print: true}
+                params: { ...query, print: true}
             })
             print.value = data
         }
@@ -169,7 +170,7 @@ export const useUsersStore = defineStore(title, () => {
 
     // SECTION FUNCTIONS
     function ChangeForm(input) {
-        config.value.form = input
+        config.form = input
         window.scrollTo({
             top: 0,
             left: 0,
@@ -208,7 +209,7 @@ export const useUsersStore = defineStore(title, () => {
     function Update(row) {
         Object.assign(params.value, row)
 
-        config.value.form = 'update'
+        config.form = 'update'
 
         window.scrollTo({
             top: 0,

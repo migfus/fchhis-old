@@ -2,20 +2,21 @@ import { defineStore } from 'pinia'
 import axios from 'axios'
 import { useToast} from 'vue-toastification'
 import { useStorage, StorageSerializers } from '@vueuse/core'
+import { reactive } from 'vue'
 
-type configInt = {
+type IConfig = {
     loading: boolean
     viewAll: boolean
     form: string
 }
-type queryInt = {
+type IQuery = {
     search: string
     sort: 'ASC' | 'DESC'
     start: string
     end: string
     filter: string
 }
-type paramsInt = {
+type IParams = {
     or: string
     pay_type: {
         name: string
@@ -40,7 +41,7 @@ type paramsInt = {
         id: string
     }
 }
-type contentInt = {
+type IContent = {
     transaction: any
 }
 
@@ -54,44 +55,44 @@ export const useTransactionStore = defineStore(title, () => {
   // DEBUG please add type 'content' & 'print'
     const content = useStorage<any>(`${title}/content` , null, localStorage, { serializer: StorageSerializers.object })
     const print = useStorage(`${title}/print`, null, localStorage)
-    const config = useStorage<configInt>(`${title}/config`, {
+    const config = reactive<IConfig>({
         loading: false,
         viewAll:false,
         form: '',
-    }, localStorage, {serializer:StorageSerializers.object })
-    const query = useStorage<queryInt>(`${title}/query`, {
+    })
+    const query = reactive<IQuery>({
         search: '',
         sort: 'ASC',
         start: '',
         end: '',
         filter: 'name'
     })
-    const params = useStorage<paramsInt>(`${title}/params`,{
+    const params = useStorage<IParams>(`${title}/params`,{
         ...InitParams(),
     }, localStorage, {serializer: StorageSerializers.object })
 
 
     // SECTION API
     async function GetAPI(page = 1) {
-        config.value.loading = true
+        config.loading = true
         try {
             let { data: {data}} = await axios.get('/api/transaction', {
                 cancelToken: new CancelToken(function executor(c) { cancel = c; }),
-                params: { ...query.value, page: page}
+                params: { ...query, page: page}
             })
             content.value = data
         }
         catch(e) {
             console.log('StatisticStore GetAPI Error', {e})
         }
-        config.value.loading = false
+        config.loading = false
     }
 
     async function PrintAPI() {
         try {
             let { data: {data} } = await axios.get('/api/transaction', {
                 cancelToken: new CancelToken(function executor(c) { cancel = c; }),
-                params: { ...query.value, print: true}
+                params: { ...query, print: true}
             })
             print.value = data
         }
@@ -151,7 +152,7 @@ export const useTransactionStore = defineStore(title, () => {
     }
 
     function ChangeForm(input) {
-        config.value.form = input
+        config.form = input
 
         window.scrollTo({
             top: 0,

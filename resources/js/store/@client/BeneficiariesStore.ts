@@ -3,10 +3,10 @@ import { defineStore } from 'pinia'
 import axios from 'axios'
 import { reactive } from 'vue'
 
-type configInt = {
+type IConfig = {
     loading: boolean
 }
-type queryInt = {
+type IQuery = {
     search: string
 }
 const title = '@client/BeneficiariesStore'
@@ -16,18 +16,17 @@ export const useBeneficiariesStore = defineStore(title, () => {
     let cancel;
 
     const content = useStorage(`${title}/content`, null, localStorage, { serializer: StorageSerializers.object })
-    const config = useStorage<configInt>(`${title}/config`, { loading: false }, localStorage, { serializer: StorageSerializers.object })
-    const query = reactive<queryInt>({ search: '' })
-
+    const config = reactive<IConfig>({ loading: false })
+    const query = reactive<IQuery>({ search: '' })
 
     // SECTION API
-
     function CancelAPI() {
         cancel()
+        content.value = null
     }
 
     async function GetAPI() {
-        config.value.loading = true
+        config.loading = true
         try {
             let { data: {data}} = await axios.get('/api/users', {
                 cancelToken: new CancelToken(function executor(c) { cancel = c; }),
@@ -38,7 +37,7 @@ export const useBeneficiariesStore = defineStore(title, () => {
         catch(e) {
             console.log('UsersStore GetAPI Error', {e})
         }
-        config.value.loading = false
+        config.loading = false
     }
 
     return {

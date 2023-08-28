@@ -1,19 +1,16 @@
 import { defineStore } from 'pinia'
 import axios from 'axios'
-import { useToast } from 'vue-toastification'
 import { useStorage, StorageSerializers } from '@vueuse/core'
 import { reactive } from 'vue'
 
-type configInt = {
+type IConfig = {
     loading: boolean
 }
-type queryInt = {
+type IQuery = {
     search: string
     sort: 'ASC' | 'DESC'
 }
-type contentInt = {
-    transaction: any
-}
+type IContent = Array<String>
 
 const title = '@client/TransactionsStore'
 
@@ -22,12 +19,12 @@ export const useTransactionStore = defineStore(title, () => {
     let cancel;
 
   // DEBUG please add type 'content' & 'print'
-    const content = useStorage<any>(`${title}/content` , null, localStorage, { serializer: StorageSerializers.object })
+    const content = useStorage<IContent>(`${title}/content` , null, localStorage, { serializer: StorageSerializers.object })
     const print = useStorage(`${title}/print`, null, localStorage)
-    const config = useStorage<configInt>(`${title}/config`, {
+    const config = reactive<IConfig>({
         loading: false,
-    }, localStorage, {serializer:StorageSerializers.object })
-    const query = reactive<queryInt>({
+    })
+    const query = reactive<IQuery>({
         search: '',
         sort: 'ASC',
     })
@@ -36,10 +33,11 @@ export const useTransactionStore = defineStore(title, () => {
     // SECTION API
     function CancelAPI() {
         cancel()
+        content.value = null
     }
 
     async function GetAPI(page = 1) {
-        config.value.loading = true
+        config.loading = true
         try {
             let { data: {data}} = await axios.get('/api/transaction', {
                 cancelToken: new CancelToken(function executor(c) { cancel = c; }),
@@ -50,14 +48,14 @@ export const useTransactionStore = defineStore(title, () => {
         catch(e) {
             console.log('StatisticStore GetAPI Error', {e})
         }
-        config.value.loading = false
+        config.loading = false
     }
 
     async function PrintAPI() {
         try {
             let { data: {data} } = await axios.get('/api/transaction', {
                 cancelToken: new CancelToken(function executor(c) { cancel = c; }),
-                params: { ...query.value, print: true}
+                params: { ...query, print: true}
             })
             print.value = data
         }

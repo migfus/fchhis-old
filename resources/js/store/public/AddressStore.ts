@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import axios from 'axios'
 import { useStorage, StorageSerializers} from '@vueuse/core'
 
-type contentInt = Array<{
+type IContent = Array<{
     id: number
     name: string
     cities: Array<{
@@ -15,7 +15,7 @@ type contentInt = Array<{
 const title = 'public/AddressStore'
 
 export const useAddressStore = defineStore(title, () => {
-    const content = useStorage<contentInt>(`${title}/content`, [], localStorage, { serializer: StorageSerializers.object })
+    const content = useStorage<IContent>(`${title}/content`, [], localStorage, { serializer: StorageSerializers.object })
 
     async function GetAPI() {
         try {

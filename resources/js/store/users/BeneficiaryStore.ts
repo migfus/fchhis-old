@@ -2,12 +2,13 @@ import { defineStore } from 'pinia'
 import axios from 'axios'
 import { useToast } from 'vue-toastification'
 import { useStorage, StorageSerializers } from '@vueuse/core'
+import { reactive } from 'vue'
 
-type configInt = {
+type IConfig = {
     loading: boolean
     form: string
 }
-type queryInt = {
+type IQuery = {
     search: string
     sort: 'ASC' | 'DESC'
     limit: number
@@ -15,7 +16,7 @@ type queryInt = {
     end: string
     filter: string
 }
-type paramsInt = {
+type IParams = {
     avatar: string
     username: string
     email: string
@@ -45,42 +46,42 @@ export const useBeneficiaryStore = defineStore(title, () => {
     // DEBUG ADD TYPE on 'content' & 'print'
     const content = useStorage(`${title}/content`, null, localStorage)
     const print = useStorage(`${title}/print`, null, localStorage)
-    const config = useStorage<configInt>(`${title}/config`, {
+    const config = reactive<IConfig>({
         loading: false,
         form: '',
-    }, localStorage, { serializer: StorageSerializers.object })
-    const query = useStorage<queryInt>(`${title}/query`, {
+    })
+    const query = reactive<IQuery>({
         search: '',
         sort: 'DESC',
         limit: 10,
         start: '',
         end: '',
         filter: 'name',
-    }, localStorage, { serializer: StorageSerializers.object })
-    const params = useStorage<paramsInt>(`${title}/params`, InitParams(), localStorage, { serializer: StorageSerializers.object })
+    })
+    const params = useStorage<IParams>(`${title}/params`, InitParams(), localStorage, { serializer: StorageSerializers.object })
 
 
     // SECTION API
     async function GetAPI(page = 1) {
-        config.value.loading = true
+        config.loading = true
         try {
             let { data: {data}} = await axios.get('/api/beneficiary', {
                 cancelToken: new CancelToken(function executor(c) { cancel = c; }),
-                params: { ...query.value, page: page}
+                params: { ...query, page: page}
             })
             content.value = data
         }
         catch(e) {
             console.log('UsersStore GetAPI Error', {e})
         }
-        config.value.loading = false
+        config.loading = false
     }
 
     async function PrintAPI() {
         try {
             let { data: {data}} = await axios.get('/api/users', {
                 cancelToken: new CancelToken(function executor(c) { cancel = c; }),
-                params: { ...query.value, print: true}
+                params: { ...query, print: true}
             })
             print.value = data
         }
@@ -108,7 +109,7 @@ export const useBeneficiaryStore = defineStore(title, () => {
 
     // SECTION FUNCTIONS
     function ChangeForm(input: string) {
-        config.value.form = input
+        config.form = input
         window.scrollTo({
             top: 0,
             left: 0,
@@ -138,10 +139,10 @@ export const useBeneficiaryStore = defineStore(title, () => {
         }
     }
 
-    function Update(row: paramsInt) {
+    function Update(row: IParams) {
         Object.assign(params.value, row)
 
-        config.value.form = 'update'
+        config.form = 'update'
 
         window.scrollTo({
             top: 0,

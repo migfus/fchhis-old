@@ -2,21 +2,22 @@ import { defineStore } from 'pinia'
 import axios from 'axios'
 import { useToast } from 'vue-toastification'
 import { useStorage, StorageSerializers } from '@vueuse/core'
+import { reactive } from 'vue'
 
-type configInt = {
+type IConfig = {
     loading: boolean
     loadingCount: boolean
     enableDelete: boolean
     notify: boolean
     form: string
 }
-type queryInt = {
+type IQuery = {
     search: string
     filter: string
     start: string
     end: string
 }
-type paramsInt = {
+type IParams = {
     avatar: string
     desc: string
     name: string
@@ -38,38 +39,38 @@ export const usePlanStore = defineStore(title, ()=> {
     // DEBUG add type for this 'content'
     const content = useStorage(`${title}/content`, [], localStorage, { serializer: StorageSerializers.object })
     const count = useStorage<number>(`${title}/count`, 0, localStorage)
-    const config = useStorage<configInt>(`${title}/config`, {
+    const config = reactive<IConfig>({
         loading: false,
         loadingCount: false,
         enableDelete: false,
         notify: sessionStorage.getItem('plan-notify') ? true : false,
         form: '',
-    }, localStorage, { serializer: StorageSerializers.object })
-    const query = useStorage<queryInt>(`${title}/query`, {
+    })
+    const query = reactive<IQuery>({
         search: '',
         filter: 'name',
         start: '',
         end: '',
-    }, localStorage, { serializer: StorageSerializers.object })
-    const params = useStorage<paramsInt>(`${title}/params`, {
+    })
+    const params = useStorage<IParams>(`${title}/params`, {
         ...InitParams()
     }, localStorage, {serializer: StorageSerializers.object})
 
     // SECTION API
     async function GetAPI() {
-        config.value.loading = true
+        config.loading = true
         try {
-            let { data: {data}} = await axios.get('/api/plan', { params: query.value });
+            let { data: {data}} = await axios.get('/api/plan', { params: query });
             content.value = data
         }
         catch(e) {
             console.log('GetAPI', {e})
         }
-        config.value.loading = false
+        config.loading = false
     }
 
     async function GetCount() {
-        config.value.loadingCount = true
+        config.loadingCount = true
         try {
             let { data: {data}} = await axios.get('/api/plan', { params: { count: true }});
             count.value = data
@@ -77,11 +78,11 @@ export const usePlanStore = defineStore(title, ()=> {
         catch(e) {
             console.log('GetCount Err', {e})
         }
-        config.value.loadingCount = false
+        config.loadingCount = false
     }
 
     async function UpdateAPI(id: number) {
-        config.value.loading = true
+        config.loading = true
         try {
             let { data: { data } } = await axios.put('/api/plan/'+id, params.value)
             console.log('UpdateAPI', {data})
@@ -91,11 +92,11 @@ export const usePlanStore = defineStore(title, ()=> {
         catch(e) {
             console.log('UpdateAPI Err', {e})
         }
-        config.value.loading = false
+        config.loading = false
     }
 
     async function AddAPI() {
-        config.value.loading = true
+        config.loading = true
         try {
             let { data: { data } } = await axios.post('/api/plan', params.value)
             console.log('AddAPI', {data})
@@ -106,7 +107,7 @@ export const usePlanStore = defineStore(title, ()=> {
         catch(e) {
             console.log('AddAPI Err', {e})
         }
-        config.value.loading = false
+        config.loading = false
     }
 
     async function DeleteAPI(id: number, idx: number) {
@@ -125,13 +126,13 @@ export const usePlanStore = defineStore(title, ()=> {
 
     // SECTION FUNCTIONS
     function RemoveNotify() {
-        config.value.notify = true
+        config.notify = true
         sessionStorage.setItem('plan-notify', '1');
     }
 
     function ToggleEnableDelete() {
         if(confirm('Deleting plans is not recommended. Are you sure you want to delete?')) {
-            config.value.enableDelete = !config.value.enableDelete
+            config.enableDelete = !config.enableDelete
         }
     }
 
@@ -139,7 +140,7 @@ export const usePlanStore = defineStore(title, ()=> {
         if(fo == '') {
             params.value = InitParams()
         }
-        config.value.form = fo
+        config.form = fo
 
         window.scrollTo({
             top: 0,
@@ -148,7 +149,7 @@ export const usePlanStore = defineStore(title, ()=> {
         })
     }
 
-    function Update(row: paramsInt) {
+    function Update(row: IParams) {
         params.value = row
         ChangeForm('update')
     }
