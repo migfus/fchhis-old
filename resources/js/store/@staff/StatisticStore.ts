@@ -59,6 +59,7 @@ export const useStatisticStore = defineStore(title, () => {
 
     function CancelAPI() {
         cancel()
+        content.value = null
     }
 
     return {

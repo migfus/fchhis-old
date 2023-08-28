@@ -92,6 +92,7 @@ export const useBeneficiaryStore = defineStore(title, () => {
 
     function CancelAPI() {
         cancel()
+        content.value = null
     }
 
     async function StoreAPI() {

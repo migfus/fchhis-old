@@ -149,6 +149,7 @@ export const useTransactionStore = defineStore(title, () => {
 
     function CancelAPI() {
         cancel()
+        content.value = null
     }
 
     function ChangeForm(input) {

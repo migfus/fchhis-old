@@ -129,6 +129,7 @@ export const useUsersStore = defineStore(title, () => {
 
     function CancelAPI() {
         cancel()
+        content.value = null
     }
 
     async function StoreAPI() {
