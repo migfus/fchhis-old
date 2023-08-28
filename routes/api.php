@@ -45,5 +45,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('/client',    \App\Http\Controllers\ClientController::class)->only(['index']);
     Route::apiResource('/pay-type',  \App\Http\Controllers\PayTypeController::class)->only(['index']);
     Route::apiResource('/agent',     \App\Http\Controllers\AgentController::class)->only(['index']);
-    Route::apiResource('/statictic', \App\Http\Controllers\StatisticController::class)->only(['index']);
+    Route::apiResource('/statistic', \App\Http\Controllers\StatisticController::class)->only(['index']);
 });
