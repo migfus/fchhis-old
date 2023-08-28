@@ -215,7 +215,7 @@ class AuthController extends Controller
         return $this->G_UnauthorizedResponse();
     }
 
-        private function StaffOverdue($req) : JsonResponse {
+        private function StaffOverdue(Request $req) : JsonResponse {
             $grace = Info::whereNotNull('due_at')->where('due_at', '<=', Carbon::now())->count();
             $overdue = Info::whereNotNull('due_at')->where('due_at', '<=', Carbon::now()->subMonth(2))->count();
 

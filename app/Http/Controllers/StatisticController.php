@@ -31,7 +31,7 @@ class StatisticController extends Controller
         return $this->G_UnauthorizedResponse();
     }
         // DONE
-        private function ClientIndex($req) : JsonResponse {
+        private function ClientIndex(Request $req) : JsonResponse {
             $start = Carbon::parse(
                 Transaction::where('client_id', $req->user()->info->id)
                     ->orderBy('created_at', 'ASC')
@@ -57,7 +57,7 @@ class StatisticController extends Controller
             return response()->json([...$this->G_ReturnDefault($req), 'data' => $summaryTransaction]);
         }
 
-        private function AgentIndex($req) : JsonResponse {
+        private function AgentIndex(Request $req) : JsonResponse {
             return response()->json([
             ...$this->G_ReturnDefault($req),
             'data' => [
@@ -67,7 +67,7 @@ class StatisticController extends Controller
         }
 
         // DONE
-        private function StaffIndex($req) : JsonResponse {
+        private function StaffIndex(Request $req) : JsonResponse {
             return response()->json([
                 ...$this->G_ReturnDefault($req),
                 'data' => [
@@ -101,7 +101,7 @@ class StatisticController extends Controller
             ]);
         }
 
-        private function AdminIndex($req) : JsonResponse {
+        private function AdminIndex(Request $req) : JsonResponse {
             $userCount = Info::whereNull('client_id')->count();
 
             $monthlyIncome = Transaction::where('created_at', '>=', Carbon::now()->startOfMonth())
@@ -220,7 +220,7 @@ class StatisticController extends Controller
                 return $data;
             }
 
-            private function GetSemiAnnualIncome($past = false) {
+            private function GetSemiAnnualIncome(bool $past = false) {
                 $data = [];
                 for($i = 0; $i < 6; $i++) {
                     if($past) {

@@ -39,7 +39,7 @@ class TransactionController extends Controller
         return $this->G_UnauthorizedResponse();
     }
 
-        private function ClientIndex($req) : JsonResponse {
+        private function ClientIndex(Request $req) : JsonResponse {
             $val = Validator::make($req->all(), [
                 'search' => '',
                 'sort' => 'required'
@@ -66,7 +66,7 @@ class TransactionController extends Controller
             ]);
         }
 
-        private function AgentIndex($req) : JsonResponse {
+        private function AgentIndex(Request $req) : JsonResponse {
             $val = Validator::make($req->all(), [
                 'search' => '',
                 'start' => 'required',
@@ -114,7 +114,7 @@ class TransactionController extends Controller
             }
         }
 
-        private function StaffIndex($req) : JsonResponse {
+        private function StaffIndex(Request $req) : JsonResponse {
             $val = Validator::make($req->all(), [
                 'search' => '',
                 'start' => '',
@@ -154,17 +154,17 @@ class TransactionController extends Controller
                     break;
                 case 'email':
                     $data->whereHas('client.user', function($q) use($req) {
-                    $q->where('email', 'LIKE', '%' . $req->search. '%');
+                        $q->where('email', 'LIKE', '%' . $req->search. '%');
                     });
                     break;
                 case 'address':
                     $data->whereHas('client', function($q) use($req) {
-                    $q->where('address', 'LIKE', '%' . $req->search. '%');
+                        $q->where('address', 'LIKE', '%' . $req->search. '%');
                     });
                     break;
                 case 'plans':
                     $data->whereHas('plan', function($q) use($req) {
-                    $q->where('name', 'LIKE', '%' . $req->search. '%');
+                        $q->where('name', 'LIKE', '%' . $req->search. '%');
                     });
                     break;
                 default:
@@ -172,7 +172,7 @@ class TransactionController extends Controller
                         $q->where('name', 'LIKE', '%' . $req->search. '%');
                     });
 
-                    $sum = Transaction::where('agent_id', $req->user()->info->id)->sum('amount');
+                    $sum = Transaction::where('agent_id', $req->user()->id)->sum('amount');
 
                     return response()->json([
                         ...$this->G_ReturnDefault($req),
@@ -182,7 +182,7 @@ class TransactionController extends Controller
             }
         }
 
-        private function StaffIDIndex($req) : JsonResponse {
+        private function StaffIDIndex(Request $req) : JsonResponse {
             $val = Validator::make($req->all(), [
                 'search' => '',
                 'start' => '',
@@ -217,7 +217,7 @@ class TransactionController extends Controller
             ]);
         }
 
-        private function StaffPrintIndex($req) : JsonResponse {
+        private function StaffPrintIndex(Request $req) : JsonResponse {
             $data = Transaction::select('*');
 
             if((bool)strtotime($req->start) OR (bool)strtotime($req->end)) {
@@ -249,7 +249,7 @@ class TransactionController extends Controller
             ]);
         }
 
-        private function AdminIndex($req) : JsonResponse {
+        private function AdminIndex(Request $req) : JsonResponse {
             $val = Validator::make($req->all(), [
                 'search' => '',
                 'start' => '',
@@ -319,7 +319,7 @@ class TransactionController extends Controller
             }
         }
 
-        private function AdminIDIndex($req) : JsonResponse {
+        private function AdminIDIndex(Request $req) : JsonResponse {
             $val = Validator::make($req->all(), [
                 'search' => '',
                 'start' => '',
@@ -354,7 +354,7 @@ class TransactionController extends Controller
                 ]);
         }
 
-        private function AdminPrintIndex($req) : JsonResponse {
+        private function AdminPrintIndex(Request $req) : JsonResponse {
             $data = Transaction::select('*');
 
             if((bool)strtotime($req->start) OR (bool)strtotime($req->end)) {
@@ -398,7 +398,7 @@ class TransactionController extends Controller
         return $this->G_UnauthorizedResponse();
     }
 
-        private function StaffStore($req) : JsonResponse {
+        private function StaffStore(Request $req) : JsonResponse {
             $val = Validator::make($req->all(), [
                 'agent.id' => 'required',
                 'client.id' => 'required',
@@ -445,7 +445,7 @@ class TransactionController extends Controller
             return response()->json([...$this->G_ReturnDefault($req), 'data' => true]);
         }
 
-        private function AdminStore($req) : JsonResponse {
+        private function AdminStore(Request $req) : JsonResponse {
             $val = Validator::make($req->all(), [
                 'agent.id' => 'required',
                 'client.id' => 'required',
@@ -493,7 +493,7 @@ class TransactionController extends Controller
         }
 
     // SECTION UPDATE
-    public function update(Request $req, string $id) : JsonResponse {
+    public function update(Request $req, int $id) : JsonResponse {
         if($req->user()->hasRole('admin')) {
             return $this->AdminUpdate($req, $id);
         }
@@ -504,7 +504,7 @@ class TransactionController extends Controller
         return $this->G_UnauthorizedResponse();
     }
 
-        private function StaffUpdate($req, $id) : JsonResponse {
+        private function StaffUpdate(Request $req, int $id) : JsonResponse {
             $val = Validator::make($req->all(), [
                 'agent.id' => 'required',
                 'client.id' => 'required',
@@ -533,7 +533,7 @@ class TransactionController extends Controller
             return response()->json([...$this->G_ReturnDefault($req), 'data' => true]);
         }
 
-        private function AdminUpdate($req, $id) : JsonResponse {
+        private function AdminUpdate(Request $req, int $id) : JsonResponse {
             $val = Validator::make($req->all(), [
                 'agent.id' => 'required',
                 'client.id' => 'required',
@@ -563,20 +563,20 @@ class TransactionController extends Controller
         }
 
     // SECTION DESTROY
-    public function destroy(string $id, Request $req) : JsonResponse {
+    public function destroy(int $id, Request $req) : JsonResponse {
         if($req->user()->hasRole('admin')) {
             return AdminDestroy($req, $id);
         }
 
         return $this->G_UnauthorizedResponse();
     }
-        private function AdminDestroy($req, $id) : JsonResponse {
+        private function AdminDestroy(Request $req, int $id) : JsonResponse {
             Transaction::where('id', $id)->delete();
             return response()->json([...$this->G_ReturnDefault($req), 'data' => true]);
         }
 
     // SECTION OTHERS
-    private function Print($req) : JsonResponse {
+    private function Print(Request $req) : JsonResponse {
         if($req->user()->role == 5) {
             $trans = Transaction::select('*');
 

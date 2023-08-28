@@ -34,7 +34,11 @@ class RoleAndPermissionSeeder extends Seeder
             ]);
 
         // SECTION MANAGER
-        $role = Role::create(['name' => 'manager']);
+        $role = Role::create(['name' => 'regional_manager']);
+            $role->givePermissionTo([
+                'index auth', 'update auth',
+            ]);
+        $role = Role::create(['name' => 'branch_manager']);
             $role->givePermissionTo([
                 'index auth', 'update auth',
             ]);

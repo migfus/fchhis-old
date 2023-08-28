@@ -35,7 +35,7 @@ class PlanController extends Controller
 
         return $this->G_UnauthorizedResponse();
     }
-        private function PlanCount($req) : JsonResponse {
+        private function PlanCount(Request $req) : JsonResponse {
             return response()->json([
                 ...$this->G_ReturnDefault($req),
                 'data' => Plan::withCount(['infos'])->orderBy('infos_count', 'DESC')->get()
@@ -49,7 +49,7 @@ class PlanController extends Controller
 
         return $this->G_UnauthorizedResponse();
     }
-        private function AdminStore($req) : JsonResponse {
+        private function AdminStore(Request $req) : JsonResponse {
             if($req->user()->role == 2) {
                 $val = Validator::make($req->all(), [
                     'avatar' => '',
@@ -97,18 +97,18 @@ class PlanController extends Controller
             }
         }
 
-    public function show(string $id) {
+    public function show(int $id) {
         //
     }
 
-    public function update(Request $req, string $id) : JsonResponse {
+    public function update(Request $req, int $id) : JsonResponse {
         if($req->user()->hasRole('admin')) {
             return $this->AdminUpdate($req, $id);
         }
 
         return $this->G_UnauthorizedResponse();
     }
-        private function AdminUpdate($req, $id) : JsonResponse {
+        private function AdminUpdate(Request $req, int $id) : JsonResponse {
             $val = Validator::make($req->all(), [
                 'avatar' => '',
                 'desc' => '',
@@ -151,14 +151,14 @@ class PlanController extends Controller
             return response()->json([...$this->G_ReturnDefault($req), 'data' => $plan]);
         }
 
-    public function destroy(Request $req, string $id) : JsonResponse {
+    public function destroy(Request $req, int $id) : JsonResponse {
         if($req->user()->hasRole('admin')) {
             return $this->AdminDestroy($req, $id);
         }
 
         return $this->G_UnauthorizedResponse();
     }
-        private function AdminDestroy($req, $id) : JsonResponse {
+        private function AdminDestroy(Request $req, int $id) : JsonResponse {
             Plan::where('id', $id)->delete();
             return response()->json([...$this->G_ReturnDefault($req), 'data' => 1]);
         }

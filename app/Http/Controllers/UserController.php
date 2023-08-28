@@ -33,7 +33,7 @@ class UserController extends Controller
         return $this->G_UnauthorizedResponse();
     }
 
-        private function ClientIndex($req) : JsonResponse {
+        private function ClientIndex ($req) : JsonResponse {
             $val = Validator::make($req->all(), [
                 'search' => '',
             ]);
@@ -49,7 +49,7 @@ class UserController extends Controller
             return response()->json([...$this->G_ReturnDefault($req), 'data' => $data]);
         }
 
-        private function AgentIndex($req) : JsonResponse {
+        private function AgentIndex(Request $req) : JsonResponse {
             $val = Validator::make($req->all(), [
                 'sort' => 'required',
                 'search' => '',
@@ -65,7 +65,7 @@ class UserController extends Controller
             if($req->print) {
                 $data = Info::with(['plan', 'pay_type'])
                     ->withSum('client_transactions', 'amount')
-                    ->where('agent_id', $req->user()->info->id)
+                    ->where('agent_id', $req->user()->id)
                     ->where('created_at', '>=', $req->start)
                     ->where('created_at', '<=', $req->end)
                     ->whereNull('client_id')
@@ -96,7 +96,7 @@ class UserController extends Controller
             }
         }
 
-        private function StaffIndex($req) : JsonResponse {
+        private function StaffIndex(Request $req) : JsonResponse {
             $val = Validator::make($req->all(), [
                 'sort' => 'required',
                 'search' => '',
@@ -170,7 +170,7 @@ class UserController extends Controller
             }
         }
 
-        private function StaffPrintIndex($req) : JsonResponse {
+        private function StaffPrintIndex(Request $req) : JsonResponse {
             $data = Info::with(['plan', 'pay_type'])
                 ->withSum('client_transactions', 'amount')
                 ->where('agent_id', $req->user()->info->id)
@@ -182,7 +182,7 @@ class UserController extends Controller
             return response()->json([...$this->G_ReturnDefault($req), 'data' => $data]);
         }
 
-        private function StaffOverdueIndex($req) : JsonResponse {
+        private function StaffOverdueIndex(Request $req) : JsonResponse {
             $data = Info::with(['plan', 'pay_type', 'user', 'staff', 'agent'])
                 ->withSum('client_transactions', 'amount')
                 ->whereNotNull('due_at')
@@ -192,7 +192,7 @@ class UserController extends Controller
             return response()->json([...$this->G_ReturnDefault($req), 'data' => $data]);
         }
 
-        private function AdminIndex($req) : JsonResponse {
+        private function AdminIndex(Request $req) : JsonResponse {
             $val = Validator::make($req->all(), [
                 'sort' => 'required',
                 'search' => '',
@@ -279,7 +279,7 @@ class UserController extends Controller
         return $this->G_UnauthorizedResponse();
     }
 
-        private function StaffStore($req) : JsonResponse {
+        private function StaffStore(Request $req) : JsonResponse {
             if($req->or) {
             $val = Validator::make($req->all(), [
                 'or'   => 'required',
@@ -411,7 +411,7 @@ class UserController extends Controller
             return response()->json([...$this->G_ReturnDefault($req)]);
         }
 
-        private function AdminStore($req) : JsonResponse {
+        private function AdminStore(Request $req) : JsonResponse {
             if($req->or) {
                 $val = Validator::make($req->all(), [
                     'or'   => 'required',
@@ -541,7 +541,7 @@ class UserController extends Controller
         }
 
     // SECTION SHOW
-    public function show(string $id, Request $req) : JsonResponse {
+    public function show(int $id, Request $req) : JsonResponse {
         if($req->user()->hasRole('admin')) {
             return $this->AdminShow($req, $id);
         }
@@ -552,7 +552,7 @@ class UserController extends Controller
         return $this->G_UnauthorizedResponse();
     }
 
-        private function StaffShow($req, $id) : JsonResponse {
+        private function StaffShow(Request $req, int $id) : JsonResponse {
             $data = Info::where('id', $id)
                 ->with(['user', 'client_transactions', 'plan', 'pay_type'])
                 ->withSum('client_transactions', 'amount')
@@ -561,7 +561,7 @@ class UserController extends Controller
             return response()->json([...$this->G_ReturnDefault($req), 'data' => $data], 200);
         }
 
-        private function AdminShow($req, $id) : JsonResponse {
+        private function AdminShow(Request $req, int $id) : JsonResponse {
             $data;
 
             if(Info::where('id', $id)->with('user')->whereHas('user', function($q) {$q->where('role', 4);})->first()) {
@@ -584,7 +584,7 @@ class UserController extends Controller
         }
 
     // SECTION UPDATE
-    public function update(Request $req, string $id) : JsonResponse {
+    public function update(Request $req, int $id) : JsonResponse {
         if($req->user()->hasRole('admin')) {
             return $this->AdminUpdate($req, $id);
         }
@@ -595,7 +595,7 @@ class UserController extends Controller
         return $this->G_UnauthorizedResponse();
     }
 
-        private function StaffUpdate($req, $id) : JsonResponse {
+        private function StaffUpdate(Request $req, int $id) : JsonResponse {
             $val = Validator::make($req->all(), [
                 'user.avatar'   => '',
                 'user.username' => ['required', Rule::unique('users', 'username')->ignore($req->user['id'])],
@@ -647,7 +647,7 @@ class UserController extends Controller
             return response()->json([...$this->G_ReturnDefault($req),]);
         }
 
-        private function AdminUpdate($req, $id) : JsonResponse {
+        private function AdminUpdate(Request $req, int $id) : JsonResponse {
             $val = Validator::make($req->all(), [
                 'user.avatar'   => '',
                 'user.username' => ['required', Rule::unique('users', 'username')->ignore($req->user['id'])],
@@ -711,7 +711,7 @@ class UserController extends Controller
         return $this->G_UnauthorizedResponse();
     }
         // SECTION OTHERS
-        private function getCount($req) : JsonResponse {
+        private function getCount(Request $req) : JsonResponse {
             // SECTION ADMIN
             if($req->user()->role == 2) {
                 $count = [
@@ -755,7 +755,7 @@ class UserController extends Controller
             return $this->G_UnauthorizedResponse();
         }
 
-        private function ORStore($req) : JsonResponse {
+        private function ORStore(Request $req) : JsonResponse {
             $val = Validator::make($req->all(), [
                 'or' => 'required',
                 'mobile' => 'required',
@@ -814,7 +814,7 @@ class UserController extends Controller
             return response()->json([...$this->G_ReturnDefault($req)]);
         }
 
-        private function Print($req) : JsonResponse {
+        private function Print(Request $req) : JsonResponse {
             // SECTION STAFF
             if($req->user()->role == 5) {
                 $user = User::select('*')->where('role', 6);
@@ -851,11 +851,11 @@ class UserController extends Controller
         return $this->G_UnauthorizedResponse();
     }
 
-        private function AdminDashboard($req) : int {
+        private function AdminDashboard(Request $req) : int {
             return '2sdfsdf2';
         }
 
-        private function StaffDashboard($req) : int {
+        private function StaffDashboard(Request $req) : int {
             return 1;
         }
 }

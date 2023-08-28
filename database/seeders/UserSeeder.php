@@ -25,7 +25,27 @@ class UserSeeder extends Seeder
         ])->assignRole('admin');
 
         // NOTE MANAGER
-        // >>>
+        User::create([
+            'id'=> 7,
+            'region_id'=> 1,
+            'branch_id'=> null,
+            'username' => 'regionalmanager',
+            'name'     => 'admin name',
+            'email'    => 'regionalmanager@gmail.com',
+            'password' => Hash::make('12345678'),
+            'avatar'   => 'https://cdn1.iconfinder.com/data/icons/user-pictures/100/female1-512.png',
+        ])->assignRole('regional_manager');
+
+        User::create([
+            'id'=> 8,
+            'region_id'=> 1,
+            'branch_id'=> 1,
+            'username' => 'branchmanager',
+            'name'     => 'branch manager',
+            'email'    => 'branchmanager@gmail.com',
+            'password' => Hash::make('12345678'),
+            'avatar'   => 'https://cdn1.iconfinder.com/data/icons/user-pictures/100/female1-512.png',
+        ])->assignRole('branch_manager');
 
         // NOTE AGENT
         User::create([
@@ -68,7 +88,7 @@ class UserSeeder extends Seeder
         $faker->addProvider(new \Ottaviano\Faker\Gravatar($faker));
         foreach(range(1,10) as $idx) {
             \App\Models\User::create([
-                'id'=> $idx + 7,
+                'id'=> $idx + 10,
                 'region_id'=> 1,
                 'branch_id'=> 1,
                 'username' => $faker->username,

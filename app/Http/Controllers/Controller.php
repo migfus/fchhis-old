@@ -65,7 +65,7 @@ class Controller extends BaseController
 
     public function G_GetEncryptedRole($req) : string  {
         if($req->user()->hasRole('admin')) {
-            return 'jklsdfgjkl;asdrtiopuert'
+            return 'jklsdfgjkl;asdrtiopuert';
         }
     }
 }

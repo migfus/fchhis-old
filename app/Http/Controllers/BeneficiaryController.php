@@ -19,7 +19,7 @@ class BeneficiaryController extends Controller
         return $this->G_UnauthorizedResponse();
     }
 
-        private function StaffIndex($req) : JsonResponse {
+        private function StaffIndex(Request $req) : JsonResponse {
             $val = Validator::make($req->all(), [
                 'search' => '',
                 'id' => 'required'
@@ -40,7 +40,7 @@ class BeneficiaryController extends Controller
         }
     }
 
-        private function StaffStore($req) : JsonResponse {
+        private function StaffStore(Request $req) : JsonResponse {
             $val = Validator::make($req->all(), [
                 'lastName' => 'required',
                 'firstName' => 'required',
@@ -69,7 +69,7 @@ class BeneficiaryController extends Controller
             return $this->G_UnauthorizedResponse();
         }
 
-    public function update(Request $req, $id) : JsonResponse {
+    public function update(Request $req, int $id) : JsonResponse {
         $val = Validator::make($req->all(), [
             'lastName' => 'required',
             'firstName' => 'required',
@@ -100,7 +100,7 @@ class BeneficiaryController extends Controller
     }
 
 
-    public function destroy($id, Request $req) : JsonResponse {
+    public function destroy(int $id, Request $req) : JsonResponse {
         if($req->user()->hasRole('client') || $req->user()->hasRole('staff')) {
             if(Beneficiary::where('id', $id)->where('info_id', User::where('id', $req->user()->id)->with('info')->first()->info->id)) {
                 $ben = Beneficiary::where('id', $id)->delete();

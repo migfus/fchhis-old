@@ -29,7 +29,7 @@ class DashboardController extends Controller
 
         return $this->G_UnauthorizedResponse();
     }
-        private function AdminIndex($req) : JsonResponse {
+        private function AdminIndex(Request $req) : JsonResponse {
             return response()->json([
                 ...$this->G_ReturnDefault($req),
                 'data' => [
@@ -52,7 +52,7 @@ class DashboardController extends Controller
                     ->sum('amount');
             }
 
-            private function GetSemiAnnualIncome($past = false) : array {
+            private function GetSemiAnnualIncome(bool $past = false) : array {
                 $data = [];
                 for($i = 0; $i < 6; $i++) {
                     if($past) {
@@ -105,7 +105,7 @@ class DashboardController extends Controller
                     ->get();
             }
 
-        private function AgentIndex($req) : JsonResponse {
+        private function AgentIndex(Request $req) : JsonResponse {
             $transactions = Transaction::where('client_id', $req->user()->id)
                 ->with(['client.info', 'staff', 'plan', 'pay_type'])
                 ->orderBy('created_at', 'DESC')
@@ -161,7 +161,7 @@ class DashboardController extends Controller
             ]);
         }
 
-        private function StaffIndex($req) : JsonResponse {
+        private function StaffIndex(Request $req) : JsonResponse {
             $data = [
                 'total' => User::where('role', 6)->count(),
                 'clients' => User::where('role', 6)
@@ -175,7 +175,7 @@ class DashboardController extends Controller
             return response()->json([...$this->G_ReturnDefault($req), 'data' => $data]);
         }
 
-        private function ClientIndex($req) : JsonResponse {
+        private function ClientIndex(Request $req) : JsonResponse {
             $transactions = Transaction::where('client_id', $req->user()->id)
                 ->with(['client.info', 'staff', 'plan', 'pay_type'])
                 ->orderBy('created_at', 'DESC')
