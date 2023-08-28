@@ -24,6 +24,7 @@ class Controller extends BaseController
                     'ip' => $_SERVER['REMOTE_ADDR'],
                     'auth' => $auth,
                     'permissions' => $req->user()->getAllPermissions()->pluck('name'),
+                    'role' => $this->G_GetEncryptedRole($req->user()->roles()->pluck('name')->first()),
                 ],
             ];
         }
@@ -63,9 +64,26 @@ class Controller extends BaseController
         return $location;
     }
 
-    public function G_GetEncryptedRole($req) : string  {
-        if($req->user()->hasRole('admin')) {
-            return 'jklsdfgjkl;asdrtiopuert';
+    public function G_GetEncryptedRole($role) : string  {
+        if($role == 'admin') {
+            return env('VUE_APP_ROLE_ADMIN ');
         }
+        else if($role == 'regional_manager') {
+            return env('VUE_APP_ROLE_REGIONAL_MANAGER');
+        }
+        else if($role == 'branch_manager') {
+            return env('VUE_APP_ROLE_BRANCH_MANAGER');
+        }
+        else if($role == 'staff') {
+            return env('VUE_APP_ROLE_STAFF');
+        }
+        else if($role == 'agent') {
+            return env('VUE_APP_ROLE_AGENT');
+        }
+        else if($role = 'client') {
+            return env('VUE_APP_ROLE_CLIENT');
+        }
+
+        return 1;
     }
 }

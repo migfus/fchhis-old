@@ -7,7 +7,7 @@
                 <div class="widget-user-header text-white"
                     style="background: url(https://adminlte.io/themes/v3/dist/img/photo1.png) center center; ">
                     <h3 class="widget-user-username text-right">{{ $auth.content.auth.email }}</h3>
-                    <h5 class="widget-user-desc text-right">{{ RoleToDesc($auth.content.auth.role) }}</h5>
+                    <h5 class="widget-user-desc text-right">{{ RoleToDesc($auth.content.role) }}</h5>
                 </div>
                 <div class="widget-user-image">
                     <img data-toggle="modal" :data-target="[can('update', 'auth') ? '#avatar-modal' : '']"

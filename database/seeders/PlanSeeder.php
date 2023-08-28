@@ -14,7 +14,7 @@ class PlanSeeder extends Seeder
     {
         $data = [
             [
-                'id'   => env('SEEDER_PLAN_BERYL_ID', null),
+                'id'   => env('SEEDER_PLAN_JASPER_ID', null),
                 'user_id' => env('SEEDER_USER_ADMIN_ID', null),
                 'avatar' => 'https://media.karousell.com/media/photos/products/2021/9/2/red_jasper_stone_raw_1630563781_5fe20000.jpg',
                 'name' => 'Jasper',

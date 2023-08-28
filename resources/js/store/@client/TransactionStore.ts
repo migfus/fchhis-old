@@ -13,6 +13,7 @@ type IQuery = {
 type IContent = {
     data: Array<{
         id: number
+        or: string
         amount: number
         plan: { name: string}
         pay_type: { name: string}

@@ -57,7 +57,7 @@
                         </RouterLink>
                     </li>
 
-                    <li class="nav-header">
+                    <li v-if="can('index', 'client')" class="nav-header">
                         <div>USERS</div>
                     </li>
 
@@ -95,10 +95,11 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
-import UserDropDown from './UserDropdown.vue';
-import { useAuthStore } from '@/store/auth/AuthStore';
-import { useOverdueStore } from '@/store/users/OverdueStore';
-import { string } from 'yup';
+// @ts-ignore
+import UserDropDown from './UserDropdown.vue'
+import { useAuthStore } from '@/store/auth/AuthStore'
+import { useOverdueStore } from '@/store/users/OverdueStore'
+import { RoleToDesc } from '@/helpers/converter'
 import { useAbility } from '@casl/vue'
 
 const $route = useRoute();
@@ -110,7 +111,7 @@ const hiddenMenu = ref()
 
 const isAdmin = computed(() => {
     if ($auth.content.auth.role) {
-        if ($auth.content.auth.role == 2) {
+        if (RoleToDesc($auth.content.role) == 'Admin') {
             return [
                 {
                     name: 'TRANSACTIONS',
@@ -168,7 +169,7 @@ const isAdmin = computed(() => {
 
 const isStaff = computed(() => {
     if ($auth.content.auth.role) {
-        if ($auth.content.auth.role == 5) {
+        if (RoleToDesc($auth.content.role) == 'Staff') {
             return [
                 {
                     name: 'USERS',
@@ -237,7 +238,7 @@ onMounted(() => {
     document.body.classList.remove('layout-top-nav');
     document.body.classList.add('sidebar-mini')
 
-    if ($auth.content.auth.role == 5 || $auth.content.auth.role == 2)
+    if (RoleToDesc($auth.content.role) == 'Staff')
         $overdue.GetAPI()
 });
 </script>

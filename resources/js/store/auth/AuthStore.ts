@@ -39,6 +39,7 @@ type IContent = {
         }
     },
     permissions: Array<String>
+    role: string
 }
 type IConfig = {
     loading: boolean

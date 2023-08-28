@@ -27,8 +27,70 @@ export const useAddressStore = defineStore(title, () => {
         }
     }
 
+    // SECTION ADDRESS
+    function CityIDToDesc(id: Number) {
+        if(id) {
+            for (let i = 0; content.value.length > i; i++) {
+                const { cities } = content.value[i];
+                for (let f = 0; cities.length > f; f++) {
+                    if (cities[f].id == id) {
+                        return cities[f].name;
+                    }
+                }
+            }
+        }
+        return null;
+    };
+
+    function ProvinceIDToDesc(id: Number) {
+        if(id) {
+            for (let i = 0; content.value.length > i; i++) {
+                const province = content.value[i];
+                for (let f = 0; province.cities.length > f; f++) {
+                    if (province.cities[f].id == id) {
+                        return province.name;
+                    }
+                }
+            }
+        }
+        return null;
+    };
+
+    function CityIDToFullAddress(id: Number) {
+        if(id) {
+            for (let i = 0; content.value.length > i; i++) {
+                const province = content.value[i];
+                for (let f = 0; province.cities.length > f; f++) {
+                    if (province.cities[f].id == id) {
+                        return `${province.cities[f].name}, ${province.name}`;
+                    }
+                }
+            }
+        }
+        return null;
+    };
+
+    function CityIDToProvinceID(id: Number) {
+        if(id) {
+            for (let i = 0; content.value.length > i; i++) {
+                const province = content.value[i];
+                for (let f = 0; province.cities.length > f; f++) {
+                    if (province.cities[f].id == id) {
+                        return province.id;
+                    }
+                }
+            }
+        }
+        return null
+    };
+
     return {
         content,
+
+        CityIDToDesc,
+        ProvinceIDToDesc,
+        CityIDToFullAddress,
+        CityIDToProvinceID,
 
         GetAPI
     }

@@ -1,47 +1,22 @@
 import moment from 'moment'
-import { useAddressStore } from '@/store/public/AddressStore';
 
-const $address = useAddressStore();
-
-export const RoleToDesc = (id: Number) => {
+export const RoleToDesc = (id: string) : string => {
+    // alert(id)
     switch (id) {
-        case 0:
-            return "Inactive";
-        case 1:
-            return "Beneficiary";
-        case 2:
+        case '569921868309888':
             return "Admin";
-        case 3:
-            return "Manager";
-        case 4:
-            return "Agent";
-        case 5:
+        case '569914608193917':
+            return "Regional Manager";
+        case '569914608859162':
+            return "Branch Manager";
+        case '569913882200121':
             return "Staff";
-        case 6:
+        case '569914152489794':
+            return "Agent";
+        case '569913882189963':
             return "Client";
         default:
-            return "Banned";
-    }
-};
-
-export const RoleToID = (id: String) => {
-    switch (id) {
-        case "Inactive":
-            return 0;
-        case "Banned":
-            return 1;
-        case "Admin":
-            return 2;
-        case "Manager":
-            return 3;
-        case "Agent":
-            return 4;
-        case "Staff":
-            return 5;
-        case "Client":
-            return 6;
-        default:
-            return "Banned";
+            return "";
     }
 };
 
@@ -54,63 +29,6 @@ export const NumberAddComma = (num: number)  => {
     }
     return '0.00'
 }
-
-// SECTION ADDRESS
-export const CityIDToDesc = (id: Number) => {
-    if(id) {
-        for (let i = 0; $address.content.length > i; i++) {
-            const { cities } = $address.content[i];
-            for (let f = 0; cities.length > f; f++) {
-                if (cities[f].id == id) {
-                return cities[f].name;
-                }
-            }
-        }
-    }
-    return null;
-};
-
-export const ProvinceIDToDesc = (id: Number) => {
-    if(id) {
-        for (let i = 0; $address.content.length > i; i++) {
-            const province = $address.content[i];
-            for (let f = 0; province.cities.length > f; f++) {
-                if (province.cities[f].id == id) {
-                    return province.name;
-                }
-            }
-        }
-    }
-    return null;
-};
-
-export const CityIDToFullAddress = (id: Number) => {
-    if(id) {
-        for (let i = 0; $address.content.length > i; i++) {
-            const province = $address.content[i];
-            for (let f = 0; province.cities.length > f; f++) {
-                if (province.cities[f].id == id) {
-                    return `${province.cities[f].name}, ${province.name}`;
-                }
-            }
-        }
-    }
-    return null;
-};
-
-export const CityIDToProvinceID = (id: Number) => {
-    if(id) {
-        for (let i = 0; $address.content.length > i; i++) {
-            const province = $address.content[i];
-            for (let f = 0; province.cities.length > f; f++) {
-                if (province.cities[f].id == id) {
-                    return province.id;
-                }
-            }
-        }
-    }
-    return null
-};
 
 export const GetPercentage = (num1: number, num2: number) => {
     if(num1 && num2) {

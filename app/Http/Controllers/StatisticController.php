@@ -32,36 +32,45 @@ class StatisticController extends Controller
     }
         // DONE
         private function ClientIndex(Request $req) : JsonResponse {
-            $start = Carbon::parse(
-                Transaction::where('client_id', $req->user()->info->id)
-                    ->orderBy('created_at', 'ASC')
-                    ->first()
-                    ->created_at
-            )->startOfYear()->format('Ym');
+            // return response()->json(['_test', $req->user()->id]);
+            // return response()->json(['_test' => Transaction::where('client_id', $req->user()->id)->get()]);
 
-            $summaryTransaction = [];
-            $count = 0;
-            while(Carbon::now()->subMonths($count)->format('Ym') >= $start) {
-                $summaryTransaction [Carbon::now()->subMonths($count)->format('Y')] [] = [
-                    Carbon::now()->subMonths($count)->startOfMonth(),
-                    Transaction::where('client_id', $req->user()->info->id)
-                        ->where('created_at', '>=', Carbon::now()->subMonths($count)->startOfMonth())
-                        ->where('created_at', '<=', Carbon::now()->subMonths($count)->endOfMonth())
-                        // ->orderBy('created_at', 'DESC')
-                        ->sum('amount'),
-                ];
-                // $summaryTransaction [Carbon::now()->subMonths($count)->format('Y')]
-                $count++;
+            if(Transaction::where('client_id', $req->user()->id)->count() > 0) {
+                $start = Carbon::parse(
+                    Transaction::where('client_id', $req->user()->id)
+                        ->orderBy('created_at', 'ASC')
+                        ->first()
+                        ->created_at
+                )->startOfYear()->format('Ym');
+
+                $summaryTransaction = [];
+                $count = 0;
+                while(Carbon::now()->subMonths($count)->format('Ym') >= $start) {
+                    $summaryTransaction [Carbon::now()->subMonths($count)->format('Y')] [] = [
+                        Carbon::now()->subMonths($count)->startOfMonth(),
+                        Transaction::where('client_id', $req->user()->id)
+                            ->where('created_at', '>=', Carbon::now()->subMonths($count)->startOfMonth())
+                            ->where('created_at', '<=', Carbon::now()->subMonths($count)->endOfMonth())
+                            // ->orderBy('created_at', 'DESC')
+                            ->sum('amount'),
+                    ];
+                    // $summaryTransaction [Carbon::now()->subMonths($count)->format('Y')]
+                    $count++;
+                }
+
+                return response()->json([...$this->G_ReturnDefault($req), 'data' => $summaryTransaction]);
+            }
+            else {
+                return response()->json([...$this->G_ReturnDefault($req), 'data' => null]);
             }
 
-            return response()->json([...$this->G_ReturnDefault($req), 'data' => $summaryTransaction]);
         }
 
         private function AgentIndex(Request $req) : JsonResponse {
             return response()->json([
             ...$this->G_ReturnDefault($req),
             'data' => [
-                'clients' => User::where('agent_id', $req->user()->info->id)->count(),
+                'clients' => User::where('agent_id', $req->user()->id)->count(),
             ]
             ]);
         }
@@ -81,16 +90,16 @@ class StatisticController extends Controller
                         'total'   => Transaction::sum('amount')
                     ],
                     'clients' => [
-                        'current' => User::with('info')->where('created_at', '>=', Carbon::now()->startOfMonth())->where('created_at', '<=', Carbon::now()->endOfMonth())->role('client')->count(),
-                        'total'   => User::with('info')->role('client')->count(),
+                        'current' => User::where('created_at', '>=', Carbon::now()->startOfMonth())->where('created_at', '<=', Carbon::now()->endOfMonth())->role('client')->count(),
+                        'total'   => User::role('client')->count(),
                     ],
                     'total' => [
-                        'current' => User::with('info')->where('created_at', '>=', Carbon::now()->startOfMonth())->where('created_at', '<=', Carbon::now()->endOfMonth())->role('client')->role('client')->count(),
-                        'total'   => User::with('info')->role('client')->count(),
+                        'current' => User::where('created_at', '>=', Carbon::now()->startOfMonth())->where('created_at', '<=', Carbon::now()->endOfMonth())->role('client')->role('client')->count(),
+                        'total'   => User::role('client')->count(),
                     ],
                     'agents' => [
-                        'current' => User::with('info')->where('created_at', '>=', Carbon::now()->startOfMonth())->where('created_at', '<=', Carbon::now()->endOfMonth())->role('agent')->count(),
-                        'total'   => User::with('info')->role('agent')->count(),
+                        'current' => User::where('created_at', '>=', Carbon::now()->startOfMonth())->where('created_at', '<=', Carbon::now()->endOfMonth())->role('agent')->count(),
+                        'total'   => User::role('agent')->count(),
                     ],
                     'beneficiaries' => [
                         'current' => Beneficiary::where('created_at', '>=', Carbon::now()->startOfMonth())->where('created_at', '<=', Carbon::now()->endOfMonth())->count(),
@@ -102,15 +111,13 @@ class StatisticController extends Controller
         }
 
         private function AdminIndex(Request $req) : JsonResponse {
-            $userCount = Info::whereNull('client_id')->count();
+            $userCount = User::count();
 
             $monthlyIncome = Transaction::where('created_at', '>=', Carbon::now()->startOfMonth())
                 ->where('created_at', '<=', Carbon::now())
                 ->sum('amount');
 
-            $newUsers = Info::with('user')
-                ->whereNull('client_id')
-                ->where('created_at', '>=', Carbon::now()->startOfMonth())
+            $newUsers = User::where('created_at', '>=', Carbon::now()->startOfMonth())
                 ->orderBy('created_at', 'DESC')
                 ->limit(5)
                 ->get();
@@ -144,62 +151,42 @@ class StatisticController extends Controller
                         'icon' => 'fa-user-friends',
                         'color' => 'orange',
                         'name' => 'Beneficiaries',
-                        'count' => Info::with('user')->whereNotNull('client_id')->count(),
+                        'count' => Beneficiary::count(),
                     ],
                     [
                         'id' => 6,
                         'icon' => 'fa-child',
                         'color' => 'success',
                         'name' => 'Client',
-                        'count' => Info::with('user')
-                        ->whereHas('user', function($q) {
-                            $q->where('role', 6);
-                        })
-                        ->whereNull('client_id')->count(),
+                        'count' => User::hasRole('client')->count(),
                     ],
                     [
                         'id' => 5,
                         'icon' => 'fa-user-edit',
                         'color' => 'info',
                         'name' => 'Staff',
-                        'count' => Info::with('user')
-                        ->whereHas('user', function($q) {
-                            $q->where('role', 5);
-                        })
-                        ->whereNull('client_id')->count(),
+                        'count' => User::hasRole('staff')->count(),
                     ],
                     [
                         'id' => 4,
                         'icon' => 'fa-handshake',
                         'color' => 'purple',
                         'name' => 'Agent',
-                        'count' => Info::with('user')
-                        ->whereHas('user', function($q) {
-                            $q->where('role', 4);
-                        })
-                        ->whereNull('client_id')->count(),
+                        'count' => User::hasRole('agent')->count(),
                     ],
                     [
                         'id' => 3,
                         'icon' => 'fa-crown',
                         'color' => 'warning',
                         'name' => 'Admin',
-                        'count' => Info::with('user')
-                        ->whereHas('user', function($q) {
-                            $q->where('role', 2);
-                        })
-                        ->whereNull('client_id')->count(),
+                        'count' => User::hasRole('admin')->count(),
                     ],
                     [
                         'id' => 2,
                         'icon' => 'fa-check-circle',
                         'color' => 'secondary',
                         'name' => 'Claimed',
-                        'count' => Info::with('user')
-                        ->whereHas('user', function($q) {
-                            $q->where('role', 6);
-                        })
-                        ->whereNotNull('fulfilled_at')->count(),
+                        'count' => User::hasRole('collected')->count(),
                     ],
                     [
                         'id' => 1,

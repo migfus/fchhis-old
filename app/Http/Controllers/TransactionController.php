@@ -49,7 +49,7 @@ class TransactionController extends Controller
                 return $this->G_ValidatorFailResponse($val);
             }
 
-            $data = Transaction::where('client_id', $req->user()->info->id)
+            $data = Transaction::where('client_id', $req->user()->id)
                 ->with(['plan', 'pay_type', 'client', 'staff'])
                 ->whereHas('plan', function($q) use($req) {
                     $q->where('name', 'LIKE', '%' . $req->search. '%');
@@ -57,7 +57,7 @@ class TransactionController extends Controller
                 ->orderBy('created_at', $req->sort)
                 ->paginate(10);
 
-            $sum = Transaction::where('client_id', $req->user()->info->id)->sum('amount');
+            $sum = Transaction::where('client_id', $req->user()->id)->sum('amount');
 
             return response()->json([
                 ...$this->G_ReturnDefault($req),
@@ -78,14 +78,14 @@ class TransactionController extends Controller
             }
 
             if($req->print) {
-                $data = Transaction::where('agent_id', $req->user()->info->id)
+                $data = Transaction::where('agent_id', $req->user()->id)
                     ->with(['plan', 'pay_type', 'client', 'staff'])
                     ->where('created_at', '>=', $req->start)
                     ->where('created_at', '<=', $req->end)
                     ->orderBy('created_at', 'DESC')
                     ->get();
 
-                $sum = Transaction::where('agent_id', $req->user()->info->id)->sum('amount');
+                $sum = Transaction::where('agent_id', $req->user()->id)->sum('amount');
 
                 return response()->json([
                     ...$this->G_ReturnDefault($req),
@@ -94,7 +94,7 @@ class TransactionController extends Controller
                 ]);
             }
             else {
-                $data = Transaction::where('agent_id', $req->user()->info->id)
+                $data = Transaction::where('agent_id', $req->user()->id)
                     ->with(['plan', 'pay_type', 'client', 'staff'])
                     ->whereHas('client', function($q) use($req) {
                         $q->where('name', 'LIKE', '%' . $req->search. '%');

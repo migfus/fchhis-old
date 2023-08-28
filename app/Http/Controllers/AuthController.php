@@ -35,7 +35,7 @@ class AuthController extends Controller
                 'ip'   => $_SERVER['REMOTE_ADDR'],
                 'token' => $user->createToken('token idk')->plainTextToken,
                 'permissions' => $user->getAllPermissions()->pluck('name'),
-                'role' => $user->roles
+                'role' => $this->G_GetEncryptedRole($user->roles()->pluck('name')->first()),
             ],
         ], 200);
     }

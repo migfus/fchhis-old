@@ -4,7 +4,6 @@ import "admin-lte/plugins/jquery/jquery"
 import "admin-lte/plugins/bootstrap/js/bootstrap.bundle"
 import "admin-lte/dist/js/adminlte"
 
-import type { Router } from 'vue-router'
 import { createPinia } from "pinia"
 import { createApp, markRaw } from "vue"
 import router from "./Router"
@@ -14,19 +13,13 @@ import ability from './Ability';
 
 import App from "./App.vue"
 
-declare module 'pinia' {
-    export interface PiniaCustomProperties {
-        router: Router;
-    }
-}
-
 const app = createApp(App)
 const pinia = createPinia()
 
+app.use(pinia)
 pinia.use(({ store }) => {
     store.$router = markRaw(router)
 });
-app.use(pinia)
 app.use(Toast, { position: "bottom-right" })
 app.use(router)
 app.use(abilitiesPlugin, ability, {
