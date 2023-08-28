@@ -13,7 +13,7 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, ValidatesRequests;
 
-    public function G_ReturnDefault($req = null) : object {
+    public function G_ReturnDefault($req = null) {
         if($req) {
             $auth = User::where('id', $req->user()->id)->with('info')->first();
 
@@ -35,7 +35,7 @@ class Controller extends BaseController
         }
     }
 
-    public function G_UnauthorizedResponse($message = 'Logout') : JsonResponse {
+    public function G_UnauthorizedResponse(string $message = 'Logout') : JsonResponse {
         return response()->json([
             'status' => false,
             'message' => $message
@@ -51,7 +51,7 @@ class Controller extends BaseController
     }
 
 
-    public function G_AvatarUpload($image, $path = '') : String {
+    public function G_AvatarUpload($image, string $path = '') : string {
         list($type, $image) = explode(';', $image);
         list(, $image) = explode(',', $image);
 
@@ -61,5 +61,11 @@ class Controller extends BaseController
         file_put_contents('uploads/'.$path.$imageName, $image);
 
         return $location;
+    }
+
+    public function G_GetEncryptedRole($req) : string  {
+        if($req->user()->hasRole('admin')) {
+            return 'jklsdfgjkl;asdrtiopuert'
+        }
     }
 }
