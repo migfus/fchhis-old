@@ -77,5 +77,9 @@ class User extends Authenticatable
         return $this->belongsTo(PayType::class, 'pay_type_id');
     }
 
+    public function beneficiaries() {
+        return $this->hasMany(Beneficiary::class, 'user_id');
+    }
+
 
 }

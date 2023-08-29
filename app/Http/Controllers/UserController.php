@@ -11,6 +11,8 @@ use Illuminate\Validation\Rule;
 use App\Models\Transaction;
 use Carbon\Carbon;
 use App\Models\Phone;
+use Spatie\Permission\Models\Role;
+
 use Illuminate\Http\JsonResponse;
 
 class UserController extends Controller
@@ -511,10 +513,18 @@ class UserController extends Controller
     }
 
         private function StaffShow(Request $req, string $id) : JsonResponse {
-            $data = Info::where('id', $id)
-                ->with(['user', 'client_transactions', 'plan', 'pay_type'])
-                ->withSum('client_transactions', 'amount')
-                ->first();
+            $data = User::where('id', $id)
+                ->with([
+                    'client_transactions.plan',
+                    'client_transactions.pay_type',
+                    'client_transactions.agent',
+                    'info.plan',
+                    'info.pay_type',
+                    'beneficiaries'
+                ])
+                ->withSum('client_transactions', 'amount')->first();
+
+            $data['role'] = User::find($id)->roles->pluck('name', 'name')->first();
 
             return response()->json([...$this->G_ReturnDefault($req), 'data' => $data], 200);
         }

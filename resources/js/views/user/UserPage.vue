@@ -1,14 +1,13 @@
 <template>
-    <div v-if="$user.content.user" class="row" :style="`background-image: url(${dead})`">
+    <div v-if="$user.content.id" class="row">
+        <!-- {{ $user.content }} -->
         <div class="col-12 col-md-5">
             <ProfileCard />
-            <TransactionAgentTable v-if="$user.content.user.role == 4" />
-            <BeneficiaryTable v-else />
+            <BeneficiaryTable />
         </div>
 
         <div class="col-12 col-md-7">
-            <ClientTable v-if="$user.content.user.role == 4" />
-            <TransactionTable v-else />
+            <ClientTable />
         </div>
 
         <ClaimModal />
@@ -19,20 +18,18 @@
 import { onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { NumberAddComma, PlanToPay } from '@/helpers/converter'
-import { useUserDetailsStore } from '@/store/user/UserDetailStore'
-import { useBeneficiaryStore } from '@/store/users/BeneficiaryStore'
+import { useUserDetailsStore } from '@/store/@staff/UserDetailStore'
+// import { useBeneficiaryStore } from '@/store/users/BeneficiaryStore'
 
-import ClaimModal from './ClaimModal.vue'
-import TransactionTable from './TransactionTable.vue'
-import BeneficiaryTable from './BeneficiaryTable.vue'
+import ClaimModal from './modals/ClaimModal.vue'
+import BeneficiaryTable from './cards/BeneficiaryTable.vue'
 import AddBeneficiary from './forms/AddBeneficiary.vue'
-import ClientTable from './ClientTable.vue'
-import ProfileCard from './ProfileCard.vue'
-import TransactionAgentTable from './TransactionAgentTable.vue'
+import ClientTable from './cards/ClientTable.vue'
+import ProfileCard from './cards/ProfileCard.vue'
 
 const $route = useRoute();
 const $user = useUserDetailsStore();
-const $ben = useBeneficiaryStore();
+// const $ben = useBeneficiaryStore();
 
 onMounted(() => {
     $user.GetAPI($route.params.id)

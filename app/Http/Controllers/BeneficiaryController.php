@@ -7,6 +7,7 @@ use App\Models\Info;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\JsonResponse;
+use App\Models\Beneficiary;
 
 class BeneficiaryController extends Controller
 {
@@ -29,7 +30,7 @@ class BeneficiaryController extends Controller
                 return $this->G_ValidatorFailResponse($val);
             }
 
-            $data = User::where('client_id', $req->id)->orderBy('name', 'ASC')->get();
+            $data = Beneficiary::where('user_id', $req->id)->orderBy('name', 'ASC')->get();
 
             return response()->json([...$this->G_ReturnDefault(), 'data' => $data]);
         }
@@ -101,12 +102,9 @@ class BeneficiaryController extends Controller
 
 
     public function destroy(int $id, Request $req) : JsonResponse {
-        if($req->user()->hasRole('client') || $req->user()->hasRole('staff')) {
-            if(Beneficiary::where('id', $id)->where('info_id', User::where('id', $req->user()->id)->with('info')->first()->info->id)) {
-                $ben = Beneficiary::where('id', $id)->delete();
-                return response()->json([...$this->G_ReturnDefault(), 'data' => $ben]);
-            }
-            return $this->G_UnauthorizedResponse();
+        if($req->user()->hasRole('staff')) {
+            $ben = Beneficiary::where('id', $id)->delete();
+            return response()->json([...$this->G_ReturnDefault(), 'data' => $ben]);
         }
 
         return $this->G_UnauthorizedResponse();

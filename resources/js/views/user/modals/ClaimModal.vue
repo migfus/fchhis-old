@@ -5,16 +5,15 @@
             <div class="modal-content">
 
                 <div class="modal-header">
-                    <h5 class="modal-title " id="exampleModalLabel">Claim</h5>
+                    <h5 class="modal-title " id="exampleModalLabel">Declare a Claim</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
 
-
                 <div class="modal-body">
                     <div>
-                        Claim this Client?
+                        Declare a claim on this Client?
                     </div>
                     <button v-if="$user.content.fulfilled_at" @click="Update($user.content.id)" type="button"
                         class="btn btn-secondary float-right" data-dismiss="modal">Unclaim</button>
