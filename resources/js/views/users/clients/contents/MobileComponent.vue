@@ -6,7 +6,8 @@
                     <div class="row">
 
                         <div class="col-xl-3 col-lg-6 col-md-12">
-                            <img :src="row.avatar" style="height: 3em;" class="img-circle float-left mr-3">
+                            <img :src="row.avatar ?? '/images/logo.png'" style="height: 3em;"
+                                class="img-circle float-left mr-3 mb-2">
 
                             <div class="d-inline d-lg-none float-right">
                                 <RouterLink :to="{ name: 'user', params: { id: row.id } }"
@@ -48,11 +49,15 @@
                                 </strong>
                             </div>
                             <div>
+                                <i style="height: 20px; width: 20px"
+                                    class="img-circle float-left mt-1 text-secondary fab fa-google-play"></i>
                                 <strong>
                                     {{ row.info.pay_type.name }}
                                 </strong>
                             </div>
                             <div>
+                                <i style="height: 20px; width: 20px"
+                                    class="img-circle float-left mt-1 fa fa-map-pin text-secondary"></i>
                                 <strong>
                                     {{ `${row.info.address}, ${$address.CityIDToFullAddress(row.info.address_id)}` }}
                                 </strong>
@@ -63,18 +68,24 @@
                         <div class="col-xl-3 col-lg-6 col-md-12">
 
                             <div>
+                                <i style="height: 20px; width: 20px"
+                                    class="img-circle float-left mt-1 text-info fa fa-wallet"></i>
                                 <strong>
-                                    Accumulated: {{ NumberAddComma(row.client_transactions_sum_amount) }}
+                                    Total: {{ NumberAddComma(row.client_transactions_sum_amount) }}
                                 </strong>
                             </div>
                             <div>
-                                <strong>
-                                    Last Payment: {{ NumberAddComma(row.client_transactions_sum_amount) }}
+                                <i style="height: 20px; width: 20px"
+                                    class="img-circle float-left mt-1 text-success fa fa-plus-circle"></i>
+                                <strong class="text-success">
+                                    + {{ NumberAddComma(row.client_transactions_sum_amount) }}
                                 </strong>
                             </div>
                             <div>
+                                <i style="height: 20px; width: 20px"
+                                    class="img-circle float-left mt-1 text-danger fa fa-calendar-times"></i>
                                 <strong v-if="row.info.due_at">
-                                    Due: {{ moment(row.info.due_at).fromNow(true) }}
+                                    Due in {{ moment(row.info.due_at).fromNow(true) }}
                                 </strong>
                                 <strong v-else>
                                     Due: N/A
@@ -91,18 +102,24 @@
                                     Info</RouterLink>
                             </div>
                             <div>
+                                <img :src="row.info.agent.avatar" style="height: 20px; width: 20px"
+                                    class="img-circle float-left mr-2">
                                 <strong>
                                     Agent: {{ row.info.agent.name }}
                                 </strong>
                             </div>
                             <div>
+                                <img :src="row.info.staff.avatar" style="height: 20px; width: 20px"
+                                    class="img-circle float-left mr-2">
                                 <strong>
                                     Staff: {{ row.info.staff.name }}
                                 </strong>
                             </div>
                             <div>
+                                <i style="height: 20px; width: 20px"
+                                    class="img-circle float-left mr-2 mt-1 fa fa-clock text-secondary"></i>
                                 <strong>
-                                    {{ moment(row.created_at).format('MMM D, YYYY') }}
+                                    {{ moment(row.created_at).format('MMM D, YYYY hh:mm A') }}
                                 </strong>
                             </div>
                         </div>

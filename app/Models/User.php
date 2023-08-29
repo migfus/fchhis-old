@@ -30,6 +30,8 @@ class User extends Authenticatable
         'role',
         'OR',
         'pay_type_id',
+        'region_id',
+        'branch_id',
     ];
 
     /**
