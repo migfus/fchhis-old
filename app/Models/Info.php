@@ -27,7 +27,8 @@ class Info extends Model
         'plan_id',
         'client_id',
         'due_at',
-        'or'
+        'or',
+        'user_id'
     ];
 
     public function user() {

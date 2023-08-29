@@ -112,15 +112,22 @@ class UserController extends Controller
                 return $this->G_ValidatorFailResponse($val);
             }
 
-            if($req->overdue) {
-                return $this->StaffOverdueIndex($req);
-            }
+            // if($req->overdue) {
+            //     return $this->StaffOverdueIndex($req);
+            // }
 
-            if($req->print) {
-                return $this->StaffPrintIndex($req);
-            }
+            // if($req->print) {
+            //     return $this->StaffPrintIndex($req);
+            // }
 
-            $data = Info::select('*');
+
+
+            $data = User::select('*');
+
+            // return response()->json([
+            //     ...$this->G_ReturnDefault($req),
+            //     'data' => User::get(),
+            // ]);
 
             if((bool)strtotime($req->start) OR (bool)strtotime($req->end)) {
                 if((bool)strtotime($req->start)) {
@@ -131,43 +138,38 @@ class UserController extends Controller
                 }
             }
 
-            $data->with(['plan', 'pay_type', 'agent', 'user', 'staff', 'phones']);
+            $data->with(['info.plan', 'info.pay_type', 'info.agent', 'info.staff']);
 
             switch($req->filter) {
-                case 'plan':
-                    $data->whereHas('user', function($q) use($req) {
-                        $q->where('role', $req->role);
-                    })
-                    ->whereHas('plan', function($q) use($req) {
+                case 'plans':
+                    $data->role('client')
+                    ->whereHas('info.plan', function($q) use($req) {
                         $q->where('name', 'LIKE', '%'.$req->search.'%');
                     })
                     ->withSum('client_transactions', 'amount');
                     break;
                 case 'address':
-                    $data->whereHas('user', function($q) use($req) {
-                        $q->where('role', $req->role);
-                    })
+                    $data->role('client')
                     ->withSum('client_transactions', 'amount')
-                    ->where('address', 'LIKE', '%'.$req->search.'%');
+                    ->whereHas('info', function($q) use($req) {
+                        $q->where('address', 'LIKE', '%'.$req->search.'%');
+                    });
                     break;
                 case 'email':
-                    $data->whereHas('user', function($q) use($req) {
-                        $q->where('role', $req->role)->where('name', 'LIKE', '%'.$req->search.'%');
-                    })
+                    $data->role('client')->where('email', 'LIKE', '%'.$req->search.'%')
                     ->withSum('client_transactions', 'amount');
                     break;
                 default:
-                    $data->whereHas('user', function($q) use($req) {
-                        $q->where('role', $req->role);
-                    })
+                    $data->role('client')
                     ->withSum('client_transactions', 'amount')
                     ->where('name', 'LIKE', '%'.$req->search.'%');
-
-                return response()->json([
-                    ...$this->G_ReturnDefault($req),
-                    'data' => $data->withSum('client_transactions', 'amount')->orderBy('created_at', 'DESC')->paginate($req->limit)
-                ]);
             }
+
+            return response()->json([
+                ...$this->G_ReturnDefault($req),
+                // 'data' => $data->withSum('client_transactions', 'amount')->orderBy('created_at', 'DESC')->paginate($req->limit)
+                'data' => $data->withSum('client_transactions', 'amount')->orderBy('created_at', 'DESC')->paginate(9)
+            ]);
         }
 
         private function StaffPrintIndex(Request $req) : JsonResponse {
@@ -280,45 +282,6 @@ class UserController extends Controller
     }
 
         private function StaffStore(Request $req) : JsonResponse {
-            if($req->or) {
-            $val = Validator::make($req->all(), [
-                'or'   => 'required',
-                'plan'     => 'required',
-                'pay_type_id' => 'required',
-                'transaction' => 'required',
-                'agent'  => 'required',
-                'name'      => 'required',
-            ]);
-
-            if($val->fails()) {
-                return $this->G_ValidatorFailResponse($val);
-            }
-
-            $user = User::create([
-                'role'     => 6, // NOTE client only,
-            ]);
-
-            $info = Info::create([
-                'user_id'    => $user->id,
-                'staff_id'   => $req->user()->info->id,
-                'or'         => $req->or,
-                'plan_id'    => $req->plan,
-                'pay_type_id'=> $req->pay_type_id,
-                'agent_id'   => $req->agent,
-                'name'       => $req->name,
-            ]);
-
-            Transaction::create([
-                'or' => $req->or,
-                'agent_id'  => $req->agent,
-                'staff_id'  => $req->user()->info->id,
-                'client_id' => $info->id,
-                'pay_type_id' => $req->pay_type_id,
-                'amount'  =>  $req->transaction,
-                'plan_id' => $req->plan,
-            ]);
-            }
-            else {
             $val = Validator::make($req->all(), [
                 'avatar'   => '',
                 'username' => 'required|unique:users',
@@ -326,7 +289,7 @@ class UserController extends Controller
                 'password' => 'required|min:8',
                 'mobile'   => 'required',
                 'role'     => 'required',
-                'plan'     => 'required',
+                'plan_id'  => 'required',
                 'agent_id' => 'required',
 
                 'name'      => 'required',
@@ -346,34 +309,17 @@ class UserController extends Controller
             $due = Carbon::now()->add('months', 1);
             switch($req->pay_type_id) {
                 case 2:
-                $due = Carbon::now()->add('months', 3);
-                break;
+                    $due = Carbon::now()->add('months', 3);
+                    break;
                 case 3:
-                $due = Carbon::now()->add('months', 6);
-                break;
+                    $due = Carbon::now()->add('months', 6);
+                    break;
                 case 4:
-                $due = Carbon::now()->add('months', 12);
-                break;
-                case 5:
-                $due = null;
-                case 6:
-                $due = null;
-                break;
+                    $due = Carbon::now()->add('months', 12);
+                    break;
+                default:
+                    $due = null;
             }
-
-            $info = Info::create([
-                'staff_id'  => $req->user()->info->id,
-                'name'      => $req->name,
-                'bday'      => $req->bday,
-                'bplace_id' => $req->bplace_id,
-                'sex'       => $req->sex,
-                'address_id'=> $req->bplace_id,
-                'address'   => $req->address,
-                'agent_id'  => $req->agent_id,
-                'plan_id'   => $req->plan,
-                'pay_type_id' => $req->pay_type_id,
-                'due_at'    => $due,
-            ]);
 
             $avatar = null;
 
@@ -382,31 +328,43 @@ class UserController extends Controller
             }
 
             $user = User::create([
-                'info_id' => $info->id,
+                'region_id' => $req->user()->region_id,
+                'branch_id' => $req->user()->branch_id,
                 'username' => $req->username,
+                'name'     => $req->name,
                 'email'    => $req->email,
                 'password' => Hash::make($req->password),
                 'avatar'   => $avatar,
-                'role'     => 6, // NOTE Client Only
+            ])->assignRole('client');
+
+            $info = Info::create([
+                'user_id'    => $user->id,
+                'staff_id'   => $req->user()->id,
+                'agent_id'   => $req->agent_id,
+                'bday'       => $req->bday,
+                'bplace_id'  => $req->bplace_id,
+                'sex'        => $req->sex,
+                'address_id' => $req->bplace_id,
+                'address'    => $req->address,
+                'plan_id'    => $req->plan_id,
+                'pay_type_id'=> $req->pay_type_id,
+                'due_at'     => $due,
             ]);
 
             Transaction::create([
                 'or' => rand(000000, 999999),
                 'agent_id'  => $req->agent_id,
-                'staff_id'  => $req->user()->person->id,
-                'client_id' => $person->id,
+                'staff_id'  => $req->user()->id,
+                'client_id' => $user->id,
                 'pay_type_id' => $req->pay_type_id,
                 'amount'  =>  $req->transaction,
-                'plan_id' => $req->plan,
+                'plan_id' => $req->plan_id,
             ]);
 
             Phone::create([
-                'info_id' => $info->id,
+                'user_id' => $user->id,
                 'phone' => $req->mobile,
             ]);
-            }
-
-
 
             return response()->json([...$this->G_ReturnDefault($req)]);
         }
@@ -711,49 +669,7 @@ class UserController extends Controller
         return $this->G_UnauthorizedResponse();
     }
         // SECTION OTHERS
-        private function getCount(Request $req) : JsonResponse {
-            // SECTION ADMIN
-            if($req->user()->role == 2) {
-                $count = [
-                    'all'     => User::count(),
-                    'clients' => User::where('role', 6)->count(),
-                    'staff'   => User::where('role', 5)->count(),
-                    'agent'   => User::where('role', 4)->count(),
-                    'manager' => User::where('role', 3)->count(),
-                    'admin'   => User::where('role', 2)->count(),
-                    'inactive'=> User::where('role', 0)->count(),
-                    'banned'  => User::where('role', 1)->count(),
-                ];
 
-                $data = [
-                    ['name' => 'All',     'count' => $count['all'],     'color' => 'info',    'icon' => 'fa-users'],
-                    ['name' => 'Clients', 'count' => $count['clients'], 'color' => 'success', 'icon' => 'fa-child'],
-                    ['name' => 'Staff',   'count' => $count['staff'],   'color' => 'info',    'icon' => 'fa-user-edit'],
-                    ['name' => 'Agent',   'count' => $count['agent'],   'color' => 'purple',  'icon' => 'fa-handshake'],
-                    ['name' => 'Manager', 'count' => $count['manager'], 'color' => 'orange',  'icon' => 'fa-tasks'],
-                    ['name' => 'Admin',   'count' => $count['admin'],   'color' => 'warning', 'icon' => 'fa-crown'],
-                    ['name' => 'Inactive','count' => $count['inactive'],'color' => 'secondary','icon'=> 'fa-moon'],
-                    ['name' => 'Banned',  'count' => $count['banned'],  'color' => 'danger',  'icon' => 'fa-ban'],
-                ];
-
-                return response()->json(['status' => true, 'message' => 'success', 'data' => $data], 200);
-            }
-            // SECTION STAFF
-            if($req->user()->role == 5) {
-                $count = [
-                    'clients' => User::where('role', 6)->count(),
-                    'inactive'=> User::where('role', 6)->whereNotNull('OR')->whereNull('email')->count(),
-                ];
-
-                $data = [
-                    ['name' => 'Clients', 'count' => $count['clients'], 'color' => 'success', 'icon' => 'fa-child'],
-                    ['name' => 'Inactive','count' => $count['inactive'],'color' => 'secondary','icon'=> 'fa-moon'],
-                ];
-
-                return response()->json(['status' => true, 'message' => 'success', 'data' => $data], 200);
-            }
-            return $this->G_UnauthorizedResponse();
-        }
 
         private function ORStore(Request $req) : JsonResponse {
             $val = Validator::make($req->all(), [
@@ -865,6 +781,71 @@ class UserController extends Controller
                 'data' => $user
             ]);
 
+        }
+
+    public function Count(Request $req) : JsonResponse {
+        if($req->user()->hasRole('admin')) {
+            return $this->AdminGetCount($req);
+        }
+        else if($req->user()->hasRole('staff')) {
+            return $this->StaffGetCount($req);
+        }
+
+        return $this->G_UnauthorizedResponse();
+    }
+        private function AdminGetCount(Request $req) : JsonResponse {
+            // SECTION ADMIN
+            if($req->user()->role == 2) {
+                $count = [
+                    'all'     =>    User::count(),
+                    'clients' =>    User::role('clients')->count(),
+                    'staff'   =>    User::role('staff')->count(),
+                    'agent'   =>    User::role('agent')->count(),
+                    'regional_manager' => User::role('manager')->count(),
+                    'branch_manager' => User::role('manager')->count(),
+                    'admin'   => User::role('admin')->count(),
+                ];
+
+                $data = [
+                    ['name' => 'All',     'count' => $count['all'],     'color' => 'info',    'icon' => 'fa-users'],
+                    ['name' => 'Clients', 'count' => $count['clients'], 'color' => 'success', 'icon' => 'fa-child'],
+                    ['name' => 'Staff',   'count' => $count['staff'],   'color' => 'info',    'icon' => 'fa-user-edit'],
+                    ['name' => 'Agent',   'count' => $count['agent'],   'color' => 'purple',  'icon' => 'fa-handshake'],
+                    ['name' => 'Regional Manager', 'count' => $count['regional_manager'], 'color' => 'orange',  'icon' => 'fa-tasks'],
+                    ['name' => 'Branch Manager', 'count' => $count['branch_manager'], 'color' => 'orange',  'icon' => 'fa-tasks'],
+                    ['name' => 'Admin',   'count' => $count['admin'],   'color' => 'warning', 'icon' => 'fa-crown'],
+                ];
+
+                return response()->json(['status' => true, 'message' => 'success', 'data' => $data], 200);
+            }
+            // SECTION STAFF
+            if($req->user()->role == 5) {
+                $count = [
+                    'clients' => User::where('role', 6)->count(),
+                    'inactive'=> User::where('role', 6)->whereNotNull('OR')->whereNull('email')->count(),
+                ];
+
+                $data = [
+                    ['name' => 'Clients', 'count' => $count['clients'], 'color' => 'success', 'icon' => 'fa-child'],
+                    ['name' => 'Inactive','count' => $count['inactive'],'color' => 'secondary','icon'=> 'fa-moon'],
+                ];
+
+                return response()->json(['status' => true, 'message' => 'success', 'data' => $data], 200);
+            }
+            return $this->G_UnauthorizedResponse();
+        }
+        private function StaffGetCount(Request $req) : JsonResponse {
+            $count = [
+                'clients' => User::role('client')->count(),
+                'beneficiaries'=> Beneficiary::count(),
+            ];
+
+            $data = [
+                ['name' => 'Clients', 'count' => $count['clients'], 'color' => 'success', 'icon' => 'fa-child'],
+                ['name' => 'Beneficiaries','count' => $count['beneficiaries'],'color' => 'secondary','icon'=> 'fa-users'],
+            ];
+
+            return response()->json(['status' => true, 'message' => 'success', 'data' => $data], 200);
         }
 }
 

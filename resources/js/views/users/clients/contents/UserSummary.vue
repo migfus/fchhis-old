@@ -1,6 +1,6 @@
 <template>
-    <div v-if="$user.config.countLoading" class="col-12">
-        <Carousel v-bind="config.bind" :breakpoints="config.breakpoints">
+    <div v-if="$user.config.loading" class="col-12">
+        <Carousel :breakpoints="config.breakpoints">
 
             <Slide v-for="row in 10" :key="row" class="mb-2">
                 <div class="info-box mb-0 mr-2 card-loader" style="height: 100px">
@@ -15,9 +15,9 @@
         </Carousel>
     </div>
     <div v-else class="col-12">
-        <Carousel v-bind="config.bind" :breakpoints="config.breakpoints">
+        <Carousel :breakpoints="config.breakpoints">
 
-            <Slide v-for="row in $user.counts" :key="row.name" class="mb-2">
+            <Slide v-for="row in $user.content" :key="row.name" class="mb-2">
                 <div class="info-box mb-0 mr-2" style="height: 100px">
                     <span :class="`info-box-icon elevation-1 bg-${row.color}`"><i :class="`fas ${row.icon}`"></i></span>
                     <div class="info-box-content">
@@ -36,14 +36,14 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { Carousel, Navigation, Slide } from 'vue3-carousel'
 import 'vue3-carousel/dist/carousel.css'
-import { useUserStore } from '@/store/users/users'
+import { useUserSummaryStore } from '@/store/@staff/UserSummaryStore'
 
 
-const $user = useUserStore()
+const $user = useUserSummaryStore()
 
 const config = {
     autoplay: 10 * 1000,
@@ -80,7 +80,7 @@ const config = {
 
 onMounted(() => {
     setTimeout(() => {
-        $user.GetCount()
+        $user.GetAPI()
     }, 1);
 });
 </script>

@@ -14,17 +14,11 @@ class AgentController extends Controller
      * **/
     public function index(Request $req) : JsonResponse {
         // SECTION AGENT & STAFF
-        if($req->user()->hasRole('admin') || $req->user()->hasRole('agent')) {
+        if($req->user()->hasRole('admin') || $req->user()->hasRole('staff')) {
 
         return response()->json([
             ...$this->G_ReturnDefault(),
-            'data' => User::where('role', 4)
-                ->with([
-                    'info' => function ($q) {
-                        $q->orderBy('name', 'DESC');
-                    }
-                ])
-                ->get()
+                'data' => User::role('agent')->get()
             ]);
         }
 

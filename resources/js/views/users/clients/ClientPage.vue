@@ -8,7 +8,7 @@
         <!-- NOTE REPORT -->
         <!-- <ReportForm /> -->
 
-        <!-- <UserSummary /> -->
+        <UserSummary />
 
         <!-- NOTE SEARCH -->
         <SearchComponent />
@@ -26,11 +26,11 @@
 </template>
 
 <script setup lang="ts">
-import { useUsersStore } from '@/store/users/UsersStore'
+import { useUsersStore } from '@/store/@staff/UsersStore'
 // import { usePlanStore } from '@/store/system/plan'
 import { onMounted } from 'vue';
 
-// import UserSummary from './contents/UserSummary.vue'
+import UserSummary from './contents/UserSummary.vue'
 import AddForm from './forms/AddForm.vue'
 import EditForm from './forms/EditForm.vue'
 import SearchComponent from './search/SearchComponent.vue'

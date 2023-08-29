@@ -14,15 +14,16 @@
                                 <div class="users-list clearfix d-flex justify-content-center">
                                     <li class="pt-0 w-100">
                                         <img data-toggle="modal" data-target="#avatar-modal"
-                                            :src="$user.params.avatar || 'https://fchhis.migfus20.com/images/logo.png'"
+                                            :src="$user.params.avatar || '/images/logo.png'"
                                             style="width: 162px; height: 162px" alt="User Image">
-                                        <button data-toggle="modal" data-target="#avatar-modal"
-                                            class="btn btn-info ml-2">Upload
-                                            Avatar</button>
+                                        <button data-toggle="modal" data-target="#avatar-modal" class="btn btn-info ml-2">
+                                            Upload Avatar
+                                        </button>
                                     </li>
                                 </div>
 
 
+                                <div class="separator mb-2"><strong>ACCOUNT</strong></div>
                                 <div class="form-group">
                                     <label for="username-input">Username</label>
                                     <Field @input="GeneratePasword()" v-model="$user.params.username" name="username"
@@ -55,18 +56,31 @@
                                     <ErrorMessage name="password" />
                                 </div>
 
-
-
+                                <div class="separator mb-2"><strong>AGENT</strong></div>
                                 <div class="form-group">
+                                    <label>Agent</label>
+                                    <Field name="agent" as='select' v-model="$user.params.agent_id" class="form-control">
+                                        <option v-for="row in $agent.content" :value="row.id">
+                                            {{ row.name }}
+                                        </option>
+                                    </Field>
+                                    <div class="mb-2 text-danger">
+                                        <ErrorMessage name="agent" />
+                                    </div>
+                                </div>
+
+                                <!-- <div class="form-group">
                                     <label>Role</label>
                                     <select v-model="$user.params.role" class="form-control" disabled>
                                         <option :value="6">Client</option>
                                     </select>
-                                </div>
+                                </div> -->
+
+                                <div class="separator mb-2"><strong>PLAN/TRANSACTION</strong></div>
 
                                 <div class="form-group">
                                     <label>Plan</label>
-                                    <select v-model="$user.params.plan" class="form-control">
+                                    <select v-model="$user.params.plan_id" class="form-control">
                                         <option v-for="row in $plan.content" :value="row.id">{{ row.name }}</option>
                                     </select>
                                 </div>
@@ -86,31 +100,17 @@
 
 
 
+
+
                             </div>
 
                             <div class="col-12 col-md-6">
 
-                                <div class="form-group">
-                                    <label>Agent</label>
-                                    <Field name="agent" as='select' v-model="$user.params.agent_id" class="form-control">
-                                        <option v-for="row in $agent.content" :value="row.id">
-                                            {{ row.person.name }}
-                                        </option>
-                                    </Field>
-                                    <div class="mb-2 text-danger">
-                                        <ErrorMessage name="agent" />
-                                    </div>
-                                </div>
 
-                                <label for="mobile-input">Mobile</label>
-                                <div class="form-group">
-                                    <Field v-model="$user.params.mobile" name="mobile" type="text" class="form-control"
-                                        placeholder="Enter Mobile Number" />
-                                    <div class="mb-3 text-danger">
-                                        <ErrorMessage name="mobile" />
-                                    </div>
-                                </div>
 
+
+
+                                <div class="separator mb-2"><strong>PROFILE</strong></div>
 
                                 <div class="form-group">
                                     <label for="last-input">Name</label>
@@ -161,6 +161,15 @@
                                     </div>
                                 </div>
 
+                                <label for="mobile-input">Mobile</label>
+                                <div class="form-group">
+                                    <Field v-model="$user.params.mobile" name="mobile" type="text" class="form-control"
+                                        placeholder="Enter Mobile Number" />
+                                    <div class="mb-3 text-danger">
+                                        <ErrorMessage name="mobile" />
+                                    </div>
+                                </div>
+
                                 <div class="separator mb-2"><strong>ADDRESS</strong></div>
                                 <div class="form-group">
                                     <div class="row">
@@ -195,6 +204,17 @@
                                     </div>
                                 </div>
 
+
+
+
+
+                                <div class="text-secondary">
+                                    Branch: {{ $auth.content.auth.branch_id }}
+                                </div>
+                                <div class="text-secondary">
+                                    Region: {{ $auth.content.auth.region_id }}
+                                </div>
+
                             </div>
                         </div>
 
@@ -213,7 +233,7 @@
 </template>
 
 <script setup>
-import { useUsersStore } from '@/store/users/UsersStore'
+import { useUsersStore } from '@/store/@staff/UsersStore'
 import { computed, ref, onMounted } from 'vue'
 import moment from 'moment'
 import { useAddressStore } from '@/store/public/AddressStore'
@@ -221,7 +241,8 @@ import { Form, Field, ErrorMessage, configure, } from 'vee-validate'
 import * as Yup from 'yup'
 import { usePlanStore } from '@/store/system/PlanStore'
 import { usePayTypeStore } from '@/store/system/PayTypeStore'
-import { useAgentStore } from '@/store/users/AgentStore'
+import { useAgentStore } from '@/store/@staff/AgentStore'
+import { useAuthStore } from '@/store/auth/AuthStore'
 
 import UploadAvatarModal from '@/components/UploadAvatarModal.vue'
 
@@ -230,6 +251,7 @@ const $user = useUsersStore();
 const $plan = usePlanStore();
 const $payType = usePayTypeStore();
 const $agent = useAgentStore();
+const $auth = useAuthStore();
 
 const BDayProvinceID = ref(16);
 const AddressProvinceID = ref(16);

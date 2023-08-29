@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Validator;
 
 class PlanController extends Controller
 {
-    public function index(Request $req, Plan $plan) : JsonResponse {
+    public function index(Request $req, Plan $plan) {
         if ($req->count)
             return $this->PlanCount($req);
 
@@ -22,7 +22,7 @@ class PlanController extends Controller
         }
 
         $data;
-        if($req->user()->role == 2 || $req->user()->role == 5) {
+        if($req->user()->hasRole('admin') || $req->user()->hasRole('staff')) {
             switch($req->filter) {
                 case 'desc':
                     $data = $plan->where('desc', 'LIKE', '%' . $req->search .'%')->orderBy('created_at', 'DESC')->get();

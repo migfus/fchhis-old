@@ -35,6 +35,7 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::get('/users/dashboard', [\App\Http\Controllers\UserController::class, 'dashboard']);
+    Route::get('/users/count', [\App\Http\Controllers\UserController::class, 'count']);
     Route::get('/transaction/dashboard', [\App\Http\Controllers\TransactionController::class, 'dashboard']);
 
     Route::apiResource('/users',     \App\Http\Controllers\UserController::class)->only(['index', 'destroy', 'store', 'update', 'show']);

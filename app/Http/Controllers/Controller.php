@@ -7,6 +7,8 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
+use App\Models\Branch;
+use App\Models\Region;
 use Illuminate\Http\JsonResponse;
 
 class Controller extends BaseController
@@ -25,6 +27,8 @@ class Controller extends BaseController
                     'auth' => $auth,
                     'permissions' => $req->user()->getAllPermissions()->pluck('name'),
                     'role' => $this->G_GetEncryptedRole($req->user()->roles()->pluck('name')->first()),
+                    'branch' => Branch::where('id', $auth->branch_id),
+                    'region' => Region::where('id', $auth->region_id),
                 ],
             ];
         }

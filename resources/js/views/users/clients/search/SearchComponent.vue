@@ -63,9 +63,9 @@
                         <button v-else @click="$user.ChangeForm('add')" class="btn btn-success float-right">
                             <span class=""><i class="fas fa-plus mr-1"></i>Add User</span>
                         </button>
-                        <button @click="$user.ChangeForm('or')" class="btn btn-info float-right mr-1">
+                        <!-- <button @click="$user.ChangeForm('or')" class="btn btn-info float-right mr-1">
                             <span class=""><i class="fas fa-plus mr-1"></i>Self Register</span>
-                        </button>
+                        </button> -->
 
                         <!-- <button @click="$user.config.tableView = !$user.config.tableView" class="btn btn-info mr-1 float-right">
               <i :class="`fas ${$user.config.tableView ? 'fa-bars' : 'fa-table'}`"></i>
@@ -93,7 +93,7 @@
 
 <script setup lang="ts">
 import { watch, onMounted } from 'vue'
-import { useUsersStore } from '@/store/users/UsersStore'
+import { useUsersStore } from '@/store/@staff/UsersStore'
 import moment from 'moment'
 import { throttle } from 'lodash'
 

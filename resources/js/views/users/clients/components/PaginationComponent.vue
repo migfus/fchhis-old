@@ -11,7 +11,7 @@
 
 <script setup>
 import Bootstrap5Pagination from '@/components/Bootstrap5Pagination.vue';
-import { useUsersStore } from '@/store/users/UsersStore';
+import { useUsersStore } from '@/store/@staff/UsersStore';
 
 const $user = useUsersStore();
 

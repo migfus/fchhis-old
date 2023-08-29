@@ -140,12 +140,12 @@ class TransactionController extends Controller
             $data = Transaction::with([
                 'plan',
                 'pay_type',
-                'client.user',
+                'client',
                 'client' => function($q) {
                     $q->withSum('client_transactions','amount');
                 },
-                'staff.user',
-                'agent.user'
+                'staff',
+                'agent'
             ]);
 
             switch($req->filter) {
