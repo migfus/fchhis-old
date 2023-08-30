@@ -1,8 +1,10 @@
 <template>
+    <AddTransaction v-if="$trans.config.form == 'add'" />
+
     <div class="card">
         <div class="card-header">
             <h3 class="card-title text-bold">Transactions</h3>
-            <button class="btn btn-success btn-sm float-right">Add Transaction</button>
+            <button @click="$trans.config.form = 'add'" class="btn btn-success btn-sm float-right">Add Transaction</button>
         </div>
 
         <div class="card-body p-0">
@@ -33,10 +35,14 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useUserDetailsStore } from '@/store/@staff/UserDetailStore'
 import moment from 'moment'
 import { NumberAddComma } from '@/helpers/converter'
+import { useUserDetailTransactionStore } from '@/store/@staff/UserDetailTransactionStore'
+
+import AddTransaction from '../forms/AddTransaction.vue'
 
 const $user = useUserDetailsStore();
+const $trans = useUserDetailTransactionStore();
 </script>

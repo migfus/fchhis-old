@@ -11,6 +11,12 @@ type TContent = Array<{
 type TParams = {
     userId: number
     id: number
+    name: string
+    bday: string
+}
+type TConfig = {
+    loading: boolean
+    form: string
 }
 
 const title = '@staff/UserDetailBeneficiariesStore'
@@ -18,12 +24,15 @@ const title = '@staff/UserDetailBeneficiariesStore'
 export const useUserDetailBeneficiariesStore = defineStore(title, () => {
 
     const content = useStorage<TContent>(`${title}/content`, null, localStorage, { serializer: StorageSerializers.object })
-    const config = reactive<{loading: boolean}>({
+    const config = reactive<TConfig>({
         loading: false,
+        form: null
     })
     const params = reactive<TParams>({
         userId: null,
-        id: null
+        id: null,
+        name: '',
+        bday: '',
     })
 
     // SECTION API
@@ -50,6 +59,20 @@ export const useUserDetailBeneficiariesStore = defineStore(title, () => {
         }
     }
 
+    async function AddAPI() {
+        try {
+            let {data: {data}} = await axios.post(`/api/beneficiary`, params )
+            params.name = ''
+            params.bday = ''
+            config.form = null
+            GetAPI()
+        }
+        catch(e) {
+            console.log('add API Error', {e})
+        }
+
+    }
+
     function ChangeForm(form = '') {
         return 1;
     }
@@ -61,6 +84,7 @@ export const useUserDetailBeneficiariesStore = defineStore(title, () => {
 
         GetAPI,
         DestroyAPI,
+        AddAPI,
         ChangeForm,
     }
 })

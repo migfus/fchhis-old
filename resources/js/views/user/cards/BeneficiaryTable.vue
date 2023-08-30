@@ -1,9 +1,11 @@
 <template>
+    <AddBeneficiary v-if="$bent.config.form == 'add'" />
     <div class="card">
         <div class="card-header">
             <h3 class="card-title text-bold">Beneficiaries</h3>
-            <button @click="$bent.ChangeForm('add')" class="btn btn-sm btn-success float-right"><i class="fas fa-plus"></i>
-                Add</button>
+            <button @click="$bent.config.form = 'add'" class="btn btn-sm btn-success float-right">
+                <i class="fas fa-plus mr-2"></i>Add
+            </button>
         </div>
 
         <div class="card-body p-0">
@@ -20,7 +22,7 @@
                         <td>{{ row.name }}</td>
                         <td>{{ `${moment(row.bday).format('MMM D, YYYY')} (${AgeConverter(row.bday)})` }}</td>
                         <td>
-                            <button class="btn btn-info btn-sm mr-2"><i class="fas fa-pen"></i></button>
+                            <!-- <button class="btn btn-info btn-sm mr-2"><i class="fas fa-pen"></i></button> -->
                             <button @click="deleteBen(row.id)" class="btn btn-danger btn-sm"><i
                                     class="fas fa-trash"></i></button>
                         </td>
@@ -38,6 +40,7 @@ import { AgeConverter } from '@/helpers/converter'
 import { useUserDetailBeneficiariesStore } from '@/store/@staff/UserDetailBeneficiariesStore'
 import { onMounted } from 'vue'
 import { useRoute } from 'vue-router'
+import AddBeneficiary from '../forms/AddBeneficiary.vue'
 
 const $route = useRoute();
 const $bent = useUserDetailBeneficiariesStore();

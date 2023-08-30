@@ -20,7 +20,7 @@ return new class extends Migration
             $table->unsignedBigInteger('pay_type_id')->index();
             $table->unsignedBigInteger('plan_id')->index();
 
-            $table->decimal('amount', 8, 2);
+            $table->decimal('amount', 12, 2);
 
             $table->timestamps();
         });

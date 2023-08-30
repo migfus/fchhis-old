@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('beneficiaries', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id')->index();
+            $table->unsignedBigInteger('staff_id')->index();
             $table->string('name');
             $table->date('bday');
             $table->timestamps();

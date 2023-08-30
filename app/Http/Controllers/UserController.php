@@ -847,11 +847,13 @@ class UserController extends Controller
         private function StaffGetCount(Request $req) : JsonResponse {
             $count = [
                 'clients' => User::role('client')->count(),
+                'agent' => User::role('agent')->count(),
                 'beneficiaries'=> Beneficiary::count(),
             ];
 
             $data = [
                 ['name' => 'Clients', 'count' => $count['clients'], 'color' => 'success', 'icon' => 'fa-child'],
+                ['name' => 'Agent', 'count' => $count['agent'], 'color' => 'warning', 'icon' => 'fa-hands-helping'],
                 ['name' => 'Beneficiaries','count' => $count['beneficiaries'],'color' => 'secondary','icon'=> 'fa-users'],
             ];
 

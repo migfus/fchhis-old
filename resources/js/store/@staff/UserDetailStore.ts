@@ -7,14 +7,21 @@ type TContent = {
     avatar: string
     branch_id: number
     client_transactions: Array<{
-        agent_id: number
+        agent: {
+            name: string
+        }
         amount: number
         client_id: number
         created_at: string
         id: number
         or: number
-        pay_type_id: number
-        plan_id: number
+        pay_type: {
+            name: string
+        }
+        plan: {
+            avatar: string
+            name: string
+        }
         staff_id: number
         updated_at: string
     }>

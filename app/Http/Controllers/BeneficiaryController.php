@@ -43,11 +43,9 @@ class BeneficiaryController extends Controller
 
         private function StaffStore(Request $req) : JsonResponse {
             $val = Validator::make($req->all(), [
-                'lastName' => 'required',
-                'firstName' => 'required',
-                'midName' => '',
-                'extName' => '',
+                'name' => 'required',
                 'bday' => 'required',
+                'userId' => 'required',
             ]);
 
             if($val->fails()) {
@@ -56,11 +54,9 @@ class BeneficiaryController extends Controller
 
             if($req->user()->hasRole('client') || $req->user()->hasRole('staff')) {
                 $ben = Beneficiary::create([
-                    'info_id' => User::where('id', $req->user()->id)->with('info')->first()->info->id,
-                    'lastName' => $req->lastName,
-                    'firstName' => $req->firstName,
-                    'midName' => $req->midName,
-                    'extName' => $req->extName,
+                    'user_id' => $req->userId,
+                    'staff_id' => $req->user()->id,
+                    'name' => $req->name,
                     'bday' => $req->bday,
                 ]);
 

@@ -7,6 +7,7 @@ use App\Models\Transaction;
 use App\Models\Info;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
 
 class TransactionController extends Controller
@@ -400,12 +401,12 @@ class TransactionController extends Controller
 
         private function StaffStore(Request $req) : JsonResponse {
             $val = Validator::make($req->all(), [
-                'agent.id' => 'required',
-                'client.id' => 'required',
+                // 'agent.id' => 'required',
+                'userId' => 'required',
                 'amount' => 'required',
                 'or' => 'required',
                 'pay_type_id' => 'required',
-                'plan.id' => 'required',
+                'plan_id' => 'required',
                 'or',
             ]);
 
@@ -413,17 +414,21 @@ class TransactionController extends Controller
                 return $this->G_ValidatorFailResponse($val);
             }
 
+            $client = User::where('id', $req->userId)->role('client')->with('info.agent')->first();
+
+            // return response()->json(['data' => $client]);
+
             Transaction::create([
                 'or' => $req->or,
-                'agent_id' => $req->agent['id'],
-                'staff_id' => $req->user()->info->id,
-                'client_id' => $req->client['id'],
+                'agent_id' => $client->info->agent->id,
+                'staff_id' => $req->user()->id,
+                'client_id' => $req->userId,
                 'pay_type_id' => $req->pay_type_id,
-                'plan_id' => $req->plan['id'],
+                'plan_id' => $req->plan_id,
                 'amount' => $req->amount,
             ]);
 
-            $due = Info::where('id', $req->client['id'])->first()->due_at;
+            $due = Info::where('user_id', $req->userId)->first()->due_at;
 
             switch($req->pay_type_id) {
                 case 2:
@@ -440,7 +445,7 @@ class TransactionController extends Controller
                     $due = Carbon::create($due)->addMonth(1);
             }
 
-            Info::where('id', $req->client['id'])->update(['due_at' => $due]);
+            Info::where('user_id', $req->userId)->update(['due_at' => $due]);
 
             return response()->json([...$this->G_ReturnDefault($req), 'data' => true]);
         }

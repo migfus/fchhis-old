@@ -1,5 +1,5 @@
 <template>
-    <div v-if="$user.content.id" class="row">
+    <div v-if="$user.content" class="row">
         <!-- {{ $user.content }} -->
         <div class="col-12 col-md-5">
             <ProfileCard />
@@ -7,7 +7,7 @@
         </div>
 
         <div class="col-12 col-md-7">
-            <ClientTable />
+            <TransactionCard />
         </div>
 
         <ClaimModal />
@@ -24,7 +24,7 @@ import { useUserDetailsStore } from '@/store/@staff/UserDetailStore'
 import ClaimModal from './modals/ClaimModal.vue'
 import BeneficiaryTable from './cards/BeneficiaryTable.vue'
 import AddBeneficiary from './forms/AddBeneficiary.vue'
-import ClientTable from './cards/ClientTable.vue'
+import TransactionCard from './cards/TransactionCard.vue'
 import ProfileCard from './cards/ProfileCard.vue'
 
 const $route = useRoute();
