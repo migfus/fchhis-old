@@ -36,6 +36,7 @@
         "real-style-xlsx": "^1.0.4",
         "sheetjs": "^2.0.0",
         "typescript": "^5.1.6",
+        "update": "^0.4.2",
         "vee-validate": "^4.8.4",
         "vue": "^3.3.4",
         "vue-chartjs": "^5.2.0",
@@ -48,7 +49,7 @@
         "vue3-carousel": "^0.3.0",
         "vue3-excel-editor": "^1.0.17",
         "vue3-pdfmake": "^2.0.0",
-        "xlsx": "https://cdn.sheetjs.com/xlsx-0.19.2/xlsx-0.19.2.tgz",
+        "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.0/xlsx-0.20.0.tgz",
         "xlsx-style": "^0.8.13",
         "yup": "^1.0.2"
     }
