@@ -1,7 +1,8 @@
 <template>
     <div v-if="$user.content" class="col-12">
-        <div v-for="(row, idx,) in $user.content.data" class="card mb-2">
-            <Transition name="fade">
+        <TransitionGroup name="list">
+            <div v-for="(row, idx,) in $user.content.data" class="card mb-2">
+
                 <div class="card-body">
                     <div class="row">
 
@@ -129,8 +130,8 @@
 
 
                 </div>
-            </Transition>
-        </div>
+            </div>
+        </TransitionGroup>
 
     </div>
 </template>
@@ -150,15 +151,22 @@ const $address = useAddressStore();
 </script>
 
 <style scoped>
-.fade-enter-active,
-.fade-leave-active {
-    transition: opacity 0.5s ease;
+.list-enter,
+.list-leave-to {
+    opacity: 0
 }
 
-.fade-enter-from,
-.fade-leave-to {
-    opacity: 0;
+.list-leave,
+.list-enter-to {
+    opacity: 1
 }
+
+.list-enter-active,
+.list-leave-active {
+    transition: opacity 300ms
+}
+
+
 
 .bg-warning {
     background-color: #EFDFAE !important;

@@ -64,22 +64,21 @@
                 <div class="col-sm-3">
                     <div class="description-block">
                         <h5 class="description-header text-success">
-                            Due At:
-                            {{ $user.content.info.due_at ?? 'N/A' }}
+                            Due on
+                            {{ moment($user.content.info.due_at).format('MMM DD, YYYY') ?? 'N/A' }}
                         </h5>
                     </div>
                 </div>
-
-
-
             </div>
 
             <div class="row">
                 <div class="col-12">
                     <button class="btn btn-secondary btn-sm float-right mt-2" data-toggle="modal"
-                        data-target="#claim-modal">Declare Claim</button>
-                    <RouterLink :to="{ name: 'users-clients' }" class="btn btn-info btn-sm float-right mt-2 mr-2">Back to
-                        List
+                        data-target="#claim-modal">
+                        Declare Claim
+                    </button>
+                    <RouterLink :to="{ name: 'users-clients' }" class="btn btn-info btn-sm float-right mt-2 mr-2">
+                        Back to List
                     </RouterLink>
                 </div>
             </div>
@@ -90,6 +89,7 @@
 <script setup>
 import { NumberAddComma, PlanToPay } from '@/helpers/converter'
 import { useUserDetailsStore } from '@/store/@staff/UserDetailStore'
+import moment from 'moment'
 
 const $user = useUserDetailsStore();
 </script>

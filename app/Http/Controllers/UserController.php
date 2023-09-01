@@ -26,6 +26,10 @@ class UserController extends Controller
             return $this->AgentIndex($req);
         }
         else if($req->user()->hasRole('staff')) {
+            if($req->print) {
+                return $this->StaffPrint($req);
+            }
+
             return $this->StaffIndex($req);
         }
         else if($req->user()->hasRole('client')) {
@@ -114,22 +118,7 @@ class UserController extends Controller
                 return $this->G_ValidatorFailResponse($val);
             }
 
-            // if($req->overdue) {
-            //     return $this->StaffOverdueIndex($req);
-            // }
-
-            // if($req->print) {
-            //     return $this->StaffPrintIndex($req);
-            // }
-
-
-
             $data = User::select('*');
-
-            // return response()->json([
-            //     ...$this->G_ReturnDefault($req),
-            //     'data' => User::get(),
-            // ]);
 
             if((bool)strtotime($req->start) OR (bool)strtotime($req->end)) {
                 if((bool)strtotime($req->start)) {
@@ -169,21 +158,75 @@ class UserController extends Controller
 
             return response()->json([
                 ...$this->G_ReturnDefault($req),
-                // 'data' => $data->withSum('client_transactions', 'amount')->orderBy('created_at', 'DESC')->paginate($req->limit)
-                'data' => $data->withSum('client_transactions', 'amount')->orderBy('created_at', 'DESC')->paginate(9)
+                'data' => $data->withSum('client_transactions', 'amount')->orderBy('created_at', 'DESC')->paginate(10)
             ]);
         }
 
-        private function StaffPrintIndex(Request $req) : JsonResponse {
-            $data = Info::with(['plan', 'pay_type'])
-                ->withSum('client_transactions', 'amount')
-                ->where('agent_id', $req->user()->info->id)
-                ->where('created_at', '>=', $req->start)
-                ->where('created_at', '<=', $req->end)
-                ->orderBy('name', 'ASC')
-                ->get();
+        private function StaffPrint(Request $req) : JsonResponse {
+            $val = Validator::make($req->all(), [
+                'sort' => 'required',
+                'search' => '',
+                'start' => '',
+                'end' => '',
+                'print' => '',
+                'limit' => 'required',
+                'filter' => 'required',
+                'role' => 'required'
+            ]);
 
-            return response()->json([...$this->G_ReturnDefault($req), 'data' => $data]);
+            if($val->fails()) {
+                return $this->G_ValidatorFailResponse($val);
+            }
+
+            $data = User::select('*');
+
+            if((bool)strtotime($req->start) OR (bool)strtotime($req->end)) {
+                if((bool)strtotime($req->start)) {
+                    $data->where('created_at', '>=', $req->start);
+                }
+                if((bool)strtotime($req->end)) {
+                    $data->where('created_at', '<=', $req->end);
+                }
+            }
+
+            $data->with(['info.plan', 'info.pay_type', 'info.agent', 'info.staff']);
+
+            switch($req->filter) {
+                case 'plans':
+                    $data->role('client')
+                    ->whereHas('info.plan', function($q) use($req) {
+                        $q->where('name', 'LIKE', '%'.$req->search.'%');
+                    })
+                    ->withSum('client_transactions', 'amount');
+                    break;
+                case 'address':
+                    $data->role('client')
+                    ->withSum('client_transactions', 'amount')
+                    ->whereHas('info', function($q) use($req) {
+                        $q->where('address', 'LIKE', '%'.$req->search.'%');
+                    });
+                    break;
+                case 'email':
+                    $data->role('client')->where('email', 'LIKE', '%'.$req->search.'%')
+                    ->withSum('client_transactions', 'amount');
+                    break;
+                default:
+                    $data->role('client')
+                    ->withSum('client_transactions', 'amount')
+                    ->where('name', 'LIKE', '%'.$req->search.'%');
+            }
+
+            if($req->print) {
+                return response()->json([
+                    ...$this->G_ReturnDefault($req),
+                    'data' => $data->withSum('client_transactions', 'amount')->orderBy('created_at', 'DESC')->get()
+                ]);
+            }
+
+            return response()->json([
+                ...$this->G_ReturnDefault($req),
+                'data' => $data->withSum('client_transactions', 'amount')->orderBy('created_at', 'DESC')->paginate(10)
+            ]);
         }
 
         private function StaffOverdueIndex(Request $req) : JsonResponse {

@@ -54,15 +54,17 @@ type TContent = {
         created_at: string
         email: string
         name: string
+        username: string
         info: {
             address: string
             address_id: bigint
+            bday: string
+            bplace_id: BigInteger
+            due_at: string
             agent: {
                 name: string
                 avatar: string
             }
-            bday: string
-            bplace_id: BigInteger
             pay_type: {
                 name: string
             }
@@ -87,6 +89,7 @@ export const useUsersStore = defineStore(title, () => {
 
     // DEBUG ADd type on 'print'
     const content = ref<TContent>(null)
+    const contentReport = ref<TContent>(null)
     const print = useStorage(`${title}/print`, null, localStorage)
     const config = reactive<IConfig>({
         loading: false,
@@ -131,9 +134,9 @@ export const useUsersStore = defineStore(title, () => {
         try {
             let { data: {data}} = await axios.get('/api/users', {
                 cancelToken: new CancelToken(function executor(c) { cancel = c; }),
-                params: { ...query, print: true}
+                params: { ...query, print: true }
             })
-            print.value = data
+            contentReport.value = data
         }
         catch(e) {
             console.log('UsersStore PrintAPI Error', {e})
@@ -234,6 +237,7 @@ export const useUsersStore = defineStore(title, () => {
 
     return {
         content,
+        contentReport,
         config,
         query,
         print,

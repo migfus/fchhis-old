@@ -9,4 +9,8 @@ use Kra8\Snowflake\HasShortflakePrimary;
 class Branch extends Model
 {
     use HasFactory, HasShortflakePrimary;
+
+    protected $fillable = [
+        'region_id',
+    ];
 }

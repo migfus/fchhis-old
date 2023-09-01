@@ -15,6 +15,7 @@ class BranchSeeder extends Seeder
         $data = [
             [
                 'id' => env('SEEDER_BRANCH_VALENCIA_ID', 569913442237459),
+                'region_id' => env('SEEDER_REGION_X_ID', null),
                 'name' => 'Valencia City'
             ]
         ];

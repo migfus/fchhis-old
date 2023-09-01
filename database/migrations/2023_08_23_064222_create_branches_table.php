@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('branches', function (Blueprint $table) {
             $table->id();
-
+            $table->unsignedBigInteger('region_id')->index();
             $table->string('name')->unique();
 
             $table->timestamps();
