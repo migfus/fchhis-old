@@ -19,7 +19,7 @@ class TransactionSeeder extends Seeder
                 'agent_id' => env('SEEDER_USER_AGENT_ID', null),
                 'staff_id' => env('SEEDER_USER_STAFF_ID', null),
                 'client_id' => env('SEEDER_USER_CLIENT_ID', null),
-                'plan_id' => env('SEEDER_PLAN_JASPER_ID', null),
+                'plan_details_id' => env('SEEDER_PLAN_JASPER_ID', null),
                 'amount' => 1250,
                 'pay_type_id' => env('SEEDER_PAY_TYPE_QUARTERLY_ID', null), // querterly
             ],

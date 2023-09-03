@@ -15,7 +15,7 @@ class Transaction extends Model
         'staff_id',
         'client_id',
         'pay_type_id',
-        'plan_id',
+        'plan_details_id',
         'amount',
         'agent_id',
         'or',
@@ -34,7 +34,7 @@ class Transaction extends Model
     }
 
     public function plan() {
-        return $this->belongsTo(Plan::class);
+        return $this->belongsTo(PlanDetails::class);
     }
 
     public function pay_type() {

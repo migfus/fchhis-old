@@ -71,6 +71,20 @@
                         </RouterLink>
                     </li>
 
+                    <li v-if="can('index', 'client')" class="nav-header">
+                        <div>TRANSACTIONS</div>
+                    </li>
+
+                    <li v-if="can('index', 'client')" class="nav-item">
+                        <RouterLink :to="{ name: 'transactions-all' }"
+                            :class="`${$route.name == 'transactions-all' ? 'active' : ''} nav-link`">
+                            <i class="nav-icon fas fa-tasks"></i>
+                            <p>
+                                Transactions
+                            </p>
+                        </RouterLink>
+                    </li>
+
                     <!-- SECTION AUTH -->
                     <li class="nav-header">
                         <div>MY ACCOUNT</div>

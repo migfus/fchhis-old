@@ -24,7 +24,7 @@ class Info extends Model
         'staff_id',
         'name',
         'pay_type_id',
-        'plan_id',
+        'plan_details_id',
         'client_id',
         'due_at',
         'or',
@@ -52,7 +52,7 @@ class Info extends Model
     }
 
     public function plan() {
-        return $this->belongsTo(Plan::class, 'plan_id');
+        return $this->belongsTo(PlanDetails::class, 'plan_details_id');
     }
 
     public function pay_type() {

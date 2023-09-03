@@ -402,11 +402,11 @@ class TransactionController extends Controller
         private function StaffStore(Request $req) : JsonResponse {
             $val = Validator::make($req->all(), [
                 // 'agent.id' => 'required',
-                'userId' => 'required',
+                'client_id' => 'required',
                 'amount' => 'required',
                 'or' => 'required',
                 'pay_type_id' => 'required',
-                'plan_id' => 'required',
+                'plan_details_id' => 'required',
                 'or',
             ]);
 
@@ -414,7 +414,7 @@ class TransactionController extends Controller
                 return $this->G_ValidatorFailResponse($val);
             }
 
-            $client = User::where('id', $req->userId)->role('client')->with('info.agent')->first();
+            $client = User::where('id', $req->client_id)->role('client')->with('info.agent')->first();
 
             // return response()->json(['data' => $client]);
 
@@ -422,13 +422,13 @@ class TransactionController extends Controller
                 'or' => $req->or,
                 'agent_id' => $client->info->agent->id,
                 'staff_id' => $req->user()->id,
-                'client_id' => $req->userId,
+                'client_id' => $req->client_id,
                 'pay_type_id' => $req->pay_type_id,
-                'plan_id' => $req->plan_id,
+                'plan_details_id' => $req->plan_details_id,
                 'amount' => $req->amount,
             ]);
 
-            $due = Info::where('user_id', $req->userId)->first()->due_at;
+            $due = Info::where('user_id', $req->client_id)->first()->due_at;
 
             switch($req->pay_type_id) {
                 case 2:
@@ -471,7 +471,7 @@ class TransactionController extends Controller
                 'staff_id' => $req->user()->info->id,
                 'client_id' => $req->client['id'],
                 'pay_type_id' => $req->pay_type_id,
-                'plan_id' => $req->plan['id'],
+                'plan_details_id' => $req->plan['id'],
                 'amount' => $req->amount,
             ]);
 
@@ -516,7 +516,7 @@ class TransactionController extends Controller
                 'amount' => 'required',
                 'or' => 'required',
                 'pay_type_id' => 'required',
-                'plan_id' => 'required',
+                'plan_details_id' => 'required',
             ]);
 
             if($val->fails()) {
@@ -531,7 +531,7 @@ class TransactionController extends Controller
                     'agent_id' => $req->agent_id,
                     'client_id' => $req->client_id,
                     'pay_type_id' => $req->pay_type_id,
-                    'plan_id' => $req->plan_id,
+                    'plan_details_id' => $req->plan_details_id,
                     'amount' => $req->amount,
                 ]);
 
@@ -564,7 +564,7 @@ class TransactionController extends Controller
                     'agent_id' => $req->agent['id'],
                     'client_id' => $req->client['id'],
                     'pay_type_id' => $req->pay_type_id,
-                    'plan_id' => $req->plan['id'],
+                    'plan_details_id' => $req->plan['id'],
                     'amount' => $req->amount,
                 ]);
 

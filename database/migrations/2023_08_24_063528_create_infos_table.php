@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('staff_id')->index();
             $table->unsignedBigInteger('agent_id')->index();
             $table->unsignedBigInteger('pay_type_id')->nullable();
-            $table->unsignedBigInteger('plan_id')->nullable();
+            $table->unsignedBigInteger('plan_details_id')->nullable();
 
             $table->date('bday')->nullable();
             $table->unsignedInteger('bplace_id')->nullable();

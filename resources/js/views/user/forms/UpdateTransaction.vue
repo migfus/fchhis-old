@@ -45,7 +45,7 @@
 
                 <div class="form-group">
                     <label>Pay Type</label>
-                    <Field name="plan" as='select' v-model="$trans.params.plan_id" class="form-control">
+                    <Field name="plan" as='select' v-model="$trans.params.plan_details_id" class="form-control">
                         <option v-for="row in $plan.content" :value="row.id">
                             {{ row.name }}
                         </option>

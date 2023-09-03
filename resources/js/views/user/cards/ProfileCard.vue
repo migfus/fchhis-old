@@ -43,9 +43,8 @@
                         <h5 class="description-header text-danger">
                             {{
                                 NumberAddComma(
-                                    $user.content.client_transactions_sum_amount -
-                                    PlanToPay($user.content.info.pay_type, $user.content.info.plan)
-                                )
+                                    PlanToPay($user.content.info.pay_type, $user.content.info.plan) -
+                                    $user.content.client_transactions_sum_amount)
                             }}
                         </h5>
                     </div>

@@ -23,14 +23,14 @@ class BeneficiaryController extends Controller
         private function StaffIndex(Request $req) : JsonResponse {
             $val = Validator::make($req->all(), [
                 'search' => '',
-                'id' => 'required'
+                'client_id' => 'required'
             ]);
 
             if($val->fails()) {
                 return $this->G_ValidatorFailResponse($val);
             }
 
-            $data = Beneficiary::where('user_id', $req->id)->orderBy('name', 'ASC')->get();
+            $data = Beneficiary::where('user_id', $req->client_id)->orderBy('name', 'ASC')->get();
 
             return response()->json([...$this->G_ReturnDefault(), 'data' => $data]);
         }
@@ -45,7 +45,7 @@ class BeneficiaryController extends Controller
             $val = Validator::make($req->all(), [
                 'name' => 'required',
                 'bday' => 'required',
-                'userId' => 'required',
+                'client_id' => 'required',
             ]);
 
             if($val->fails()) {
@@ -54,7 +54,7 @@ class BeneficiaryController extends Controller
 
             if($req->user()->hasRole('client') || $req->user()->hasRole('staff')) {
                 $ben = Beneficiary::create([
-                    'user_id' => $req->userId,
+                    'user_id' => $req->client_id,
                     'staff_id' => $req->user()->id,
                     'name' => $req->name,
                     'bday' => $req->bday,
@@ -75,7 +75,7 @@ class BeneficiaryController extends Controller
             $val = Validator::make($req->all(), [
                 'name' => 'required',
                 'bday' => 'required',
-                'userId' => 'required',
+                'client_id' => 'required',
             ]);
 
             if($val->fails()) {
@@ -84,7 +84,7 @@ class BeneficiaryController extends Controller
 
             if($req->user()->hasRole('client') || $req->user()->hasRole('staff')) {
                 $ben = Beneficiary::where('id', $id)
-                    ->where('user_id', $req->userId)
+                    ->where('user_id', $req->client_id)
                     ->update([
                         'name' => $req->name,
                         'bday' => $req->bday,

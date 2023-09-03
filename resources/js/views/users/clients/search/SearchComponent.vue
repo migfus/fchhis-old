@@ -4,7 +4,7 @@
             <div class="card-body">
                 <div class="row">
 
-                    <div v-if="$user.config.notify" class="col-12">
+                    <!-- <div v-if="$user.config.notify" class="col-12">
                         <div class="alert alert-warning alert-dismissible fade show" role="alert">
                             <strong>Notify</strong> We don't recommend to delete some records, it will reflect everything
                             that they
@@ -14,7 +14,7 @@
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                    </div>
+                    </div> -->
 
                     <div class="col-12 col-md-2 mb-2">
                         <VueDatePicker v-model="$user.query.start" :enable-time-picker="false"

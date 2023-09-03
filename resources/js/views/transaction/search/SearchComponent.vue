@@ -4,7 +4,7 @@
             <div class="card-body">
                 <div class="row">
 
-                    <div v-if="$trans.config.notify" class="col-12">
+                    <div class="col-12">
                         <div class="alert alert-warning alert-dismissible fade show" role="alert">
                             <strong>Notify</strong> We don't recommend to delete some records, it will reflect everything
                             that they

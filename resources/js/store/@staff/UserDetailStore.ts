@@ -35,7 +35,7 @@ type TContent = {
     username: string
     info: {
         pay_type_id: number
-        plan_id: number
+        plan_details_id: number
         pay_type: {
             name: string
         }

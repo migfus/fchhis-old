@@ -13,20 +13,13 @@ class Plan extends Model
     protected $fillable = [
             'name',
             'avatar',
-            'age_start',
-            'age_end',
-            'desc',
-            'contract_price',
-            'spot_pay',
-            'spot_service',
-            'user_id',
-            'annual',
-            'semi_annual',
-            'quarterly',
-            'monthly'
     ];
 
     public function infos() {
         return $this->hasMany(Info::class);
+    }
+
+    public function planDetails() {
+        return $this->hasMany(PlanDetails::class);
     }
 }

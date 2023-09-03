@@ -13,7 +13,7 @@ type TParams = {
     agent_id: number
     or: string
     pay_type_id: number
-    plan_id: number
+    plan_details_id: number
     amount: number
     client_id: number
     id: number
@@ -35,7 +35,7 @@ export const useUserDetailTransactionStore = defineStore(title, () => {
     // SECTION API
     async function StoreAPI() {
         try {
-            let {data: {data}} = await axios.post(`/api/transaction`, params )
+            let {data: {data}} = await axios.post(`/api/transaction`, { ...params, client_id: $route.params.id} )
             ResetParams()
             $user.GetAPI()
         }
@@ -66,7 +66,7 @@ export const useUserDetailTransactionStore = defineStore(title, () => {
         params.agent_id = row.agent.id,
         params.or = row.or,
         params.pay_type_id = row.pay_type.id,
-        params.plan_id = row.plan.id,
+        params.plan_details_id = row.plan.id,
         params.amount = row.amount,
 
         config.form = 'update'
@@ -78,7 +78,7 @@ export const useUserDetailTransactionStore = defineStore(title, () => {
             agent_id: null,
             or: '',
             pay_type_id: null,
-            plan_id: null,
+            plan_details_id: null,
             amount: 0,
             client_id: null,
         }

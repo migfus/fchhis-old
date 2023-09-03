@@ -41,7 +41,7 @@ type IParams = {
     address_id: number
     or: string
     agent: number
-    plan_id: number
+    plan_details_id: number
     id: number
     phones?: Array<{phone: string}>
 }
@@ -202,7 +202,7 @@ export const useUsersStore = defineStore(title, () => {
             or: '',
             phones: null,
             agent: 0,
-            plan_id: 0,
+            plan_details_id: 0,
             id: 0
         }
     }

@@ -25,7 +25,7 @@ class User extends Authenticatable
         'password',
         'username',
         'avatar',
-        'plan_id',
+        'plan_details_id',
         'notify_mobile',
         'role',
         'OR',
@@ -58,7 +58,7 @@ class User extends Authenticatable
     }
 
     public function plan() {
-        return $this->belongsTo(Plan::class, 'plan_id', 'id');
+        return $this->belongsTo(PlanDetails::class, 'plan_details_id', 'id');
     }
 
     public function agent_users() {

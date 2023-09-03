@@ -31,7 +31,7 @@ type IContent = {
             id: number
             or: string
             pay_type_id: number
-            plan_id: number
+            plan_details_id: number
             sex: boolean
             staff_id: number
             updated_at: string

@@ -7,6 +7,7 @@ import { PrintTest } from '@/helpers/print'
 import { useAddressStore } from '@/store/public/AddressStore'
 import moment from 'moment'
 import { useAuthStore } from '@/store/auth/AuthStore'
+import { PlanToPay } from '@/helpers/converter'
 
 type IConfig = {
     loading: boolean
@@ -45,7 +46,7 @@ type IParams = {
     address_id: number
     or: string
     agent: number
-    plan_id: number
+    plan_details_id: number
     id: number
     phones?: Array<{phone: string}>
 }
@@ -79,6 +80,12 @@ type TContent = {
             plan: {
                 id: string
                 name: string
+                monthly: number,
+                quarterly: number,
+                semi_annual: number,
+                annual: number,
+                spot_pay: number,
+                spot_service: number,
             }
         }
     }>
@@ -152,7 +159,7 @@ export const useUsersStore = defineStore(title, () => {
                     el.info.pay_type.name,
                     `${el.info.address}, ${$address.CityIDToFullAddress(el.info.address_id)}`,
                     el.client_transactions_sum_amount ?? 0,
-                    el.client_transactions_sum_amount ?? 0,
+                    PlanToPay(el.info.pay_type, el.info.plan)?? 0,
                     el.info.due_at,
                     el.info.agent.name,
                     el.info.staff.name,
@@ -242,7 +249,7 @@ export const useUsersStore = defineStore(title, () => {
             or: '',
             phones: null,
             agent: 0,
-            plan_id: 0,
+            plan_details_id: 0,
             id: 0
         }
     }

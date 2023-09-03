@@ -16,8 +16,43 @@ class PlanSeeder extends Seeder
             [
                 'id'   => env('SEEDER_PLAN_JASPER_ID', null),
                 'user_id' => env('SEEDER_USER_ADMIN_ID', null),
+
                 'avatar' => 'https://media.karousell.com/media/photos/products/2021/9/2/red_jasper_stone_raw_1630563781_5fe20000.jpg',
                 'name' => 'Jasper',
+            ],
+            [
+                'id'   => env('SEEDER_PLAN_JADE_ID', null),
+                'user_id' => env('SEEDER_USER_ADMIN_ID', null),
+
+                'avatar' => 'https://cdn.shopify.com/s/files/1/0273/4214/3566/files/Untitled_design_-_2020-09-03T160021.639.jpg?v=1599145227',
+                'name' => 'Jade',
+            ],
+            [
+                'id'   => env('SEEDER_PLAN_BERYL_ID', null),
+                'user_id' => env('SEEDER_USER_ADMIN_ID', null),
+
+                'avatar' => 'https://gem-a.com/media/k2/items/cache/9139b86f02108abdcc0129521eca5e85_L.jpg',
+                'name' => 'Beryl',
+            ],
+            [
+                'id'   => env('SEEDER_PLAN_ONYX_ID', null),
+                'user_id' => env('SEEDER_USER_ADMIN_ID', null),
+
+                'avatar' => 'https://cdn.shopify.com/s/files/1/0273/4214/3566/files/Untitled_design.jpg?v=1626279061',
+                'name' => 'Onyx',
+            ]
+        ];
+
+        foreach($data as $row) {
+            \App\Models\Plan::create($row);
+        }
+
+        $data = [
+            [
+                'id'   => env('SEEDER_PLAN_JASPER_ID', null),
+                'plan_id'   => env('SEEDER_PLAN_JASPER_ID', null),
+                'user_id' => env('SEEDER_USER_ADMIN_ID', null),
+
                 'age_start'=> 18,
                 'age_end'  => 70,
                 'desc' => 'For Non-Insured Person always pay the balance -71 & up.',
@@ -31,9 +66,9 @@ class PlanSeeder extends Seeder
             ],
             [
                 'id'   => env('SEEDER_PLAN_JADE_ID', null),
+                'plan_id'   => env('SEEDER_PLAN_JADE_ID', null),
                 'user_id' => env('SEEDER_USER_ADMIN_ID', null),
-                'avatar' => 'https://cdn.shopify.com/s/files/1/0273/4214/3566/files/Untitled_design_-_2020-09-03T160021.639.jpg?v=1599145227',
-                'name' => 'Jade',
+
                 'age_start'=> 18,
                 'age_end'  => 70,
                 'desc' => '',
@@ -47,9 +82,9 @@ class PlanSeeder extends Seeder
             ],
             [
                 'id'   => env('SEEDER_PLAN_BERYL_ID', null),
+                'plan_id'   => env('SEEDER_PLAN_BERYL_ID', null),
                 'user_id' => env('SEEDER_USER_ADMIN_ID', null),
-                'avatar' => 'https://gem-a.com/media/k2/items/cache/9139b86f02108abdcc0129521eca5e85_L.jpg',
-                'name' => 'Beryl',
+
                 'age_start'=> 18,
                 'age_end'  => 70,
                 'desc' => '',
@@ -63,9 +98,9 @@ class PlanSeeder extends Seeder
             ],
             [
                 'id'   => env('SEEDER_PLAN_ONYX_ID', null),
+                'plan_id'   => env('SEEDER_PLAN_ONYX_ID', null),
                 'user_id' => env('SEEDER_USER_ADMIN_ID', null),
-                'avatar' => 'https://cdn.shopify.com/s/files/1/0273/4214/3566/files/Untitled_design.jpg?v=1626279061',
-                'name' => 'Onyx',
+
                 'age_start'=> 18,
                 'age_end'  => 70,
                 'desc' => 'The Wooder Full Glass (Dual Memorial Package)',
@@ -79,8 +114,10 @@ class PlanSeeder extends Seeder
             ]
         ];
 
+
         foreach($data as $row) {
-            \App\Models\Plan::create($row);
+            \App\Models\PlanDetails::create($row);
         }
+
     }
 }

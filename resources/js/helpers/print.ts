@@ -144,15 +144,13 @@ export const PrintTest = (contentData, name: string = '', start: string, end: st
             { v: "", ...contentHeaderStyle([true, false, false, false])  },
             { v: "Total: ", ...contentHeaderStyle([true, false, false, false])},
             {
-                v: contentData.reduce((accumulator, total) => {
-                    console.log(total[7])
+                v: contentData.reduce((accumulator: number, total: Array<string>) => {
                     return accumulator + Number(total[7])
                 }, 0)
                 , ...contentHeaderStyle([true, false, false, false])
             },
             {
-                v: contentData.reduce((accumulator, total) => {
-                    console.log(total[8])
+            v: contentData.reduce((accumulator: number, total: Array<string>) => {
                     return accumulator + Number(total[8])
                 }, 0)
                 , ...contentHeaderStyle([true, false, false, false])

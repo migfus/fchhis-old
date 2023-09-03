@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('staff_id')->index(); // staff
             $table->unsignedBigInteger('client_id')->index(); // user_id
             $table->unsignedBigInteger('pay_type_id')->index();
-            $table->unsignedBigInteger('plan_id')->index();
+            $table->unsignedBigInteger('plan_details_id')->index();
 
             $table->decimal('amount', 12, 2);
 

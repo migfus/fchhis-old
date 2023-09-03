@@ -42,7 +42,7 @@
 
                 <div class="form-group">
                     <label>Pay Type</label>
-                    <Field name="plan" as='select' v-model="$trans.params.plan_id" class="form-control">
+                    <Field name="plan" as='select' v-model="$trans.params.plan_details_id" class="form-control">
                         <option v-for="row in $plan.content" :value="row.id">
                             {{ row.name }}
                         </option>
@@ -106,7 +106,7 @@ onMounted(async () => {
 
     // NOTE PREDICTION
     $trans.params.pay_type_id = $user.content.info.pay_type_id
-    $trans.params.plan_id = $user.content.info.plan_id
+    $trans.params.plan_details_id = $user.content.info.plan_details_id
     $trans.params.amount = PlanToPay($user.content.info.pay_type, $user.content.info.plan)
 })
 </script>

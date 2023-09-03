@@ -82,7 +82,7 @@
 
                                 <div class="form-group">
                                     <label>Plan</label>
-                                    <select v-model="$user.input.plan_id" class="form-control">
+                                    <select v-model="$user.input.plan_details_id" class="form-control">
                                         <option v-for="row in $plan.content" :value="row.id">{{ row.name }}</option>
                                     </select>
                                 </div>
@@ -363,4 +363,5 @@ onMounted(() => {
 
 .separator:not(:empty)::after {
     margin-left: .25em;
-}</style>
+}
+</style>

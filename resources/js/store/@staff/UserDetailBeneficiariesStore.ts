@@ -37,7 +37,7 @@ export const useUserDetailBeneficiariesStore = defineStore(title, () => {
     async function GetAPI() {
         config.loading = true
         try {
-            let { data: {data}} = await axios.get('/api/beneficiary/', { params: { id: Number($route.params.id) }})
+            let { data: {data}} = await axios.get('/api/beneficiary/', { params: { client_id: Number($route.params.id) }})
             content.value = data
         }
         catch(e) {
@@ -59,7 +59,7 @@ export const useUserDetailBeneficiariesStore = defineStore(title, () => {
 
     async function UpdateAPI() {
         try {
-            let { data } = await axios.put(`/api/beneficiary/${params.id}`, { ...params, userId: Number($route.params.id) })
+            let { data } = await axios.put(`/api/beneficiary/${params.id}`, { ...params, client_id: Number($route.params.id) })
             ResetParams()
             GetAPI()
         }
@@ -70,7 +70,7 @@ export const useUserDetailBeneficiariesStore = defineStore(title, () => {
 
     async function StoreAPI() {
         try {
-            let { data } = await axios.post(`/api/beneficiary`, params )
+            let { data } = await axios.post(`/api/beneficiary`, {...params, client_id: $route.params.id} )
             ResetParams()
             GetAPI()
         }

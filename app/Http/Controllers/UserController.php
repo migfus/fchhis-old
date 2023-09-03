@@ -334,7 +334,7 @@ class UserController extends Controller
                 'password' => 'required|min:8',
                 'mobile'   => 'required',
                 'role'     => 'required',
-                'plan_id'  => 'required',
+                'plan_details_id'  => 'required',
                 'agent_id' => 'required',
 
                 'name'      => 'required',
@@ -391,7 +391,7 @@ class UserController extends Controller
                 'sex'        => $req->sex,
                 'address_id' => $req->bplace_id,
                 'address'    => $req->address,
-                'plan_id'    => $req->plan_id,
+                'plan_details_id'    => $req->plan_details_id,
                 'pay_type_id'=> $req->pay_type_id,
                 'due_at'     => $due,
             ]);
@@ -403,7 +403,7 @@ class UserController extends Controller
                 'client_id' => $user->id,
                 'pay_type_id' => $req->pay_type_id,
                 'amount'  =>  $req->transaction,
-                'plan_id' => $req->plan_id,
+                'plan_details_id' => $req->plan_details_id,
             ]);
 
             Phone::create([
@@ -432,7 +432,7 @@ class UserController extends Controller
                 $info = Info::create([
                     'staff_id'   => $req->user()->info->id,
                     'or'         => $req->or,
-                    'plan_id'    => $req->plan,
+                    'plan_details_id'    => $req->plan,
                     'pay_type_id'=> $req->pay_type_id,
                     'agent_id'   => $req->agent,
                     'name'       => $req->name,
@@ -450,7 +450,7 @@ class UserController extends Controller
                     'client_id' => $info->id,
                     'pay_type_id' => $req->pay_type_id,
                     'amount'  =>  $req->transaction,
-                    'plan_id' => $req->plan,
+                    'plan_details_id' => $req->plan,
                 ]);
             }
             else {
@@ -505,7 +505,7 @@ class UserController extends Controller
                     'address_id'=> $req->bplace_id,
                     'address'   => $req->address,
                     'agent_id'  => $req->agent_id,
-                    'plan_id'   => $req->plan,
+                    'plan_details_id'   => $req->plan,
                     'pay_type_id' => $req->pay_type_id,
                     'due_at'    => $due,
                 ]);
@@ -532,7 +532,7 @@ class UserController extends Controller
                     'client_id' => $info->id,
                     'pay_type_id' => $req->pay_type_id,
                     'amount'  =>  $req->transaction,
-                    'plan_id' => $req->plan,
+                    'plan_details_id' => $req->plan,
                 ]);
 
                 Phone::create([
@@ -613,7 +613,7 @@ class UserController extends Controller
                 'user.email'    => ['required', 'email', Rule::unique('users', 'email')->ignore($req->user['id'])],
                 'user.password' => '',
                 // 'person.mobile' => 'required',
-                'plan_id'  => 'required',
+                'plan_details_id'  => 'required',
                 'pay_type_id' => 'required',
 
                 'name'  => 'required',
@@ -638,7 +638,7 @@ class UserController extends Controller
                 'address'   => $req->address,
                 // 'mobile'    => $req->person['mobile'],
                 'agent_id'  => $req->agent_id,
-                'plan_id'   => $req->plan_id,
+                'plan_details_id'   => $req->plan_details_id,
                 'pay_type_id'=> $req->pay_type_id,
             ]);
 
@@ -665,7 +665,7 @@ class UserController extends Controller
                 'user.email'    => ['required', 'email', Rule::unique('users', 'email')->ignore($req->user['id'])],
                 'user.password' => '',
                 // 'person.mobile' => 'required',
-                'plan_id'  => 'required',
+                'plan_details_id'  => 'required',
                 'pay_type_id' => 'required',
 
                 'name'  => 'required',
@@ -690,7 +690,7 @@ class UserController extends Controller
                 'address'   => $req->address,
                 // 'mobile'    => $req->person['mobile'],
                 'agent_id'  => $req->agent_id,
-                'plan_id'   => $req->plan_id,
+                'plan_details_id'   => $req->plan_details_id,
                 'pay_type_id'=> $req->pay_type_id,
             ]);
 
@@ -762,7 +762,7 @@ class UserController extends Controller
 
             $user = User::create([
                 'info_id'=> $info->id,
-                'plan_id'  => $req->plan,
+                'plan_details_id'  => $req->plan,
                 'role'     => 6, // NOTE client only
                 'notify_mobile' => $req->notifyMobile,
                 'OR' => $req->or,
@@ -776,7 +776,7 @@ class UserController extends Controller
                 'client_id' => $info->id,
                 'pay_type_id' => $req->pay_type,
                 'amount'  =>  $req->transaction,
-                'plan_id' => $req->plan,
+                'plan_details_id' => $req->plan,
             ]);
 
 

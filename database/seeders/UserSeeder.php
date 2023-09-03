@@ -108,7 +108,7 @@ class UserSeeder extends Seeder
                 'address_id'=> 1,
                 'address'   => 'client address',
                 'pay_type_id'=> env("SEEDER_PAY_TYPE_MONTHLY_ID", null),
-                'plan_id'    => env('SEEDER_PLAN_JASPER_ID', null),
+                'plan_details_id'    => env('SEEDER_PLAN_JASPER_ID', null),
                 'due_at'    => Carbon::today()->addDays()
 
             ]);
