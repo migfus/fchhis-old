@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import axios from 'axios'
 import { useStorage, StorageSerializers } from '@vueuse/core'
 import { reactive } from 'vue'
+import { useRoute } from 'vue-router'
 
 type TContent = {
     avatar: string
@@ -20,7 +21,7 @@ type TContent = {
         }
         plan: {
             avatar: string
-            name: string
+            name: string,
         }
         staff_id: number
         updated_at: string
@@ -32,11 +33,27 @@ type TContent = {
     region_id: number
     role: string
     username: string
+    info: {
+        pay_type_id: number
+        plan_id: number
+        pay_type: {
+            name: string
+        }
+        plan: {
+            monthly: number,
+            quarterly: number,
+            semi_annual: number,
+            annual: number,
+            spot_pay: number,
+            spot_service: number,
+        }
+    }
 }
 
 const title = '@staff/UserDetailsStore'
 
 export const useUserDetailsStore = defineStore(title, () => {
+    const $route = useRoute()
 
     const content = useStorage<TContent>(`${title}/content`, null, localStorage, { serializer: StorageSerializers.object })
     const config = reactive<{loading: boolean}>({
@@ -44,10 +61,10 @@ export const useUserDetailsStore = defineStore(title, () => {
     })
 
     // SECTION API
-    async function GetAPI(id: bigint) {
+    async function GetAPI() {
         config.loading = true
         try {
-            let { data: {data}} = await axios.get('/api/users/'+ id)
+            let { data: {data}} = await axios.get('/api/users/'+ Number($route.params.id))
             content.value = data
         }
         catch(e) {

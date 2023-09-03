@@ -23,7 +23,7 @@
                         <td>{{ row.name }}</td>
                         <td>{{ `${moment(row.bday).format('MMM D, YYYY')} (${AgeConverter(row.bday)})` }}</td>
                         <td>
-                            <button @click="$bent.Update(row)" class="btn btn-info btn-sm mr-2"><i
+                            <button @click="$bent.Update(row)" class="btn btn-warning btn-sm mr-2"><i
                                     class="fas fa-pen"></i></button>
                             <button @click="deleteBen(row.id)" class="btn btn-danger btn-sm"><i
                                     class="fas fa-trash"></i></button>

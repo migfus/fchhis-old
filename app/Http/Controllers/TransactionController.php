@@ -511,31 +511,35 @@ class TransactionController extends Controller
 
         private function StaffUpdate(Request $req, int $id) : JsonResponse {
             $val = Validator::make($req->all(), [
-                'agent.id' => 'required',
-                'client.id' => 'required',
+                'agent_id' => 'required',
+                'client_id' => 'required',
                 'amount' => 'required',
                 'or' => 'required',
                 'pay_type_id' => 'required',
-                'plan.id' => 'required',
-                'or'
+                'plan_id' => 'required',
             ]);
 
             if($val->fails()) {
                 return $this->G_ValidatorFailResponse($val);
             }
 
-            Transaction::where('id', $id)
-                ->where('staff_id', $req->user()->info->id)
+            $trans = Transaction::where('id', $id)
+                // NOTE in the future for restrictions
+                // ->where('staff_id', $req->user()->id)
                 ->update([
                     'or' => $req->or,
-                    'agent_id' => $req->agent['id'],
-                    'client_id' => $req->client['id'],
+                    'agent_id' => $req->agent_id,
+                    'client_id' => $req->client_id,
                     'pay_type_id' => $req->pay_type_id,
-                    'plan_id' => $req->plan['id'],
+                    'plan_id' => $req->plan_id,
                     'amount' => $req->amount,
                 ]);
 
-            return response()->json([...$this->G_ReturnDefault($req), 'data' => true]);
+            if(!$trans) {
+                return $this->G_UnauthorizedResponse();
+            }
+
+            return response()->json([...$this->G_ReturnDefault($req), 'data' => $trans]);
         }
 
         private function AdminUpdate(Request $req, int $id) : JsonResponse {

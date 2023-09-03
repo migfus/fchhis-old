@@ -78,6 +78,9 @@
                         Declare Claim
                     </button>
                     <RouterLink :to="{ name: 'users-clients' }" class="btn btn-info btn-sm float-right mt-2 mr-2">
+                        Print
+                    </RouterLink>
+                    <RouterLink :to="{ name: 'users-clients' }" class="btn btn-info btn-sm float-right mt-2 mr-2">
                         Back to List
                     </RouterLink>
                 </div>

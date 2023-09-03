@@ -1,12 +1,15 @@
 <template>
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title text-bold">Add Transaction</h3>
+            <h3 class="card-title text-bold">Update Transaction</h3>
         </div>
 
         <div class="card-body">
 
             <Form v-slot="{ errors }" :validation-schema="schema" validate-on-mount @submit="$trans.StoreAPI()">
+                <div class="text-secondary">
+                    ID: {{ $trans.params.id }}
+                </div>
                 <div class="form-group">
                     <label for="exampleInputEmail1">OR</label>
                     <Field v-model="$trans.params.or" name="or" type="text" class="form-control" id="username-input"
@@ -61,10 +64,10 @@
                     </div>
                 </div>
 
-                <button @click="$trans.ResetParams()" class="btn btn-sm btn-danger float-right"><i
+                <button @click="$trans.ResetParams()" class=" btn btn-sm btn-danger float-right"><i
                         class="fas fa-times mr-1"></i>Cancel</button>
-                <button @click="$trans.StoreAPI()" class="btn btn-sm btn-info float-right mr-2">
-                    <i class="fas fa-plus mr-1"></i>Add</button>
+                <button @click="$trans.UpdateAPI()" class="btn btn-sm btn-warning float-right mr-2">
+                    <i class="fas fa-pen mr-1"></i>Update</button>
             </Form>
         </div>
 
@@ -79,8 +82,7 @@ import { Form, Field, ErrorMessage, configure, } from 'vee-validate'
 import { usePayTypeStore } from '@/store/system/PayTypeStore'
 import * as Yup from 'yup'
 import { usePlanStore } from '@/store/system/PlanStore'
-import { useUserDetailsStore } from '@/store/@staff/UserDetailStore'
-import { PlanToPay } from '@/helpers/converter'
+import { useRoute } from 'vue-router'
 
 configure({
     validateOnInput: true,
@@ -93,20 +95,15 @@ const schema = Yup.object({
     amount: Yup.string().required('Amount is required'),
 })
 
-const $trans = useUserDetailTransactionStore()
-const $agent = useAgentStore()
-const $payType = usePayTypeStore()
-const $plan = usePlanStore()
-const $user = useUserDetailsStore()
+const $trans = useUserDetailTransactionStore();
+const $agent = useAgentStore();
+const $payType = usePayTypeStore();
+const $plan = usePlanStore();
+const $route = useRoute();
 
-onMounted(async () => {
-    await $agent.GetAPI()
-    await $payType.GetAPI()
-    await $plan.GetAPI()
-
-    // NOTE PREDICTION
-    $trans.params.pay_type_id = $user.content.info.pay_type_id
-    $trans.params.plan_id = $user.content.info.plan_id
-    $trans.params.amount = PlanToPay($user.content.info.pay_type, $user.content.info.plan)
+onMounted(() => {
+    $agent.GetAPI()
+    $payType.GetAPI()
+    $plan.GetAPI()
 })
 </script>

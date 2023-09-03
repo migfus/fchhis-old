@@ -1,5 +1,6 @@
 <template>
     <AddTransaction v-if="$trans.config.form == 'add'" />
+    <UpdateTransaction v-if="$trans.config.form == 'update'" />
 
     <div class="card">
         <div class="card-header">
@@ -14,6 +15,7 @@
                         <th>Agent Name</th>
                         <th>Plan</th>
                         <th>Amount</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -27,9 +29,17 @@
                         <td class="text-success text-bold">
                             +{{ NumberAddComma(row.amount) }}
                         </td>
+                        <td class="text-success text-bold">
+                            <button @click="$trans.Update(row)" class="btn btn-warning btn-sm mr-2"><i
+                                    class="fas fa-pen"></i></button>
+                        </td>
                     </tr>
                 </tbody>
             </table>
+        </div>
+
+        <div class="card-footer">
+            <h3 class="card-title text-bold">Total: {{ NumberAddComma($user.content.client_transactions_sum_amount) }}</h3>
         </div>
 
     </div>
@@ -42,6 +52,7 @@ import { NumberAddComma } from '@/helpers/converter'
 import { useUserDetailTransactionStore } from '@/store/@staff/UserDetailTransactionStore'
 
 import AddTransaction from '../forms/AddTransaction.vue'
+import UpdateTransaction from '../forms/UpdateTransaction.vue'
 
 const $user = useUserDetailsStore();
 const $trans = useUserDetailTransactionStore();
