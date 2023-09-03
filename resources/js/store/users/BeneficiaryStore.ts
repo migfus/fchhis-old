@@ -33,7 +33,8 @@ type IParams = {
     bplace_id: string
     address: string
     address_id: string
-    or: string
+    or: string,
+    id: number,
 }
 
 const title = 'users/BeneficiaryStore'
@@ -77,19 +78,6 @@ export const useBeneficiaryStore = defineStore(title, () => {
         config.loading = false
     }
 
-    async function PrintAPI() {
-        try {
-            let { data: {data}} = await axios.get('/api/users', {
-                cancelToken: new CancelToken(function executor(c) { cancel = c; }),
-                params: { ...query, print: true}
-            })
-            print.value = data
-        }
-        catch(e) {
-            console.log('UsersStore PrintAPI Error', {e})
-        }
-    }
-
     function CancelAPI() {
         cancel()
         content.value = null
@@ -105,6 +93,12 @@ export const useBeneficiaryStore = defineStore(title, () => {
         }
         catch(e) {
             console.log('UsersTore SToreAPI Error', {e})
+        }
+    }
+
+    async function UpdateAPI() {
+        try {
+            let { data } = await axios.put(`/api/users/${params.}`, params.value)
         }
     }
 
@@ -137,6 +131,7 @@ export const useBeneficiaryStore = defineStore(title, () => {
             address: '',
             address_id: '',
             or: '',
+            id: null,
         }
     }
 
@@ -160,7 +155,6 @@ export const useBeneficiaryStore = defineStore(title, () => {
         params,
 
         GetAPI,
-        PrintAPI,
         CancelAPI,
         StoreAPI,
 

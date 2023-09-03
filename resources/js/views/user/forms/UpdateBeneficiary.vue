@@ -17,11 +17,10 @@
                 <input v-model="$ben.params.bday" type="date" class="form-control" id="exampleInputEmail1"
                     placeholder="Enter Name">
             </div>
-
             <button @click="$ben.ResetParams()" class="btn btn-sm btn-danger float-right"><i
                     class="fas fa-times mr-1"></i>Cancel</button>
-            <button @click="$ben.StoreAPI()" class="btn btn-sm btn-info float-right mr-2"
-                :disabled="$ben.params.bday == '' || $ben.params.name == ''"><i class="fas fa-plus mr-1"></i>Add</button>
+            <button @click="$ben.UpdateAPI()" class="btn btn-sm btn-warning float-right mr-2"
+                :disabled="$ben.params.bday == '' || $ben.params.name == ''"><i class="fas fa-pen mr-1"></i>Update</button>
         </div>
 
     </div>

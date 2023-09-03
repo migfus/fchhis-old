@@ -67,34 +67,38 @@ class BeneficiaryController extends Controller
         }
 
     public function update(Request $req, int $id) : JsonResponse {
-        $val = Validator::make($req->all(), [
-            'lastName' => 'required',
-            'firstName' => 'required',
-            'midName' => '',
-            'extName' => '',
-            'bday' => 'required',
-        ]);
-
-        if($val->fails()) {
-            return $this->G_ValidatorFailResponse($val);
-        }
-
         if($req->user()->hasRole('admin') || $req->user()->hasRole('staff')) {
-            if(Beneficiary::where('id', $id)->where('info_id', User::where('id', $req->user()->id)->with('info')->first()->info->id)) {
-                $ben = Beneficiary::where('id', $id)->update([
-                    'lastName' => $req->lastName,
-                    'firstName' => $req->firstName,
-                    'midName' => $req->midName,
-                    'extName' => $req->extName,
-                    'bday' => $req->bday,
-                ]);
+            return $this->StaffUpdate($req, $id);
+        }
+    }
+        private function StaffUpdate(Request $req, $id) : JsonResponse {
+            $val = Validator::make($req->all(), [
+                'name' => 'required',
+                'bday' => 'required',
+                'userId' => 'required',
+            ]);
+
+            if($val->fails()) {
+                return $this->G_ValidatorFailResponse($val);
+            }
+
+            if($req->user()->hasRole('client') || $req->user()->hasRole('staff')) {
+                $ben = Beneficiary::where('id', $id)
+                    ->where('user_id', $req->userId)
+                    ->update([
+                        'name' => $req->name,
+                        'bday' => $req->bday,
+                    ]);
+
+                if(!$ben) {
+                    return $this->G_UnauthorizedResponse();
+                }
 
                 return response()->json([...$this->G_ReturnDefault(), 'data' => $ben]);
             }
+
             return $this->G_UnauthorizedResponse();
         }
-        return $this->G_UnauthorizedResponse();
-    }
 
 
     public function destroy(int $id, Request $req) : JsonResponse {

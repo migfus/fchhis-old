@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import axios from 'axios'
 import { useStorage, StorageSerializers } from '@vueuse/core'
 import { reactive } from 'vue'
+import { useRoute } from 'vue-router'
 
 type TContent = Array<{
     name: string
@@ -9,7 +10,6 @@ type TContent = Array<{
     id: number
 }>
 type TParams = {
-    userId: number
     id: number
     name: string
     bday: string
@@ -22,6 +22,7 @@ type TConfig = {
 const title = '@staff/UserDetailBeneficiariesStore'
 
 export const useUserDetailBeneficiariesStore = defineStore(title, () => {
+    const $route = useRoute()
 
     const content = useStorage<TContent>(`${title}/content`, null, localStorage, { serializer: StorageSerializers.object })
     const config = reactive<TConfig>({
@@ -29,17 +30,14 @@ export const useUserDetailBeneficiariesStore = defineStore(title, () => {
         form: null
     })
     const params = reactive<TParams>({
-        userId: null,
-        id: null,
-        name: '',
-        bday: '',
+        ...ParamsInit()
     })
 
     // SECTION API
     async function GetAPI() {
         config.loading = true
         try {
-            let { data: {data}} = await axios.get('/api/beneficiary/', { params: { id: params.userId }})
+            let { data: {data}} = await axios.get('/api/beneficiary/', { params: { id: Number($route.params.id) }})
             content.value = data
         }
         catch(e) {
@@ -51,7 +49,7 @@ export const useUserDetailBeneficiariesStore = defineStore(title, () => {
     async function DestroyAPI(id: number) {
         params.id = id
         try {
-            let {data: {data}} = await axios.delete(`/api/beneficiary/${params.id}`)
+            let { data } = await axios.delete(`/api/beneficiary/${params.id}`)
             GetAPI()
         }
         catch(e) {
@@ -59,12 +57,21 @@ export const useUserDetailBeneficiariesStore = defineStore(title, () => {
         }
     }
 
-    async function AddAPI() {
+    async function UpdateAPI() {
         try {
-            let {data: {data}} = await axios.post(`/api/beneficiary`, params )
-            params.name = ''
-            params.bday = ''
-            config.form = null
+            let { data } = await axios.put(`/api/beneficiary/${params.id}`, { ...params, userId: Number($route.params.id) })
+            ResetParams()
+            GetAPI()
+        }
+        catch(e) {
+            console.log('UpdateAPI ERR', {e})
+        }
+    }
+
+    async function StoreAPI() {
+        try {
+            let { data } = await axios.post(`/api/beneficiary`, params )
+            ResetParams()
             GetAPI()
         }
         catch(e) {
@@ -73,9 +80,28 @@ export const useUserDetailBeneficiariesStore = defineStore(title, () => {
 
     }
 
-    function ChangeForm(form = '') {
-        return 1;
+    function Update(data) {
+        params.id = data.id
+        params.name = data.name
+        params.bday = data.bday
+
+        config.form = 'update'
     }
+
+    function ResetParams() {
+        Object.assign(params, ParamsInit())
+        config.form = null
+    }
+
+    function ParamsInit() {
+        return {
+            userId: null,
+            id: null,
+            name: '',
+            bday: '',
+        }
+    }
+
 
     return {
         content,
@@ -84,7 +110,10 @@ export const useUserDetailBeneficiariesStore = defineStore(title, () => {
 
         GetAPI,
         DestroyAPI,
-        AddAPI,
-        ChangeForm,
+        UpdateAPI,
+        StoreAPI,
+
+        Update,
+        ResetParams,
     }
 })

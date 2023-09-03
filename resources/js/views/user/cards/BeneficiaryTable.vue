@@ -1,5 +1,6 @@
 <template>
     <AddBeneficiary v-if="$bent.config.form == 'add'" />
+    <UpdateBeneficiary v-if="$bent.config.form == 'update'" />
     <div class="card">
         <div class="card-header">
             <h3 class="card-title text-bold">Beneficiaries</h3>
@@ -22,7 +23,8 @@
                         <td>{{ row.name }}</td>
                         <td>{{ `${moment(row.bday).format('MMM D, YYYY')} (${AgeConverter(row.bday)})` }}</td>
                         <td>
-                            <!-- <button class="btn btn-info btn-sm mr-2"><i class="fas fa-pen"></i></button> -->
+                            <button @click="$bent.Update(row)" class="btn btn-info btn-sm mr-2"><i
+                                    class="fas fa-pen"></i></button>
                             <button @click="deleteBen(row.id)" class="btn btn-danger btn-sm"><i
                                     class="fas fa-trash"></i></button>
                         </td>
@@ -39,10 +41,10 @@ import moment from 'moment'
 import { AgeConverter } from '@/helpers/converter'
 import { useUserDetailBeneficiariesStore } from '@/store/@staff/UserDetailBeneficiariesStore'
 import { onMounted } from 'vue'
-import { useRoute } from 'vue-router'
-import AddBeneficiary from '../forms/AddBeneficiary.vue'
 
-const $route = useRoute();
+import AddBeneficiary from '../forms/AddBeneficiary.vue'
+import UpdateBeneficiary from '../forms/UpdateBeneficiary.vue'
+
 const $bent = useUserDetailBeneficiariesStore();
 
 function deleteBen(id: number) {
@@ -52,7 +54,6 @@ function deleteBen(id: number) {
 }
 
 onMounted(() => {
-    $bent.params.userId = Number($route.params.id)
     $bent.GetAPI()
 })
 </script>
