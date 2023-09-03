@@ -56,7 +56,7 @@ export const useAddressStore = defineStore(title, () => {
         return null;
     };
 
-    function CityIDToFullAddress(id: Number) {
+    function CityIDToFullAddress(id: number | bigint) {
         if(id) {
             for (let i = 0; content.value.length > i; i++) {
                 const province = content.value[i];

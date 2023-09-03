@@ -31,8 +31,8 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button v-if="!$user.config.loading" :disabled="Object.keys(errors).length != 0" type="button"
-                            class="btn btn-success">
+                        <button @click="$user.PrintAPI()" v-if="!$user.config.loading"
+                            :disabled="Object.keys(errors).length != 0" type="button" class="btn btn-success">
                             Print
                         </button>
                         <button v-else disabled type="button" class="btn btn-secondary">
@@ -48,18 +48,15 @@
 
 <script setup lang="ts">
 import { useUsersStore } from '@/store/@staff/UsersStore'
-import { useAuthStore } from '@/store/auth/AuthStore'
 import { Form, Field, ErrorMessage, configure, } from 'vee-validate'
 import * as Yup from 'yup'
-import moment from 'moment'
-import { NumberAddComma } from '@/helpers/converter'
 
 const $user = useUsersStore();
-const $auth = useAuthStore();
 
 configure({
     validateOnInput: true,
 })
+
 const schema = Yup.object({
     start: Yup.date()
         .typeError('Invalid date format')

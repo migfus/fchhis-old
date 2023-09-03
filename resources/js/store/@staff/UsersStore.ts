@@ -4,6 +4,9 @@ import axios from 'axios'
 import { useToast } from 'vue-toastification'
 import { reactive, ref } from 'vue'
 import { PrintTest } from '@/helpers/print'
+import { useAddressStore } from '@/store/public/AddressStore'
+import moment from 'moment'
+import { useAuthStore } from '@/store/auth/AuthStore'
 
 type IConfig = {
     loading: boolean
@@ -85,12 +88,14 @@ const title = '@staff/UsersStore'
 
 export const useUsersStore = defineStore(title, () => {
     const $toast = useToast();
+    const $address = useAddressStore();
+    const $auth = useAuthStore();
     const CancelToken = axios.CancelToken;
     let cancel;
 
     // DEBUG ADd type on 'print'
     const content = ref<TContent>(null)
-    const contentReport = ref<TContent>(null)
+    const contentReport = ref<any>(null)
     const print = useStorage(`${title}/print`, null, localStorage)
     const config = reactive<IConfig>({
         loading: false,
@@ -133,14 +138,29 @@ export const useUsersStore = defineStore(title, () => {
 
     async function PrintAPI() {
         try {
-            let { data: {data}} = await axios.get('/api/users', {
+            let { data: {data}} = await axios.get<TContent>('/api/users', {
                 cancelToken: new CancelToken(function executor(c) { cancel = c; }),
                 params: { ...query, print: true }
             })
-            contentReport.value = data
-            console.log(data)
-            return 1;
-            PrintTest(data)
+            contentReport.value = data.map(el => {
+                return [
+                    el.id,
+                    el.name,
+                    el.username,
+                    el.email,
+                    el.info.plan.name,
+                    el.info.pay_type.name,
+                    `${el.info.address}, ${$address.CityIDToFullAddress(el.info.address_id)}`,
+                    el.client_transactions_sum_amount ?? 0,
+                    el.client_transactions_sum_amount ?? 0,
+                    el.info.due_at,
+                    el.info.agent.name,
+                    el.info.staff.name,
+                    moment(el.created_at).format('MM/DD/YYYY hh:mm A'),
+                ]
+            })
+            console.log(contentReport.value)
+            PrintTest(contentReport.value, $auth.content.auth.name, query.start, query.end)
         }
         catch(e) {
             console.log('UsersStore PrintAPI Error', {e})

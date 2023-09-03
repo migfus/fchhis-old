@@ -194,26 +194,26 @@ class UserController extends Controller
             switch($req->filter) {
                 case 'plans':
                     $data->role('client')
-                    ->whereHas('info.plan', function($q) use($req) {
-                        $q->where('name', 'LIKE', '%'.$req->search.'%');
-                    })
+                        ->whereHas('info.plan', function($q) use($req) {
+                            $q->where('name', 'LIKE', '%'.$req->search.'%');
+                        })
                     ->withSum('client_transactions', 'amount');
                     break;
                 case 'address':
                     $data->role('client')
-                    ->withSum('client_transactions', 'amount')
-                    ->whereHas('info', function($q) use($req) {
-                        $q->where('address', 'LIKE', '%'.$req->search.'%');
-                    });
+                        ->withSum('client_transactions', 'amount')
+                        ->whereHas('info', function($q) use($req) {
+                            $q->where('address', 'LIKE', '%'.$req->search.'%');
+                        });
                     break;
                 case 'email':
                     $data->role('client')->where('email', 'LIKE', '%'.$req->search.'%')
-                    ->withSum('client_transactions', 'amount');
+                        ->withSum('client_transactions', 'amount');
                     break;
                 default:
                     $data->role('client')
-                    ->withSum('client_transactions', 'amount')
-                    ->where('name', 'LIKE', '%'.$req->search.'%');
+                        ->withSum('client_transactions', 'amount')
+                        ->where('name', 'LIKE', '%'.$req->search.'%');
             }
 
             if($req->print) {
