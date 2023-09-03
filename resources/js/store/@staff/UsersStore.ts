@@ -3,6 +3,7 @@ import { defineStore } from 'pinia'
 import axios from 'axios'
 import { useToast } from 'vue-toastification'
 import { reactive, ref } from 'vue'
+import { PrintTest } from '@/helpers/print'
 
 type IConfig = {
     loading: boolean
@@ -137,6 +138,9 @@ export const useUsersStore = defineStore(title, () => {
                 params: { ...query, print: true }
             })
             contentReport.value = data
+            console.log(data)
+            return 1;
+            PrintTest(data)
         }
         catch(e) {
             console.log('UsersStore PrintAPI Error', {e})

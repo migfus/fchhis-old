@@ -1,8 +1,7 @@
 <template>
     <div v-if="$user.content" class="col-12">
-        <TransitionGroup name="list">
-            <div v-for="(row, idx,) in $user.content.data" class="card mb-2">
-
+        <TransitionGroup name="list" tag="div">
+            <div v-for="(row, idx,) in $user.content.data" :key="row.id" class="card mb-2">
                 <div class="card-body">
                     <div class="row">
 

@@ -82,6 +82,9 @@
                         <button v-else class="btn btn-info mr-1 float-right" data-toggle="modal" data-target="#print-modal">
                             <i class="fas fa-print mr-1"></i>Print
                         </button>
+                        <button @click="PrintTest()" class="btn btn-danger mr-1 float-right">
+                            <i class="fas fa-print mr-1"></i>Print Test
+                        </button>
 
                     </div>
                 </div>
@@ -98,6 +101,7 @@ import { watch, onMounted } from 'vue'
 import { useUsersStore } from '@/store/@staff/UsersStore'
 import moment from 'moment'
 import { throttle } from 'lodash'
+import { PrintTest } from '@/helpers/print'
 
 import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'

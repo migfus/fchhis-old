@@ -52,6 +52,7 @@
         "vue3-excel-editor": "^1.0.20",
         "vue3-pdfmake": "^2.2.0",
         "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.0/xlsx-0.20.0.tgz",
+        "xlsx-js-style": "^1.2.0",
         "xlsx-style": "^0.8.13",
         "yup": "^1.2.0"
     }
