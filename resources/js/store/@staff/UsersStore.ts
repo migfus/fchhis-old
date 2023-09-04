@@ -32,10 +32,8 @@ type IParams = {
     username: string
     email: string
     password: string
-    role: number
-    plan: number
     pay_type_id: number
-    transaction: number,
+    transaction: number
     agent_id: string
     mobile: string
     name: string
@@ -77,9 +75,12 @@ type TContent = {
                 name: string
                 avatar: string
             }
-            plan: {
+            plan_details: {
+                plan: {
+                    name: string
+                    avatar: string
+                }
                 id: string
-                name: string
                 monthly: number,
                 quarterly: number,
                 semi_annual: number,
@@ -124,7 +125,6 @@ export const useUsersStore = defineStore(title, () => {
     })
     const params = useStorage<IParams>(`${title}/params`, {
         ...InitParams(),
-
     }, localStorage, { serializer: StorageSerializers.object })
 
     // SECTION API
@@ -155,11 +155,11 @@ export const useUsersStore = defineStore(title, () => {
                     el.name,
                     el.username,
                     el.email,
-                    el.info.plan.name,
+                    el.info.plan_details.plan.name,
                     el.info.pay_type.name,
                     `${el.info.address}, ${$address.CityIDToFullAddress(el.info.address_id)}`,
                     el.client_transactions_sum_amount ?? 0,
-                    PlanToPay(el.info.pay_type, el.info.plan)?? 0,
+                    PlanToPay(el.info.pay_type, el.info.plan_details)?? 0,
                     el.info.due_at,
                     el.info.agent.name,
                     el.info.staff.name,
@@ -181,7 +181,7 @@ export const useUsersStore = defineStore(title, () => {
 
     async function StoreAPI() {
         try {
-            let { data: { data }} = await axios.post('/api/users', params.value)
+            let { data } = await axios.post('/api/users', params.value)
             Object.assign(params.value, {... InitParams()})
             $toast.success('Successfully created');
             GetAPI(1)
@@ -192,9 +192,9 @@ export const useUsersStore = defineStore(title, () => {
         }
     }
 
-    async function UpdateAPI(id) {
+    async function UpdateAPI(id: number) {
         try {
-            let { data: { data }} = await axios.put('/api/users/'+id, params.value)
+            let { data } = await axios.put('/api/users/'+id, params.value)
             Object.assign(params.value, {... InitParams()})
             $toast.success('Successfully created');
             GetAPI(1)
@@ -205,9 +205,9 @@ export const useUsersStore = defineStore(title, () => {
         }
     }
 
-    async function DestroyAPI(id) {
+    async function DestroyAPI(id: number) {
         try {
-            let { data: { data }} = await axios.delete('/api/users/'+ id)
+            let { data } = await axios.delete('/api/users/'+ id)
             $toast.success('Successfully deleted');
             GetAPI(1)
         }
@@ -226,16 +226,12 @@ export const useUsersStore = defineStore(title, () => {
         })
     }
 
-
-
     function InitParams() {
         return {
             avatar: '',
             username: '',
             email: '',
             password: '',
-            role: 6,
-            plan: 1,
             pay_type_id: 1,
             transaction: 0,
             agent_id: '',
@@ -248,13 +244,13 @@ export const useUsersStore = defineStore(title, () => {
             address_id: 0,
             or: '',
             phones: null,
-            agent: 0,
-            plan_details_id: 0,
-            id: 0
+            agent: null,
+            plan_details_id: null,
+            id: null
         }
     }
 
-    function Update(row) {
+    function Update(row: IParams) {
         Object.assign(params.value, row)
 
         config.form = 'update'

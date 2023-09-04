@@ -59,7 +59,7 @@ export const PrintTest = (contentData, name: string = '', start: string, end: st
         t: 's'
 
     }
-    const contentHeaderStyle = (border = [false, false, false, false]) => {
+    const contentHeaderStyle = (border = [0, 0, 0, 0]) => {
         return {
             s: {
                 font: {
@@ -109,19 +109,19 @@ export const PrintTest = (contentData, name: string = '', start: string, end: st
 
         // NOTE DATA HEADER
         [
-            { v: "ID", ...contentHeaderStyle([true, true, true, false]) },
-            { v: "NAME", ...contentHeaderStyle([true, false, true, false]) },
-            { v: "USERNAME", ...contentHeaderStyle([true, false, true, false])  },
-            { v: "EMAIL", ...contentHeaderStyle([true, false, true, false])  },
-            { v: "PLAN", ...contentHeaderStyle([true, false, true, false])  },
-            { v: "PAY TYPE", ...contentHeaderStyle([true, false, true, false])  },
-            { v: "ADDRESS", ...contentHeaderStyle([true, false, true, false])  },
-            { v: "TOTAL", ...contentHeaderStyle([true, false, true, false])  },
-            { v: "AMOUNT TO PAY", ...contentHeaderStyle([true, false, true, false])  },
-            { v: "DUE DATE", ...contentHeaderStyle([true, false, true, false])  },
-            { v: "AGENT", ...contentHeaderStyle([true, false, true, false])  },
-            { v: "STAFF", ...contentHeaderStyle([true, false, true, false])  },
-            { v: "REGISTERED", ...contentHeaderStyle([true, false, true, true])  },
+            { v: "ID", ...contentHeaderStyle([1, 1, 1, 0]) },
+            { v: "NAME", ...contentHeaderStyle([1, 0, 1, 0]) },
+            { v: "USERNAME", ...contentHeaderStyle([1, 0, 1, 0])  },
+            { v: "EMAIL", ...contentHeaderStyle([1, 0, 1, 0])  },
+            { v: "PLAN", ...contentHeaderStyle([1, 0, 1, 0])  },
+            { v: "PAY TYPE", ...contentHeaderStyle([1, 0, 1, 0])  },
+            { v: "ADDRESS", ...contentHeaderStyle([1, 0, 1, 0])  },
+            { v: "TOTAL", ...contentHeaderStyle([1, 0, 1, 0])  },
+            { v: "AMOUNT TO PAY", ...contentHeaderStyle([1, 0, 1, 0])  },
+            { v: "DUE DATE", ...contentHeaderStyle([1, 0, 1, 0])  },
+            { v: "AGENT", ...contentHeaderStyle([1, 0, 1, 0])  },
+            { v: "STAFF", ...contentHeaderStyle([1, 0, 1, 0])  },
+            { v: "REGISTERED", ...contentHeaderStyle([1, 0, 1, 1])  },
         ],
 
         // NOTE DATA
@@ -136,29 +136,29 @@ export const PrintTest = (contentData, name: string = '', start: string, end: st
 
         // NOTE FOOTER
         [
-            { v: "", ...contentHeaderStyle([true, false, false, false]) },
-            { v: "", ...contentHeaderStyle([true, false, false, false]) },
-            { v: "", ...contentHeaderStyle([true, false, false, false])  },
-            { v: "", ...contentHeaderStyle([true, false, false, false])  },
-            { v: "", ...contentHeaderStyle([true, false, false, false])  },
-            { v: "", ...contentHeaderStyle([true, false, false, false])  },
-            { v: "Total: ", ...contentHeaderStyle([true, false, false, false])},
+            { v: "=123*123", ...contentHeaderStyle([1, 0, 0, 0]) },
+            { v: "", ...contentHeaderStyle([1, 0, 0, 0]) },
+            { v: "", ...contentHeaderStyle([1, 0, 0, 0])  },
+            { v: "", ...contentHeaderStyle([1, 0, 0, 0])  },
+            { v: "", ...contentHeaderStyle([1, 0, 0, 0])  },
+            { v: "", ...contentHeaderStyle([1, 0, 0, 0])  },
+            { v: "Total: ", ...contentHeaderStyle([1, 0, 0, 0])},
             {
                 v: contentData.reduce((accumulator: number, total: Array<string>) => {
                     return accumulator + Number(total[7])
                 }, 0)
-                , ...contentHeaderStyle([true, false, false, false])
+                , ...contentHeaderStyle([1, 0, 0, 0])
             },
             {
             v: contentData.reduce((accumulator: number, total: Array<string>) => {
                     return accumulator + Number(total[8])
                 }, 0)
-                , ...contentHeaderStyle([true, false, false, false])
+                , ...contentHeaderStyle([1, 0, 0, 0])
             },
-            { v: "", ...contentHeaderStyle([true, false, false, false])  },
-            { v: "", ...contentHeaderStyle([true, false, false, false])  },
-            { v: "", ...contentHeaderStyle([true, false, false, false])  },
-            { v: "", ...contentHeaderStyle([true, false, false, false])  },
+            { v: "", ...contentHeaderStyle([1, 0, 0, 0])  },
+            { v: "", ...contentHeaderStyle([1, 0, 0, 0])  },
+            { v: "", ...contentHeaderStyle([1, 0, 0, 0])  },
+            { v: "", ...contentHeaderStyle([1, 0, 0, 0])  },
         ],
 
     ]

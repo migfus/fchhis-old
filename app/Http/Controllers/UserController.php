@@ -189,7 +189,7 @@ class UserController extends Controller
                 }
             }
 
-            $data->with(['info.plan', 'info.pay_type', 'info.agent', 'info.staff']);
+            $data->with(['info.plan_details.plan', 'info.pay_type', 'info.agent', 'info.staff']);
 
             switch($req->filter) {
                 case 'plans':
