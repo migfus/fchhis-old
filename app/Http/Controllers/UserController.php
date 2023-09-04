@@ -69,7 +69,7 @@ class UserController extends Controller
             }
 
             if($req->print) {
-                $data = Info::with(['plan', 'pay_type'])
+                $data = Info::with(['plan_details.plan', 'pay_type'])
                     ->withSum('client_transactions', 'amount')
                     ->where('agent_id', $req->user()->id)
                     ->where('created_at', '>=', $req->start)
@@ -81,7 +81,7 @@ class UserController extends Controller
                 return response()->json([...$this->G_ReturnDefault($req), 'data' => $data]);
             }
             else {
-                $data = Info::with(['plan', 'pay_type'])
+                $data = Info::with(['plan_details.plan', 'pay_type'])
                     ->withSum('client_transactions', 'amount')
                     ->where('agent_id', $req->user()->info->id)
                     ->where('name', 'LIKE', '%'.$req->search.'%');
@@ -129,31 +129,31 @@ class UserController extends Controller
                 }
             }
 
-            $data->with(['info.plan', 'info.pay_type', 'info.agent', 'info.staff']);
+            $data->with(['info.plan_details.plan', 'info.pay_type', 'info.agent', 'info.staff']);
 
             switch($req->filter) {
                 case 'plans':
                     $data->role('client')
-                    ->whereHas('info.plan', function($q) use($req) {
-                        $q->where('name', 'LIKE', '%'.$req->search.'%');
-                    })
-                    ->withSum('client_transactions', 'amount');
+                        ->whereHas('info.plan_details.plan', function($q) use($req) {
+                            $q->where('name', 'LIKE', '%'.$req->search.'%');
+                        })
+                        ->withSum('client_transactions', 'amount');
                     break;
                 case 'address':
                     $data->role('client')
-                    ->withSum('client_transactions', 'amount')
-                    ->whereHas('info', function($q) use($req) {
-                        $q->where('address', 'LIKE', '%'.$req->search.'%');
-                    });
+                        ->withSum('client_transactions', 'amount')
+                        ->whereHas('info', function($q) use($req) {
+                            $q->where('address', 'LIKE', '%'.$req->search.'%');
+                        });
                     break;
                 case 'email':
                     $data->role('client')->where('email', 'LIKE', '%'.$req->search.'%')
-                    ->withSum('client_transactions', 'amount');
+                        ->withSum('client_transactions', 'amount');
                     break;
                 default:
                     $data->role('client')
-                    ->withSum('client_transactions', 'amount')
-                    ->where('name', 'LIKE', '%'.$req->search.'%');
+                        ->withSum('client_transactions', 'amount')
+                        ->where('name', 'LIKE', '%'.$req->search.'%');
             }
 
             return response()->json([
@@ -230,7 +230,7 @@ class UserController extends Controller
         }
 
         private function StaffOverdueIndex(Request $req) : JsonResponse {
-            $data = Info::with(['plan', 'pay_type', 'user', 'staff', 'agent'])
+            $data = Info::with(['plan_details.plan', 'pay_type', 'user', 'staff', 'agent'])
                 ->withSum('client_transactions', 'amount')
                 ->whereNotNull('due_at')
                 ->orderBy('due_at', 'ASC')
@@ -274,7 +274,7 @@ class UserController extends Controller
                 }
             }
 
-            $data->with(['plan', 'pay_type', 'agent', 'user', 'staff', 'phones']);
+            $data->with(['plan_details.plan', 'pay_type', 'agent', 'user', 'staff', 'phones']);
 
             if($req->role > 0) {
                 $data->whereHas('user', function($q) use($req) {
@@ -291,8 +291,8 @@ class UserController extends Controller
             }
 
             switch($req->filter) {
-                case 'plan':
-                    $data->whereHas('plan', function($q) use($req) {
+                case 'plan_details.plan':
+                    $data->whereHas('plan_details.plan', function($q) use($req) {
                             $q->where('name', 'LIKE', '%'.$req->search.'%');
                         })
                         ->withSum('client_transactions', 'amount');
@@ -418,7 +418,7 @@ class UserController extends Controller
             if($req->or) {
                 $val = Validator::make($req->all(), [
                     'or'   => 'required',
-                    'plan'     => 'required',
+                    'plan_details.plan'     => 'required',
                     'pay_type_id' => 'required',
                     'transaction' => 'required',
                     'agent'  => 'required',
@@ -461,7 +461,7 @@ class UserController extends Controller
                     'password' => 'required|min:8',
                     'mobile'   => 'required',
                     'role'     => 'required',
-                    'plan'     => 'required',
+                    'plan_details.plan'     => 'required',
                     'agent_id' => 'required',
 
                     'name'      => 'required',
@@ -558,10 +558,10 @@ class UserController extends Controller
         private function StaffShow(Request $req, string $id) : JsonResponse {
             $data = User::where('id', $id)
                 ->with([
-                    'client_transactions.plan',
+                    'client_transactions.plan_details.plan',
                     'client_transactions.pay_type',
                     'client_transactions.agent',
-                    'info.plan',
+                    'info.plan_details.plan',
                     'info.pay_type',
                     'beneficiaries'
                 ])
@@ -577,7 +577,7 @@ class UserController extends Controller
 
             if(Info::where('id', $id)->with('user')->whereHas('user', function($q) {$q->where('role', 4);})->first()) {
                 $data = Info::where('id', $id)
-                    ->with(['user', 'agent_transactions.client', 'pay_type', 'plan', 'agent_clients.plan', 'agent_clients.pay_type', 'agent_clients' => function ($q) {
+                    ->with(['user', 'agent_transactions.client', 'pay_type', 'plan_details.plan', 'agent_clients.plan', 'agent_clients.pay_type', 'agent_clients' => function ($q) {
                         $q->withSum('client_transactions', 'amount');
                     }])
                     ->withSum('agent_transactions', 'amount')
@@ -586,7 +586,7 @@ class UserController extends Controller
             }
             else {
                 $data = Info::where('id', $id)
-                    ->with(['user', 'client_transactions', 'plan', 'pay_type'])
+                    ->with(['user', 'client_transactions', 'plan_details.plan', 'pay_type'])
                     ->withSum('client_transactions', 'amount')
                     ->first();
             }
@@ -728,7 +728,7 @@ class UserController extends Controller
             $val = Validator::make($req->all(), [
                 'or' => 'required',
                 'mobile' => 'required',
-                'plan' => 'required',
+                'plan_details.plan' => 'required',
                 'transaction' => '',
                 'lastName' => 'required',
                 'firstName' => 'required',
@@ -796,10 +796,10 @@ class UserController extends Controller
                     if((bool)strtotime($req->end)) {
                         $user->where('created_at', '<=', $req->end);
                     }
-                    $user->with(['info.user', 'plan', 'pay_type', 'info.referred.info'])->withSum('client_transactions', 'amount');
+                    $user->with(['info.user', 'plan_details.plan', 'pay_type', 'info.referred.info'])->withSum('client_transactions', 'amount');
                 }
             else {
-                    $user->with(['info.user', 'plan', 'pay_type', 'info.referred.info'])->withSum('client_transactions', 'amount');
+                    $user->with(['info.user', 'plan_details.plan', 'pay_type', 'info.referred.info'])->withSum('client_transactions', 'amount');
                 }
 
                 $data = $user->orderBy('created_at', 'desc')->get();

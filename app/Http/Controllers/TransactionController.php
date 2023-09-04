@@ -51,8 +51,8 @@ class TransactionController extends Controller
             }
 
             $data = Transaction::where('client_id', $req->user()->id)
-                ->with(['plan', 'pay_type', 'client', 'staff'])
-                ->whereHas('plan', function($q) use($req) {
+                ->with(['plan_details.plan', 'pay_type', 'client', 'staff'])
+                ->whereHas('plan_details.plan', function($q) use($req) {
                     $q->where('name', 'LIKE', '%' . $req->search. '%');
                 })
                 ->orderBy('created_at', $req->sort)
@@ -80,7 +80,7 @@ class TransactionController extends Controller
 
             if($req->print) {
                 $data = Transaction::where('agent_id', $req->user()->id)
-                    ->with(['plan', 'pay_type', 'client', 'staff'])
+                    ->with(['plan_details.plan', 'pay_type', 'client', 'staff'])
                     ->where('created_at', '>=', $req->start)
                     ->where('created_at', '<=', $req->end)
                     ->orderBy('created_at', 'DESC')
@@ -96,7 +96,7 @@ class TransactionController extends Controller
             }
             else {
                 $data = Transaction::where('agent_id', $req->user()->id)
-                    ->with(['plan', 'pay_type', 'client', 'staff'])
+                    ->with(['plan_details.plan', 'pay_type', 'client', 'staff'])
                     ->whereHas('client', function($q) use($req) {
                         $q->where('name', 'LIKE', '%' . $req->search. '%');
                     })
@@ -139,7 +139,7 @@ class TransactionController extends Controller
             }
 
             $data = Transaction::with([
-                'plan',
+                'plan_details.plan',
                 'pay_type',
                 'client',
                 'client' => function($q) {
@@ -164,7 +164,7 @@ class TransactionController extends Controller
                     });
                     break;
                 case 'plans':
-                    $data->whereHas('plan', function($q) use($req) {
+                    $data->whereHas('plan_details.plan', function($q) use($req) {
                         $q->where('name', 'LIKE', '%' . $req->search. '%');
                     });
                     break;
@@ -196,7 +196,7 @@ class TransactionController extends Controller
             }
 
             $data = Transaction::with([
-                'plan',
+                'plan_details.plan',
                 'pay_type',
                 'client.user',
                 'client' => function($q) {
@@ -206,7 +206,7 @@ class TransactionController extends Controller
                 'agent.user'
             ])
                 ->where('client_id', $req->id)
-                ->whereHas('plan', function($q) use($req) {
+                ->whereHas('plan_details.plan', function($q) use($req) {
                     $q->where('name', 'LIKE', '%' . $req->search. '%');
                 })
                 ->orderBy('created_at', 'DESC')
@@ -231,7 +231,7 @@ class TransactionController extends Controller
             }
 
             $data = Transaction::with([
-                'plan',
+                'plan_details.plan',
                 'pay_type',
                 'client.user',
                 'client' => function($q) {
@@ -274,7 +274,7 @@ class TransactionController extends Controller
             }
 
             $data = Transaction::with([
-                'plan',
+                'plan_details.plan',
                 'pay_type',
                 'client.user',
                 'client' => function($q) {
@@ -299,7 +299,7 @@ class TransactionController extends Controller
                     });
                     break;
                 case 'plans':
-                    $data->whereHas('plan', function($q) use($req) {
+                    $data->whereHas('plan_details.plan', function($q) use($req) {
                         $q->where('name', 'LIKE', '%' . $req->search. '%');
                     });
                     break;
@@ -333,7 +333,7 @@ class TransactionController extends Controller
             }
 
             $data = Transaction::with([
-                    'plan',
+                    'plan_details.plan',
                     'pay_type',
                     'client.user',
                     'client' => function($q) {
@@ -343,7 +343,7 @@ class TransactionController extends Controller
                     'agent.user'
                 ])
                 ->where('client_id', $req->id)
-                ->whereHas('plan', function($q) use($req) {
+                ->whereHas('plan_details.plan', function($q) use($req) {
                     $q->where('name', 'LIKE', '%' . $req->search. '%');
                 })
                 ->orderBy('created_at', 'DESC')
@@ -368,7 +368,7 @@ class TransactionController extends Controller
             }
 
             $data = Transaction::with([
-                'plan',
+                'plan_details.plan',
                 'pay_type',
                 'client.user',
                 'client' => function($q) {
@@ -457,7 +457,7 @@ class TransactionController extends Controller
                 'amount' => 'required',
                 'or' => 'required',
                 'pay_type_id' => 'required',
-                'plan.id' => 'required',
+                'plan_details.id' => 'required',
                 'or',
             ]);
 
@@ -549,7 +549,7 @@ class TransactionController extends Controller
                 'amount' => 'required',
                 'or' => 'required',
                 'pay_type_id' => 'required',
-                'plan.id' => 'required',
+                'plan_details.id' => 'required',
                 'or'
             ]);
 
@@ -605,7 +605,7 @@ class TransactionController extends Controller
                 },
                 'staff',
                 'agent.info',
-                'plan',
+                'plan_details.plan',
                 'pay_type'
             ]);
 

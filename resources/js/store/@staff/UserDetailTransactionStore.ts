@@ -66,7 +66,7 @@ export const useUserDetailTransactionStore = defineStore(title, () => {
         params.agent_id = row.agent.id,
         params.or = row.or,
         params.pay_type_id = row.pay_type.id,
-        params.plan_details_id = row.plan.id,
+        params.plan_details_id = row.plan_details.id,
         params.amount = row.amount,
 
         config.form = 'update'

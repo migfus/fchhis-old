@@ -42,10 +42,10 @@
                                     Info</RouterLink>
                             </div>
                             <div>
-                                <img :src="row.info.plan.avatar" style="height: 20px; width: 20px"
+                                <img :src="row.info.plan_details.plan.avatar" style="height: 20px; width: 20px"
                                     class="img-circle float-left mr-2">
                                 <strong>
-                                    {{ row.info.plan.name }}
+                                    {{ row.info.plan_details.plan.name }}
                                 </strong>
                             </div>
                             <div>

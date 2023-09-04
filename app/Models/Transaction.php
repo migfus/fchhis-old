@@ -33,8 +33,8 @@ class Transaction extends Model
         return $this->belongsTo(User::class, 'agent_id');
     }
 
-    public function plan() {
-        return $this->belongsTo(PlanDetails::class);
+    public function plan_details() {
+        return $this->belongsTo(PlanDetails::class, 'plan_details_id');
     }
 
     public function pay_type() {

@@ -19,9 +19,11 @@ type TContent = {
         pay_type: {
             name: string
         }
-        plan: {
-            avatar: string
-            name: string,
+        plan_details: {
+            plan: {
+                avatar: string
+                name: string
+            }
         }
         staff_id: number
         updated_at: string
@@ -39,7 +41,8 @@ type TContent = {
         pay_type: {
             name: string
         }
-        plan: {
+        plan_details: {
+            plan: { name: string }
             monthly: number,
             quarterly: number,
             semi_annual: number,

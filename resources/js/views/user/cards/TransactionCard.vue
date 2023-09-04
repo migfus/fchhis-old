@@ -22,9 +22,9 @@
                     <tr v-for="row in $user.content.client_transactions" :key="row.id">
                         <td>{{ row.agent.name }}</td>
                         <td>
-                            <img :src="row.plan.avatar" style="height: 20px; width: 20px"
+                            <img :src="row.plan_details.plan.avatar" style="height: 20px; width: 20px"
                                 class="img-circle float-left mr-2">
-                            {{ `${row.plan.name} (${row.pay_type.name})` }}
+                            {{ `${row.plan_details.plan.name} (${row.pay_type.name})` }}
                         </td>
                         <td class="text-success text-bold">
                             +{{ NumberAddComma(row.amount) }}

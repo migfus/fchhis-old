@@ -15,7 +15,11 @@ type IContent = {
         id: number
         or: string
         amount: number
-        plan: { name: string}
+        plan_details: {
+            plan: {
+                name: string
+            }
+        }
         pay_type: { name: string}
         created_at: string
     }>

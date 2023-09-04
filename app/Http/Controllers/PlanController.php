@@ -25,10 +25,15 @@ class PlanController extends Controller
         if($req->user()->hasRole('admin') || $req->user()->hasRole('staff')) {
             switch($req->filter) {
                 case 'desc':
-                    $data = $plan->where('desc', 'LIKE', '%' . $req->search .'%')->orderBy('created_at', 'DESC')->get();
+                    $data = $plan
+                        ->with(['plan_details'])
+                        ->whereHas('plan_details', function($q) use($req) {
+                            $q->where('desc', 'LIKE', '%' . $req->search .'%');
+                        })
+                        ->orderBy('created_at', 'DESC')->get();
                     break;
                 default:
-                    $data = $plan->where('name', 'LIKE', '%' . $req->search .'%')->orderBy('created_at', 'DESC')->get();
+                    $data = $plan->with(['plan_details'])->where('name', 'LIKE', '%' . $req->search .'%')->orderBy('created_at', 'DESC')->get();
             }
             return response()->json([...$this->G_ReturnDefault($req), 'data' => $data]);
         }

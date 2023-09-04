@@ -18,18 +18,20 @@ type IQuery = {
     end: string
 }
 type IParams = {
+    plan_details: {
+        desc: string
+        start: string
+        end: string
+        contract_price: string
+        spot_payment: string
+        spot_service: string
+        annual: string
+        semi_annual: string
+        quarterly: string
+        monthly: string
+    }
     avatar: string
-    desc: string
     name: string
-    start: string
-    end: string
-    contract_price: string
-    spot_payment: string
-    spot_service: string
-    annual: string
-    semi_annual: string
-    quarterly: string
-    monthly: string
 }
 
 const title = 'system/PlanStore'
@@ -156,18 +158,21 @@ export const usePlanStore = defineStore(title, ()=> {
 
     function InitParams() {
         return {
-            avatar: '',
-            desc: '',
+            plan_details: {
+                desc: '',
+                start: '18',
+                end: '70',
+                contract_price: '',
+                spot_payment: '',
+                spot_service:'',
+                annual: '',
+                semi_annual: '',
+                quarterly: '',
+                monthly: '',
+            },
             name: '',
-            start: '18',
-            end: '70',
-            contract_price: '',
-            spot_payment: '',
-            spot_service:'',
-            annual: '',
-            semi_annual: '',
-            quarterly: '',
-            monthly: '',
+            avatar: '',
+
         }
     }
 

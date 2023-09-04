@@ -33,7 +33,7 @@
                 </div>
                 <div class="col-sm-3 border-right">
                     <div class="description-block">
-                        <h5 class="description-header">{{ $user.content.info.plan.name }}</h5>
+                        <h5 class="description-header">{{ $user.content.info.plan_details.plan.name }}</h5>
                     </div>
 
                 </div>
@@ -43,7 +43,7 @@
                         <h5 class="description-header text-danger">
                             {{
                                 NumberAddComma(
-                                    PlanToPay($user.content.info.pay_type, $user.content.info.plan) -
+                                    PlanToPay($user.content.info.pay_type, $user.content.info.plan_details) -
                                     $user.content.client_transactions_sum_amount)
                             }}
                         </h5>

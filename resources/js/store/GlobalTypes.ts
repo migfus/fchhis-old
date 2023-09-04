@@ -5,3 +5,14 @@ export type authConfigInt = {
   status: string;
   confirm: boolean;
 }
+
+
+export type TPlanDetails = {
+    plan: { name: string }
+    monthly: number,
+    quarterly: number,
+    semi_annual: number,
+    annual: number,
+    spot_pay: number,
+    spot_service: number,
+}

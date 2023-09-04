@@ -51,9 +51,9 @@ class Info extends Model
         return $this->belongsTo(User::class, 'staff_id');
     }
 
-    public function plan() {
-        return $this->belongsTo(PlanDetails::class, 'plan_details_id');
-    }
+    // public function plan() {
+    //     return $this->belongsTo(PlanDetails::class, 'plan_details_id');
+    // }
 
     public function pay_type() {
         return $this->belongsTo(PayType::class, 'pay_type_id');
@@ -65,5 +65,10 @@ class Info extends Model
 
     public function phones() {
         return $this->hasMany(Phone::class);
+    }
+
+
+    public function plan_details() {
+        return $this->belongsTo(PlanDetails::class, 'plan_details_id');
     }
 }

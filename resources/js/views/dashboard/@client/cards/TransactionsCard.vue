@@ -37,7 +37,7 @@
                     <tr v-for="row in $trans.content.data">
                         <td>{{ row.or }}</td>
                         <td class="text-success text-bold">+{{ NumberAddComma(row.amount) }}</td>
-                        <td class="text-bold">{{ `${row.plan.name} (${row.pay_type.name})` }}</td>
+                        <td class="text-bold">{{ `${row.plan_details.plan.name} (${row.pay_type.name})` }}</td>
                         <td class="">{{ moment(row.created_at).format('MMM D, YYYY HH:mm:ss') }}</td>
                         <td>
                             <button data-toggle="modal" data-target="#receipt-modal" @click="OpenReceipt(row)"
@@ -97,7 +97,7 @@ function Print(): void {
 
         ['Plan Name', 'Plan Type', 'Amount', 'Date'],
 
-        ...$trans.content.data.map(m => { return [m.plan.name, m.pay_type.name, m.amount, moment(m.created_at).format('MM/DD/YYYY HH:MM A')] }),
+        ...$trans.content.data.map(m => { return [m.plan_details.plan.name, m.pay_type.name, m.amount, moment(m.created_at).format('MM/DD/YYYY HH:MM A')] }),
         // @ts-ignore
         ['', '', 'Total: ', NumberAddComma(Number($trans.content.data.reduce((a, b) => Number(a.amount) + Number(b.amount))))],
     ]
