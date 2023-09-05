@@ -218,10 +218,13 @@
                             </div>
                         </div>
 
-
-                        <button @click="$user.ChangeForm('')" class="btn btn-danger float-right">Cancel</button>
-                        <button type="submit" class="btn btn-info float-right mr-1"
-                            :disabled="Object.keys(errors).length != 0">Add</button>
+                        <AppButton @click="$user.ChangeForm('')" icon="fa-times" color="danger" push="right">
+                            Cancel
+                        </AppButton>
+                        <AppButton color="info" icon="fa-plus" :disabled="Object.keys(errors).length != 0" type="submit"
+                            push="right" mr="1">
+                            Add
+                        </AppButton>
                     </Form>
                 </div>
 
@@ -245,6 +248,7 @@ import { useAgentStore } from '@/store/@staff/AgentStore'
 import { useAuthStore } from '@/store/auth/AuthStore'
 
 import UploadAvatarModal from '@/components/UploadAvatarModal.vue'
+import AppButton from '@/components/AppButton.vue'
 
 const $address = useAddressStore();
 const $user = useUsersStore();

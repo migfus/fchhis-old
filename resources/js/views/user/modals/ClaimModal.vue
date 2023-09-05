@@ -15,10 +15,14 @@
                     <div>
                         Declare a claim on this Client?
                     </div>
-                    <button v-if="$user.content.fulfilled_at" @click="Update($user.content.id)" type="button"
-                        class="btn btn-secondary float-right" data-dismiss="modal">Unclaim</button>
-                    <button v-else @click="Update($user.content.id)" type="button" class="btn btn-secondary float-right"
-                        data-dismiss="modal">Claim</button>
+
+                    <AppButton v-if="$user.content.fulfilled_at" @click="Update($user.content.id)" color="secondary"
+                        data-dismiss="modal" push="right">
+                        Unclaim
+                    </AppButton>
+                    <AppButton v-else color="secondary" push="right" dada-dismiss="modal">
+                        Claim
+                    </AppButton>
                 </div>
             </div>
         </div>
@@ -29,6 +33,8 @@
 import { useUserDetailsStore } from '@/store/user/UserDetailStore'
 import axios from 'axios'
 import { useToast } from 'vue-toastification'
+
+import AppButton from '@/components/AppButton.vue'
 
 const $user = useUserDetailsStore();
 const $toast = useToast();

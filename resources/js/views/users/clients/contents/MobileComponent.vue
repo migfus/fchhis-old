@@ -95,11 +95,18 @@
 
                         <div class="col-xl-3 col-lg-6 col-md-12">
                             <div class="d-none d-xl-inline float-right">
-                                <RouterLink :to="{ name: 'user', params: { id: row.id } }"
-                                    class="btn btn-warning btn-sm mr-1">
-                                    Update</RouterLink>
-                                <RouterLink :to="{ name: 'user', params: { id: row.id } }" class="btn btn-info btn-sm">
-                                    Info</RouterLink>
+                                <RouterLink :to="{ name: 'user', params: { id: row.id } }">
+                                    <AppButton icon="fa-" color="warning" size="sm" mr="1">
+                                        Update
+                                    </AppButton>
+                                </RouterLink>
+
+
+                                <RouterLink :to="{ name: 'user', params: { id: row.id } }">
+                                    <AppButton icon="fa-info-circle" color="info" size="sm">
+                                        Info
+                                    </AppButton>
+                                </RouterLink>
                             </div>
                             <div>
                                 <img :src="row.info.agent.avatar" style="height: 20px; width: 20px"
@@ -126,8 +133,6 @@
                     </div>
 
 
-
-
                 </div>
             </div>
         </TransitionGroup>
@@ -138,12 +143,11 @@
 <script setup>
 import moment from "moment"
 import { useUsersStore } from '@/store/@staff/UsersStore'
-import { RoleToDesc } from '@/helpers/converter'
-import BadgeComponent from '../components/BadgeComponent.vue'
 import { NumberAddComma } from '@/helpers/converter'
 import { useAddressStore } from "@/store/public/AddressStore"
-import VueAvatar from "@webzlodimir/vue-avatar"
 import "@webzlodimir/vue-avatar/dist/style.css"
+
+import AppButton from "@/components/AppButton.vue"
 
 const $user = useUsersStore();
 const $address = useAddressStore();

@@ -35,7 +35,6 @@ export const useTransactionStore = defineStore(title, () => {
 
   // DEBUG please add type 'content' & 'print'
     const content = useStorage<IContent>(`${title}/content` , null, localStorage, { serializer: StorageSerializers.object })
-    const print = useStorage(`${title}/print`, null, localStorage)
     const config = reactive<IConfig>({
         loading: false,
     })
@@ -43,7 +42,6 @@ export const useTransactionStore = defineStore(title, () => {
         search: '',
         sort: 'ASC',
     })
-
 
     // SECTION API
     function CancelAPI() {
@@ -66,28 +64,13 @@ export const useTransactionStore = defineStore(title, () => {
         config.loading = false
     }
 
-    async function PrintAPI() {
-        try {
-            let { data: {data} } = await axios.get('/api/transaction', {
-                cancelToken: new CancelToken(function executor(c) { cancel = c; }),
-                params: { ...query, print: true}
-            })
-            print.value = data
-        }
-        catch(e) {
-            console.log('StatisticStore PrintAPI Error', {e})
-        }
-    }
-
     // SECTION FUNCTIONS
     return {
         content,
         config,
         query,
-        print,
 
         GetAPI,
-        PrintAPI,
         CancelAPI,
     }
 })

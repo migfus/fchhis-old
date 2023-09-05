@@ -4,18 +4,6 @@
             <div class="card-body">
                 <div class="row">
 
-                    <!-- <div v-if="$user.config.notify" class="col-12">
-                        <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                            <strong>Notify</strong> We don't recommend to delete some records, it will reflect everything
-                            that they
-                            transact.
-                            <button @click="$user.config.RemoveNotify" type="button" class="close" data-dismiss="alert"
-                                aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                    </div> -->
-
                     <div class="col-12 col-md-2 mb-2">
                         <VueDatePicker v-model="$user.query.start" :enable-time-picker="false"
                             :start-date="moment().startOf('month').format('YYYY-MM-DD')" placeholder="Start Date"
@@ -56,33 +44,20 @@
 
                 <div class="row mt-2">
                     <div class="col-12">
-                        <button v-if="$user.config.form" @click="$user.ChangeForm('')" class="btn btn-danger float-right">
-                            <i class="fas fa-plus-square d-inline d-xl-none"></i>
-                            <span class="d-none d-xl-inline">Cancel</span>
-                        </button>
-                        <button v-else @click="$user.ChangeForm('add')" class="btn btn-success float-right">
-                            <span class=""><i class="fas fa-plus mr-1"></i>Add User</span>
-                        </button>
-                        <!-- <button @click="$user.ChangeForm('or')" class="btn btn-info float-right mr-1">
-                            <span class=""><i class="fas fa-plus mr-1"></i>Self Register</span>
-                        </button> -->
+                        <AppButton v-if="$user.config.form" @click="$user.ChangeForm('')" color="danger" icon="fa-times"
+                            push="right">
+                            Cancel
+                        </AppButton>
+                        <AppButton v-else @click="$user.ChangeForm('add')" color="success" icon="fa-plus" push="right"
+                            :loading="$user.config.loading">
+                            Add User
+                        </AppButton>
 
-                        <!-- <button @click="$user.config.tableView = !$user.config.tableView" class="btn btn-info mr-1 float-right">
-              <i :class="`fas ${$user.config.tableView ? 'fa-bars' : 'fa-table'}`"></i>
-            </button>
-            <button @click="$user.config.viewAll = !$user.config.viewAll" :disabled="$user.config.tableView"
-              class="btn btn-info mr-1 float-right">
-              <i :class="`fas ${$user.config.viewAll ? 'fa-window-minimize' : 'fa-window-maximize'}`"></i>
-            </button> -->
 
-                        <button v-if="$user.config.loading" class="btn card-loader-content card-loader mr-1 float-right"
-                            style="width: 42px">
-                            &nbsp;
-                        </button>
-                        <button v-else class="btn btn-info mr-1 float-right" data-toggle="modal" data-target="#print-modal">
-                            <i class="fas fa-print mr-1"></i>Print
-                        </button>
-
+                        <AppButton color="info" icon="fa-arrow-down" :loading="$user.config.loading" mr="1" push="right"
+                            data-toggle="modal" data-target="#print-modal">
+                            Download
+                        </AppButton>
                     </div>
                 </div>
 
@@ -102,6 +77,7 @@ import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
 
 import PrintModal from '../modals/PrintModal.vue'
+import AppButton from '@/components/AppButton.vue'
 
 const $user = useUsersStore();
 
@@ -112,8 +88,4 @@ watch($user.query, throttle(() => {
 onMounted(() => {
     $user.GetAPI()
 });
-
-// onUnmounted(() => {
-//   $user.content = []
-// });
 </script>

@@ -21,7 +21,7 @@
             <h5 class="widget-user-desc text-right">{{ $user.content.email }}</h5>
         </div>
         <div class="widget-user-image">
-            <img class="img-circle" :src="$user.content.avatar" alt="User Avatar">
+            <img class="img-circle" :src="$user.content.avatar ?? '/images/logo.png'" alt="User Avatar">
         </div>
         <div class="card-footer">
             <div class="row">
@@ -72,15 +72,18 @@
 
             <div class="row">
                 <div class="col-12">
-                    <button class="btn btn-secondary btn-sm float-right mt-2" data-toggle="modal"
-                        data-target="#claim-modal">
+                    <AppButton color="secondary" push="right" mr="1" data-toggle="modal" data-target="#claim-modal">
                         Declare Claim
-                    </button>
-                    <RouterLink :to="{ name: 'users-clients' }" class="btn btn-info btn-sm float-right mt-2 mr-2">
-                        Print
+                    </AppButton>
+                    <RouterLink :to="{ name: 'users-clients' }" class="mt-2">
+                        <AppButton color="info" push="right" mr="1" icon="fa-arrow-down">
+                            Download Data
+                        </AppButton>
                     </RouterLink>
-                    <RouterLink :to="{ name: 'users-clients' }" class="btn btn-info btn-sm float-right mt-2 mr-2">
-                        Back to List
+                    <RouterLink :to="{ name: 'users-clients' }" class="mt-2">
+                        <AppButton color="info" push="right" mr="1" icon="fa-arrow-left">
+                            Back to List
+                        </AppButton>
                     </RouterLink>
                 </div>
             </div>
@@ -92,6 +95,8 @@
 import { NumberAddComma, PlanToPay } from '@/helpers/converter'
 import { useUserDetailsStore } from '@/store/@staff/UserDetailStore'
 import moment from 'moment'
+
+import AppButton from '@/components/AppButton.vue'
 
 const $user = useUserDetailsStore();
 </script>

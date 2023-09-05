@@ -30,14 +30,14 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button @click="$user.PrintAPI()" v-if="!$user.config.loading"
-                            :disabled="Object.keys(errors).length != 0" type="button" class="btn btn-success">
-                            Print
-                        </button>
-                        <button v-else disabled type="button" class="btn btn-secondary">
-                            <i class="fa fa-circle-notch fa-spin"></i>
-                        </button>
+                        <AppButton data-dismiss="modal" color="secondary" icon="fa-times">
+                            Close
+                        </AppButton>
+                        <AppButton @click="$user.PrintAPI()" color="info" icon="fa-arrow-down"
+                            :loading="$user.config.loading" :disabled="Object.keys(errors).length != 0">
+                            Download
+                        </AppButton>
+
                     </div>
                 </Form>
 
@@ -50,6 +50,8 @@
 import { useUsersStore } from '@/store/@staff/UsersStore'
 import { Form, Field, ErrorMessage, configure, } from 'vee-validate'
 import * as Yup from 'yup'
+
+import AppButton from '@/components/AppButton.vue'
 
 const $user = useUsersStore();
 

@@ -4,9 +4,9 @@
     <div class="card">
         <div class="card-header">
             <h3 class="card-title text-bold">Beneficiaries</h3>
-            <button @click="$bent.config.form = 'add'" class="btn btn-sm btn-success float-right">
-                <i class="fas fa-plus mr-2"></i>Add
-            </button>
+            <AppButton @click="$bent.config.form = 'add'" color="success" push="right" icon="fa-plus">
+                Add
+            </AppButton>
         </div>
 
         <div class="card-body p-0">
@@ -23,10 +23,9 @@
                         <td>{{ row.name }}</td>
                         <td>{{ `${moment(row.bday).format('MMM D, YYYY')} (${AgeConverter(row.bday)})` }}</td>
                         <td>
-                            <button @click="$bent.Update(row)" class="btn btn-warning btn-sm mr-2"><i
-                                    class="fas fa-pen"></i></button>
-                            <button @click="deleteBen(row.id)" class="btn btn-danger btn-sm"><i
-                                    class="fas fa-trash"></i></button>
+                            <AppButton @click="deleteBen(row.id)" color="danger" push="right" icon="fa-times" size="sm" />
+                            <AppButton @click="$bent.Update(row)" color="warning" push="right" mr="1" icon="fa-pen"
+                                size="sm" />
                         </td>
                     </tr>
                 </tbody>
@@ -44,6 +43,7 @@ import { onMounted } from 'vue'
 
 import AddBeneficiary from '../forms/AddBeneficiary.vue'
 import UpdateBeneficiary from '../forms/UpdateBeneficiary.vue'
+import AppButton from '@/components/AppButton.vue'
 
 const $bent = useUserDetailBeneficiariesStore();
 

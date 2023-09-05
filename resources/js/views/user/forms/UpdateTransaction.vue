@@ -64,10 +64,12 @@
                     </div>
                 </div>
 
-                <button @click="$trans.ResetParams()" class=" btn btn-sm btn-danger float-right"><i
-                        class="fas fa-times mr-1"></i>Cancel</button>
-                <button @click="$trans.UpdateAPI()" class="btn btn-sm btn-warning float-right mr-2">
-                    <i class="fas fa-pen mr-1"></i>Update</button>
+                <AppButton @click="$trans.ResetParams()" color="danger" push="right" icon="fa-times">
+                    Cancel
+                </AppButton>
+                <AppButton @click="$trans.UpdateAPI()" color="warning" push="right" icon="fa-pen" mr="1">
+                    Update
+                </AppButton>
             </Form>
         </div>
 
@@ -83,6 +85,8 @@ import { usePayTypeStore } from '@/store/system/PayTypeStore'
 import * as Yup from 'yup'
 import { usePlanStore } from '@/store/system/PlanStore'
 import { useRoute } from 'vue-router'
+
+import AppButton from '@/components/AppButton.vue'
 
 configure({
     validateOnInput: true,

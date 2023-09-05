@@ -18,10 +18,13 @@
                     placeholder="Enter Name">
             </div>
 
-            <button @click="$ben.ResetParams()" class="btn btn-sm btn-danger float-right"><i
-                    class="fas fa-times mr-1"></i>Cancel</button>
-            <button @click="$ben.StoreAPI()" class="btn btn-sm btn-info float-right mr-2"
-                :disabled="$ben.params.bday == '' || $ben.params.name == ''"><i class="fas fa-plus mr-1"></i>Add</button>
+            <AppButton @click="$ben.ResetParams()" color="danger" push="right" icon="fa-times">
+                Cancel
+            </AppButton>
+            <AppButton @click="$ben.StoreAPI()" color="info" push="right" icon="fa-times" mr="1"
+                :disabled="$ben.params.bday == '' || $ben.params.name == ''">
+                Add
+            </AppButton>
         </div>
 
     </div>
@@ -29,6 +32,8 @@
 
 <script setup lang="ts">
 import { useUserDetailBeneficiariesStore } from '@/store/@staff/UserDetailBeneficiariesStore'
+
+import AppButton from '@/components/AppButton.vue';
 
 const $ben = useUserDetailBeneficiariesStore();
 </script>

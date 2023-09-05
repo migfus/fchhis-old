@@ -5,7 +5,9 @@
     <div class="card">
         <div class="card-header">
             <h3 class="card-title text-bold">Transactions</h3>
-            <button @click="$trans.config.form = 'add'" class="btn btn-success btn-sm float-right">Add Transaction</button>
+            <AppButton @click="$trans.config.form = 'add'" push="right" color="success" icon="fa-plus">
+                Add Transaction
+            </AppButton>
         </div>
 
         <div class="card-body p-0">
@@ -30,8 +32,7 @@
                             +{{ NumberAddComma(row.amount) }}
                         </td>
                         <td class="text-success text-bold">
-                            <button @click="$trans.Update(row)" class="btn btn-warning btn-sm mr-2"><i
-                                    class="fas fa-pen"></i></button>
+                            <AppButton @click="$trans.Update(row)" icon="fa-pen" color="warning" size="sm" />
                         </td>
                     </tr>
                 </tbody>
@@ -53,6 +54,7 @@ import { useUserDetailTransactionStore } from '@/store/@staff/UserDetailTransact
 
 import AddTransaction from '../forms/AddTransaction.vue'
 import UpdateTransaction from '../forms/UpdateTransaction.vue'
+import AppButton from '@/components/AppButton.vue'
 
 const $user = useUserDetailsStore();
 const $trans = useUserDetailTransactionStore();

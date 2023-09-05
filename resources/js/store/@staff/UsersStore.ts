@@ -3,7 +3,7 @@ import { defineStore } from 'pinia'
 import axios from 'axios'
 import { useToast } from 'vue-toastification'
 import { reactive, ref } from 'vue'
-import { PrintTest } from '@/helpers/print'
+import { PrintClientList } from '@/helpers/print'
 import { useAddressStore } from '@/store/public/AddressStore'
 import moment from 'moment'
 import { useAuthStore } from '@/store/auth/AuthStore'
@@ -167,7 +167,7 @@ export const useUsersStore = defineStore(title, () => {
                 ]
             })
             console.log(contentReport.value)
-            PrintTest(contentReport.value, $auth.content.auth.name, query.start, query.end)
+            PrintClientList(contentReport.value, $auth.content.auth.name, query.start, query.end)
         }
         catch(e) {
             console.log('UsersStore PrintAPI Error', {e})

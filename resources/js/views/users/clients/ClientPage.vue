@@ -1,7 +1,6 @@
 <template>
     <div class="row">
         <!-- NOTE ADD/EDIT -->
-        <EditForm v-if="$user.config.form == 'update'" />
         <AddForm v-if="$user.config.form == 'add'" />
 
         <!-- NOTE REPORT -->
@@ -30,7 +29,6 @@ import { useUsersStore } from '@/store/@staff/UsersStore'
 
 import UserSummary from './contents/UserSummary.vue'
 import AddForm from './forms/AddForm.vue'
-import EditForm from './forms/EditForm.vue'
 import SearchComponent from './search/SearchComponent.vue'
 import MobileComponent from './contents/MobileComponent.vue'
 import PaginationComponent from './components/PaginationComponent.vue'
