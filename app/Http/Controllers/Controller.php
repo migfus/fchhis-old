@@ -17,7 +17,7 @@ class Controller extends BaseController
 
     public function G_ReturnDefault($req = null) {
         if($req) {
-            $auth = User::where('id', $req->user()->id)->with('info')->first();
+            $auth = User::where('id', $req->user()->id)->with(['info', 'branch', 'region'])->first();
 
             return [
                 'status' => true,

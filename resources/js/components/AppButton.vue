@@ -1,5 +1,5 @@
 <template>
-    <button :class="['btn', color, size, mr, ml, push]" :type="type" :disabled="$props.disabled"
+    <button :class="['btn', color, size, mr, ml, mb, push]" :type="type" :disabled="$props.disabled"
         :data-dismiss="$props.dataDismiss">
         <i v-if="$props.disabled" class="mr-1 fa fa-ban"></i>
         <i v-else-if="$props.loading" class="fa fa-circle-notch fa-spin"></i>
@@ -21,6 +21,7 @@ const $props = defineProps<{
     dataDismiss?: string // for modal (no function, for error fix)
     mr?: string
     ml?: string
+    mb?: string
     push?: string
     type?: string
 }>()
@@ -71,6 +72,14 @@ const ml = computed(() => {
             return 'ml-1'
         case `2`:
             return 'ml-2'
+        default:
+            return ''
+    }
+})
+const mb = computed(() => {
+    switch ($props.mb) {
+        case `1`:
+            return 'mb-1'
         default:
             return ''
     }

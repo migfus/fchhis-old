@@ -26,7 +26,7 @@
                                     {{ row.username }}
                                 </strong>
                             </div>
-                            <div>
+                            <div class="text-truncate">
                                 <strong class="text-secondary">
                                     {{ row.email }}
                                 </strong>
@@ -55,7 +55,7 @@
                                     {{ row.info.pay_type.name }}
                                 </strong>
                             </div>
-                            <div>
+                            <div class="text-truncate">
                                 <i style="height: 20px; width: 20px"
                                     class="img-circle float-left mt-1 fa fa-map-pin text-secondary"></i>
                                 <strong>
@@ -94,20 +94,6 @@
                         </div>
 
                         <div class="col-xl-3 col-lg-6 col-md-12">
-                            <div class="d-none d-xl-inline float-right">
-                                <RouterLink :to="{ name: 'user', params: { id: row.id } }">
-                                    <AppButton icon="fa-" color="warning" size="sm" mr="1">
-                                        Update
-                                    </AppButton>
-                                </RouterLink>
-
-
-                                <RouterLink :to="{ name: 'user', params: { id: row.id } }">
-                                    <AppButton icon="fa-info-circle" color="info" size="sm">
-                                        Info
-                                    </AppButton>
-                                </RouterLink>
-                            </div>
                             <div>
                                 <img :src="row.info.agent.avatar" style="height: 20px; width: 20px"
                                     class="img-circle float-left mr-2">
@@ -128,6 +114,19 @@
                                 <strong>
                                     {{ moment(row.created_at).format('MMM D, YYYY hh:mm A') }}
                                 </strong>
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-12">
+                            <div class="d-none d-xl-inline float-right">
+                                <RouterLink :to="{ name: 'user', params: { id: row.id } }">
+                                    <AppButton icon="fa-pen" color="info" size="sm" mr="1">
+                                        Info
+                                    </AppButton>
+                                </RouterLink>
                             </div>
                         </div>
                     </div>

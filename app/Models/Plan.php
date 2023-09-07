@@ -19,7 +19,7 @@ class Plan extends Model
         return $this->hasMany(Info::class);
     }
 
-    public function planDetails() {
+    public function plan_details() {
         return $this->hasMany(PlanDetails::class);
     }
 }

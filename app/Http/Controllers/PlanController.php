@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Plan;
+use App\Models\PlanDetails;
 use Illuminate\Support\Facades\Validator;
 
 class PlanController extends Controller

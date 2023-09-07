@@ -81,5 +81,12 @@ class User extends Authenticatable
         return $this->hasMany(Beneficiary::class, 'user_id');
     }
 
+    public function branch() {
+        return $this->belongsTo(Branch::class, 'branch_id');
+    }
+    public function region() {
+        return $this->belongsTo(Region::class, 'region_id');
+    }
+
 
 }

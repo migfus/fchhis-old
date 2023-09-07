@@ -70,23 +70,6 @@
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col-12">
-                    <AppButton color="secondary" push="right" mr="1" data-toggle="modal" data-target="#claim-modal">
-                        Declare Claim
-                    </AppButton>
-                    <RouterLink :to="{ name: 'users-clients' }" class="mt-2">
-                        <AppButton color="info" push="right" mr="1" icon="fa-arrow-down">
-                            Download Data
-                        </AppButton>
-                    </RouterLink>
-                    <RouterLink :to="{ name: 'users-clients' }" class="mt-2">
-                        <AppButton color="info" push="right" mr="1" icon="fa-arrow-left">
-                            Back to List
-                        </AppButton>
-                    </RouterLink>
-                </div>
-            </div>
         </div>
     </div>
 </template>

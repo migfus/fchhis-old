@@ -69,6 +69,11 @@
                                     </div>
                                 </div>
 
+                                <div class="form-group">
+                                    <label for="mid-input">Role</label>
+                                    <Field value="Client" name="role" type="text" class="form-control" disabled />
+                                </div>
+
                                 <!-- <div class="form-group">
                                     <label>Role</label>
                                     <select v-model="$user.params.role" class="form-control" disabled>
