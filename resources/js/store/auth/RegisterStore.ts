@@ -3,6 +3,7 @@ import axios from 'axios'
 import { useToast } from 'vue-toastification'
 import { useStorage, StorageSerializers } from '@vueuse/core'
 import { reactive } from 'vue'
+import type { TGConfig } from '../GlobalTypes'
 
 type IParams = {
     or: string
@@ -28,7 +29,7 @@ export const useRegisterStore = defineStore(title, () => {
     const $toast = useToast();
 
     const params = useStorage<IParams>(`${title}/params`, null, localStorage, { serializer: StorageSerializers.object })
-    const config = reactive<{loading: boolean}>({
+    const config = reactive<TGConfig>({
         loading: false
     })
 

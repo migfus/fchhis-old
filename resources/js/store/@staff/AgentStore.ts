@@ -2,13 +2,14 @@ import { defineStore } from 'pinia'
 import axios from 'axios'
 import { useStorage, StorageSerializers } from '@vueuse/core'
 import { reactive } from 'vue'
+import type { TGConfig } from '@/store/GlobalTypes'
 
 const title = '@staff/AgentStore'
 
 export const useAgentStore = defineStore(title, () => {
     // DEBUG Add type on 'content'
     const content = useStorage(`${title}/content`, null, localStorage, { serializer: StorageSerializers.object })
-    const config = reactive<{loading: boolean}>({
+    const config = reactive<TGConfig>({
         loading: false,
     })
 

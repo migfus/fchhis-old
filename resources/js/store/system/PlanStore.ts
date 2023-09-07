@@ -3,6 +3,7 @@ import axios from 'axios'
 import { useToast } from 'vue-toastification'
 import { useStorage, StorageSerializers } from '@vueuse/core'
 import { reactive } from 'vue'
+import type { TGQuery } from '../GlobalTypes'
 
 type IConfig = {
     loading: boolean
@@ -10,12 +11,6 @@ type IConfig = {
     enableDelete: boolean
     notify: boolean
     form: string
-}
-type IQuery = {
-    search: string
-    filter: string
-    start: string
-    end: string
 }
 type IParams = {
     plan_details: {
@@ -48,11 +43,12 @@ export const usePlanStore = defineStore(title, ()=> {
         notify: sessionStorage.getItem('plan-notify') ? true : false,
         form: '',
     })
-    const query = reactive<IQuery>({
+    const query = reactive<TGQuery>({
         search: '',
         filter: 'name',
-        start: '',
-        end: '',
+        sort: 'ASC',
+        start: null,
+        end: null,
     })
     const params = useStorage<IParams>(`${title}/params`, {
         ...InitParams()

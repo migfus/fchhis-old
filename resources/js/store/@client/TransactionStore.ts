@@ -2,26 +2,16 @@ import { defineStore } from 'pinia'
 import axios from 'axios'
 import { useStorage, StorageSerializers } from '@vueuse/core'
 import { reactive } from 'vue'
+import type { TGConfig, TGQuery, TPlanDetails, TPayType } from '@/store/GlobalTypes'
 
-type IConfig = {
-    loading: boolean
-}
-type IQuery = {
-    search: string
-    sort: 'ASC' | 'DESC'
-}
 type IContent = {
     data: Array<{
         id: number
         or: string
         amount: number
-        plan_details: {
-            plan: {
-                name: string
-            }
-        }
-        pay_type: { name: string}
-        created_at: string
+        plan_details: TPlanDetails
+        pay_type: TPayType
+        created_at: dateFns
     }>
     sumTransactions: number
     sum: number
@@ -35,10 +25,10 @@ export const useTransactionStore = defineStore(title, () => {
 
   // DEBUG please add type 'content' & 'print'
     const content = useStorage<IContent>(`${title}/content` , null, localStorage, { serializer: StorageSerializers.object })
-    const config = reactive<IConfig>({
+    const config = reactive<TGConfig>({
         loading: false,
     })
-    const query = reactive<IQuery>({
+    const query = reactive<TGQuery>({
         search: '',
         sort: 'ASC',
     })

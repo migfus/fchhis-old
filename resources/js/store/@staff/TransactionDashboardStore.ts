@@ -2,17 +2,15 @@ import { defineStore } from 'pinia'
 import axios from 'axios'
 import { useStorage, StorageSerializers } from '@vueuse/core'
 import { reactive } from 'vue'
+import type { TGConfig, TPlanDetails, TPayType } from '@/store/GlobalTypes'
 
-type IConfig = {
-    loading: boolean
-}
 type IContent = {
     data: Array<{
         id: number
         or: string
         amount: number
-        plan: { name: string}
-        pay_type: { name: string}
+        plan_details: TPlanDetails
+        pay_type: TPayType
         created_at: string
     }>
     sumTransactions: number
@@ -20,14 +18,13 @@ type IContent = {
 }
 
 const title = '@staff/TransactionDashboardStore'
-
 export const useTransactionDashboardStore = defineStore(title, () => {
     const CancelToken = axios.CancelToken;
     let cancel;
 
   // DEBUG please add type 'content' & 'print'
     const content = useStorage<IContent>(`${title}/content` , null, localStorage, { serializer: StorageSerializers.object })
-    const config = reactive<IConfig>({
+    const config = reactive<TGConfig>({
         loading: false,
     })
 

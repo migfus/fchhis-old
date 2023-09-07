@@ -2,18 +2,15 @@ import { useStorage, StorageSerializers } from '@vueuse/core'
 import { defineStore } from 'pinia'
 import axios from 'axios'
 import { reactive } from 'vue'
+import type { TGConfig } from '@/store/GlobalTypes'
 
-type IConfig = {
-    loading: boolean
-}
 const title = '@staff/ClientsDashboardStore'
-
 export const useClientsDashboardStore = defineStore(title, () => {
     const CancelToken = axios.CancelToken;
     let cancel;
 
     const content = useStorage(`${title}/content`, null, localStorage, { serializer: StorageSerializers.object })
-    const config = reactive<IConfig>({
+    const config = reactive<TGConfig>({
         loading: false
     })
 

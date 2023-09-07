@@ -3,6 +3,7 @@ import axios from 'axios'
 import { useStorage, StorageSerializers } from '@vueuse/core'
 import { reactive } from 'vue'
 import { useRoute } from 'vue-router'
+import type { TGConfig } from '../GlobalTypes'
 
 type TContent = Array<{
     name: string
@@ -14,18 +15,13 @@ type TParams = {
     name: string
     bday: string
 }
-type TConfig = {
-    loading: boolean
-    form: string
-}
 
 const title = '@staff/UserDetailBeneficiariesStore'
-
 export const useUserDetailBeneficiariesStore = defineStore(title, () => {
     const $route = useRoute()
 
     const content = useStorage<TContent>(`${title}/content`, null, localStorage, { serializer: StorageSerializers.object })
-    const config = reactive<TConfig>({
+    const config = reactive<TGConfig>({
         loading: false,
         form: null
     })

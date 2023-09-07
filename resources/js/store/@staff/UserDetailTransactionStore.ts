@@ -4,11 +4,8 @@ import { useStorage, StorageSerializers } from '@vueuse/core'
 import { reactive } from 'vue'
 import { useUserDetailsStore } from '@/store/@staff/UserDetailStore'
 import { useRoute } from 'vue-router'
+import type { TGConfig } from '../GlobalTypes'
 
-type IConfig = {
-    loading: boolean
-    form: string
-}
 type TParams = {
     agent_id: number
     or: string
@@ -25,7 +22,7 @@ export const useUserDetailTransactionStore = defineStore(title, () => {
     const $user = useUserDetailsStore();
     const $route = useRoute();
 
-    const config = reactive<IConfig>({
+    const config = reactive<TGConfig>({
         loading: false,
         form: null
     })

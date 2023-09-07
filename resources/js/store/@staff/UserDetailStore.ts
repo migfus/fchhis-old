@@ -3,68 +3,8 @@ import axios from 'axios'
 import { useStorage, StorageSerializers } from '@vueuse/core'
 import { reactive } from 'vue'
 import { useRoute } from 'vue-router'
+import type { TGConfig, TAuthContent } from '../GlobalTypes'
 
-type TContent = {
-    name: string
-    avatar: string
-    branch_id: number
-    client_transactions: Array<{
-        agent: {
-            name: string
-        }
-        amount: number
-        client_id: number
-        created_at: string
-        id: number
-        or: number
-        pay_type: {
-            name: string
-        }
-        plan_details: {
-            plan: {
-                avatar: string
-                name: string
-            }
-        }
-        staff_id: number
-        updated_at: string
-    }>
-    client_transactions_sum_amount: number
-    created_at: string
-    email: string
-    id: number
-    region_id: number
-    role: string
-    username: string
-    info: {
-        bplace_id: bigint
-        address: string
-        address_id: bigint
-        sex: boolean
-        bday: dateFns
-        due_at: dateFns
-        agent_id: bigint
-        staff_id: bigint
-        pay_type_id: bigint
-        plan_details_id: bigint
-        pay_type: {
-            name: string
-        }
-        plan_details: {
-            plan: { name: string }
-            monthly: number,
-            quarterly: number,
-            semi_annual: number,
-            annual: number,
-            spot_pay: number,
-            spot_service: number,
-        }
-    }
-}
-type TConfig = {
-    loading: boolean
-    form?: string
-}
 type TParams = {
     region_id: bigint
     branch_id: bigint
@@ -84,12 +24,11 @@ type TParams = {
 }
 
 const title = '@staff/UserDetailsStore'
-
 export const useUserDetailsStore = defineStore(title, () => {
     const $route = useRoute()
 
-    const content = useStorage<TContent>(`${title}/content`, null, localStorage, { serializer: StorageSerializers.object })
-    const config = reactive<TConfig>({
+    const content = useStorage<TAuthContent>(`${title}/content`, null, localStorage, { serializer: StorageSerializers.object })
+    const config = reactive<TGConfig>({
         loading: false,
         form: null
     })

@@ -2,13 +2,14 @@ import axios from 'axios'
 import { defineStore } from 'pinia'
 import { useStorage, StorageSerializers } from '@vueuse/core'
 import { reactive } from 'vue'
+import type { TGConfig } from '../GlobalTypes'
 
 const title = 'system/PayTypeStore'
 
 export const usePayTypeStore = defineStore(title, () => {
     // DEBUG add type of content
     const content = useStorage(`${title}/content`, [], localStorage, { serializer: StorageSerializers.object })
-    const config = reactive<{loading: boolean}>({
+    const config = reactive<TGConfig>({
         loading: false
     })
 

@@ -2,13 +2,8 @@ import { useStorage, StorageSerializers } from '@vueuse/core'
 import { defineStore } from 'pinia'
 import axios from 'axios'
 import { reactive } from 'vue'
+import type { TGConfig, TGQuery } from '@/store/GlobalTypes'
 
-type IConfig = {
-    loading: boolean
-}
-type IQuery = {
-    search: string
-}
 const title = '@client/BeneficiariesStore'
 
 export const useBeneficiariesStore = defineStore(title, () => {
@@ -16,8 +11,12 @@ export const useBeneficiariesStore = defineStore(title, () => {
     let cancel;
 
     const content = useStorage(`${title}/content`, null, localStorage, { serializer: StorageSerializers.object })
-    const config = reactive<IConfig>({ loading: false })
-    const query = reactive<IQuery>({ search: '' })
+    const config = reactive<TGConfig>({ loading: false })
+    const query = reactive<TGQuery>({
+        search: '',
+        filter: null,
+        sort: 'DESC'
+    })
 
     // SECTION API
     function CancelAPI() {

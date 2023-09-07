@@ -3,41 +3,13 @@ import { defineStore } from "pinia"
 import { useToast } from "vue-toastification"
 import { useStorage, StorageSerializers } from '@vueuse/core'
 import axios from "axios"
-import ability from '@/Ability';
+import ability from '@/Ability'
+import type { TAuthContent } from "@/store/GlobalTypes"
 
 type IContent = {
     ip: string
     token: string
-    auth: {
-        avatar: string
-        created_at: string
-        email: string
-        id: number
-        role: number
-        updated_at: string
-        username: string
-        name: string
-        // NOTE FOR CLIENTS & AGENTS ONLY
-        info?: {
-            address: string
-            address_id: number
-            agent_id: number
-            bday: string
-            bplace_id: number
-            client_id: number
-            created_at: string
-            due_at: string
-            fulfilled_at: string
-            id: number
-            or: string
-            pay_type_id: number
-            plan_details_id: number
-            sex: boolean
-            staff_id: number
-            updated_at: string
-            user_id: number
-        }
-    },
+    auth: TAuthContent,
     permissions: Array<String>
     role: string
 }

@@ -3,10 +3,8 @@ import { defineStore } from 'pinia'
 import axios from 'axios'
 import { useToast } from 'vue-toastification'
 import { reactive } from 'vue'
+import type { TGConfig } from '../GlobalTypes'
 
-type IConfig = {
-    loading: boolean
-}
 type TContent = Array<{
     name: string
     color: string
@@ -22,7 +20,7 @@ export const useUserSummaryStore = defineStore(title, () => {
     let cancel;
 
     const content = useStorage<TContent>(`${title}/content`, null, localStorage, { serializer: StorageSerializers.object })
-    const config = reactive<IConfig>({
+    const config = reactive<TGConfig>({
         loading: false
     })
 
