@@ -8,6 +8,7 @@ import { useAddressStore } from '@/store/public/AddressStore'
 import moment from 'moment'
 import { useAuthStore } from '@/store/auth/AuthStore'
 import { PlanToPay } from '@/helpers/converter'
+import type { TAuthContent } from '../GlobalTypes'
 
 type IConfig = {
     loading: boolean
